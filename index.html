@@ -638,9 +638,7 @@
 
 <script>
 // ── CONFIGURACIÓN ──
-const URL_PRODUCTOS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=1666631008&single=true&output=csv';
-const URL_GRUPOS    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=2138230487&single=true&output=csv';
-const WHATSAPP_NUM  = '5491112345678'; // ← reemplazar con número real
+const WHATSAPP_NUM = '5491112345678'; // ← reemplazar con número real
 const CANAL         = 'B2B'; // esta página es B2B
 
 // ── ESTADO ──
@@ -691,13 +689,10 @@ function formatPrecio(n) {
 // ── CARGA DE DATOS ──
 async function cargarDatos() {
   try {
-    const [csvProd, csvGrups] = await Promise.all([
-      fetch(URL_PRODUCTOS).then(r => r.text()),
-      fetch(URL_GRUPOS).then(r => r.text())
-    ]);
+    const data = await fetch('catalogo.json').then(r => r.json());
 
     // Grupos
-    parseCSV(csvGrups).forEach(g => {
+    data.grupos.forEach(g => {
       grupos[g['Id_Grupo']] = {
         nombre: g['Nombre_Grupo'],
         marca: g['Marca'],
@@ -707,9 +702,8 @@ async function cargarDatos() {
     });
 
     // Productos — filtrar por canal B2B y Activo ON
-    const colCat = 'Cat B2B';
-    const productos = parseCSV(csvProd).filter(p =>
-      p['Activo'] === 'ON' && p[colCat] === 'ON'
+    const productos = data.productos.filter(p =>
+      p['Activo'] === 'ON' && p['Cat B2B'] === 'ON'
     );
 
     // Agrupar
