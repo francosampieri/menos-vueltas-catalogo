@@ -393,6 +393,36 @@
   }
   .cerrar-card:hover { color: var(--gris-oscuro); }
 
+  /* ── DESCUENTO ── */
+  .descuento-bloque {
+    background: #E8F5E9;
+    border: 1px solid #A5D6A7;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .descuento-info { font-size: 0.78rem; color: #2E7D32; line-height: 1.4; }
+  .descuento-info strong { font-size: 0.9rem; }
+  .descuento-badge {
+    background: #2E7D32;
+    color: white;
+    border-radius: 50px;
+    padding: 3px 9px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .precio-tachado {
+    font-size: 0.8rem;
+    color: var(--gris-medio);
+    text-decoration: line-through;
+    margin-left: 6px;
+  }
+
   /* ── LOADING / EMPTY ── */
   .loading {
     text-align: center;
@@ -675,9 +705,11 @@ function parseLine(line) {
 }
 
 function parsePrecio(str) {
-  if (!str) return null;
-  const clean = str.replace(/[^0-9,.-]/g, '').replace(',', '.');
-  const n = parseFloat(clean);
+  if (!str || str.trim() === '' || str.includes('#')) return null;
+  // Formato argentino: $19.680,00 → puntos=miles, coma=decimal
+  const clean = str.replace(/[^0-9,.]/g, '');
+  const normalizado = clean.replace(/\./g, '').replace(',', '.');
+  const n = parseFloat(normalizado);
   return isNaN(n) || n <= 0 ? null : n;
 }
 
@@ -1073,18 +1105,38 @@ function renderExpanded(gid, vars, imgEl) {
       expanded.appendChild(chips);
     }
 
-    // Precio detalle
+    // Precio detalle + descuento
     const varSel = getVarianteFiltrada();
     const precio = varSel ? parsePrecio(varSel['Precio_Venta']) : null;
+    const precioDto = varSel ? parsePrecio(varSel['Precio_Dto']) : null;
+    const uniDto = varSel ? parseInt(varSel['Uni Dto']) || 0 : 0;
+    const dto = varSel ? varSel['Dto'] || '' : '';
 
     const pdiv = document.createElement('div');
     pdiv.className = 'precio-detalle';
     if (precio !== null) {
-      pdiv.innerHTML = `<span class="precio-detalle-label">Precio unitario</span><span class="precio-detalle-valor">${formatPrecio(precio)}</span>`;
+      pdiv.innerHTML = `
+        <span class="precio-detalle-label">Precio unitario</span>
+        <span class="precio-detalle-valor">${formatPrecio(precio)}</span>
+      `;
     } else {
       pdiv.innerHTML = `<span class="precio-detalle-label">Precio</span><span class="precio-detalle-valor sin-precio">A confirmar</span>`;
     }
     expanded.appendChild(pdiv);
+
+    // Bloque descuento (solo si tiene uni_dto y precio_dto)
+    if (uniDto > 0 && precioDto !== null && precio !== null) {
+      const dtoDiv = document.createElement('div');
+      dtoDiv.className = 'descuento-bloque';
+      dtoDiv.innerHTML = `
+        <div class="descuento-info">
+          Comprando <strong>${uniDto} o más</strong>: ${formatPrecio(precioDto)} c/u
+          <span class="precio-tachado">${formatPrecio(precio)}</span>
+        </div>
+        <div class="descuento-badge">-${dto}</div>
+      `;
+      expanded.appendChild(dtoDiv);
+    }
 
     // Actualizar imagen principal
     if (varSel && imgEl) {
@@ -1168,6 +1220,9 @@ function agregarAlCarrito(gid, variante, qty) {
   const varLabel = partes.join(' · ');
 
   const precio = parsePrecio(variante['Precio_Venta']);
+  const precioDto = parsePrecio(variante['Precio_Dto']);
+  const uniDto = parseInt(variante['Uni Dto']) || 0;
+  const dto = variante['Dto'] || '';
   const idProd = variante['Id'];
 
   // Buscar si ya existe en carrito
@@ -1175,7 +1230,7 @@ function agregarAlCarrito(gid, variante, qty) {
   if (existe) {
     existe.qty += qty;
   } else {
-    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, qty });
+    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto, uniDto, dto, qty });
   }
 
   actualizarUICarrito();
@@ -1185,8 +1240,13 @@ function agregarAlCarrito(gid, variante, qty) {
   if (badge) badge.classList.add('visible');
 }
 
+function precioEfectivo(item) {
+  const aplicaDto = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
+  return aplicaDto ? item.precioDto : item.precio;
+}
+
 function actualizarUICarrito() {
-  const total = carrito.reduce((s, i) => s + (i.precio || 0) * i.qty, 0);
+  const total = carrito.reduce((s, i) => s + (precioEfectivo(i) || 0) * i.qty, 0);
   const totalItems = carrito.reduce((s, i) => s + i.qty, 0);
   const hayPrecio = carrito.some(i => i.precio !== null);
 
@@ -1224,12 +1284,30 @@ function renderCarritoItems() {
   carrito.forEach((item, idx) => {
     const div = document.createElement('div');
     div.className = 'carrito-item';
-    const subtotal = item.precio !== null ? formatPrecio(item.precio * item.qty) : 'S/P';
+
+    // Determinar si aplica descuento por cantidad
+    const aplicaDto = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
+    const precioEfectivo = aplicaDto ? item.precioDto : item.precio;
+    const subtotal = precioEfectivo !== null ? formatPrecio(precioEfectivo * item.qty) : 'S/P';
+
+    let precioLinea = '';
+    if (item.precio !== null) {
+      if (aplicaDto) {
+        precioLinea = `<span style="text-decoration:line-through;color:var(--gris-medio);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--verde)">${formatPrecio(item.precioDto)}</strong> c/u <span style="background:#2E7D32;color:white;border-radius:50px;padding:1px 6px;font-size:0.7rem;font-weight:800">-${item.dto}</span>`;
+      } else if (item.uniDto > 0 && item.precioDto !== null) {
+        precioLinea = `${formatPrecio(item.precio)} c/u <span style="color:var(--gris-medio);font-size:0.75rem">(dto al llegar a ${item.uniDto} u.)</span>`;
+      } else {
+        precioLinea = `${formatPrecio(item.precio)} c/u`;
+      }
+    } else {
+      precioLinea = 'Precio a confirmar';
+    }
+
     div.innerHTML = `
       <div class="ci-info">
         <div class="ci-nombre">${item.marca} ${item.nombre}</div>
         ${item.varLabel ? `<div class="ci-variante">${item.varLabel}</div>` : ''}
-        <div class="ci-precio">${item.precio !== null ? formatPrecio(item.precio) + ' c/u' : 'Precio a confirmar'}</div>
+        <div class="ci-precio">${precioLinea}</div>
         <div class="ci-qty-row">
           <button class="ci-qty-btn" onclick="cambiarQtyCarrito(${idx}, -1)">−</button>
           <div class="ci-qty-num">${item.qty}</div>
@@ -1282,12 +1360,19 @@ function enviarWhatsApp() {
   msg += '━━━━━━━━━━━━━━━━\n\n';
 
   carrito.forEach((item, i) => {
+    const aplicaDto = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
+    const pEfectivo = precioEfectivo(item);
     msg += `*${i + 1}. ${item.marca} ${item.nombre}*\n`;
     if (item.varLabel) msg += `   Variante: ${item.varLabel}\n`;
     msg += `   Cantidad: ${item.qty} unidades\n`;
     if (item.precio !== null) {
-      msg += `   Precio unit.: ${formatPrecio(item.precio)}\n`;
-      msg += `   Subtotal: ${formatPrecio(item.precio * item.qty)}\n`;
+      if (aplicaDto) {
+        msg += `   Precio unit.: ${formatPrecio(item.precioDto)} (-${item.dto})\n`;
+        msg += `   Precio regular: ${formatPrecio(item.precio)}\n`;
+      } else {
+        msg += `   Precio unit.: ${formatPrecio(item.precio)}\n`;
+      }
+      msg += `   Subtotal: ${formatPrecio(pEfectivo * item.qty)}\n`;
     } else {
       msg += `   Precio: a confirmar\n`;
     }
