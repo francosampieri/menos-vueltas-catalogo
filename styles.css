@@ -119,21 +119,32 @@ body { font-family: var(--font); background: var(--gris-claro); color: var(--gri
 
 .nav-megamenu {
   display: none;
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
+  left: 12px;
+  right: 12px;
   background: white;
   border: 1px solid var(--gris-borde);
   border-radius: var(--radio);
   box-shadow: var(--sombra-hover);
   z-index: 300;
-  padding: 16px;
-  min-width: 480px;
+  padding: 16px 20px;
 }
 .nav-dropdown.open .nav-megamenu { display: block; }
-.megamenu-grid { display: flex; gap: 24px; flex-wrap: wrap; }
-.megamenu-col { min-width: 130px; }
+.megamenu-grid {
+  display: flex;
+  gap: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.megamenu-col {
+  flex: 1;
+  min-width: 120px;
+  padding: 0 16px;
+  border-right: 1px solid var(--gris-borde);
+}
+.megamenu-col:first-child { padding-left: 0; }
+.megamenu-col:last-child  { border-right: none; padding-right: 0; }
 .megamenu-cat {
   font-size: 0.7rem;
   font-weight: 800;

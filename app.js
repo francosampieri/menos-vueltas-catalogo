@@ -819,7 +819,16 @@ function llenarMegamenu() {
 }
 
 function toggleMegamenu() {
-  document.getElementById('navDropdown').classList.toggle('open');
+  const dropdown = document.getElementById('navDropdown');
+  const isOpen = dropdown.classList.contains('open');
+  if (!isOpen) {
+    // Posicionar justo debajo de la navbar
+    const navbar = document.querySelector('.navbar');
+    const navBottom = navbar.getBoundingClientRect().bottom;
+    const menu = dropdown.querySelector('.nav-megamenu');
+    menu.style.top = (navBottom + 6) + 'px';
+  }
+  dropdown.classList.toggle('open');
 }
 function cerrarMegamenu() {
   document.getElementById('navDropdown').classList.remove('open');
