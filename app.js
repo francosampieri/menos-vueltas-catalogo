@@ -759,7 +759,7 @@ function mostrarCatalogo(cat, sub) {
   window.scrollTo({ top: 0 });
 
   if (cat) {
-    const btnCat = document.querySelector(`.filtro-btn[data-cat="${cat}"]`);
+    const btnCat = document.querySelector(`.filtro-btn[data-cat="${CSS.escape(cat)}"]`) || document.querySelector(`.filtro-btn[data-cat="${cat}"]`);
     setFiltroCategoria(cat, btnCat);
     if (sub) {
       filtroSubcat = sub;
@@ -823,7 +823,7 @@ function toggleMegamenu() {
   const isOpen = dropdown.classList.contains('open');
   if (!isOpen) {
     // Posicionar justo debajo de la navbar
-    const navbar = document.querySelector('.navbar');
+    const navbar = document.querySelector('.topbar');
     const navBottom = navbar.getBoundingClientRect().bottom;
     const menu = dropdown.querySelector('.nav-megamenu');
     menu.style.top = (navBottom + 6) + 'px';
