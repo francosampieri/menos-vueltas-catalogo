@@ -183,13 +183,15 @@ function getGruposFiltrados() {
     const marca  = g.marca     || vars[0]['Marca']        || '';
     const tags   = vars.map(v => v['Tags'] || '').join(' ');
 
-    if (filtroActivo !== 'Todos' && cat !== filtroActivo) return false;
-    if (filtroSubcat && sub !== filtroSubcat) return false;
+    // Búsqueda siempre global — ignora filtros de categoría y subcategoría
     if (busquedaActiva) {
       const q = busquedaActiva.toLowerCase();
       const texto = `${nombre} ${marca} ${cat} ${sub} ${tags}`.toLowerCase();
-      if (!texto.includes(q)) return false;
+      return texto.includes(q);
     }
+
+    if (filtroActivo !== 'Todos' && cat !== filtroActivo) return false;
+    if (filtroSubcat && sub !== filtroSubcat) return false;
     return true;
   });
 }
