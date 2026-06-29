@@ -3,37 +3,38 @@
    Filosofía: MENOS. Más aire. Más claridad.
 ══════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Cabin:wght@400;500;600&display=swap');
 
 /* ── Tokens ── */
 :root {
   /* Superficies */
-  --bg:        #f7f7f5;
+  --bg:        #FAFAF7;
   --surface:   #ffffff;
-  --surface-2: #f2f2f0;
-  --surface-3: #eaeae7;
+  --surface-2: #F3F4EF;
+  --surface-3: #EAECE5;
 
   /* Bordes */
-  --line:      #e4e4e0;
-  --line-soft: #efefec;
+  --line:      #E4E7E0;
+  --line-soft: #ECEEE8;
 
   /* Texto */
-  --t1: #111110;
-  --t2: #6b6b67;
-  --t3: #a8a8a3;
+  --t1: #2F3430;
+  --t2: #6F746E;
+  --t3: #9EA39D;
 
-  /* Acento — verde salvia */
-  --accent:      #3d6b4f;
-  --accent-2:    #2e5540;
-  --accent-bg:   #edf3ef;
-  --accent-line: #c4d9cc;
+  /* Acento — verde oliva */
+  --accent:      #6E8B5B;
+  --accent-2:    #587547;
+  --accent-bg:   #EEF2E9;
+  --accent-line: #C8D6BB;
 
   /* Util */
   --red:   #c0392b;
   --wa:    #25D366;
 
   /* Tipografía */
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font:      'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Cabin', Georgia, serif;
 
   /* Espaciado */
   --space-1: 4px;
@@ -75,6 +76,15 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Textos largos y párrafos usan Cabin */
+.hero-sub,
+.sobre-text,
+.faq-respuesta,
+.pillar p,
+.carrito-nota {
+  font-family: var(--font-body);
 }
 button { font-family: var(--font); cursor: pointer; }
 img { display: block; max-width: 100%; }
@@ -793,9 +803,9 @@ img { display: block; max-width: 100%; }
   object-fit: contain;
   padding: var(--space-3);
   filter:
-    drop-shadow(0px 18px 8px rgba(15, 80, 42, 0.50))
-    drop-shadow(0px 22px 18px rgba(15, 80, 42, 0.28))
-    drop-shadow(0px 30px 28px rgba(15, 80, 42, 0.12));
+    drop-shadow(0px 18px 8px rgba(60, 90, 45, 0.50))
+    drop-shadow(0px 22px 18px rgba(60, 90, 45, 0.28))
+    drop-shadow(0px 30px 28px rgba(60, 90, 45, 0.12));
 }
 .card-img-placeholder {
   font-size: 2rem;

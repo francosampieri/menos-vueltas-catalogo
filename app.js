@@ -685,7 +685,7 @@ function renderCarritoItems() {
     let precioLinea = '';
     if (item.precio !== null) {
       if (aplica) {
-        precioLinea = `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--accent)">${formatPrecio(item.precioDto)}</strong> c/u`;
+        precioLinea = `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--accent-2)">${formatPrecio(item.precioDto)}</strong> c/u`;
       } else {
         precioLinea = `${formatPrecio(item.precio)} c/u`;
       }
