@@ -122,6 +122,9 @@ function construirFiltrosCategorias() {
 function setFiltroCategoria(cat, btn) {
   filtroActivo = cat;
   filtroSubcat = null;
+  // Limpiar búsqueda al navegar por categorías
+  busquedaActiva = '';
+  document.getElementById('buscador').value = '';
   document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   renderSubfiltros();
@@ -170,6 +173,9 @@ function renderSubfiltros() {
 
 function setFiltroSubcat(sub) {
   filtroSubcat = sub;
+  // Limpiar búsqueda al navegar por subcategorías
+  busquedaActiva = '';
+  document.getElementById('buscador').value = '';
   renderSubfiltros();
   renderGrupos();
 }
