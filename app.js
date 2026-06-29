@@ -184,9 +184,11 @@ function getGruposFiltrados() {
     const tags   = vars.map(v => v['Tags'] || '').join(' ');
 
     // Búsqueda siempre global — ignora filtros de categoría y subcategoría
+    // Normaliza acentos para que "limon" encuentre "limón"
     if (busquedaActiva) {
-      const q = busquedaActiva.toLowerCase();
-      const texto = `${nombre} ${marca} ${cat} ${sub} ${tags}`.toLowerCase();
+      const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const q = norm(busquedaActiva);
+      const texto = norm(`${nombre} ${marca} ${cat} ${sub} ${tags}`);
       return texto.includes(q);
     }
 
