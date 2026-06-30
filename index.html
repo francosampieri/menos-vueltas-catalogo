@@ -65,11 +65,11 @@
   <!-- Hero -->
   <section class="hero">
     <div class="hero-inner">
-      <h1 class="hero-title">Hacer las compras<br>nunca fue tan fácil.</h1>
+      <h1 class="hero-title">Comprar nunca<br>fue tan fácil.</h1>
       <p class="hero-sub">Elegí lo que necesitás, enviá tu pedido y nosotros nos ocupamos del resto.</p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
-        <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Cómo hacer un pedido</button>
+        <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Como hacer un pedido</button>
       </div>
     </div>
     <div class="hero-visual">
@@ -80,7 +80,7 @@
   <!-- Cómo comprar -->
   <section id="como-comprar" class="como-comprar">
     <div class="como-comprar-inner">
-      <h2 class="seccion-h2-center">Cómo hacer un pedido</h2>
+      <h2 class="seccion-h2-center">Como hacer un pedido</h2>
       <div class="pasos-row">
 
         <div class="paso">
@@ -96,9 +96,11 @@
           <p>Añadí productos de nuestro catálogo.</p>
         </div>
 
-        <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M2 8h34M28 2l8 6-8 6"/>
-        </svg>
+        <div class="paso-arrow-wrap">
+          <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M2 8h34M28 2l8 6-8 6"/>
+          </svg>
+        </div>
 
         <div class="paso">
           <div class="paso-num">2</div>
@@ -112,9 +114,11 @@
           <p>Con un solo clic desde el carrito.</p>
         </div>
 
-        <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M2 8h34M28 2l8 6-8 6"/>
-        </svg>
+        <div class="paso-arrow-wrap">
+          <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M2 8h34M28 2l8 6-8 6"/>
+          </svg>
+        </div>
 
         <div class="paso">
           <div class="paso-num">3</div>
@@ -126,7 +130,7 @@
             </svg>
           </div>
           <h3>Lo recibís en tu casa</h3>
-          <p>En el horario y día acordado (24-48hs).</p>
+          <p>En el día y horario acordado (24 a 48 horas).</p>
         </div>
 
       </div>
@@ -142,7 +146,7 @@
         <ul class="vueltas-lista">
           <li><span class="vueltas-x">✕</span> Ir al mayorista</li>
           <li><span class="vueltas-x">✕</span> Buscar estacionamiento</li>
-          <li><span class="vueltas-x">✕</span> Recorrer góndolas buscando cada producto</li>
+          <li><span class="vueltas-x">✕</span> Recorrer góndolas</li>
           <li><span class="vueltas-x">✕</span> Hacer fila</li>
           <li><span class="vueltas-x">✕</span> Cargar bolsas</li>
           <li><span class="vueltas-x">✕</span> Volver a casa</li>
@@ -246,7 +250,7 @@
 
         <button class="categoria-card" onclick="mostrarCatalogo('Higiene Personal')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4v4l2 2v12a2 2 0 01-2 2h-4a2 2 0 01-2-2V8l2-2V2z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2.5 3 5 6.2 5 9.5a5 5 0 01-10 0C7 9.2 9.5 6 12 3z"/></svg>
           </div>
           <span>Higiene Personal</span>
         </button>
@@ -260,14 +264,14 @@
 
         <button class="categoria-card" onclick="mostrarCatalogo('Limpieza')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10M9 21V3h6v18M9 9h6"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h4l1 2h3a1 1 0 011 1v1a1 1 0 01-1 1h-1l-1 11a2 2 0 01-2 2H9a2 2 0 01-2-2L6 9H5a1 1 0 01-1-1V7a1 1 0 011-1h3l1-2z"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
           </div>
           <span>Limpieza</span>
         </button>
 
         <button class="categoria-card" onclick="mostrarCatalogo('Snacks y Golosinas')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M8 12h8M12 8v8"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M12 13v8"/><path d="M9 21h6"/></svg>
           </div>
           <span>Snacks y Golosinas</span>
         </button>
