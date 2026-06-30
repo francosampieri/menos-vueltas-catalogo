@@ -43,7 +43,6 @@
         </div>
       </div>
 
-      <button class="nav-ghost hide-mobile" onclick="scrollLanding('sobre-nosotros')">Nosotros</button>
       <button class="nav-ghost hide-mobile" onclick="scrollLanding('faq')">Preguntas</button>
 
       <button class="cart-trigger" onclick="abrirCarrito()">
@@ -66,12 +65,11 @@
   <!-- Hero -->
   <section class="hero">
     <div class="hero-inner">
-      <p class="hero-eyebrow">Distribución barrial · Mendoza</p>
-      <h1 class="hero-title">Hacé las compras<br>desde casa.</h1>
+      <h1 class="hero-title">Hacer las compras<br>nunca fue tan fácil.</h1>
       <p class="hero-sub">Elegí lo que necesitás, enviá tu pedido y nosotros nos ocupamos del resto.</p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
-        <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Cómo funciona</button>
+        <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Cómo hacer un pedido</button>
       </div>
     </div>
     <div class="hero-visual">
@@ -82,20 +80,20 @@
   <!-- Cómo comprar -->
   <section id="como-comprar" class="como-comprar">
     <div class="como-comprar-inner">
-      <h2 class="seccion-h2-center">Cómo comprar</h2>
+      <h2 class="seccion-h2-center">Cómo hacer un pedido</h2>
       <div class="pasos-row">
 
         <div class="paso">
           <div class="paso-num">1</div>
           <div class="paso-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 01-8 0"/>
+              <circle cx="9" cy="21" r="1.5"/>
+              <circle cx="19" cy="21" r="1.5"/>
+              <path d="M2.5 3h2.5l2.6 12.4a2 2 0 002 1.6h9a2 2 0 002-1.8L22 8H6"/>
             </svg>
           </div>
-          <h3>Elegís productos</h3>
-          <p>Explorá nuestro catálogo de productos.</p>
+          <h3>Armá tu carrito</h3>
+          <p>Añadí productos de nuestro catálogo.</p>
         </div>
 
         <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -111,7 +109,7 @@
             </svg>
           </div>
           <h3>Nos enviás tu pedido</h3>
-          <p>Por WhatsApp o desde el formulario.</p>
+          <p>Con un solo clic desde el carrito.</p>
         </div>
 
         <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -128,7 +126,7 @@
             </svg>
           </div>
           <h3>Lo recibís en tu casa</h3>
-          <p>En el día y horario que elijas.</p>
+          <p>En el horario y día acordado (24-48hs).</p>
         </div>
 
       </div>
@@ -144,6 +142,7 @@
         <ul class="vueltas-lista">
           <li><span class="vueltas-x">✕</span> Ir al mayorista</li>
           <li><span class="vueltas-x">✕</span> Buscar estacionamiento</li>
+          <li><span class="vueltas-x">✕</span> Recorrer góndolas buscando cada producto</li>
           <li><span class="vueltas-x">✕</span> Hacer fila</li>
           <li><span class="vueltas-x">✕</span> Cargar bolsas</li>
           <li><span class="vueltas-x">✕</span> Volver a casa</li>
@@ -190,20 +189,9 @@
 
         <div class="beneficio">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2"/>
-            <line x1="16" y1="2" x2="16" y2="6"/>
-            <line x1="8" y1="2" x2="8" y2="6"/>
-            <line x1="3" y1="10" x2="21" y2="10"/>
+            <path d="M3 7h18M3 12h18M3 17h12"/>
           </svg>
-          <p>Entrega programada</p>
-        </div>
-
-        <div class="beneficio">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
-          </svg>
-          <p>Atención personalizada</p>
+          <p>Sin mínimos complicados</p>
         </div>
 
         <div class="beneficio">
@@ -216,9 +204,20 @@
 
         <div class="beneficio">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 7h18M3 12h18M3 17h12"/>
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
           </svg>
-          <p>Sin mínimos complicados</p>
+          <p>Atención personalizada</p>
+        </div>
+
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <p>Entrega programada</p>
         </div>
 
       </div>
@@ -235,14 +234,28 @@
           <div class="categoria-img-wrap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v10a1 1 0 01-1 1H5a1 1 0 01-1-1V9z"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
           </div>
-          <span>Despensa</span>
+          <span>Almacén</span>
         </button>
 
-        <button class="categoria-card" onclick="mostrarCatalogo('Almacen')">
+        <button class="categoria-card" onclick="mostrarCatalogo('Desayuno y Mediatarde')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8M9 2v6l-5 11a1 1 0 001 1.5h14a1 1 0 001-1.5L15 8V2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h14v6a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><path d="M17 9h2a2 2 0 012 2v1a2 2 0 01-2 2h-2"/><line x1="6" y1="2" x2="6" y2="5"/><line x1="10" y1="2" x2="10" y2="5"/><line x1="14" y1="2" x2="14" y2="5"/></svg>
           </div>
-          <span>Bebidas</span>
+          <span>Desayuno y Mediatarde</span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Higiene Personal')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4v4l2 2v12a2 2 0 01-2 2h-4a2 2 0 01-2-2V8l2-2V2z"/></svg>
+          </div>
+          <span>Higiene Personal</span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Hogar y Ferreteria')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/><path d="M9 21v-6h6v6"/></svg>
+          </div>
+          <span>Hogar y Ferretería</span>
         </button>
 
         <button class="categoria-card" onclick="mostrarCatalogo('Limpieza')">
@@ -252,41 +265,14 @@
           <span>Limpieza</span>
         </button>
 
-        <button class="categoria-card" onclick="mostrarCatalogo('Higiene Personal')">
+        <button class="categoria-card" onclick="mostrarCatalogo('Snacks y Golosinas')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4v4l2 2v12a2 2 0 01-2 2h-4a2 2 0 01-2-2V8l2-2V2z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M8 12h8M12 8v8"/></svg>
           </div>
-          <span>Perfumería</span>
-        </button>
-
-        <button class="categoria-card" onclick="mostrarCatalogo('Hogar y Ferreteria')">
-          <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2C8 5 7 8 7 11a5 5 0 0010 0c0-3-1-6-3-9-.5 2-1.5 3-2 3s-1.5-1-2-3z"/><path d="M9 16a3 3 0 006 0"/></svg>
-          </div>
-          <span>Mascotas</span>
-        </button>
-
-        <button class="categoria-card" onclick="mostrarCatalogo()">
-          <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-          </div>
-          <span>Congelados</span>
+          <span>Snacks y Golosinas</span>
         </button>
 
       </div>
-    </div>
-  </section>
-
-  <!-- Sobre nosotros (mantiene id para nav) -->
-  <section id="sobre-nosotros" class="sobre">
-    <div class="sobre-inner">
-      <div class="sobre-label">Quiénes somos</div>
-      <h2 class="sobre-title">Un emprendimiento familiar que simplifica la compra.</h2>
-      <p class="sobre-text">
-        Desde Mendoza, acercamos productos de limpieza, almacén, higiene y más
-        directo a tu puerta o negocio. Trabajamos por encargo, sin stock propio,
-        lo que nos permite mantener precios competitivos y trato personalizado.
-      </p>
     </div>
   </section>
 
@@ -301,18 +287,7 @@
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Cuándo llega mi pedido?</span>
-            <span class="faq-icono">+</span>
-          </button>
-          <div class="faq-respuesta">
-            Coordinamos la entrega según tu zona y la disponibilidad del pedido,
-            normalmente dentro de las 24 a 48 horas. Consultanos por WhatsApp para confirmar tiempos.
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Cómo hago el pedido?</span>
+            <span>¿Cómo hago un pedido?</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
@@ -323,33 +298,21 @@
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Hay compra mínima?</span>
+            <span>¿Cuándo llega mi pedido?</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            Consultanos por WhatsApp. Dependiendo de la zona y el volumen puede haber condiciones especiales.
+            Coordinamos la entrega según tu zona y tus horarios. Normalmente entre 24 a 48 horas.
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Cuánto cuesta el envío?</span>
+            <span>¿Cuándo pago?</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            El costo de envío depende de la zona y el volumen del pedido. Te lo confirmamos
-            antes de cerrar la compra por WhatsApp.
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Puedo pagar al recibir?</span>
-            <span class="faq-icono">+</span>
-          </button>
-          <div class="faq-respuesta">
-            Sí, aceptamos efectivo y transferencia bancaria al momento de la entrega.
-            No contamos con pago con tarjeta por el momento.
+            Te vamos a pedir una seña del 10% del total para confirmar tu pedido. El resto lo pagás cuando recibís tu pedido.
           </div>
         </div>
 
@@ -359,8 +322,7 @@
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            Entregamos en Mendoza y alrededores. Escribinos por WhatsApp para confirmar
-            si llegamos a tu zona.
+            Entregamos en Carrodilla y alrededores. Consultanos por WhatsApp por tu dirección.
           </div>
         </div>
 
