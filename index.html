@@ -3,84 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menos Vueltas — Catálogo B2B</title>
+<title>Menos Vueltas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Cabin:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- ══ NAVBAR ══ -->
-<nav class="navbar">
-  <div class="navbar-inner">
+<!-- ══ BARRA SUPERIOR ══ -->
+<header class="topbar">
+  <div class="topbar-inner">
 
-    <button class="nav-brand" onclick="mostrarLanding()">Menos Vueltas</button>
+    <button class="brand" onclick="mostrarLanding()">
+      <img src="" alt="Menos Vueltas" class="brand-logo">
+      <span class="brand-name">menos vueltas</span>
+    </button>
 
-    <div class="search-box">
-      <input type="text" id="buscador" placeholder="Buscar productos..." autocomplete="off">
+    <div class="topbar-center">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="none">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M15 15l-2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="buscador" placeholder="Buscar en el catálogo…" autocomplete="off">
+      </div>
     </div>
 
-    <div class="nav-links">
+    <nav class="topbar-nav">
       <div class="nav-dropdown" id="navDropdown">
-        <button class="nav-dropdown-btn" onclick="toggleMegamenu()">Catálogo</button>
+        <button class="nav-pill" onclick="toggleMegamenu()">
+          Catálogo
+          <svg class="chevron" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
         <div class="nav-megamenu">
           <div class="megamenu-grid" id="megamenuGrid"></div>
         </div>
       </div>
 
-      <button class="nav-link hide-mobile" onclick="scrollLanding('sobre-nosotros')">Nosotros</button>
-      <button class="nav-link hide-mobile" onclick="scrollLanding('faq')">Preguntas</button>
-    </div>
+      <button class="nav-ghost hide-mobile" onclick="scrollLanding('sobre-nosotros')">Nosotros</button>
+      <button class="nav-ghost hide-mobile" onclick="scrollLanding('faq')">Preguntas</button>
 
-    <button class="cart-btn" onclick="abrirCarrito()">
-      🛒 <span class="cart-count" id="cartCount">0</span>
-    </button>
+      <button class="cart-trigger" onclick="abrirCarrito()">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </nav>
 
   </div>
-</nav>
+</header>
 
 
-<!-- ══ VISTA LANDING ══ -->
+<!-- ══ LANDING ══ -->
 <div id="vista-landing">
 
+  <!-- Hero -->
   <section class="hero">
-    <h1>Menos Vueltas</h1>
-    <p>Más Comodidad, Más Ahorro</p>
-    <button class="hero-btn" onclick="mostrarCatalogo()">Ver Catálogo</button>
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Distribución barrial · Mendoza</p>
+      <h1 class="hero-title">El súper,<br>sin el súper.</h1>
+      <p class="hero-sub">Pedís por acá. Te lo llevamos. Sin filas, sin viajes, sin bolsas.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
+        <button class="btn-ghost-dark" onclick="scrollLanding('faq')">¿Cómo funciona?</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-badge">B2B</div>
+    </div>
   </section>
 
-  <section id="sobre-nosotros">
-    <div class="seccion-landing">
-      <h2>Sobre <span>Nosotros</span></h2>
-      <p>
-        Somos un emprendimiento familiar de Mendoza dedicado a acercarte los productos
-        que más usás — limpieza, almacén, higiene y más — directamente a tu puerta o negocio.
-        Trabajamos con consignación y pedidos, sin stock propio, lo que nos permite mantener
-        precios competitivos y atención personalizada. Nuestro objetivo es simple: que comprar
-        lo de siempre sea más fácil y más barato.
+  <!-- Propuesta de valor -->
+  <section class="pillars">
+    <div class="pillars-inner">
+      <div class="pillar">
+        <span class="pillar-num">01</span>
+        <h3>Sin filas</h3>
+        <p>Pedís desde acá y nosotros hacemos el recorrido.</p>
+      </div>
+      <div class="pillar-divider"></div>
+      <div class="pillar">
+        <span class="pillar-num">02</span>
+        <h3>Sin bolsas</h3>
+        <p>Entregamos en tu puerta o local, ordenado.</p>
+      </div>
+      <div class="pillar-divider"></div>
+      <div class="pillar">
+        <span class="pillar-num">03</span>
+        <h3>Sin vueltas</h3>
+        <p>Elegís, pedís por WhatsApp, listo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre nosotros -->
+  <section id="sobre-nosotros" class="sobre">
+    <div class="sobre-inner">
+      <div class="sobre-label">Quiénes somos</div>
+      <h2 class="sobre-title">Un emprendimiento familiar que simplifica la compra.</h2>
+      <p class="sobre-text">
+        Desde Mendoza, acercamos productos de limpieza, almacén, higiene y más
+        directo a tu puerta o negocio. Trabajamos por encargo, sin stock propio,
+        lo que nos permite mantener precios competitivos y trato personalizado.
       </p>
     </div>
   </section>
 
-  <hr class="seccion-divider">
-
-  <section id="faq">
-    <div class="seccion-landing">
-      <h2>Preguntas <span>Frecuentes</span></h2>
+  <!-- FAQ -->
+  <section id="faq" class="faq-section">
+    <div class="faq-inner">
+      <div class="faq-header">
+        <div class="sobre-label">Preguntas frecuentes</div>
+        <h2 class="sobre-title">Todo lo que necesitás saber.</h2>
+      </div>
       <div class="faq-list">
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            ¿Cómo hago un pedido? <span class="faq-icono">+</span>
+            <span>¿Cómo hago un pedido?</span>
+            <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
             Elegís los productos desde el catálogo, los agregás al carrito y al finalizar
-            te redirigimos a WhatsApp con el pedido ya armado. Nosotros lo confirmamos
-            y coordinamos la entrega.
+            te redirigimos a WhatsApp con el pedido ya armado. Nosotros lo confirmamos y coordinamos la entrega.
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            ¿Hacen entregas a domicilio? <span class="faq-icono">+</span>
+            <span>¿Hacen entregas a domicilio?</span>
+            <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
             Sí. Coordinamos la entrega según tu zona y la disponibilidad del pedido.
@@ -90,27 +148,28 @@
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            ¿Cuáles son los medios de pago? <span class="faq-icono">+</span>
+            <span>¿Cuáles son los medios de pago?</span>
+            <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            Aceptamos efectivo y transferencia bancaria.
-            No contamos con pago con tarjeta por el momento.
+            Aceptamos efectivo y transferencia bancaria. No contamos con pago con tarjeta por el momento.
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            ¿Hay monto mínimo de pedido? <span class="faq-icono">+</span>
+            <span>¿Hay monto mínimo de pedido?</span>
+            <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            Consultanos por WhatsApp. Dependiendo de la zona y el volumen
-            puede haber condiciones especiales.
+            Consultanos por WhatsApp. Dependiendo de la zona y el volumen puede haber condiciones especiales.
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            ¿Los precios incluyen IVA? <span class="faq-icono">+</span>
+            <span>¿Los precios incluyen IVA?</span>
+            <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
             Sí, todos los precios mostrados en el catálogo son precio final.
@@ -121,16 +180,28 @@
     </div>
   </section>
 
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="brand-name">menos vueltas</span>
+      <span class="footer-copy">Mendoza, Argentina</span>
+    </div>
+  </footer>
+
 </div><!-- /vista-landing -->
 
 
-<!-- ══ VISTA CATÁLOGO ══ -->
+<!-- ══ CATÁLOGO ══ -->
 <div id="vista-catalogo">
 
-  <div class="catalogo-header">
-    <div class="catalogo-header-inner">
-      <button class="volver-btn" onclick="mostrarLanding()">← Volver</button>
-      <span class="catalogo-titulo-label" id="catalogo-titulo-label">Catálogo completo</span>
+  <div class="catalogo-topbar">
+    <div class="catalogo-topbar-inner">
+      <button class="back-btn" onclick="mostrarLanding()">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Inicio
+      </button>
+      <span class="catalogo-titulo-label" id="catalogo-titulo-label">Catálogo</span>
     </div>
   </div>
 
@@ -142,10 +213,10 @@
     <div class="subfiltros" id="subfiltros"></div>
   </div>
 
-  <main class="main">
+  <main class="catalogo-main">
     <div class="loading" id="loading">
       <div class="loading-spinner"></div>
-      <div>Cargando catálogo...</div>
+      <p>Cargando productos…</p>
     </div>
     <div id="catalogo"></div>
   </main>
@@ -153,30 +224,38 @@
 </div><!-- /vista-catalogo -->
 
 
-<!-- ══ CARRITO ══ -->
+<!-- ══ CARRITO (drawer) ══ -->
 <div class="carrito-overlay" id="carritoOverlay" onclick="if(event.target===this)cerrarCarrito()">
-  <div class="carrito-panel">
+  <aside class="carrito-panel">
+
     <div class="carrito-header">
-      <h2>🛒 Tu pedido</h2>
-      <button class="carrito-close" onclick="cerrarCarrito()">✕</button>
+      <h2>Tu pedido</h2>
+      <button class="carrito-close" onclick="cerrarCarrito()">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
+
     <div class="carrito-items" id="carritoItems">
       <div class="carrito-empty">Tu carrito está vacío</div>
     </div>
+
     <div class="carrito-footer">
       <div class="carrito-total">
         <span class="carrito-total-label">Total estimado</span>
-        <span class="carrito-total-valor" id="carritoTotal">$0</span>
+        <span class="carrito-total-valor" id="carritoTotal">—</span>
       </div>
       <div class="carrito-nota" id="carritoNota"></div>
       <button class="whatsapp-btn" onclick="enviarWhatsApp()">
-        <svg viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24" fill="currentColor">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
-        Enviar pedido por WhatsApp
+        Enviar pedido
       </button>
     </div>
-  </div>
+
+  </aside>
 </div>
 
 <script src="app.js"></script>

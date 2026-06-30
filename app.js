@@ -122,6 +122,9 @@ function construirFiltrosCategorias() {
 function setFiltroCategoria(cat, btn) {
   filtroActivo = cat;
   filtroSubcat = null;
+  // Limpiar búsqueda al navegar por categorías
+  busquedaActiva = '';
+  document.getElementById('buscador').value = '';
   document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   renderSubfiltros();
@@ -170,6 +173,9 @@ function renderSubfiltros() {
 
 function setFiltroSubcat(sub) {
   filtroSubcat = sub;
+  // Limpiar búsqueda al navegar por subcategorías
+  busquedaActiva = '';
+  document.getElementById('buscador').value = '';
   renderSubfiltros();
   renderGrupos();
 }
@@ -183,13 +189,17 @@ function getGruposFiltrados() {
     const marca  = g.marca     || vars[0]['Marca']        || '';
     const tags   = vars.map(v => v['Tags'] || '').join(' ');
 
+    // Búsqueda siempre global — ignora filtros de categoría y subcategoría
+    // Normaliza acentos para que "limon" encuentre "limón"
+    if (busquedaActiva) {
+      const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const q = norm(busquedaActiva);
+      const texto = norm(`${nombre} ${marca} ${cat} ${sub} ${tags}`);
+      return texto.includes(q);
+    }
+
     if (filtroActivo !== 'Todos' && cat !== filtroActivo) return false;
     if (filtroSubcat && sub !== filtroSubcat) return false;
-    if (busquedaActiva) {
-      const q = busquedaActiva.toLowerCase();
-      const texto = `${nombre} ${marca} ${cat} ${sub} ${tags}`.toLowerCase();
-      if (!texto.includes(q)) return false;
-    }
     return true;
   });
 }
@@ -675,7 +685,7 @@ function renderCarritoItems() {
     let precioLinea = '';
     if (item.precio !== null) {
       if (aplica) {
-        precioLinea = `<span style="text-decoration:line-through;color:var(--gris-medio);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--verde)">${formatPrecio(item.precioDto)}</strong> c/u`;
+        precioLinea = `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--accent-2)">${formatPrecio(item.precioDto)}</strong> c/u`;
       } else {
         precioLinea = `${formatPrecio(item.precio)} c/u`;
       }
@@ -759,7 +769,7 @@ function mostrarCatalogo(cat, sub) {
   window.scrollTo({ top: 0 });
 
   if (cat) {
-    const btnCat = document.querySelector(`.filtro-btn[data-cat="${cat}"]`);
+    const btnCat = document.querySelector(`.filtro-btn[data-cat="${CSS.escape(cat)}"]`) || document.querySelector(`.filtro-btn[data-cat="${cat}"]`);
     setFiltroCategoria(cat, btnCat);
     if (sub) {
       filtroSubcat = sub;
@@ -823,7 +833,7 @@ function toggleMegamenu() {
   const isOpen = dropdown.classList.contains('open');
   if (!isOpen) {
     // Posicionar justo debajo de la navbar
-    const navbar = document.querySelector('.navbar');
+    const navbar = document.querySelector('.topbar');
     const navBottom = navbar.getBoundingClientRect().bottom;
     const menu = dropdown.querySelector('.nav-megamenu');
     menu.style.top = (navBottom + 6) + 'px';
