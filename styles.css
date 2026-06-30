@@ -396,18 +396,17 @@ img { display: block; max-width: 100%; }
   align-items: center;
   justify-content: center;
   min-height: 300px;
+  position: relative;
 }
 
-.hero-badge {
-  display: inline-block;
-  padding: 6px 14px;
-  background: var(--accent-bg);
-  color: var(--accent);
-  border: 1px solid var(--accent-line);
-  border-radius: var(--rf);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: .06em;
+.hero-photo {
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  object-fit: cover;
+  border-radius: var(--r5);
+  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
 }
 
 
@@ -500,6 +499,296 @@ img { display: block; max-width: 100%; }
   font-size: 0.875rem;
   color: var(--t2);
   line-height: 1.65;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   TÍTULO DE SECCIÓN CENTRADO (reutilizable)
+══════════════════════════════════════════════════════ */
+.seccion-h2-center {
+  font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+  text-align: center;
+  margin-bottom: var(--space-7);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   CÓMO COMPRAR
+══════════════════════════════════════════════════════ */
+.como-comprar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--line-soft);
+}
+.como-comprar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-9) var(--space-5);
+}
+
+.pasos-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-5);
+}
+
+.paso {
+  flex: 1;
+  max-width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.paso-num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-bg);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-3);
+}
+
+.paso-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+  color: var(--accent);
+}
+.paso-icon svg { width: 26px; height: 26px; }
+
+.paso h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--t1);
+  margin-bottom: var(--space-2);
+}
+.paso p {
+  font-size: 0.825rem;
+  color: var(--t2);
+  font-family: var(--font-body);
+  line-height: 1.55;
+}
+
+.paso-arrow {
+  width: 32px;
+  height: 14px;
+  color: var(--line);
+  flex-shrink: 0;
+  margin-top: 30px;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   LAS VUELTAS QUE TE AHORRAMOS
+══════════════════════════════════════════════════════ */
+.vueltas {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line-soft);
+}
+.vueltas-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-9) var(--space-5);
+}
+
+.vueltas-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-7);
+  flex-wrap: wrap;
+}
+
+.vueltas-lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.vueltas-lista li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.9rem;
+  color: var(--t2);
+  font-family: var(--font-body);
+}
+.vueltas-lista-check li { color: var(--t1); font-weight: 500; }
+
+.vueltas-x {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  color: var(--t3);
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.vueltas-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vueltas-centro {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(110,139,91,.28);
+}
+.vueltas-centro svg { width: 30px; height: 30px; }
+
+
+/* ══════════════════════════════════════════════════════
+   BENEFICIOS
+══════════════════════════════════════════════════════ */
+.beneficios {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line-soft);
+}
+.beneficios-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-9) var(--space-5);
+}
+
+.beneficios-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-5);
+}
+
+.beneficio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+}
+.beneficio svg {
+  width: 30px;
+  height: 30px;
+  color: var(--accent);
+}
+.beneficio p {
+  font-size: 0.8rem;
+  color: var(--t2);
+  line-height: 1.4;
+  font-family: var(--font-body);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   CATEGORÍAS PRINCIPALES
+══════════════════════════════════════════════════════ */
+.categorias-home {
+  background: var(--bg);
+  border-bottom: 1px solid var(--line-soft);
+}
+.categorias-home-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-9) var(--space-5);
+}
+
+.categorias-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-4);
+}
+
+.categoria-card {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r4);
+  padding: var(--space-5) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: border-color var(--t) var(--ease), transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+.categoria-card:hover {
+  border-color: var(--accent-line);
+  transform: translateY(-2px);
+  box-shadow: var(--s2);
+}
+
+.categoria-img-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+.categoria-img-wrap svg { width: 24px; height: 24px; }
+
+.categoria-card span {
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: var(--t1);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   CTA FINAL
+══════════════════════════════════════════════════════ */
+.cta-final {
+  background: var(--surface-2);
+}
+.cta-final-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-9) var(--space-5);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+.cta-final h2 {
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--t1);
 }
 
 
@@ -1277,12 +1566,23 @@ img { display: block; max-width: 100%; }
 ══════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
   .hero { flex-direction: column; min-height: unset; padding: var(--space-8) var(--space-5); }
-  .hero-visual { display: none; }
+  .hero-visual { min-height: unset; margin-top: var(--space-6); }
+  .hero-photo { max-height: 320px; }
   .pillars-inner { flex-direction: column; gap: var(--space-5); }
   .pillar { padding: 0; }
   .pillar-divider { width: 100%; height: 1px; }
   .faq-inner { grid-template-columns: 1fr; gap: var(--space-5); }
   .faq-header { position: static; }
+
+  .pasos-row { flex-direction: column; align-items: center; gap: var(--space-6); }
+  .paso-arrow { transform: rotate(90deg); margin-top: 0; }
+  .paso { max-width: 280px; }
+
+  .vueltas-grid { flex-direction: column; gap: var(--space-5); }
+  .vueltas-centro { transform: rotate(90deg); }
+
+  .beneficios-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6) var(--space-4); }
+  .categorias-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 600px) {
@@ -1298,4 +1598,9 @@ img { display: block; max-width: 100%; }
   .hero-title { font-size: 2.4rem; }
   .sobre-inner, .faq-inner { padding: var(--space-8) var(--space-4); }
   .pillars-inner { padding: var(--space-7) var(--space-4); }
+
+  .como-comprar-inner, .vueltas-inner, .beneficios-inner,
+  .categorias-home-inner, .cta-final-inner { padding: var(--space-7) var(--space-4); }
+  .beneficios-grid { grid-template-columns: repeat(2, 1fr); }
+  .categorias-grid { grid-template-columns: repeat(2, 1fr); }
 }

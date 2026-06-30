@@ -67,42 +67,217 @@
   <section class="hero">
     <div class="hero-inner">
       <p class="hero-eyebrow">Distribución barrial · Mendoza</p>
-      <h1 class="hero-title">El súper,<br>sin el súper.</h1>
-      <p class="hero-sub">Pedís por acá. Te lo llevamos. Sin filas, sin viajes, sin bolsas.</p>
+      <h1 class="hero-title">Hacé las compras<br>desde casa.</h1>
+      <p class="hero-sub">Elegí lo que necesitás, enviá tu pedido y nosotros nos ocupamos del resto.</p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
-        <button class="btn-ghost-dark" onclick="scrollLanding('faq')">¿Cómo funciona?</button>
+        <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Cómo funciona</button>
       </div>
     </div>
     <div class="hero-visual">
-      <div class="hero-badge">B2B</div>
+      <img src="hero-bolsas.jpg" alt="Bolsas de compras Menos Vueltas" class="hero-photo">
     </div>
   </section>
 
-  <!-- Propuesta de valor -->
-  <section class="pillars">
-    <div class="pillars-inner">
-      <div class="pillar">
-        <span class="pillar-num">01</span>
-        <h3>Sin filas</h3>
-        <p>Pedís desde acá y nosotros hacemos el recorrido.</p>
-      </div>
-      <div class="pillar-divider"></div>
-      <div class="pillar">
-        <span class="pillar-num">02</span>
-        <h3>Sin bolsas</h3>
-        <p>Entregamos en tu puerta o local, ordenado.</p>
-      </div>
-      <div class="pillar-divider"></div>
-      <div class="pillar">
-        <span class="pillar-num">03</span>
-        <h3>Sin vueltas</h3>
-        <p>Elegís, pedís por WhatsApp, listo.</p>
+  <!-- Cómo comprar -->
+  <section id="como-comprar" class="como-comprar">
+    <div class="como-comprar-inner">
+      <h2 class="seccion-h2-center">Cómo comprar</h2>
+      <div class="pasos-row">
+
+        <div class="paso">
+          <div class="paso-num">1</div>
+          <div class="paso-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+          </div>
+          <h3>Elegís productos</h3>
+          <p>Explorá nuestro catálogo de productos.</p>
+        </div>
+
+        <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M2 8h34M28 2l8 6-8 6"/>
+        </svg>
+
+        <div class="paso">
+          <div class="paso-num">2</div>
+          <div class="paso-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 2L11 13"/>
+              <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+          </div>
+          <h3>Nos enviás tu pedido</h3>
+          <p>Por WhatsApp o desde el formulario.</p>
+        </div>
+
+        <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M2 8h34M28 2l8 6-8 6"/>
+        </svg>
+
+        <div class="paso">
+          <div class="paso-num">3</div>
+          <div class="paso-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <h3>Lo recibís en tu casa</h3>
+          <p>En el día y horario que elijas.</p>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Sobre nosotros -->
+  <!-- Las vueltas que te ahorramos -->
+  <section class="vueltas">
+    <div class="vueltas-inner">
+      <h2 class="seccion-h2-center">Las vueltas que te ahorramos</h2>
+      <div class="vueltas-grid">
+
+        <ul class="vueltas-lista">
+          <li><span class="vueltas-x">✕</span> Ir al mayorista</li>
+          <li><span class="vueltas-x">✕</span> Buscar estacionamiento</li>
+          <li><span class="vueltas-x">✕</span> Hacer fila</li>
+          <li><span class="vueltas-x">✕</span> Cargar bolsas</li>
+          <li><span class="vueltas-x">✕</span> Volver a casa</li>
+        </ul>
+
+        <div class="vueltas-centro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+
+        <ul class="vueltas-lista vueltas-lista-check">
+          <li><span class="vueltas-check">✓</span> Elegís</li>
+          <li><span class="vueltas-check">✓</span> Enviás</li>
+          <li><span class="vueltas-check">✓</span> Recibís</li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Beneficios -->
+  <section class="beneficios">
+    <div class="beneficios-inner">
+      <h2 class="seccion-h2-center">Beneficios</h2>
+      <div class="beneficios-grid">
+
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12 7 12 12 15 15"/>
+          </svg>
+          <p>Ahorrás tiempo</p>
+        </div>
+
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          <p>Precios convenientes</p>
+        </div>
+
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <p>Entrega programada</p>
+        </div>
+
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
+          </svg>
+          <p>Atención personalizada</p>
+        </div>
+
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="7" y="2" width="10" height="20" rx="2"/>
+            <line x1="11" y1="18" x2="13" y2="18"/>
+          </svg>
+          <p>Comprás desde donde quieras</p>
+        </div>
+
+        <div class="beneficio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7h18M3 12h18M3 17h12"/>
+          </svg>
+          <p>Sin mínimos complicados</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Categorías principales -->
+  <section class="categorias-home">
+    <div class="categorias-home-inner">
+      <h2 class="seccion-h2-center">Categorías principales</h2>
+      <div class="categorias-grid">
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Almacen')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v10a1 1 0 01-1 1H5a1 1 0 01-1-1V9z"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+          </div>
+          <span>Despensa</span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Almacen')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8M9 2v6l-5 11a1 1 0 001 1.5h14a1 1 0 001-1.5L15 8V2"/></svg>
+          </div>
+          <span>Bebidas</span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Limpieza')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10M9 21V3h6v18M9 9h6"/></svg>
+          </div>
+          <span>Limpieza</span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Higiene Personal')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4v4l2 2v12a2 2 0 01-2 2h-4a2 2 0 01-2-2V8l2-2V2z"/></svg>
+          </div>
+          <span>Perfumería</span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Hogar y Ferreteria')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2C8 5 7 8 7 11a5 5 0 0010 0c0-3-1-6-3-9-.5 2-1.5 3-2 3s-1.5-1-2-3z"/><path d="M9 16a3 3 0 006 0"/></svg>
+          </div>
+          <span>Mascotas</span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo()">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          </div>
+          <span>Congelados</span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre nosotros (mantiene id para nav) -->
   <section id="sobre-nosotros" class="sobre">
     <div class="sobre-inner">
       <div class="sobre-label">Quiénes somos</div>
@@ -126,7 +301,18 @@
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Cómo hago un pedido?</span>
+            <span>¿Cuándo llega mi pedido?</span>
+            <span class="faq-icono">+</span>
+          </button>
+          <div class="faq-respuesta">
+            Coordinamos la entrega según tu zona y la disponibilidad del pedido,
+            normalmente dentro de las 24 a 48 horas. Consultanos por WhatsApp para confirmar tiempos.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿Cómo hago el pedido?</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
@@ -137,28 +323,7 @@
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Hacen entregas a domicilio?</span>
-            <span class="faq-icono">+</span>
-          </button>
-          <div class="faq-respuesta">
-            Sí. Coordinamos la entrega según tu zona y la disponibilidad del pedido.
-            Consultanos por WhatsApp para confirmar tiempos y cobertura.
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Cuáles son los medios de pago?</span>
-            <span class="faq-icono">+</span>
-          </button>
-          <div class="faq-respuesta">
-            Aceptamos efectivo y transferencia bancaria. No contamos con pago con tarjeta por el momento.
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Hay monto mínimo de pedido?</span>
+            <span>¿Hay compra mínima?</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
@@ -168,15 +333,46 @@
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Los precios incluyen IVA?</span>
+            <span>¿Cuánto cuesta el envío?</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            Sí, todos los precios mostrados en el catálogo son precio final.
+            El costo de envío depende de la zona y el volumen del pedido. Te lo confirmamos
+            antes de cerrar la compra por WhatsApp.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿Puedo pagar al recibir?</span>
+            <span class="faq-icono">+</span>
+          </button>
+          <div class="faq-respuesta">
+            Sí, aceptamos efectivo y transferencia bancaria al momento de la entrega.
+            No contamos con pago con tarjeta por el momento.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿En qué zonas entregan?</span>
+            <span class="faq-icono">+</span>
+          </button>
+          <div class="faq-respuesta">
+            Entregamos en Mendoza y alrededores. Escribinos por WhatsApp para confirmar
+            si llegamos a tu zona.
           </div>
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="cta-final">
+    <div class="cta-final-inner">
+      <h2>¿Listo para comprar más simple?</h2>
+      <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
     </div>
   </section>
 
