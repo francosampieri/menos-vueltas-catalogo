@@ -387,20 +387,21 @@ img { display: block; max-width: 100%; }
 
 .hero-pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-6);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-7);
 }
 
 .hero-pill {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 14px 7px 10px;
+  gap: 10px;
+  padding: 9px 18px 9px 12px;
   background: var(--accent-bg);
   border: 1px solid var(--accent-line);
   border-radius: var(--rf);
-  font-size: 0.825rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--accent-2);
 }
@@ -885,7 +886,7 @@ img { display: block; max-width: 100%; }
   gap: var(--space-8);
   align-items: start;
 }
-.faq-header { position: sticky; top: 80px; }
+.faq-header { position: static; }
 
 .faq-list { display: flex; flex-direction: column; }
 
