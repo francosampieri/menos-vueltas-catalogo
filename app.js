@@ -361,12 +361,20 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl) {
     }
   }
 
-  // Imagen
-  if (imgEl && v['Imagen'] && v['Imagen'].trim()) {
-    imgEl.src = v['Imagen'].trim();
+  // Imagen + dots sincronizados
+  const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
+  if (imgEl && url) {
+    // Actualizar dots cuando la imagen termina de cargar
+    imgEl.onload = () => actualizarDots(gid, idx);
+    imgEl.onerror = () => actualizarDots(gid, idx);
+    imgEl.src = url;
+  } else {
+    // Sin imagen: actualizar dots inmediatamente
+    actualizarDots(gid, idx);
   }
+}
 
-  // Dots
+function actualizarDots(gid, idx) {
   const dotsEl = document.getElementById(`dots-${gid}`);
   if (dotsEl) {
     dotsEl.querySelectorAll('.variante-dot').forEach((d, i) => {
@@ -808,9 +816,13 @@ function llenarMegamenu() {
     const col = document.createElement('div');
     col.className = 'megamenu-col';
 
-    const catEl = document.createElement('div');
+    const catEl = document.createElement('button');
     catEl.className = 'megamenu-cat';
     catEl.textContent = cat;
+    catEl.addEventListener('click', () => {
+      cerrarMegamenu();
+      mostrarCatalogo(cat);
+    });
     col.appendChild(catEl);
 
     subs.forEach(sub => {
