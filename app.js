@@ -276,8 +276,6 @@ function crearCard(gid, vars) {
 
   const img = document.createElement('img');
   img.style.display = 'none';
-  img.onload  = () => { img.style.display = 'block'; placeholder.style.display = 'none'; };
-  img.onerror = () => { img.style.display = 'none';  placeholder.style.display = 'flex'; };
   imgWrap.append(placeholder, img);
 
   // Dots de variante
@@ -361,6 +359,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl) {
     }
   }
 
+<<<<<<< Updated upstream
   // Imagen + dots sincronizados
   const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
   if (imgEl && url) {
@@ -374,6 +373,40 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl) {
   }
 }
 
+=======
+  // Imagen + placeholder + dots sincronizados
+  if (imgEl) {
+    const placeholder = imgEl.previousElementSibling;
+    const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
+
+    if (url) {
+      imgEl.onload = () => {
+        imgEl.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+        actualizarDots(gid, idx);
+      };
+      imgEl.onerror = () => {
+        imgEl.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'flex';
+        actualizarDots(gid, idx);
+      };
+      // Si la imagen ya está cacheada, onload no se dispara — forzar
+      if (imgEl.src === url && imgEl.complete) {
+        imgEl.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+        actualizarDots(gid, idx);
+      } else {
+        imgEl.src = url;
+      }
+    } else {
+      imgEl.style.display = 'none';
+      if (placeholder) placeholder.style.display = 'flex';
+      actualizarDots(gid, idx);
+    }
+  }
+}
+
+>>>>>>> Stashed changes
 function actualizarDots(gid, idx) {
   const dotsEl = document.getElementById(`dots-${gid}`);
   if (dotsEl) {
@@ -530,10 +563,23 @@ function renderExpanded(gid, vars, imgEl) {
       expanded.appendChild(dtoDiv);
     }
 
-    // Actualizar imagen
-    if (varSel && imgEl && varSel['Imagen']?.trim()) {
-      imgEl.src = varSel['Imagen'].trim();
-      imgEl.style.display = 'block';
+    // Actualizar imagen al seleccionar variante
+    if (varSel && imgEl) {
+      const url = varSel['Imagen']?.trim();
+      const placeholder = imgEl.previousElementSibling;
+      if (url) {
+        imgEl.onload  = () => { imgEl.style.display = 'block'; if (placeholder) placeholder.style.display = 'none'; };
+        imgEl.onerror = () => { imgEl.style.display = 'none';  if (placeholder) placeholder.style.display = 'flex'; };
+        if (imgEl.src === url && imgEl.complete) {
+          imgEl.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+        } else {
+          imgEl.src = url;
+        }
+      } else {
+        imgEl.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'flex';
+      }
     }
 
     // Cantidad + agregar
