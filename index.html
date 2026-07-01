@@ -156,31 +156,83 @@
   <section class="vueltas">
     <div class="vueltas-inner">
       <h2 class="seccion-h2-center">Las vueltas que te ahorramos</h2>
-      <div class="vueltas-grid">
 
-        <ul class="vueltas-lista">
-          <li><span class="vueltas-x">✕</span> Ir al mayorista</li>
-          <li><span class="vueltas-x">✕</span> Buscar estacionamiento</li>
-          <li><span class="vueltas-x">✕</span> Recorrer góndolas</li>
-          <li><span class="vueltas-x">✕</span> Hacer fila</li>
-          <li><span class="vueltas-x">✕</span> Cargar bolsas</li>
-          <li><span class="vueltas-x">✕</span> Volver a casa</li>
-        </ul>
+      <div class="vueltas-svg-wrap">
+        <svg class="vueltas-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="arrowVueltas" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6E8B5B" stroke-width="1.5"/>
+            </marker>
+          </defs>
 
-        <div class="vueltas-centro">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
-        </div>
+          <!-- ══ ITEMS IZQUIERDA — texto a la izquierda, badge pegado al final ══ -->
+          <text x="20" y="62"  font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Ir al mayorista</text>
+          <circle cx="178" cy="57"  r="10" fill="#EAECE5"/>
+          <text   x="178" y="61"  font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
 
-        <ul class="vueltas-lista vueltas-lista-check">
-          <li><span class="vueltas-check">✓</span> Elegís</li>
-          <li><span class="vueltas-check">✓</span> Enviás</li>
-          <li><span class="vueltas-check">✓</span> Recibís</li>
-        </ul>
+          <text x="20" y="122" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Buscar estacionamiento</text>
+          <circle cx="222" cy="117" r="10" fill="#EAECE5"/>
+          <text   x="222" y="121" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
 
+          <text x="20" y="182" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Recorrer góndolas</text>
+          <circle cx="185" cy="177" r="10" fill="#EAECE5"/>
+          <text   x="185" y="181" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <text x="20" y="242" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Hacer fila</text>
+          <circle cx="115" cy="237" r="10" fill="#EAECE5"/>
+          <text   x="115" y="241" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <text x="20" y="302" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Cargar bolsas</text>
+          <circle cx="162" cy="297" r="10" fill="#EAECE5"/>
+          <text   x="162" y="301" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <text x="20" y="362" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Volver a casa</text>
+          <circle cx="155" cy="357" r="10" fill="#EAECE5"/>
+          <text   x="155" y="361" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <!-- ══ CURVAS CON RULOS desde el borde derecho de cada badge ══ -->
+
+          <!-- Ir al mayorista (sale x=188): rulo hacia arriba -->
+          <path d="M188 57 C 230 57, 215 20, 260 28 C 300 36, 285 76, 258 86 C 232 96, 245 128, 290 140 C 330 150, 365 158, 385 205"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Buscar estacionamiento (sale x=232): rulo pequeño arriba -->
+          <path d="M232 117 C 268 117, 252 92, 285 98 C 316 104, 308 132, 285 137 C 266 141, 275 158, 388 204"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Recorrer góndolas (sale x=195): leve arco -->
+          <path d="M195 177 C 280 177, 350 182, 384 205"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Hacer fila (sale x=125): leve arco desde abajo -->
+          <path d="M125 237 C 230 237, 360 224, 384 215"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Cargar bolsas (sale x=172): rulo hacia abajo -->
+          <path d="M172 297 C 215 297, 200 334, 242 326 C 282 318, 268 278, 242 268 C 218 258, 230 238, 270 228 C 320 218, 365 218, 385 215"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Volver a casa (sale x=165): rulo grande hacia abajo -->
+          <path d="M165 357 C 210 357, 195 396, 238 387 C 278 378, 262 336, 236 326 C 210 316, 222 294, 264 284 C 306 274, 356 248, 383 218"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- ══ LOGO CENTRAL ══ -->
+          <circle cx="430" cy="210" r="48" fill="#6E8B5B"/>
+          <text x="430" y="206" font-size="12" fill="white" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600">MENOS</text>
+          <text x="430" y="222" font-size="12" fill="white" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600">VUELTAS</text>
+
+          <!-- ══ LÍNEA DE SALIDA ══ -->
+          <path d="M478 210 L 630 210" stroke="#6E8B5B" stroke-width="1.5" fill="none" marker-end="url(#arrowVueltas)"/>
+
+          <!-- Check + texto -->
+          <circle cx="648" cy="210" r="10" fill="#EEF2E9"/>
+          <text x="648" y="214" font-size="9" fill="#6E8B5B" text-anchor="middle" font-weight="700">✓</text>
+          <text x="668" y="205" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">Elegí,</text>
+          <text x="668" y="221" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">enviá y recibí.</text>
+
+        </svg>
       </div>
+
     </div>
   </section>
 
