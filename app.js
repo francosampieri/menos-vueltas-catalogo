@@ -205,6 +205,10 @@ function getGruposFiltrados() {
 }
 
 function renderGrupos() {
+  // Limpiar todos los timers de rotación antes de reconstruir el grid,
+  // así no quedan intervalos "fantasma" corriendo sobre cards viejas
+  Object.values(rotaciones).forEach(r => { if (r.timer) clearInterval(r.timer); });
+
   const cont = document.getElementById('catalogo');
   cont.innerHTML = '';
 
@@ -326,6 +330,7 @@ function crearCard(gid, vars) {
   card.append(imgWrap, badge, body, expanded);
 
   // Inicializar vista con variante 0
+  if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
   rotaciones[gid] = { indexActual: 0, timer: null };
   actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl);
 
@@ -532,6 +537,22 @@ function renderExpanded(gid, vars, imgEl) {
     const precioDto = varSel ? parsePrecio(varSel['Precio_Dto'])   : null;
     const uniDto    = varSel ? (parseInt(varSel['Uni Dto']) || 0)  : 0;
 
+    // Sincronizar la parte de arriba de la card (label y precio) con la variante elegida
+    if (varSel) {
+      const vlabelEl  = document.getElementById(`vlabel-${gid}`);
+      const vprecioEl = document.getElementById(`vprecio-${gid}`);
+      if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(varSel, vars);
+      if (vprecioEl) {
+        if (precio !== null) {
+          vprecioEl.textContent = formatPrecio(precio);
+          vprecioEl.className = 'card-precio';
+        } else {
+          vprecioEl.textContent = 'Precio a confirmar';
+          vprecioEl.className = 'card-precio sin-precio';
+        }
+      }
+    }
+
     const pdiv = document.createElement('div');
     pdiv.className = 'precio-detalle';
     pdiv.innerHTML = precio !== null
@@ -557,8 +578,7 @@ function renderExpanded(gid, vars, imgEl) {
         if (imgEl.src === url && imgEl.complete) {
           imgEl.style.display = 'block';
           if (placeholder) placeholder.style.display = 'none';
-        } else {
-          imgEl.src = url;
+        } else {          imgEl.src = url;
         }
       } else {
         imgEl.style.display = 'none';
