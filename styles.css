@@ -79,10 +79,7 @@ body {
 }
 
 /* Textos largos y párrafos usan Cabin */
-.hero-sub,
-.sobre-text,
 .faq-respuesta,
-.pillar p,
 .carrito-nota {
   font-family: var(--font-body);
 }
@@ -437,15 +434,6 @@ img { display: block; max-width: 100%; }
   margin-bottom: var(--space-5);
 }
 
-.hero-sub {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--t2);
-  font-weight: 400;
-  max-width: 400px;
-  margin-bottom: var(--space-7);
-}
-
 .hero-pills {
   display: flex;
   flex-direction: column;
@@ -538,59 +526,6 @@ img { display: block; max-width: 100%; }
   transition: background var(--t), color var(--t), border-color var(--t);
 }
 .btn-ghost-dark:hover { background: var(--surface-2); color: var(--t1); border-color: var(--surface-3); }
-
-
-/* ══════════════════════════════════════════════════════
-   PILLARS
-══════════════════════════════════════════════════════ */
-.pillars {
-  background: var(--bg);
-  border-bottom: 1px solid var(--line-soft);
-}
-
-.pillars-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: var(--space-8) var(--space-5);
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-}
-
-.pillar {
-  flex: 1;
-  padding: 0 var(--space-7);
-}
-.pillar:first-child { padding-left: 0; }
-.pillar:last-child  { padding-right: 0; }
-
-.pillar-divider {
-  width: 1px;
-  background: var(--line);
-  flex-shrink: 0;
-  align-self: stretch;
-}
-
-.pillar-num {
-  display: block;
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: .08em;
-  margin-bottom: var(--space-3);
-}
-.pillar h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--t1);
-  margin-bottom: var(--space-2);
-}
-.pillar p {
-  font-size: 0.875rem;
-  color: var(--t2);
-  line-height: 1.65;
-}
 
 
 /* ══════════════════════════════════════════════════════
@@ -708,6 +643,47 @@ img { display: block; max-width: 100%; }
   max-width: 960px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
+}
+
+.nosotros-intro {
+  text-align: center;
+  padding-top: var(--space-2);
+}
+.nosotros-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: var(--space-3);
+}
+.nosotros-title {
+  font-size: clamp(1.3rem, 2.6vw, 1.6rem);
+  font-weight: 600;
+  color: var(--t1);
+  letter-spacing: -0.02em;
+  margin: 0 auto var(--space-3);
+  max-width: 460px;
+}
+.nosotros-text {
+  font-size: 0.9rem;
+  color: var(--t2);
+  line-height: 1.75;
+  font-family: var(--font-body);
+  margin: 0 auto;
+  max-width: 460px;
+}
+
+/* Conector visual entre la intro y el diagrama de vueltas */
+.nosotros-conector {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-6) auto;
+}
+.nosotros-conector svg {
+  width: 24px;
+  height: 64px;
+  color: var(--accent);
 }
 
 .vueltas-svg-wrap {
@@ -926,17 +902,8 @@ img { display: block; max-width: 100%; }
 
 
 /* ══════════════════════════════════════════════════════
-   SOBRE NOSOTROS
+   ETIQUETA Y TÍTULO COMPARTIDOS (usados por FAQ)
 ══════════════════════════════════════════════════════ */
-.sobre {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line-soft);
-}
-.sobre-inner {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: var(--space-9) var(--space-5);
-}
 .sobre-label {
   font-size: 0.75rem;
   font-weight: 600;
@@ -952,11 +919,6 @@ img { display: block; max-width: 100%; }
   line-height: 1.2;
   color: var(--t1);
   margin-bottom: var(--space-5);
-}
-.sobre-text {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--t2);
 }
 
 
@@ -1832,9 +1794,6 @@ img { display: block; max-width: 100%; }
   .hero-inner { padding: var(--space-7) var(--space-4); max-width: none; }
   .hero-visual { min-height: 280px; width: 100%; }
   .hero-photo { position: absolute; }
-  .pillars-inner { flex-direction: column; gap: var(--space-5); }
-  .pillar { padding: 0; }
-  .pillar-divider { width: 100%; height: 1px; }
   .faq-inner { grid-template-columns: 1fr; gap: var(--space-5); }
   .faq-header { position: static; }
 
@@ -1842,9 +1801,6 @@ img { display: block; max-width: 100%; }
   .paso-arrow-wrap { height: auto; }
   .paso-arrow { transform: rotate(90deg); margin-top: 0; }
   .paso { max-width: 280px; }
-
-  .vueltas-grid { flex-direction: column; gap: var(--space-5); }
-  .vueltas-centro { transform: rotate(90deg); }
 
   .beneficios-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6) var(--space-4); }
   .categorias-grid { grid-template-columns: repeat(3, 1fr); }
@@ -1861,8 +1817,7 @@ img { display: block; max-width: 100%; }
   .filtros { padding: var(--space-2) var(--space-4); }
   .subfiltros { padding: var(--space-1) var(--space-4); }
   .hero-title { font-size: 2.4rem; }
-  .sobre-inner, .faq-inner { padding: var(--space-8) var(--space-4); }
-  .pillars-inner { padding: var(--space-7) var(--space-4); }
+  .faq-inner { padding: var(--space-8) var(--space-4); }
 
   .como-comprar-inner, .vueltas-inner, .beneficios-inner,
   .categorias-home-inner, .cta-final-inner { padding: var(--space-7) var(--space-4); }

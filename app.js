@@ -26,30 +26,6 @@ function formatPrecio(n) {
   return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  const headers = parseLine(lines[0]);
-  return lines.slice(1).map(l => {
-    const vals = parseLine(l);
-    const obj = {};
-    headers.forEach((h, i) => { obj[h.trim()] = (vals[i] || '').trim(); });
-    return obj;
-  }).filter(r => Object.values(r).some(v => v));
-}
-
-function parseLine(line) {
-  const result = [];
-  let cur = '', inQ = false;
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === '"') { inQ = !inQ; }
-    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
-    else { cur += c; }
-  }
-  result.push(cur);
-  return result;
-}
-
 // ══ CARGA DE DATOS ══
 async function cargarDatos() {
   try {
@@ -65,7 +41,7 @@ async function cargarDatos() {
     });
 
     const productos = data.productos.filter(p =>
-      p['Activo'] === 'ON' && p['Cat B2B'] === 'ON'
+      p['Activo'] === 'ON' && p['Cat B2C'] === 'ON'
     );
 
     productos.forEach(p => {
@@ -829,7 +805,7 @@ function enviarWhatsApp() {
   const total     = carrito.reduce((s, i) => s + (precioEfectivo(i) || 0) * i.qty, 0);
   const hayPrecio = carrito.some(i => i.precio !== null);
 
-  let msg = '🛒 *PEDIDO B2B*\n';
+  let msg = '🛒 *PEDIDO*\n';
   msg += '━━━━━━━━━━━━━━━━\n\n';
 
   carrito.forEach((item, i) => {
@@ -849,7 +825,7 @@ function enviarWhatsApp() {
 
   msg += '━━━━━━━━━━━━━━━━\n';
   if (hayPrecio) msg += `*TOTAL ESTIMADO: ${formatPrecio(total)}*\n`;
-  msg += '\n_Pedido generado desde el catálogo B2B_';
+  msg += '\n_Pedido generado desde el catálogo_';
 
   window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`, '_blank');
 }
