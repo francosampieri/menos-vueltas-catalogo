@@ -19,7 +19,7 @@
       <img src="logo.svg" alt="Menos Vueltas" class="brand-logo">
     </button>
 
-    <div class="topbar-center">
+    <div class="topbar-middle">
       <div class="search-wrap">
         <svg class="search-icon" viewBox="0 0 20 20" fill="none">
           <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
@@ -27,9 +27,7 @@
         </svg>
         <input type="text" id="buscador" placeholder="Buscar en el catálogo…" autocomplete="off">
       </div>
-    </div>
 
-    <nav class="topbar-nav">
       <div class="nav-dropdown" id="navDropdown">
         <button class="nav-pill" onclick="toggleMegamenu()">
           Catálogo
@@ -45,16 +43,17 @@
       <button class="nav-ghost hide-mobile" onclick="scrollLanding('como-comprar')">Como pedir</button>
       <button class="nav-ghost hide-mobile" onclick="scrollLanding('vueltas')">Nosotros</button>
       <button class="nav-ghost hide-mobile" onclick="scrollLanding('faq')">Preguntas</button>
+    </div>
 
-      <button class="cart-trigger" onclick="abrirCarrito()">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-          <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
-    </nav>
+    <button class="cart-trigger" onclick="abrirCarrito()">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="cart-label hide-mobile">Carrito</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
 
   </div>
 </header>
@@ -67,10 +66,6 @@
   <section class="hero-bg">
   <div class="hero">
     <div class="hero-inner">
-      <p class="hero-eyebrow">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4L12 17l-6.3 4.4 2.3-7.4-6-4.6h7.6z"/></svg>
-        Comprar barato nunca fue tan fácil
-      </p>
       <h1 class="hero-title">Menos Vueltas</h1>
       <div class="hero-pills">
         <span class="hero-pill">
@@ -100,8 +95,8 @@
   <!-- Cómo comprar -->
   <section id="como-comprar" class="como-comprar seccion-deco">
     <div class="bg-circles" aria-hidden="true">
-      <span class="bg-circle bg-circle--dash" style="width:150px;height:150px;top:-60px;left:-40px;"></span>
-      <span class="bg-circle bg-circle--fill" style="width:44px;height:44px;bottom:12%;right:8%;border-color:var(--t3);opacity:.35;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:130px;height:130px;top:-55px;left:-35px;"></span>
+      <span class="bg-circle bg-circle--fill" style="width:24px;height:24px;top:48%;right:6%;border-color:var(--t3);opacity:.3;"></span>
     </div>
     <div class="como-comprar-inner">
       <h2 class="seccion-h2-center">Como hacer un pedido</h2>
@@ -164,15 +159,17 @@
   <!-- Las vueltas que te ahorramos -->
   <section id="vueltas" class="vueltas seccion-deco">
     <div class="bg-circles" aria-hidden="true">
-      <span class="bg-circle bg-circle--dash" style="width:110px;height:110px;top:-45px;right:6%;border-color:var(--t3);opacity:.3;"></span>
-      <span class="bg-circle bg-circle--fill" style="width:30px;height:30px;bottom:8%;left:3%;opacity:.35;"></span>
+      <span class="bg-circle" style="width:22px;height:22px;top:44%;left:2.5%;border-color:var(--t3);opacity:.25;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:64px;height:64px;top:30%;right:4%;"></span>
     </div>
     <div class="vueltas-inner">
 
       <div class="nosotros-intro">
-        <p class="nosotros-eyebrow">Quiénes somos</p>
-        <h3 class="nosotros-title">Nacimos de un problema bien cotidiano.</h3>
-        <p class="nosotros-text">Ir al súper, hacer fila, cargar bolsas — perder horas en algo que debería ser simple. Por eso armamos Menos Vueltas: vos elegís, nosotros hacemos el resto.</p>
+        <p class="nosotros-eyebrow">Nosotros</p>
+        <h3 class="nosotros-title">Comprar deberia ser más simple</h3>
+        <p class="nosotros-text">Por eso nació Menos Vueltas.</p>
+        <p class="nosotros-text">Creemos que hacer las compras no tendría que significar perder tiempo. Comprar puede ser una tarea simple.<br>Elegís lo que necesitás, nos enviás el pedido y nosotros hacemos el resto.</p>
+        <p class="nosotros-text">Y todo eso, sin hacerte pagar de más</p>
       </div>
 
       <div class="nosotros-conector" aria-hidden="true">
@@ -181,7 +178,7 @@
         </svg>
       </div>
 
-      <h2 class="seccion-h2-center">Así te ahorramos las vueltas</h2>
+      <h2 class="seccion-h2-center">Las vueltas que te ahorramos</h2>
 
       <div class="vueltas-svg-wrap">
         <svg class="vueltas-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
@@ -243,11 +240,11 @@
                 stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
 
           <!-- ══ LOGO CENTRAL ══ -->
-          <circle cx="430" cy="210" r="48" fill="#ffffff" stroke="#C8D6BB" stroke-width="1.5"/>
-          <image href="logo.svg" x="393" y="197" width="74" height="25.2"/>
+          <circle cx="430" cy="210" r="58" fill="#6E8B5B"/>
+          <image href="logo.svg" x="379" y="192.6" width="102" height="34.7" style="filter: brightness(0) invert(1);"/>
 
           <!-- ══ LÍNEA DE SALIDA ══ -->
-          <path d="M478 210 L 630 210" stroke="#6E8B5B" stroke-width="1.5" fill="none" marker-end="url(#arrowVueltas)"/>
+          <path d="M488 210 L 630 210" stroke="#6E8B5B" stroke-width="1.5" fill="none" marker-end="url(#arrowVueltas)"/>
 
           <!-- Check + texto -->
           <circle cx="648" cy="210" r="10" fill="#EEF2E9"/>
@@ -264,8 +261,8 @@
   <!-- Beneficios -->
   <section class="beneficios seccion-deco">
     <div class="bg-circles" aria-hidden="true">
-      <span class="bg-circle bg-circle--dash" style="width:140px;height:140px;bottom:-55px;right:-40px;"></span>
-      <span class="bg-circle bg-circle--fill" style="width:34px;height:34px;top:10%;left:5%;opacity:.4;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:76px;height:76px;top:32%;right:4%;"></span>
+      <span class="bg-circle bg-circle--fill" style="width:20px;height:20px;bottom:30%;left:6%;opacity:.35;"></span>
     </div>
     <div class="beneficios-inner">
       <h2 class="seccion-h2-center">Beneficios</h2>
@@ -327,8 +324,8 @@
   <!-- Categorías principales -->
   <section class="categorias-home seccion-deco">
     <div class="bg-circles" aria-hidden="true">
-      <span class="bg-circle bg-circle--dash" style="width:170px;height:170px;top:-70px;right:-60px;"></span>
-      <span class="bg-circle" style="width:36px;height:36px;bottom:8%;left:4%;border-color:var(--t3);opacity:.3;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:88px;height:88px;bottom:26%;right:5%;"></span>
+      <span class="bg-circle" style="width:26px;height:26px;top:35%;left:4%;border-color:var(--t3);opacity:.3;"></span>
     </div>
     <div class="categorias-home-inner">
       <h2 class="seccion-h2-center">Categorías principales</h2>
@@ -344,7 +341,7 @@
 
         <button class="categoria-card" onclick="mostrarCatalogo('Desayuno y Mediatarde')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h14v6a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><path d="M17 9h2a2 2 0 012 2v1a2 2 0 01-2 2h-2"/><line x1="6" y1="2" x2="6" y2="5"/><line x1="10" y1="2" x2="10" y2="5"/><line x1="14" y1="2" x2="14" y2="5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(1,2)"><path d="M3 8h14v6a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><path d="M17 9h2a2 2 0 012 2v1a2 2 0 01-2 2h-2"/><line x1="6" y1="2" x2="6" y2="5"/><line x1="10" y1="2" x2="10" y2="5"/><line x1="14" y1="2" x2="14" y2="5"/></g></svg>
           </div>
           <span>Desayuno y Mediatarde</span>
           <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -352,7 +349,7 @@
 
         <button class="categoria-card" onclick="mostrarCatalogo('Higiene Personal')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2.5 3 5 6.2 5 9.5a5 5 0 01-10 0C7 9.2 9.5 6 12 3z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/><path d="M4 21l1-1.5"/><path d="M20 21l-1-1.5"/></svg>
           </div>
           <span>Higiene Personal</span>
           <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -368,7 +365,7 @@
 
         <button class="categoria-card" onclick="mostrarCatalogo('Limpieza')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h4l1 2h3a1 1 0 011 1v1a1 1 0 01-1 1h-1l-1 11a2 2 0 01-2 2H9a2 2 0 01-2-2L6 9H5a1 1 0 01-1-1V7a1 1 0 011-1h3l1-2z"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a2 2 0 012-2h4a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7"/><path d="M6 10V6a1 1 0 011-1h2a1 1 0 011 1v4"/><path d="M15 7h.01"/><path d="M18 9h.01"/><path d="M18 5h.01"/><path d="M21 3h.01"/><path d="M21 7h.01"/><path d="M21 11h.01"/><path d="M10 7h1"/></svg>
           </div>
           <span>Limpieza</span>
           <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -376,7 +373,7 @@
 
         <button class="categoria-card" onclick="mostrarCatalogo('Snacks y Golosinas')">
           <div class="categoria-img-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M12 13v8"/><path d="M9 21h6"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.05 11.293l4.243-4.243a2 2 0 012.828 0l2.829 2.83a2 2 0 010 2.828l-4.243 4.243a2 2 0 01-2.828 0l-2.829-2.831a2 2 0 010-2.828"/><path d="M16.243 9.172l3.086-.772a1.5 1.5 0 00.697-2.516l-2.216-2.217a1.5 1.5 0 00-2.44.47l-1.248 2.913"/><path d="M9.172 16.243l-.772 3.086a1.5 1.5 0 01-2.516.697l-2.217-2.216a1.5 1.5 0 01.47-2.44l2.913-1.248"/></svg>
           </div>
           <span>Snacks y Golosinas</span>
           <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -389,8 +386,8 @@
   <!-- FAQ -->
   <section id="faq" class="faq-section seccion-deco">
     <div class="bg-circles" aria-hidden="true">
-      <span class="bg-circle bg-circle--fill" style="width:60px;height:60px;top:6%;right:5%;"></span>
-      <span class="bg-circle bg-circle--dash" style="width:130px;height:130px;bottom:-50px;left:-40px;border-color:var(--t3);"></span>
+      <span class="bg-circle bg-circle--fill" style="width:28px;height:28px;top:38%;right:6%;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:120px;height:120px;bottom:-50px;left:-35px;border-color:var(--t3);"></span>
     </div>
     <div class="faq-inner">
       <div class="faq-header">
