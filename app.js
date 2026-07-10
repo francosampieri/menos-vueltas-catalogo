@@ -40,9 +40,22 @@ async function cargarDatos() {
       };
     });
 
+    // Lookup de precios B2C por Id de producto (la hoja Precios vive separada de Productos)
+    const preciosPorId = {};
+    (data.precios_b2c || []).forEach(p => { preciosPorId[p['Id']] = p; });
+
     const productos = data.productos.filter(p =>
       p['Activo'] === 'ON' && p['Cat B2C'] === 'ON'
     );
+
+    // Mergear precio/descuento en cada producto antes de usarlo en el resto de la app
+    productos.forEach(p => {
+      const precio = preciosPorId[p['Id']];
+      p['Precio_Venta'] = precio ? precio['Precio_Venta'] : '';
+      p['Uni Dto']      = precio ? precio['Uni Dto']      : '';
+      p['Dto']          = precio ? precio['Dto']          : '';
+      p['Precio_Dto']   = precio ? precio['Precio_Dto']   : '';
+    });
 
     productos.forEach(p => {
       const gid = p['Id_Grupo'];

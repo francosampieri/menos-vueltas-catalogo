@@ -22,25 +22,58 @@ jobs:
 
           URL_PRODUCTOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=1666631008&single=true&output=csv"
           URL_GRUPOS    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=2138230487&single=true&output=csv"
+          URL_PRECIOS   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=685666727&single=true&output=csv"
+
+          def leer_texto(url):
+              with urllib.request.urlopen(url) as r:
+                  return r.read().decode('utf-8')
 
           def leer_csv(url):
-              with urllib.request.urlopen(url) as r:
-                  content = r.read().decode('utf-8')
+              content = leer_texto(url)
               reader = csv.DictReader(io.StringIO(content))
               return [row for row in reader]
 
+          def leer_precios(url):
+              """
+              La hoja Precios tiene DOS tablas lado a lado en el mismo CSV:
+              columnas 0-10  → Precios B2C (11 columnas)
+              columna  11    → separador vacío
+              columnas 12-22 → Precios B2B (11 columnas)
+              No se puede usar DictReader directo porque los headers se repiten.
+              """
+              content = leer_texto(url)
+              filas = list(csv.reader(io.StringIO(content)))
+              header = filas[0]
+              cols_b2c = header[0:11]
+              cols_b2b = header[12:23]
+
+              precios_b2c, precios_b2b = [], []
+              for fila in filas[1:]:
+                  if len(fila) < 23:
+                      continue
+                  izq = fila[0:11]
+                  der = fila[12:23]
+                  if izq[0]:  # tiene Id
+                      precios_b2c.append(dict(zip(cols_b2c, izq)))
+                  if der[0]:
+                      precios_b2b.append(dict(zip(cols_b2b, der)))
+              return precios_b2c, precios_b2b
+
           productos = leer_csv(URL_PRODUCTOS)
           grupos    = leer_csv(URL_GRUPOS)
+          precios_b2c, precios_b2b = leer_precios(URL_PRECIOS)
 
           resultado = {
               "productos": productos,
-              "grupos": grupos
+              "grupos": grupos,
+              "precios_b2c": precios_b2c,
+              "precios_b2b": precios_b2b
           }
 
           with open("catalogo.json", "w", encoding="utf-8") as f:
               json.dump(resultado, f, ensure_ascii=False, indent=2)
 
-          print(f"OK — {len(productos)} productos, {len(grupos)} grupos")
+          print(f"OK — {len(productos)} productos, {len(grupos)} grupos, {len(precios_b2c)} precios B2C, {len(precios_b2b)} precios B2B")
           EOF
 
       - name: Commitear JSON actualizado
