@@ -70,7 +70,9 @@ jobs:
               "precios_b2b": precios_b2b
           }
 
-          with open("catalogo.json", "w", encoding="utf-8") as f:
+          import os
+          os.makedirs("shared", exist_ok=True)
+          with open("shared/catalogo.json", "w", encoding="utf-8") as f:
               json.dump(resultado, f, ensure_ascii=False, indent=2)
 
           print(f"OK — {len(productos)} productos, {len(grupos)} grupos, {len(precios_b2c)} precios B2C, {len(precios_b2b)} precios B2B")
@@ -80,6 +82,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add catalogo.json
+          git add shared/catalogo.json
           git diff --cached --quiet && echo "Sin cambios" || git commit -m "chore: actualizar catálogo $(date -u '+%Y-%m-%d %H:%M UTC')"
           git push
