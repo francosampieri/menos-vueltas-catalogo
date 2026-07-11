@@ -951,7 +951,7 @@
       "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "MARV2264",
-      "Producto": "Aceitunas Negras Naturales Bandeja",
+      "Producto": "Aceitunas Negras Bandeja",
       "Marca": "MARVAVIC",
       "Tamaño": "200",
       "UM": "g",
@@ -993,7 +993,7 @@
       "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "MARV2158",
-      "Producto": "Aceitunas Negras Naturales Sache",
+      "Producto": "Aceitunas Negras Sache",
       "Marca": "MARVAVIC",
       "Tamaño": "300",
       "UM": "g",
@@ -3875,7 +3875,7 @@
       "Tamaño": "2",
       "UM": "kg",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Dulces y Endulzantes",
       "Tags": "membrillo, dulce, queso, postre, untable",
       "Id_Grupo": "134",
       "Tipo_Variante": "",
@@ -3896,7 +3896,7 @@
       "Tamaño": "5",
       "UM": "kg",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Dulces y Endulzantes",
       "Tags": "membrillo, dulce, queso, postre, untable",
       "Id_Grupo": "135",
       "Tipo_Variante": "",
@@ -6731,7 +6731,7 @@
       "Tamaño": "500",
       "UM": "cc",
       "Categoria": "Limpieza",
-      "Subcategoria": "Lavandería",
+      "Subcategoria": "Lavavajillas",
       "Tags": "detergente, limón, ropa, lavar, concentrado",
       "Id_Grupo": "211",
       "Tipo_Variante": "",
@@ -19786,14 +19786,14 @@
     },
     {
       "Id_Grupo": "38",
-      "Nombre_Grupo": "Aceitunas",
+      "Nombre_Grupo": "Aceitunas Bandeja",
       "Marca": "MARVAVIC",
       "Categoria": "Almacén",
       "Subcategoria": "Conservas"
     },
     {
       "Id_Grupo": "39",
-      "Nombre_Grupo": "Aceitunas",
+      "Nombre_Grupo": "Aceitunas Sache",
       "Marca": "MARVAVIC",
       "Categoria": "Almacén",
       "Subcategoria": "Conservas"
@@ -20433,14 +20433,14 @@
       "Nombre_Grupo": "Dulce de Membrillo",
       "Marca": "DE LA HUERTA",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Dulces y Endulzantes"
     },
     {
       "Id_Grupo": "135",
       "Nombre_Grupo": "Dulce de Membrillo",
       "Marca": "7 DIAS",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Dulces y Endulzantes"
     },
     {
       "Id_Grupo": "136",
@@ -20958,7 +20958,7 @@
       "Nombre_Grupo": "Detergente Concentrado Limón",
       "Marca": "SEDILE",
       "Categoria": "Limpieza",
-      "Subcategoria": "Lavandería"
+      "Subcategoria": "Lavavajillas"
     },
     {
       "Id_Grupo": "212",
@@ -21857,7 +21857,7 @@
     },
     {
       "Id": "135",
-      "Producto": "Aceitunas Negras Naturales Bandeja MARVAVIC 200 g",
+      "Producto": "Aceitunas Negras Bandeja MARVAVIC 200 g",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.094,09",
       "Precio_Venta": "$1.350,00",
@@ -21883,7 +21883,7 @@
     },
     {
       "Id": "138",
-      "Producto": "Aceitunas Negras Naturales Sache MARVAVIC 300 g",
+      "Producto": "Aceitunas Negras Sache MARVAVIC 300 g",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.554,77",
       "Precio_Venta": "$1.950,00",
@@ -27046,7 +27046,7 @@
     },
     {
       "Id": "135",
-      "Producto": "Aceitunas Negras Naturales Bandeja MARVAVIC 200 g",
+      "Producto": "Aceitunas Negras Bandeja MARVAVIC 200 g",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.094,09",
       "Precio_Venta": "$1.300,00",
@@ -27072,7 +27072,7 @@
     },
     {
       "Id": "138",
-      "Producto": "Aceitunas Negras Naturales Sache MARVAVIC 300 g",
+      "Producto": "Aceitunas Negras Sache MARVAVIC 300 g",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.554,77",
       "Precio_Venta": "$1.850,00",
