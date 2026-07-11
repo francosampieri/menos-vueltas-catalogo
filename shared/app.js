@@ -1,6 +1,10 @@
 // ══ CONFIGURACIÓN ══
 const WHATSAPP_NUM = '5491112345678'; // reemplazar con número real
 
+// CANAL lo define cada página (B2C o B2B) con <script>window.CANAL='B2C'</script>
+// ANTES de cargar este archivo. Fallback a B2C por seguridad si no se definió.
+const CANAL = (typeof window !== 'undefined' && window.CANAL) ? window.CANAL : 'B2C';
+
 // ══ ESTADO GLOBAL ══
 let grupos          = {};  // id_grupo → { nombre, marca, categoria, subcategoria }
 let catalogo        = {};  // id_grupo → [productos]
@@ -40,12 +44,13 @@ async function cargarDatos() {
       };
     });
 
-    // Lookup de precios B2C por Id de producto (la hoja Precios vive separada de Productos)
+    // Lookup de precios según el canal de esta página (B2C o B2B)
+    const tablaPrecios = CANAL === 'B2B' ? data.precios_b2b : data.precios_b2c;
     const preciosPorId = {};
-    (data.precios_b2c || []).forEach(p => { preciosPorId[p['Id']] = p; });
+    (tablaPrecios || []).forEach(p => { preciosPorId[p['Id']] = p; });
 
     const productos = data.productos.filter(p =>
-      p['Activo'] === 'ON' && p['Cat B2C'] === 'ON'
+      p['Activo'] === 'ON' && p[`Cat ${CANAL}`] === 'ON'
     );
 
     // Mergear precio/descuento en cada producto antes de usarlo en el resto de la app

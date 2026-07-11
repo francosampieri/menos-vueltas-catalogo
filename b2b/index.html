@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menos Vueltas — Pedidos para tu negocio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Cabin:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ══ BARRA SUPERIOR ══ -->
+<header class="topbar">
+  <div class="topbar-inner">
+
+    <button class="brand" onclick="mostrarLanding()">
+      <img src="logo.svg" alt="Menos Vueltas" class="brand-logo">
+    </button>
+
+    <div class="topbar-middle">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="none">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M15 15l-2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="buscador" placeholder="Buscar en el catálogo…" autocomplete="off">
+      </div>
+
+      <div class="nav-dropdown" id="navDropdown">
+        <button class="nav-pill" onclick="toggleMegamenu()">
+          Catálogo
+          <svg class="chevron" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="nav-megamenu">
+          <div class="megamenu-grid" id="megamenuGrid"></div>
+        </div>
+      </div>
+
+      <button class="nav-ghost hide-mobile" onclick="scrollLanding('como-comprar')">Como reponer</button>
+      <button class="nav-ghost hide-mobile" onclick="scrollLanding('vueltas')">Nosotros</button>
+      <button class="nav-ghost hide-mobile" onclick="scrollLanding('faq')">Preguntas</button>
+    </div>
+
+    <button class="cart-trigger" onclick="abrirCarrito()">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="cart-label hide-mobile">Carrito</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+  </div>
+</header>
+
+
+<!-- ══ LANDING ══ -->
+<div id="vista-landing">
+
+  <!-- Hero -->
+  <section class="hero-bg">
+  <div class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title">Menos Vueltas</h1>
+      <div class="hero-pills">
+        <span class="hero-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Más tiempo para tu negocio
+        </span>
+        <span class="hero-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Precios convenientes
+        </span>
+      </div>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
+        <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Como reponer</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img src="hero-bolsas.jpg" alt="Bolsas de compras Menos Vueltas" class="hero-photo">
+    </div>
+  </div>
+  </section>
+
+  <!-- Cómo reponer (id interno "como-comprar" se mantiene por compatibilidad con el JS compartido) -->
+  <section id="como-comprar" class="como-comprar seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle bg-circle--dash" style="width:130px;height:130px;top:-55px;left:-35px;"></span>
+      <span class="bg-circle bg-circle--fill" style="width:24px;height:24px;top:48%;right:6%;border-color:var(--t3);opacity:.3;"></span>
+    </div>
+    <div class="como-comprar-inner">
+      <h2 class="seccion-h2-center">Como reponer tu negocio</h2>
+      <div class="pasos-row">
+
+        <div class="paso">
+          <div class="paso-icon">
+            <span class="paso-num">1</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1.5"/>
+              <circle cx="19" cy="21" r="1.5"/>
+              <path d="M2.5 3h2.5l2.6 12.4a2 2 0 002 1.6h9a2 2 0 002-1.8L22 8H6"/>
+            </svg>
+          </div>
+          <h3>Armá tu pedido</h3>
+          <p>Elegí lo que tu negocio necesita.</p>
+        </div>
+
+        <div class="paso-arrow-wrap">
+          <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M2 8h34M28 2l8 6-8 6"/>
+          </svg>
+        </div>
+
+        <div class="paso">
+          <div class="paso-icon">
+            <span class="paso-num">2</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 2L11 13"/>
+              <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+          </div>
+          <h3>Nos enviás tu pedido</h3>
+          <p>Con un solo clic desde el carrito.</p>
+        </div>
+
+        <div class="paso-arrow-wrap">
+          <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M2 8h34M28 2l8 6-8 6"/>
+          </svg>
+        </div>
+
+        <div class="paso">
+          <div class="paso-icon">
+            <span class="paso-num">3</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <h3>Lo recibís en tu negocio</h3>
+          <p>En el día y horario acordado (24 a 48 horas).</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Las vueltas que te ahorramos -->
+  <section id="vueltas" class="vueltas seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle" style="width:22px;height:22px;top:44%;left:2.5%;border-color:var(--t3);opacity:.25;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:64px;height:64px;top:30%;right:4%;"></span>
+    </div>
+    <div class="vueltas-inner">
+
+      <div class="nosotros-intro">
+        <p class="nosotros-eyebrow">Nosotros</p>
+        <h3 class="nosotros-title">Reponer debería ser más simple</h3>
+        <p class="nosotros-text">Por eso nació Menos Vueltas.</p>
+        <p class="nosotros-text">Creemos que hacer un pedido no tendría que significar listas interminables ni cálculos manuales. Reponer puede ser una tarea simple.<br>Elegís lo que tu negocio necesita, nos enviás el pedido y nosotros hacemos el resto.</p>
+        <p class="nosotros-text">Y todo eso, con precios competitivos y sin mínimos que te compliquen</p>
+      </div>
+
+      <div class="nosotros-conector" aria-hidden="true">
+        <svg viewBox="0 0 24 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v50M5 44l7 8 7-8"/>
+        </svg>
+      </div>
+
+      <h2 class="seccion-h2-center">Las vueltas que te ahorramos</h2>
+
+      <div class="vueltas-svg-wrap">
+        <svg class="vueltas-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="arrowVueltas" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6E8B5B" stroke-width="1.5"/>
+            </marker>
+          </defs>
+
+          <!-- ══ ITEMS IZQUIERDA — badge pegado justo al texto ══ -->
+          <text x="20" y="62"  font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Ir al mayorista</text>
+          <circle cx="147" cy="57"  r="10" fill="#EAECE5"/>
+          <text   x="147" y="61"  font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <text x="20" y="122" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Hacer cuentas a mano</text>
+          <circle cx="183" cy="117" r="10" fill="#EAECE5"/>
+          <text   x="183" y="121" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <text x="20" y="182" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Recorrer góndolas</text>
+          <circle cx="162" cy="177" r="10" fill="#EAECE5"/>
+          <text   x="162" y="181" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <text x="20" y="242" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Hacer fila</text>
+          <circle cx="104" cy="237" r="10" fill="#EAECE5"/>
+          <text   x="104" y="241" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <text x="20" y="302" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Cargar mercadería</text>
+          <circle cx="154" cy="297" r="10" fill="#EAECE5"/>
+          <text   x="154" y="301" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <text x="20" y="362" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Volver al negocio</text>
+          <circle cx="154" cy="357" r="10" fill="#EAECE5"/>
+          <text   x="154" y="361" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
+
+          <!-- ══ CURVAS CON RULOS desde el borde derecho de cada badge ══ -->
+
+          <!-- Ir al mayorista (sale x=157): rulo hacia arriba -->
+          <path d="M157 57 C 210 57, 195 18, 245 27 C 290 36, 272 78, 244 88 C 218 98, 232 130, 280 142 C 325 152, 362 160, 385 205"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Hacer cuentas a mano (sale x=193): rulo pequeño arriba -->
+          <path d="M193 117 C 233 117, 217 90, 253 96 C 288 102, 278 133, 255 138 C 235 142, 245 160, 387 205"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Recorrer góndolas (sale x=172): leve arco -->
+          <path d="M172 177 C 270 177, 350 183, 385 207"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Hacer fila (sale x=114): leve arco desde abajo -->
+          <path d="M114 237 C 230 237, 358 222, 385 215"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Cargar mercadería (sale x=164): rulo hacia abajo -->
+          <path d="M164 297 C 210 297, 194 336, 236 327 C 276 318, 260 276, 234 266 C 210 256, 222 236, 262 226 C 315 215, 365 216, 385 215"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- Volver al negocio (sale x=164): rulo grande hacia abajo -->
+          <path d="M164 357 C 212 357, 196 398, 238 388 C 280 378, 263 334, 236 324 C 210 314, 222 292, 264 282 C 310 272, 362 248, 385 220"
+                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
+
+          <!-- ══ LOGO CENTRAL ══ -->
+          <circle cx="430" cy="210" r="58" fill="#6E8B5B"/>
+          <image href="logo.svg" x="379" y="192.6" width="102" height="34.7" style="filter: brightness(0) invert(1);"/>
+
+          <!-- ══ LÍNEA DE SALIDA ══ -->
+          <path d="M488 210 L 630 210" stroke="#6E8B5B" stroke-width="1.5" fill="none" marker-end="url(#arrowVueltas)"/>
+
+          <!-- Check + texto -->
+          <circle cx="648" cy="210" r="10" fill="#EEF2E9"/>
+          <text x="648" y="214" font-size="9" fill="#6E8B5B" text-anchor="middle" font-weight="700">✓</text>
+          <text x="668" y="205" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">Elegí,</text>
+          <text x="668" y="221" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">enviá y recibí.</text>
+
+        </svg>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Beneficios -->
+  <section class="beneficios seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle bg-circle--dash" style="width:76px;height:76px;top:32%;right:4%;"></span>
+      <span class="bg-circle bg-circle--fill" style="width:20px;height:20px;bottom:30%;left:6%;opacity:.35;"></span>
+    </div>
+    <div class="beneficios-inner">
+      <h2 class="seccion-h2-center">Beneficios</h2>
+      <div class="beneficios-grid">
+
+        <div class="beneficio">
+          <div class="beneficio-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12 7 12 12 15 15"/>
+          </svg></div>
+          <p>Pedidos más rápidos</p>
+        </div>
+
+        <div class="beneficio">
+          <div class="beneficio-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg></div>
+          <p>Precios competitivos</p>
+        </div>
+
+        <div class="beneficio">
+          <div class="beneficio-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7h18M3 12h18M3 17h12"/>
+          </svg></div>
+          <p>Sin mínimos ni máximos</p>
+        </div>
+
+        <div class="beneficio">
+          <div class="beneficio-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="7" y="2" width="10" height="20" rx="2"/>
+            <line x1="11" y1="18" x2="13" y2="18"/>
+          </svg></div>
+          <p>Pedís desde donde estés</p>
+        </div>
+
+        <div class="beneficio">
+          <div class="beneficio-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
+          </svg></div>
+          <p>Atención cercana y personalizada</p>
+        </div>
+
+        <div class="beneficio">
+          <div class="beneficio-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg></div>
+          <p>Entregas con mínimo margen de error</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Categorías principales -->
+  <section class="categorias-home seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle bg-circle--dash" style="width:88px;height:88px;bottom:26%;right:5%;"></span>
+      <span class="bg-circle" style="width:26px;height:26px;top:35%;left:4%;border-color:var(--t3);opacity:.3;"></span>
+    </div>
+    <div class="categorias-home-inner">
+      <h2 class="seccion-h2-center">Categorías principales</h2>
+      <div class="categorias-grid">
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Almacen')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v10a1 1 0 01-1 1H5a1 1 0 01-1-1V9z"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+          </div>
+          <span>Almacén</span>
+          <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Desayuno y Mediatarde')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(1,2)"><path d="M3 8h14v6a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><path d="M17 9h2a2 2 0 012 2v1a2 2 0 01-2 2h-2"/><line x1="6" y1="2" x2="6" y2="5"/><line x1="10" y1="2" x2="10" y2="5"/><line x1="14" y1="2" x2="14" y2="5"/></g></svg>
+          </div>
+          <span>Desayuno y Mediatarde</span>
+          <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Higiene Personal')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/><path d="M4 21l1-1.5"/><path d="M20 21l-1-1.5"/></svg>
+          </div>
+          <span>Higiene Personal</span>
+          <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Hogar y Ferreteria')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/><path d="M9 21v-6h6v6"/></svg>
+          </div>
+          <span>Hogar y Ferretería</span>
+          <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Limpieza')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a2 2 0 012-2h4a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7"/><path d="M6 10V6a1 1 0 011-1h2a1 1 0 011 1v4"/><path d="M15 7h.01"/><path d="M18 9h.01"/><path d="M18 5h.01"/><path d="M21 3h.01"/><path d="M21 7h.01"/><path d="M21 11h.01"/><path d="M10 7h1"/></svg>
+          </div>
+          <span>Limpieza</span>
+          <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+
+        <button class="categoria-card" onclick="mostrarCatalogo('Snacks y Golosinas')">
+          <div class="categoria-img-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.05 11.293l4.243-4.243a2 2 0 012.828 0l2.829 2.83a2 2 0 010 2.828l-4.243 4.243a2 2 0 01-2.828 0l-2.829-2.831a2 2 0 010-2.828"/><path d="M16.243 9.172l3.086-.772a1.5 1.5 0 00.697-2.516l-2.216-2.217a1.5 1.5 0 00-2.44.47l-1.248 2.913"/><path d="M9.172 16.243l-.772 3.086a1.5 1.5 0 01-2.516.697l-2.217-2.216a1.5 1.5 0 01.47-2.44l2.913-1.248"/></svg>
+          </div>
+          <span>Snacks y Golosinas</span>
+          <span class="categoria-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="faq-section seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle bg-circle--fill" style="width:28px;height:28px;top:38%;right:6%;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:120px;height:120px;bottom:-50px;left:-35px;border-color:var(--t3);"></span>
+    </div>
+    <div class="faq-inner">
+      <div class="faq-header">
+        <div class="sobre-label">Preguntas frecuentes</div>
+        <h2 class="sobre-title">Todo lo que necesitás saber.</h2>
+      </div>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿Cómo hago un pedido?</span>
+            <span class="faq-icono">+</span>
+          </button>
+          <div class="faq-respuesta">
+            Elegís los productos desde el catálogo, los agregás al carrito y al finalizar
+            te redirigimos a WhatsApp con el pedido ya armado. Nosotros lo confirmamos y coordinamos la entrega.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿Hay pedido mínimo?</span>
+            <span class="faq-icono">+</span>
+          </button>
+          <div class="faq-respuesta">
+            No. No manejamos mínimos ni máximos — pedís lo que tu negocio necesita, sin restricciones innecesarias.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿Cuándo llega mi pedido?</span>
+            <span class="faq-icono">+</span>
+          </button>
+          <div class="faq-respuesta">
+            Coordinamos la entrega según tu zona y tus horarios. Normalmente entre 24 a 48 horas.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿Cuándo pago?</span>
+            <span class="faq-icono">+</span>
+          </button>
+          <div class="faq-respuesta">
+            Te vamos a pedir una seña del 10% del total para confirmar tu pedido. El resto lo pagás cuando recibís tu pedido.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿En qué zonas entregan?</span>
+            <span class="faq-icono">+</span>
+          </button>
+          <div class="faq-respuesta">
+            Entregamos en Carrodilla y alrededores. Consultanos por WhatsApp por tu dirección.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="cta-final">
+    <div class="cta-final-inner">
+      <div class="bg-circles" aria-hidden="true">
+        <span class="bg-circle bg-circle--dash" style="width:180px;height:180px;top:-70px;right:-50px;border-color:var(--accent);opacity:.35;"></span>
+        <span class="bg-circle" style="width:90px;height:90px;bottom:-40px;left:6%;border-color:var(--accent);opacity:.3;"></span>
+      </div>
+      <h2>¿Listo para reponer más simple?</h2>
+      <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+      <img src="logo.svg" alt="Menos Vueltas" class="footer-logo">
+
+      <nav class="footer-nav">
+        <button class="footer-nav-link" onclick="mostrarCatalogo()">Catálogo</button>
+        <button class="footer-nav-link" onclick="scrollLanding('como-comprar')">Como reponer</button>
+        <button class="footer-nav-link" onclick="scrollLanding('vueltas')">Nosotros</button>
+        <button class="footer-nav-link" onclick="scrollLanding('faq')">Preguntas</button>
+      </nav>
+
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 Menos Vueltas</span>
+        <span class="footer-dot">·</span>
+        <span class="footer-copy">Carrodilla, Mendoza</span>
+        <span class="footer-dot">·</span>
+        <a class="footer-whatsapp" href="https://wa.me/5491112345678" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+
+    </div>
+  </footer>
+
+</div><!-- /vista-landing -->
+
+
+<!-- ══ CATÁLOGO ══ -->
+<div id="vista-catalogo">
+
+  <div class="catalogo-topbar">
+    <div class="catalogo-topbar-inner">
+      <button class="back-btn" onclick="mostrarLanding()">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Inicio
+      </button>
+      <span class="catalogo-titulo-label" id="catalogo-titulo-label">Catálogo</span>
+    </div>
+  </div>
+
+  <div class="filtros-wrap">
+    <div class="filtros" id="filtros"></div>
+  </div>
+
+  <div class="subfiltros-wrap" id="subfiltrosWrap">
+    <div class="subfiltros" id="subfiltros"></div>
+  </div>
+
+  <main class="catalogo-main">
+    <div class="loading" id="loading">
+      <div class="loading-spinner"></div>
+      <p>Cargando productos…</p>
+    </div>
+    <div id="catalogo"></div>
+  </main>
+
+</div><!-- /vista-catalogo -->
+
+
+<!-- ══ CARRITO (drawer) ══ -->
+<div class="carrito-overlay" id="carritoOverlay" onclick="if(event.target===this)cerrarCarrito()">
+  <aside class="carrito-panel">
+
+    <div class="carrito-header">
+      <h2>Tu pedido</h2>
+      <button class="carrito-close" onclick="cerrarCarrito()">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="carrito-items" id="carritoItems">
+      <div class="carrito-empty">Tu carrito está vacío</div>
+    </div>
+
+    <div class="carrito-footer">
+      <div class="carrito-total">
+        <span class="carrito-total-label">Total estimado</span>
+        <span class="carrito-total-valor" id="carritoTotal">—</span>
+      </div>
+      <div class="carrito-nota" id="carritoNota"></div>
+      <button class="whatsapp-btn" onclick="enviarWhatsApp()">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Enviar pedido
+      </button>
+    </div>
+
+  </aside>
+</div>
+
+<script>window.CANAL = 'B2B';</script>
+<script src="app.js"></script>
+</body>
+</html>
