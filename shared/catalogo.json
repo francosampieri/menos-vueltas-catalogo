@@ -25682,13 +25682,13 @@
       "Producto": "Papel Higienico 4x30m Simple Hoja FELPITA 4 rol",
       "Tipo": "Ancla",
       "Precio_Costo": "$1.301,60",
-      "Precio_Venta": "",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Dto": "$0,00",
-      "Ganancia_Bruta": "-$1.301,60",
-      "Margen_Bruto": "#DIV/0!",
-      "Markup": "-100,00%"
+      "Precio_Venta": "$1.600,00",
+      "Uni Dto": "3",
+      "Dto": "5%",
+      "Precio_Dto": "$1.500,00",
+      "Ganancia_Bruta": "$298,40",
+      "Margen_Bruto": "18,65%",
+      "Markup": "22,93%"
     },
     {
       "Id": "356",
@@ -30871,13 +30871,13 @@
       "Producto": "Papel Higienico 4x30m Simple Hoja FELPITA 4 rol",
       "Tipo": "Ancla",
       "Precio_Costo": "$1.301,60",
-      "Precio_Venta": "",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Dto": "$0,00",
-      "Ganancia_Bruta": "-$1.301,60",
-      "Margen_Bruto": "#DIV/0!",
-      "Markup": "-100,00%"
+      "Precio_Venta": "$1.550,00",
+      "Uni Dto": "6",
+      "Dto": "5%",
+      "Precio_Dto": "$1.450,00",
+      "Ganancia_Bruta": "$248,40",
+      "Margen_Bruto": "16,03%",
+      "Markup": "19,08%"
     },
     {
       "Id": "356",
