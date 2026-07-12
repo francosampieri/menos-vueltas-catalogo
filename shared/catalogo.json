@@ -21337,6 +21337,13 @@
       "Marca": "CANDELA",
       "Categoria": "Hogar y Ferreteria",
       "Subcategoria": "Cartas"
+    },
+    {
+      "Id_Grupo": "267",
+      "Nombre_Grupo": "Chocolate",
+      "Marca": "HERSHEY'S",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Golosinas"
     }
   ],
   "precios_b2c": [
