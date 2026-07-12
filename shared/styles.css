@@ -1824,10 +1824,11 @@ img { display: block; max-width: 100%; }
   .carrito-footer { padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
   /* Hero móvil: la foto pasa a ser el escenario completo, no un bloque aparte. */
   .hero { position: relative; min-height: 560px; overflow: hidden; isolation: isolate; }
-  .hero-visual { position: absolute; inset: 0; min-height: 0; z-index: 0; }
+  .hero-visual { position: absolute; inset: 0; min-height: 0; z-index: 0; background: var(--accent-2); }
   .hero-photo {
     inset: 0;
-    object-position: center;
+    object-position: 48% center;
+    transform: scale(.94);
     -webkit-mask-image: none;
     mask-image: none;
   }
@@ -1838,11 +1839,11 @@ img { display: block; max-width: 100%; }
     z-index: 1;
     background: linear-gradient(180deg, rgba(27, 39, 29, .34) 0%, rgba(27, 39, 29, .12) 32%, rgba(27, 39, 29, .82) 100%);
   }
-  .hero-inner { position: relative; z-index: 2; flex: 1; justify-content: flex-end; padding: 132px var(--space-5) var(--space-6); }
+  .hero-inner { position: relative; z-index: 2; flex: 1; justify-content: flex-start; padding: var(--space-6) var(--space-5); }
   .hero-title { font-size: clamp(2.25rem, 11vw, 2.8rem); white-space: normal; color: white; text-shadow: 0 2px 16px rgba(0, 0, 0, .22); margin-bottom: var(--space-4); }
   .hero-pills { gap: var(--space-2); margin-bottom: var(--space-5); }
   .hero-pill { padding: 7px 13px 7px 10px; background: rgba(255, 255, 255, .92); font-size: .82rem; }
-  .hero-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); }
+  .hero-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); margin-top: auto; }
   .hero-actions .btn-primary, .hero-actions .btn-ghost-dark { width: 100%; }
   .hero-actions .btn-ghost-dark { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .75); color: white; backdrop-filter: blur(4px); }
   .pasos-row { gap: var(--space-3); }
@@ -1857,32 +1858,36 @@ img { display: block; max-width: 100%; }
   .beneficio-icon-wrap { width: 42px; height: 42px; flex: 0 0 42px; }
   .beneficio svg { width: 20px; height: 20px; }
   .beneficio p { font-family: var(--font); font-size: .86rem; font-weight: 500; line-height: 1.3; color: var(--t1); }
-  .categorias-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
-  .categoria-card { gap: var(--space-2); padding: var(--space-4) var(--space-2) var(--space-3); }
-  .categoria-img-wrap { width: 48px; height: 48px; }
-  .categoria-arrow { opacity: 1; transform: none; margin-top: 0; }
-  /* Comparativo directo: lo que evitás a la izquierda y el resultado a la derecha. */
+  .categorias-grid { grid-template-columns: 1fr; gap: var(--space-2); }
+  .categoria-card { flex-direction: row; justify-content: flex-start; gap: var(--space-3); padding: var(--space-3); text-align: left; }
+  .categoria-img-wrap { width: 42px; height: 42px; flex: 0 0 42px; }
+  .categoria-img-wrap svg { width: 20px; height: 20px; }
+  .categoria-card span { text-align: left; font-size: .86rem; }
+  .categoria-arrow { opacity: 1; transform: none; margin: 0 0 0 auto; }
   .vueltas-svg-wrap { display: none; }
-  .vueltas-mobile { display: grid; grid-template-columns: minmax(0, 1fr) minmax(118px, .9fr); gap: var(--space-3); max-width: 390px; margin: 0 auto; align-items: stretch; }
-  .vueltas-mobile-list { list-style: none; padding: var(--space-3); margin: 0; display: flex; flex-direction: column; justify-content: space-around; background: var(--surface-3); border-radius: var(--r3); }
-  .vueltas-mobile-list li { color: var(--t3); font-size: .74rem; line-height: 1.25; text-decoration: line-through; text-decoration-thickness: 1.5px; }
-  .vueltas-mobile-list li::before, .vueltas-mobile-list li::after { content: none; }
-  .vueltas-mobile-result { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: var(--space-3); margin: 0; padding: var(--space-4) var(--space-3); border: 1px solid var(--accent-line); border-radius: var(--r3); background: var(--accent-bg); color: var(--t1); }
-  .vueltas-mobile-logo { width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); }
-  .vueltas-mobile-logo img { width: 30px; filter: brightness(0) invert(1); }
-  .vueltas-mobile-result p { margin: 0; font-size: .86rem; line-height: 1.35; color: var(--t2); }
-  .vueltas-mobile-result strong { display: block; color: var(--accent-2); font-size: .95rem; line-height: 1.18; }
+  .vueltas-mobile { display: flex; flex-direction: column; gap: var(--space-3); max-width: 390px; margin: 0 auto; padding: var(--space-4); background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--r4); }
+  .vueltas-mobile-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-2); }
+  .vueltas-mobile-list::before { content: 'Lo que dejás atrás'; grid-column: 1 / -1; color: var(--t3); font-size: .68rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .vueltas-mobile-list li { display: flex; align-items: center; gap: 6px; color: var(--t3); font-size: .74rem; line-height: 1.25; text-decoration: line-through; text-decoration-thickness: 1.5px; }
+  .vueltas-mobile-list li::before { content: '×'; width: 16px; height: 16px; flex: 0 0 16px; display: grid; place-items: center; border-radius: 50%; background: var(--surface-3); color: var(--t3); font-size: .82rem; font-weight: 600; }
+  .vueltas-mobile-list li::after { content: none; }
+  .vueltas-mobile-result { display: flex; flex-direction: row; align-items: center; gap: var(--space-3); margin: 0; padding: var(--space-4); border: 0; border-radius: var(--r3); background: var(--accent); color: white; }
+  .vueltas-mobile-result::before { content: '→'; width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.16); font-size: 1.15rem; }
+  .vueltas-mobile-logo { display: none; }
+  .vueltas-mobile-result p { margin: 0; font-size: .84rem; line-height: 1.35; color: rgba(255,255,255,.82); }
+  .vueltas-mobile-result strong { display: block; color: white; font-size: 1rem; line-height: 1.18; }
   .card.expanded { grid-column: 1 / -1; }
   .carrito-items { padding: var(--space-4); }
   .carrito-header { padding: var(--space-4); }
   .carrito-footer { padding: var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
 
   /* Footer: jerarquía clara, navegación liviana y WhatsApp como acción principal. */
-  .footer-inner { padding: var(--space-6) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom, 0px)); text-align: left; }
-  .footer-logo { margin: 0 0 var(--space-5); height: 32px; }
-  .footer-nav { display: flex; justify-content: flex-start; gap: 0 var(--space-4); margin-bottom: var(--space-5); }
+  .cta-final h2 { font-size: clamp(.95rem, 4.3vw, 1.15rem); letter-spacing: -.04em; white-space: nowrap; }
+  .footer-inner { padding: var(--space-6) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom, 0px)); text-align: center; }
+  .footer-logo { margin: 0 auto var(--space-5); height: 32px; }
+  .footer-nav { display: flex; justify-content: center; gap: 0 var(--space-4); margin-bottom: var(--space-5); }
   .footer-nav-link { width: auto; height: 30px; padding: 0; color: rgba(255,255,255,.78); }
-  .footer-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); padding-top: var(--space-4); align-items: center; }
+  .footer-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); padding-top: var(--space-4); align-items: center; text-align: center; }
   .footer-dot { display: none; }
   .footer-copy { font-size: .72rem; }
   .footer-whatsapp { grid-column: 1 / -1; grid-row: 1; display: flex; align-items: center; justify-content: center; height: 42px; border: 1px solid rgba(255,255,255,.55); border-radius: var(--r2); font-size: .82rem; }
