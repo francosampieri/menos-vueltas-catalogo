@@ -670,6 +670,9 @@ img { display: block; max-width: 100%; }
   display: block;
 }
 
+/* Alternativa compacta al diagrama para pantallas angostas. */
+.vueltas-mobile { display: none; }
+
 
 /* ══════════════════════════════════════════════════════
    BENEFICIOS
@@ -1795,15 +1798,132 @@ img { display: block; max-width: 100%; }
   .hide-mobile { display: none; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
   .catalogo-main { padding: var(--space-4) var(--space-4) 100px; }
+  .catalogo-topbar-inner { padding: 0 var(--space-4); }
   .filtros { padding: var(--space-2) var(--space-4); }
   .subfiltros { padding: var(--space-1) var(--space-4); }
+  .filtro-btn { height: 36px; }
+  .subfiltro-btn { height: 34px; }
+
+  /* Controles de la card expandida: se prioriza un toque cómodo sobre la densidad. */
+  .qty-btn { width: 36px; height: 36px; }
+  .qty-num { width: 36px; }
+  .agregar-btn { height: 40px; }
+  .cerrar-card { padding: var(--space-2); }
+
+  /* Bottom sheet con controles amplios y espacio para la barra del sistema. */
+  .carrito-panel { max-height: 92dvh; }
+  .carrito-close { width: 36px; height: 36px; }
+  .ci-qty-btn { width: 32px; height: 32px; }
+  .ci-eliminar {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .carrito-footer { padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
   .hero-title { font-size: clamp(2rem, 10vw, 2.4rem); white-space: normal; }
+  .hero-pills { margin-bottom: var(--space-6); }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn-primary,
+  .hero-actions .btn-ghost-dark { width: 100%; }
+
+  .pasos-row { gap: var(--space-3); }
+  .paso-arrow-wrap { height: 20px; }
+  .paso-icon { margin-bottom: var(--space-3); }
   .faq-inner { padding: var(--space-8) var(--space-4); }
+
+  /* En móvil, los enlaces del footer se mantienen ordenados y con área táctil cómoda. */
+  .footer-inner { padding: var(--space-5) var(--space-4) var(--space-4); }
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+  .footer-nav-link { width: 100%; height: 40px; padding: 0 var(--space-2); }
 
   .como-comprar-inner, .vueltas-inner, .beneficios-inner,
   .categorias-home-inner, .cta-final-inner { padding: var(--space-7) var(--space-4); }
-  .beneficios-grid { grid-template-columns: repeat(2, 1fr); }
-  .categorias-grid { grid-template-columns: repeat(2, 1fr); }
+  .beneficios-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-5) var(--space-3); }
+  .beneficio { gap: var(--space-2); padding: var(--space-4) var(--space-2); }
+  .beneficio-icon-wrap { width: 48px; height: 48px; }
+
+  .categorias-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+  .categoria-card { gap: var(--space-2); padding: var(--space-4) var(--space-2) var(--space-3); }
+  .categoria-img-wrap { width: 48px; height: 48px; }
+  /* En pantallas táctiles no hay hover: la flecha deja claro que la tarjeta abre el catálogo. */
+  .categoria-arrow { opacity: 1; transform: none; margin-top: 0; }
+
+  /* El diagrama horizontal no entra en un teléfono: se reemplaza por una
+     secuencia vertical, sin scroll lateral y fácil de recorrer con el pulgar. */
+  .vueltas-svg-wrap { display: none; }
+  .vueltas-mobile { display: block; max-width: 360px; margin: 0 auto; }
+  .vueltas-mobile-list {
+    counter-reset: vuelta;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .vueltas-mobile-list li {
+    counter-increment: vuelta;
+    position: relative;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 0 var(--space-3) 52px;
+    color: var(--t2);
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+  .vueltas-mobile-list li::before {
+    content: counter(vuelta);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--surface-3);
+    color: var(--t3);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .vueltas-mobile-list li::after {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 35px;
+    bottom: -2px;
+    border-left: 1px dashed var(--line);
+  }
+  .vueltas-mobile-list li:last-child::after { display: none; }
+  .vueltas-mobile-result {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    padding: var(--space-4);
+    border: 1px solid #c8d6bb;
+    border-radius: var(--r3);
+    background: var(--surface);
+    color: var(--t1);
+  }
+  .vueltas-mobile-logo {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .vueltas-mobile-logo img { width: 35px; filter: brightness(0) invert(1); }
+  .vueltas-mobile-result p { margin: 0; font-size: 0.85rem; line-height: 1.55; color: var(--t2); }
+  .vueltas-mobile-result strong { color: var(--t1); }
 
   /* Card expandida ocupa todo el ancho del grid para que entren los controles */
   .card.expanded { grid-column: 1 / -1; }
@@ -1811,12 +1931,16 @@ img { display: block; max-width: 100%; }
   /* Carrito: menos padding lateral para aprovechar el ancho */
   .carrito-items { padding: var(--space-4) var(--space-4); }
   .carrito-header { padding: var(--space-4) var(--space-4); }
-  .carrito-footer { padding: var(--space-4) var(--space-4); }
+  .carrito-footer { padding: var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
 }
 
 @media (max-width: 380px) {
-  .topbar-inner { padding: 0 var(--space-2); }
-  .brand-logo { height: 26px; }
+  .topbar-inner { padding: 0 var(--space-2); gap: var(--space-1); }
+  .brand-logo { height: 24px; }
+  .topbar-middle { gap: var(--space-1); }
+  .search-wrap input { height: 34px; }
+  .nav-pill { height: 32px; padding: 0 7px; }
+  .cart-trigger { height: 34px; padding: 0 6px; margin-left: var(--space-1); }
   .search-wrap input { padding: 0 var(--space-3) 0 28px; }
 }
 
