@@ -506,6 +506,7 @@ function renderExpanded(gid, vars, imgEl) {
 
   let selVariante = null;
   let selTamaño   = null;
+  let esPrimeraDibujada = true;
 
   function getVarianteSeleccionada() {
     if (esUnico) return vars[0];
@@ -598,21 +599,16 @@ function renderExpanded(gid, vars, imgEl) {
     const precioDto = varSel ? parsePrecio(varSel['Precio_Dto'])   : null;
     const uniDto    = varSel ? (parseInt(varSel['Uni Dto']) || 0)  : 0;
 
-    // Sincronizar la parte de arriba de la card (label y precio) con la variante elegida
+    // Sincronizar la parte de arriba de la card (label, precio e imagen) con
+    // la variante elegida, usando la misma animación de deslizamiento que la
+    // rotación automática (excepto en el primer render, que no debe animar).
     if (varSel) {
       const vlabelEl  = document.getElementById(`vlabel-${gid}`);
       const vprecioEl = document.getElementById(`vprecio-${gid}`);
-      if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(varSel, vars);
-      if (vprecioEl) {
-        if (precio !== null) {
-          vprecioEl.textContent = formatPrecio(precio);
-          vprecioEl.className = 'card-precio';
-        } else {
-          vprecioEl.textContent = 'Precio a confirmar';
-          vprecioEl.className = 'card-precio sin-precio';
-        }
-      }
+      const idxSel = vars.indexOf(varSel);
+      actualizarVistaCerrada(gid, vars, idxSel >= 0 ? idxSel : 0, imgEl, vlabelEl, vprecioEl, !esPrimeraDibujada);
     }
+    esPrimeraDibujada = false;
 
     const pdiv = document.createElement('div');
     pdiv.className = 'precio-detalle';
@@ -629,23 +625,7 @@ function renderExpanded(gid, vars, imgEl) {
       expanded.appendChild(dtoDiv);
     }
 
-    // Actualizar imagen al seleccionar variante
-    if (varSel && imgEl) {
-      const url = varSel['Imagen']?.trim();
-      const placeholder = imgEl.previousElementSibling;
-      if (url) {
-        imgEl.onload  = () => { imgEl.style.display = 'block'; if (placeholder) placeholder.style.display = 'none'; };
-        imgEl.onerror = () => { imgEl.style.display = 'none';  if (placeholder) placeholder.style.display = 'flex'; };
-        if (imgEl.src === url && imgEl.complete) {
-          imgEl.style.display = 'block';
-          if (placeholder) placeholder.style.display = 'none';
-        } else {          imgEl.src = url;
-        }
-      } else {
-        imgEl.style.display = 'none';
-        if (placeholder) placeholder.style.display = 'flex';
-      }
-    }
+    // (La imagen ya se actualiza junto con label y precio arriba, con animación)
 
     // Cantidad + agregar
     const qtyRow = document.createElement('div');
