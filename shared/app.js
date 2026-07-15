@@ -1,5 +1,5 @@
 // ══ CONFIGURACIÓN ══
-const WHATSAPP_NUM = '5491112345678'; // reemplazar con número real
+const WHATSAPP_NUM = '5492617716916'; // reemplazar con número real
 
 // CANAL lo define cada página (B2C o B2B) con <script>window.CANAL='B2C'</script>
 // ANTES de cargar este archivo. Fallback a B2C por seguridad si no se definió.
