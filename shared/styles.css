@@ -80,7 +80,7 @@
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body {
   font-family: var(--font);
   background-color: var(--bg);
@@ -89,6 +89,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* Textos largos y párrafos usan Cabin */
@@ -425,6 +426,7 @@ img { display: block; max-width: 100%; }
 
 .hero {
   display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   gap: 0;
   min-height: calc(100vh - 72px);
@@ -440,7 +442,8 @@ img { display: block; max-width: 100%; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  flex-basis: 420px;
 }
 
 .hero-title {
@@ -448,7 +451,6 @@ img { display: block; max-width: 100%; }
   font-weight: 600;
   line-height: 1.06;
   letter-spacing: -0.04em;
-  white-space: nowrap;
   color: var(--accent);
   margin-bottom: var(--space-5);
 }
@@ -488,7 +490,7 @@ img { display: block; max-width: 100%; }
 }
 
 .hero-visual {
-  flex: 1;
+  flex: 1 1 320px;
   position: relative;
   align-self: stretch;
   min-height: 400px;
@@ -1841,7 +1843,7 @@ img { display: block; max-width: 100%; }
    a su mínimo y no hay más margen — achicamos el botón de Catálogo a
    ícono-solo antes de que compita por espacio con el resto de la topbar.
    El dropdown se mantiene funcional, solo cambia su tamaño. */
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .topbar-inner { gap: var(--space-3); }
   .nav-pill { padding: 0 8px; gap: 0; }
   .nav-pill-icon { display: block; }
