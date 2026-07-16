@@ -8,7 +8,7 @@
 /* ── Tokens ── */
 :root {
   /* Ancho para las secciones visuales en escritorio: deja aire sin encajonar
-     la interfaz en el centro de monitores grandes.*/
+     la interfaz en el centro de monitores grandes. */
   --content-gutter: 24px;
   --content-wide: min(1280px, calc(100% - var(--content-gutter) - var(--content-gutter)));
   /* Superficies */
@@ -70,7 +70,7 @@
 }
 
 /* En monitores anchos, el contenido visual ocupa el ancho disponible sin
-   tocar las medidas de lectura de FAQ, Nosotros y footer.*/
+   tocar las medidas de lectura de FAQ, Nosotros y footer. */
 @media (min-width: 1440px) {
   :root {
     --content-gutter: clamp(48px, 5vw, 96px);
@@ -426,7 +426,6 @@ img { display: block; max-width: 100%; }
 
 .hero {
   display: flex;
-  flex-wrap: wrap;
   align-items: stretch;
   gap: 0;
   min-height: calc(100vh - 72px);
@@ -437,7 +436,7 @@ img { display: block; max-width: 100%; }
 }
 
 .hero-inner {
-  max-width: 680px;
+  max-width: 520px;
   padding: var(--space-8) var(--space-6) var(--space-8) var(--content-gutter);
   display: flex;
   flex-direction: column;
@@ -491,7 +490,6 @@ img { display: block; max-width: 100%; }
 
 .hero-visual {
   flex: 1;
-  min-width: 280px;
   position: relative;
   align-self: stretch;
   min-height: 400px;
