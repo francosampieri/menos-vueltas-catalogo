@@ -437,7 +437,7 @@ img { display: block; max-width: 100%; }
 }
 
 .hero-inner {
-  max-width: 560px;
+  max-width: 680px;
   padding: var(--space-8) var(--space-6) var(--space-8) var(--content-gutter);
   display: flex;
   flex-direction: column;
