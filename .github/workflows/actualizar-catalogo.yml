@@ -22,7 +22,7 @@ jobs:
 
           URL_PRODUCTOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=1666631008&single=true&output=csv"
           URL_GRUPOS    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=2138230487&single=true&output=csv"
-          URL_PRECIOS   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=685666727&single=true&output=csv"
+          URL_PRECIOS   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=955304075&single=true&output=csv"
 
           def leer_texto(url):
               with urllib.request.urlopen(url) as r:
