@@ -36,23 +36,23 @@ jobs:
           def leer_precios(url):
               """
               La hoja Precios tiene DOS tablas lado a lado en el mismo CSV:
-              columnas 0-10  → Precios B2C (11 columnas)
-              columna  11    → separador vacío
-              columnas 12-22 → Precios B2B (11 columnas)
+              columnas 0-11  → Precios B2C (12 columnas, incluye Strat)
+              columna  12    → separador vacío
+              columnas 13-24 → Precios B2B (12 columnas, incluye Strat)
               No se puede usar DictReader directo porque los headers se repiten.
               """
               content = leer_texto(url)
               filas = list(csv.reader(io.StringIO(content)))
               header = filas[0]
-              cols_b2c = header[0:11]
-              cols_b2b = header[12:23]
+              cols_b2c = header[0:12]
+              cols_b2b = header[13:25]
 
               precios_b2c, precios_b2b = [], []
               for fila in filas[1:]:
-                  if len(fila) < 23:
+                  if len(fila) < 25:
                       continue
-                  izq = fila[0:11]
-                  der = fila[12:23]
+                  izq = fila[0:12]
+                  der = fila[13:25]
                   if izq[0]:  # tiene Id
                       precios_b2c.append(dict(zip(cols_b2c, izq)))
                   if der[0]:
