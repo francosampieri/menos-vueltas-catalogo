@@ -6449,9 +6449,9 @@
     },
     {
       "Id": "336",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Id_Proveedor": "cal130135",
       "Producto": "Protector Discreet Extra Largos XL 50u",
       "Marca": "TENA",
@@ -19590,7 +19590,7 @@
     },
     {
       "Id_Grupo": "9",
-      "Nombre_Grupo": "Agua Saborizada",
+      "Nombre_Grupo": "Agua Saborizada Sin Azúcar",
       "Marca": "FRESH",
       "Categoria": "Almacén",
       "Subcategoria": "Bebidas"
