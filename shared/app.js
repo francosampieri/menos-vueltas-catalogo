@@ -658,16 +658,46 @@ function renderExpanded(gid, vars, imgEl) {
     btnMenos.className = 'qty-btn';
     btnMenos.textContent = '−';
 
-    const numEl = document.createElement('div');
+    const numEl = document.createElement('input');
+    numEl.type = 'number';
+    numEl.min = '1';
+    numEl.inputMode = 'numeric';
+    numEl.pattern = '[0-9]*';
     numEl.className = 'qty-num';
-    numEl.textContent = qty;
+    numEl.value = qty;
 
     const btnMas = document.createElement('button');
     btnMas.className = 'qty-btn';
     btnMas.textContent = '+';
 
-    btnMenos.addEventListener('click', e => { e.stopPropagation(); if (qty > 1) { qty--; numEl.textContent = qty; } });
-    btnMas.addEventListener('click',   e => { e.stopPropagation(); qty++; numEl.textContent = qty; });
+    btnMenos.addEventListener('click', e => { e.stopPropagation(); if (qty > 1) { qty--; numEl.value = qty; } });
+    btnMas.addEventListener('click',   e => { e.stopPropagation(); qty++; numEl.value = qty; });
+
+    numEl.addEventListener('click', e => e.stopPropagation());
+    numEl.addEventListener('focus', e => { e.stopPropagation(); numEl.select(); });
+    numEl.addEventListener('input', e => {
+      e.stopPropagation();
+      const val = parseInt(numEl.value, 10);
+      if (!isNaN(val) && val >= 1) {
+        qty = val;
+      }
+    });
+    numEl.addEventListener('blur', e => {
+      e.stopPropagation();
+      const val = parseInt(numEl.value, 10);
+      if (isNaN(val) || val < 1) {
+        qty = 1;
+      } else {
+        qty = val;
+      }
+      numEl.value = qty;
+    });
+    numEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        numEl.blur();
+      }
+    });
+
     qtyCtrl.append(btnMenos, numEl, btnMas);
 
     const agregarBtn = document.createElement('button');
@@ -682,7 +712,9 @@ function renderExpanded(gid, vars, imgEl) {
         e.stopPropagation();
         const v = getVarianteSeleccionada();
         if (!v) return;
-        agregarAlCarrito(gid, v, qty);
+        const valActual = parseInt(numEl.value, 10);
+        const finalQty = (!isNaN(valActual) && valActual >= 1) ? valActual : qty;
+        agregarAlCarrito(gid, v, finalQty);
         agregarBtn.textContent = '✓ Agregado';
         setTimeout(() => { agregarBtn.textContent = '+ Agregar más'; }, 1500);
       });
@@ -749,6 +781,47 @@ function cambiarQtyCarrito(idx, delta) {
   actualizarUICarrito();
 }
 
+function cambiarQtyCarritoInput(idx, valStr, isFinal) {
+  let n = parseInt(valStr, 10);
+  if (!isNaN(n) && n >= 1) {
+    carrito[idx].qty = n;
+    actualizarUICarrito(false);
+
+    const item = carrito[idx];
+    const cont = document.getElementById('carritoItems');
+    if (cont && cont.children[idx]) {
+      const itemEl = cont.children[idx];
+      const aplica = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
+      const pEfectivo = precioEfectivo(item);
+      const subtotal = pEfectivo !== null ? formatPrecio(pEfectivo * item.qty) : 'S/P';
+
+      let precioLinea = '';
+      if (item.precio !== null) {
+        if (aplica) {
+          precioLinea = `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--accent-2)">${formatPrecio(item.precioDto)}</strong> c/u`;
+        } else {
+          precioLinea = `${formatPrecio(item.precio)} c/u`;
+        }
+      } else {
+        precioLinea = 'Precio a confirmar';
+      }
+
+      const precioEl = itemEl.querySelector('.ci-precio');
+      if (precioEl) precioEl.innerHTML = precioLinea;
+
+      const subtotalEl = itemEl.querySelector('.ci-subtotal');
+      if (subtotalEl) subtotalEl.textContent = subtotal;
+    }
+  }
+
+  if (isFinal) {
+    if (isNaN(n) || n < 1) {
+      carrito[idx].qty = 1;
+    }
+    actualizarUICarrito(true);
+  }
+}
+
 function eliminarDelCarrito(idx) {
   const gid = carrito[idx].gid;
   carrito.splice(idx, 1);
@@ -759,31 +832,39 @@ function eliminarDelCarrito(idx) {
   actualizarUICarrito();
 }
 
-function actualizarUICarrito() {
+function actualizarUICarrito(rerenderItems = true) {
   const total      = carrito.reduce((s, i) => s + (precioEfectivo(i) || 0) * i.qty, 0);
   const totalItems = carrito.reduce((s, i) => s + i.qty, 0);
   const hayPrecio  = carrito.some(i => i.precio !== null);
 
   const countEl = document.getElementById('cartCount');
-  countEl.textContent = totalItems;
-  countEl.classList.toggle('visible', totalItems > 0);
+  if (countEl) {
+    countEl.textContent = totalItems;
+    countEl.classList.toggle('visible', totalItems > 0);
+  }
 
   const totalEl = document.getElementById('carritoTotal');
-  if (hayPrecio) {
-    totalEl.textContent  = formatPrecio(total);
-    totalEl.className    = 'carrito-total-valor';
-  } else {
-    totalEl.textContent  = 'Precios a confirmar';
-    totalEl.className    = 'carrito-total-valor sin-precios';
+  if (totalEl) {
+    if (hayPrecio) {
+      totalEl.textContent  = formatPrecio(total);
+      totalEl.className    = 'carrito-total-valor';
+    } else {
+      totalEl.textContent  = 'Precios a confirmar';
+      totalEl.className    = 'carrito-total-valor sin-precios';
+    }
   }
 
   const notaEl = document.getElementById('carritoNota');
-  const sinPrecio = carrito.filter(i => i.precio === null);
-  notaEl.textContent = sinPrecio.length
-    ? `⚠️ ${sinPrecio.length} producto(s) sin precio. El total puede variar.`
-    : '';
+  if (notaEl) {
+    const sinPrecio = carrito.filter(i => i.precio === null);
+    notaEl.textContent = sinPrecio.length
+      ? `⚠️ ${sinPrecio.length} producto(s) sin precio. El total puede variar.`
+      : '';
+  }
 
-  renderCarritoItems();
+  if (rerenderItems) {
+    renderCarritoItems();
+  }
 }
 
 function renderCarritoItems() {
@@ -826,7 +907,12 @@ function renderCarritoItems() {
         <div class="ci-precio">${precioLinea}</div>
         <div class="ci-qty-row">
           <button class="ci-qty-btn" onclick="cambiarQtyCarrito(${idx}, -1)">−</button>
-          <div class="ci-qty-num">${item.qty}</div>
+          <input type="number" min="1" inputmode="numeric" pattern="[0-9]*" class="ci-qty-num" value="${item.qty}"
+            onfocus="this.select()"
+            oninput="cambiarQtyCarritoInput(${idx}, this.value, false)"
+            onchange="cambiarQtyCarritoInput(${idx}, this.value, true)"
+            onblur="cambiarQtyCarritoInput(${idx}, this.value, true)"
+            onkeydown="if(event.key==='Enter') this.blur()">
           <button class="ci-qty-btn" onclick="cambiarQtyCarrito(${idx}, 1)">+</button>
         </div>
       </div>

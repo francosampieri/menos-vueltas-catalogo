@@ -1470,16 +1470,31 @@ img { display: block; max-width: 100%; }
   transition: background var(--t), color var(--t);
 }
 .qty-btn:hover { background: var(--surface-2); color: var(--t1); }
+
+.qty-num::-webkit-inner-spin-button,
+.qty-num::-webkit-outer-spin-button,
+.ci-qty-num::-webkit-inner-spin-button,
+.ci-qty-num::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .qty-num {
-  width: 30px;
+  width: 36px;
   text-align: center;
   font-size: 0.875rem;
   font-weight: 600;
   border: none;
   outline: none;
   font-family: var(--font);
-  background: none;
+  background: transparent;
   color: var(--t1);
+  padding: 0;
+  -moz-appearance: textfield;
+  transition: background var(--t);
+}
+.qty-num:focus {
+  background: var(--surface-2);
 }
 
 .agregar-btn {
@@ -1730,7 +1745,25 @@ img { display: block; max-width: 100%; }
   transition: all var(--t);
 }
 .ci-qty-btn:hover { border-color: var(--accent); color: var(--accent); }
-.ci-qty-num { font-size: 0.845rem; font-weight: 600; min-width: 18px; text-align: center; color: var(--t1); }
+.ci-qty-num {
+  font-size: 0.845rem;
+  font-weight: 600;
+  width: 32px;
+  text-align: center;
+  color: var(--t1);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  outline: none;
+  font-family: var(--font);
+  padding: 2px 0;
+  -moz-appearance: textfield;
+  transition: border-color var(--t), background var(--t);
+}
+.ci-qty-num:hover, .ci-qty-num:focus {
+  border-color: var(--line);
+  background: var(--surface);
+}
 
 .ci-eliminar {
   background: none;
