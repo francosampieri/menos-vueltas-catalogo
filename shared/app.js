@@ -921,6 +921,12 @@ function actualizarUICarrito(rerenderItems = true) {
     countEl.classList.toggle('visible', totalItems > 0);
   }
 
+  const floatCountEl = document.getElementById('cartFloatingCount');
+  if (floatCountEl) {
+    floatCountEl.textContent = totalItems;
+    floatCountEl.classList.toggle('visible', totalItems > 0);
+  }
+
   const totalEl = document.getElementById('carritoTotal');
   if (totalEl) {
     if (hayPrecio) {
@@ -944,6 +950,18 @@ function actualizarUICarrito(rerenderItems = true) {
     renderCarritoItems();
   }
 }
+
+// ══ SCROLL BOTÓN FLOTANTE CARRITO ══
+window.addEventListener('scroll', () => {
+  const floatBtn = document.getElementById('cartFloatingBtn');
+  if (floatBtn) {
+    if (window.scrollY > 100) {
+      floatBtn.classList.add('visible');
+    } else {
+      floatBtn.classList.remove('visible');
+    }
+  }
+}, { passive: true });
 
 function renderCarritoItems() {
   const cont = document.getElementById('carritoItems');
