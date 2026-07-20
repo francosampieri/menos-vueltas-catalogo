@@ -27,7 +27,7 @@ function parsePrecio(str) {
 
 function formatPrecio(n) {
   if (n === null || n === undefined) return null;
-  return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
 // ══ CARGA DE DATOS ══
@@ -333,7 +333,12 @@ function crearCard(gid, vars) {
   const vprecioEl = document.createElement('div');
   vprecioEl.id = `vprecio-${gid}`;
 
-  body.append(marcaEl, nombreEl, vlabelEl, vprecioEl);
+  const vprecioDtoEl = document.createElement('div');
+  vprecioDtoEl.className = 'card-precio-dto';
+  vprecioDtoEl.id = `vprecio-dto-${gid}`;
+  vprecioDtoEl.style.display = 'none';
+
+  body.append(marcaEl, nombreEl, vlabelEl, vprecioEl, vprecioDtoEl);
 
   // ── Expanded ──
   const expanded = document.createElement('div');
@@ -345,10 +350,10 @@ function crearCard(gid, vars) {
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
   rotaciones[gid] = { indexActual: 0, timer: null };
-  actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl, false);
+  actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl, vprecioDtoEl, false);
 
   // Rotación automática si hay múltiples variantes
-  if (vars.length > 1) iniciarRotacion(gid, vars, img, vlabelEl, vprecioEl);
+  if (vars.length > 1) iniciarRotacion(gid, vars, img, vlabelEl, vprecioEl, vprecioDtoEl);
 
   // Click para expandir
   card.addEventListener('click', (e) => {
@@ -359,9 +364,12 @@ function crearCard(gid, vars) {
   return card;
 }
 
-function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, animar = true) {
+function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, animar = true) {
   const v = vars[idx];
-  const precio = parsePrecio(v['Precio_Venta']);
+  const precio    = parsePrecio(v['Precio_Venta']);
+  const precioDto = parsePrecio(v['Precio_Dto']);
+  const uniDto    = parseInt(v['Uni Dto']) || 0;
+  const hayDto    = uniDto > 0 && precioDto !== null;
 
   const aplicarCambios = (entrando) => {
     // Label
@@ -375,6 +383,17 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
       } else {
         vprecioEl.textContent = 'Precio a confirmar';
         vprecioEl.className = 'card-precio sin-precio';
+      }
+    }
+
+    // Precio con descuento por cantidad (debajo del precio normal).
+    // Solo el precio resalta (ver CSS); el resto del texto queda en gris.
+    if (vprecioDtoEl) {
+      if (hayDto) {
+        vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)} c/u</strong> ${uniDto} o más`;
+        vprecioDtoEl.style.display = 'block';
+      } else {
+        vprecioDtoEl.style.display = 'none';
       }
     }
 
@@ -416,6 +435,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
 
     if (vlabelEl)  vlabelEl.style.opacity  = '1';
     if (vprecioEl) vprecioEl.style.opacity = '1';
+    if (vprecioDtoEl) vprecioDtoEl.style.opacity = '1';
   };
 
   if (!animar || !imgEl) {
@@ -429,6 +449,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
   imgEl.style.transform = 'translateX(-14px)';
   if (vlabelEl)  vlabelEl.style.opacity  = '0';
   if (vprecioEl) vprecioEl.style.opacity = '0';
+  if (vprecioDtoEl) vprecioDtoEl.style.opacity = '0';
 
   setTimeout(() => {
     aplicarCambios(() => {
@@ -450,14 +471,14 @@ function actualizarDots(gid, idx) {
   }
 }
 
-function iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl) {
+function iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl, vprecioDtoEl) {
   const rot = rotaciones[gid];
   if (rot.timer) clearInterval(rot.timer);
   rot.timer = setInterval(() => {
     const card = document.getElementById(`card-${gid}`);
     if (!card || card.classList.contains('expanded')) return;
     rot.indexActual = (rot.indexActual + 1) % vars.length;
-    actualizarVistaCerrada(gid, vars, rot.indexActual, imgEl, vlabelEl, vprecioEl);
+    actualizarVistaCerrada(gid, vars, rot.indexActual, imgEl, vlabelEl, vprecioEl, vprecioDtoEl);
   }, 3000);
 }
 
@@ -471,6 +492,7 @@ function sincronizarYReanudarRotacion(gid) {
   const imgEl = document.querySelector(`#card-${gid} .card-img-wrap img`);
   const vlabelEl = document.getElementById(`vlabel-${gid}`);
   const vprecioEl = document.getElementById(`vprecio-${gid}`);
+  const vprecioDtoEl = document.getElementById(`vprecio-dto-${gid}`);
 
   if (rotaciones[gid] && vlabelEl) {
     const idxActual = vars.findIndex(v => buildVarianteLabel(v, vars) === vlabelEl.textContent);
@@ -480,7 +502,7 @@ function sincronizarYReanudarRotacion(gid) {
     imgEl.onload = null;
     imgEl.onerror = null;
   }
-  if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
+  if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl, vprecioDtoEl);
 }
 
 function toggleCard(gid, vars, card, imgEl) {
@@ -624,8 +646,9 @@ function renderExpanded(gid, vars, imgEl) {
     if (varSel) {
       const vlabelEl  = document.getElementById(`vlabel-${gid}`);
       const vprecioEl = document.getElementById(`vprecio-${gid}`);
+      const vprecioDtoEl = document.getElementById(`vprecio-dto-${gid}`);
       const idxSel = vars.indexOf(varSel);
-      actualizarVistaCerrada(gid, vars, idxSel >= 0 ? idxSel : 0, imgEl, vlabelEl, vprecioEl, !esPrimeraDibujada);
+      actualizarVistaCerrada(gid, vars, idxSel >= 0 ? idxSel : 0, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, !esPrimeraDibujada);
     }
     esPrimeraDibujada = false;
 
@@ -640,7 +663,7 @@ function renderExpanded(gid, vars, imgEl) {
     if (uniDto > 0 && precioDto !== null) {
       const dtoDiv = document.createElement('div');
       dtoDiv.className = 'descuento-bloque';
-      dtoDiv.innerHTML = `<div class="descuento-info">Comprando ${uniDto} o más: <strong>${formatPrecio(precioDto)}</strong> c/u</div>`;
+      dtoDiv.innerHTML = `<div class="descuento-info"><span class="dto-cantidad">Comprando ${uniDto} o más</span><strong>${formatPrecio(precioDto)} c/u</strong></div>`;
       expanded.appendChild(dtoDiv);
     }
 
