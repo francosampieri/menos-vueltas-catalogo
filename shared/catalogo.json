@@ -28565,12 +28565,12 @@
       "Producto": "Harina 000 FLORENCIA 1 kg",
       "Tipo": "Ancla",
       "Precio_Costo": "$753,25",
-      "Precio_Venta": "$950,00",
+      "Precio_Venta": "$900,00",
       "Uni Dto": "5",
       "Dto": "8%",
       "Precio_Dto": "$850,00",
-      "Markup": "26,12%",
-      "Ganancia_Bruta": "$196,75",
+      "Markup": "19,48%",
+      "Ganancia_Bruta": "$146,75",
       "Strat": "24,00%"
     },
     {
