@@ -833,12 +833,6 @@ img { display: block; max-width: 100%; }
   color: var(--t1);
   white-space: nowrap;
 }
-.destacados-strip-sub {
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  color: var(--t2);
-  white-space: nowrap;
-}
 
 .destacados-scroller {
   position: relative;

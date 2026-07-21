@@ -104,8 +104,7 @@
   <section id="destacados" class="destacados-strip">
     <div class="destacados-strip-inner">
       <div class="destacados-strip-label">
-        <span class="destacados-strip-title">Los más pedidos</span>
-        <span class="destacados-strip-sub">Mejores precios de la semana</span>
+        <span class="destacados-strip-title">Productos Destacados</span>
       </div>
       <div class="destacados-scroller">
         <button class="destacados-arrow destacados-arrow--prev" id="destacadosPrev" aria-label="Ver anteriores">
@@ -216,11 +215,11 @@
           </defs>
 
           <!-- ══ ITEMS IZQUIERDA — badge pegado justo al texto ══ -->
-          <text x="20" y="62"  font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Buscar productos en un PDF</text>
+          <text x="20" y="62"  font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Buscar productos en una lista</text>
           <circle cx="236" cy="57"  r="10" fill="#EAECE5"/>
           <text   x="236" y="61"  font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
 
-          <text x="20" y="122" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Anotar cada producto</text>
+          <text x="20" y="122" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Tener un proveedor por cada producto</text>
           <circle cx="187" cy="117" r="10" fill="#EAECE5"/>
           <text   x="187" y="121" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
 
@@ -228,7 +227,7 @@
           <circle cx="187" cy="177" r="10" fill="#EAECE5"/>
           <text   x="187" y="181" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
 
-          <text x="20" y="242" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Calcular porcentajes</text>
+          <text x="20" y="242" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Comprar por bulto sí o sí</text>
           <circle cx="187" cy="237" r="10" fill="#EAECE5"/>
           <text   x="187" y="241" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
 
@@ -236,17 +235,17 @@
           <circle cx="171" cy="297" r="10" fill="#EAECE5"/>
           <text   x="171" y="301" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
 
-          <text x="20" y="362" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Mínimos obligatorios</text>
+          <text x="20" y="362" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Mínimos de pedido</text>
           <circle cx="187" cy="357" r="10" fill="#EAECE5"/>
           <text   x="187" y="361" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
 
           <!-- ══ CURVAS CON RULOS desde el borde derecho de cada badge ══ -->
 
-          <!-- Buscar productos en un PDF (sale x=246): rulo hacia arriba -->
+          <!-- Buscar productos en una lista (sale x=246): rulo hacia arriba -->
           <path d="M246 57 C 299 57, 284 18, 334 27 C 379 36, 361 78, 333 88 C 307 98, 321 130, 355 142 C 370 152, 378 160, 385 205"
                 stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
 
-          <!-- Anotar cada producto (sale x=197): rulo pequeño arriba -->
+          <!-- Tener un proveedor por cada producto (sale x=197): rulo pequeño arriba -->
           <path d="M197 117 C 233 117, 217 90, 253 96 C 288 102, 278 133, 255 138 C 235 142, 245 160, 387 205"
                 stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
 
@@ -254,7 +253,7 @@
           <path d="M197 177 C 270 177, 350 183, 385 207"
                 stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
 
-          <!-- Calcular porcentajes (sale x=197): leve arco desde abajo -->
+          <!-- Comprar por bulto sí o sí (sale x=197): leve arco desde abajo -->
           <path d="M197 237 C 230 237, 358 222, 385 215"
                 stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
 
@@ -262,7 +261,7 @@
           <path d="M181 297 C 210 297, 194 336, 236 327 C 276 318, 260 276, 234 266 C 210 256, 222 236, 262 226 C 315 215, 365 216, 385 215"
                 stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
 
-          <!-- Mínimos obligatorios (sale x=197): rulo grande hacia abajo -->
+          <!-- Mínimos de pedido (sale x=197): rulo grande hacia abajo -->
           <path d="M197 357 C 212 357, 196 398, 238 388 C 280 378, 263 334, 236 324 C 210 314, 222 292, 264 282 C 310 272, 362 248, 385 220"
                 stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
 
@@ -285,12 +284,12 @@
       <div class="vueltas-mobile" aria-label="Pasos que evitás al pedir con Menos Vueltas">
         <p class="vueltas-ticket-heading">Tu pedido sin Menos Vueltas</p>
 
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Buscar productos en un PDF</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Anotar cada producto</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Buscar productos en una lista</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Tener un proveedor por cada producto</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
         <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Sacar cuentas a mano</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Calcular porcentajes</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Comprar por bulto sí o sí</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
         <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Escribir el pedido</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Mínimos obligatorios</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Mínimos de pedido</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
 
         <hr class="vueltas-ticket-divider">
 
