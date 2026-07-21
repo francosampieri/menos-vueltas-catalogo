@@ -1391,3 +1391,26 @@ function addRevealClasses() {
 // Iniciar reveal al cargar la página
 document.addEventListener('DOMContentLoaded', addRevealClasses);
 
+// ══ DESTACADOS: flechas del scroll horizontal ══
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.getElementById('destacados-grid');
+  const prev  = document.getElementById('destacadosPrev');
+  const next  = document.getElementById('destacadosNext');
+  if (!track || !prev || !next) return;
+
+  const paso = () => Math.round(track.clientWidth * 0.8);
+  prev.addEventListener('click', () => track.scrollBy({ left: -paso(), behavior: 'smooth' }));
+  next.addEventListener('click', () => track.scrollBy({ left: paso(), behavior: 'smooth' }));
+
+  const actualizarFlechas = () => {
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    prev.disabled = track.scrollLeft <= 4;
+    next.disabled = track.scrollLeft >= maxScroll - 4;
+  };
+  track.addEventListener('scroll', actualizarFlechas);
+  // Recalcular cuando cambian las cards (ej. al cargar el catálogo)
+  new MutationObserver(actualizarFlechas).observe(track, { childList: true });
+  window.addEventListener('resize', actualizarFlechas);
+  actualizarFlechas();
+});
+
