@@ -373,7 +373,7 @@ function crearCardDestacada(gid, vars) {
   if (hayDto) {
     const vprecioDtoEl = document.createElement('div');
     vprecioDtoEl.className = 'card-precio-dto';
-    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)} c/u</strong> ${uniDto} o más`;
+    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)}</strong> ${uniDto} o más`;
     body.appendChild(vprecioDtoEl);
   }
 
