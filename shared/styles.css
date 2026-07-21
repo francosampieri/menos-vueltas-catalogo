@@ -805,6 +805,88 @@ img { display: block; max-width: 100%; }
   padding: var(--space-9) var(--space-5);
 }
 
+/* Destacados: franjita angosta con scroll horizontal (no una sección más) */
+.destacados-strip {
+  background: var(--accent-bg);
+  border-bottom: 1px solid var(--line-soft);
+}
+.destacados-strip-inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+.destacados-strip-label {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-right: var(--space-4);
+  border-right: 1px solid var(--accent-line);
+}
+.destacados-strip-title {
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--t1);
+  white-space: nowrap;
+}
+
+.destacados-scroller {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.destacados-track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 2px 6px;
+  scrollbar-width: none;
+}
+.destacados-track::-webkit-scrollbar { display: none; }
+
+.destacados-track .card {
+  flex: 0 0 132px;
+  scroll-snap-align: start;
+}
+.destacados-track .card-img-wrap { aspect-ratio: 1.15; }
+.destacados-track .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+.destacados-track .card-marca { font-size: 0.62rem; }
+.destacados-track .card-nombre { font-size: 0.78rem; -webkit-line-clamp: 2; }
+.destacados-track .card-variante-label { display: none; }
+.destacados-track .card-precio { font-size: 0.86rem; }
+.destacados-track .card-precio-dto { font-size: 0.68rem; }
+
+.destacados-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--s2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--t1);
+  cursor: pointer;
+  z-index: 2;
+  transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
+}
+.destacados-arrow:hover { border-color: var(--accent-line); }
+.destacados-arrow svg { width: 16px; height: 16px; }
+.destacados-arrow--prev { left: -14px; }
+.destacados-arrow--next { right: -14px; }
+.destacados-arrow[disabled] { opacity: 0; pointer-events: none; }
+
 .categorias-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -2025,6 +2107,11 @@ img { display: block; max-width: 100%; }
 
   .beneficios-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6) var(--space-4); }
   .categorias-grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Destacados: en pantallas medianas ya no hace falta el botón de flecha,
+     el swipe táctil alcanza */
+  .destacados-arrow { display: none; }
+  .destacados-strip-inner { gap: var(--space-3); }
 }
 
 /* Zona intermedia (tablet / ventana achicada): el buscador ya se encogió
@@ -2056,6 +2143,13 @@ img { display: block; max-width: 100%; }
   .whatsapp-trigger { width: 34px; height: 34px; }
   .cart-trigger { padding: 0 8px; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
+
+  /* Destacados en mobile: label arriba (angosto), franja de scroll abajo,
+     cards un poco más chicas para que entren 2 y pico por pantalla */
+  .destacados-strip-inner { flex-direction: column; align-items: stretch; gap: var(--space-2); padding: var(--space-3) var(--space-4); }
+  .destacados-strip-label { flex-direction: row; align-items: baseline; gap: 6px; border-right: none; padding-right: 0; }
+  .destacados-track .card { flex-basis: 116px; }
+
   .catalogo-main { padding: var(--space-4) var(--space-4) 100px; }
   .catalogo-topbar-inner { padding: 0 var(--space-4); }
   .filtros { padding: var(--space-2) var(--space-4); }

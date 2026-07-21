@@ -11,6 +11,14 @@ let catalogo        = {};  // id_grupo → [productos]
 let carrito         = [];  // items del carrito
 const rotaciones    = {};  // id_grupo → { timer, indexActual }
 
+// Productos destacados en la landing (solo B2B, sección "Los más pedidos").
+// Poné acá los Id_Grupo de los productos que querés mostrar, en el orden
+// en que querés que aparezcan. El Id_Grupo se ve en la columna "Id_Grupo"
+// de la hoja de Productos.
+const PRODUCTOS_DESTACADOS = [
+  '1', '196', '220', '8', '241', '41', '267', '74', '253', '133', '145', '147', '152', '156', '184', '200'
+];
+
 let filtroActivo    = 'Todos';
 let filtroSubcat    = null;
 let busquedaActiva  = '';
@@ -82,6 +90,31 @@ function renderCatalogo() {
   construirFiltrosCategorias();
   llenarMegamenu();
   renderGrupos();
+  renderDestacados();
+}
+
+// Sección "Los más pedidos" de la landing (solo existe en B2B; en B2C el
+// contenedor no está en el HTML y esta función no hace nada).
+function renderDestacados() {
+  const cont = document.getElementById('destacados-grid');
+  if (!cont) return;
+
+  cont.innerHTML = '';
+  const seccion = document.getElementById('destacados');
+
+  const items = PRODUCTOS_DESTACADOS
+    .map(gid => [gid, catalogo[gid]])
+    .filter(([, vars]) => vars && vars.length);
+
+  // Si no hay ningún destacado activo/cargado, ocultamos la sección entera
+  // en vez de mostrarla vacía.
+  if (!items.length) {
+    if (seccion) seccion.style.display = 'none';
+    return;
+  }
+  if (seccion) seccion.style.display = '';
+
+  items.forEach(([gid, vars]) => cont.appendChild(crearCardDestacada(gid, vars)));
 }
 
 function construirFiltrosCategorias() {
@@ -271,6 +304,93 @@ function buildVarianteLabel(v, vars) {
   // tenga o no el producto variantes de otro tipo (color, sabor, etc.).
   else if (v['Tamaño'] && v['UM']) partes.push(`${v['Tamaño']} ${v['UM']}`);
   return partes.join(' · ');
+}
+
+// Card "destacada": versión liviana y estática (sin rotación de variantes
+// ni expandido propio) para usar en la sección "Los más pedidos" de la
+// landing, evitando así tener ids duplicados con la card real que vive en
+// el catálogo. Al tocarla, lleva directo al catálogo con ese producto
+// buscado.
+function crearCardDestacada(gid, vars) {
+  const g = grupos[gid] || {};
+  const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
+  const marca  = g.marca  || vars[0]['Marca']    || '';
+  const cat    = g.categoria || vars[0]['Categoria'] || '';
+  const v = vars[0];
+
+  const precio    = parsePrecio(v['Precio_Venta']);
+  const precioDto = parsePrecio(v['Precio_Dto']);
+  const uniDto    = parseInt(v['Uni Dto']) || 0;
+  const hayDto    = uniDto > 0 && precioDto !== null;
+
+  const card = document.createElement('div');
+  card.className = 'card card-destacada';
+  card.addEventListener('click', () => irAProducto(nombre));
+
+  const imgWrap = document.createElement('div');
+  imgWrap.className = 'card-img-wrap';
+  const placeholder = document.createElement('div');
+  placeholder.className = 'card-img-placeholder';
+  placeholder.textContent = getEmoji(cat);
+  imgWrap.appendChild(placeholder);
+
+  const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
+  if (url) {
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = nombre;
+    img.onload = () => { placeholder.style.display = 'none'; };
+    img.onerror = () => { img.remove(); };
+    imgWrap.appendChild(img);
+  }
+
+  const body = document.createElement('div');
+  body.className = 'card-body';
+
+  const marcaEl = document.createElement('div');
+  marcaEl.className = 'card-marca';
+  marcaEl.textContent = marca;
+
+  const nombreEl = document.createElement('div');
+  nombreEl.className = 'card-nombre';
+  nombreEl.textContent = nombre;
+
+  const vlabelEl = document.createElement('div');
+  vlabelEl.className = 'card-variante-label';
+  vlabelEl.textContent = buildVarianteLabel(v, vars);
+
+  const vprecioEl = document.createElement('div');
+  if (precio !== null) {
+    vprecioEl.textContent = formatPrecio(precio);
+    vprecioEl.className = 'card-precio';
+  } else {
+    vprecioEl.textContent = 'Precio a confirmar';
+    vprecioEl.className = 'card-precio sin-precio';
+  }
+
+  body.append(marcaEl, nombreEl, vlabelEl, vprecioEl);
+
+  if (hayDto) {
+    const vprecioDtoEl = document.createElement('div');
+    vprecioDtoEl.className = 'card-precio-dto';
+    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)}</strong> ${uniDto} o más`;
+    body.appendChild(vprecioDtoEl);
+  }
+
+  card.append(imgWrap, body);
+  return card;
+}
+
+// Lleva al catálogo con el producto ya buscado, para que el kiosquero vea
+// la card real (con todas sus variantes) y pueda agregarla al pedido.
+function irAProducto(nombre) {
+  mostrarCatalogo();
+  const input = document.getElementById('buscador');
+  if (input) input.value = nombre;
+  busquedaActiva = nombre;
+  const label = document.getElementById('catalogo-titulo-label');
+  if (label) label.textContent = `Resultados para "${nombre}"`;
+  renderGrupos();
 }
 
 function crearCard(gid, vars) {
@@ -1270,4 +1390,27 @@ function addRevealClasses() {
 
 // Iniciar reveal al cargar la página
 document.addEventListener('DOMContentLoaded', addRevealClasses);
+
+// ══ DESTACADOS: flechas del scroll horizontal ══
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.getElementById('destacados-grid');
+  const prev  = document.getElementById('destacadosPrev');
+  const next  = document.getElementById('destacadosNext');
+  if (!track || !prev || !next) return;
+
+  const paso = () => Math.round(track.clientWidth * 0.8);
+  prev.addEventListener('click', () => track.scrollBy({ left: -paso(), behavior: 'smooth' }));
+  next.addEventListener('click', () => track.scrollBy({ left: paso(), behavior: 'smooth' }));
+
+  const actualizarFlechas = () => {
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    prev.disabled = track.scrollLeft <= 4;
+    next.disabled = track.scrollLeft >= maxScroll - 4;
+  };
+  track.addEventListener('scroll', actualizarFlechas);
+  // Recalcular cuando cambian las cards (ej. al cargar el catálogo)
+  new MutationObserver(actualizarFlechas).observe(track, { childList: true });
+  window.addEventListener('resize', actualizarFlechas);
+  actualizarFlechas();
+});
 
