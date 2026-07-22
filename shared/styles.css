@@ -2156,13 +2156,19 @@ img { display: block; max-width: 100%; }
   .subfiltros { padding: var(--space-1) var(--space-4); }
   .filtro-btn { height: 36px; background: var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
   .subfiltro-btn { height: 34px; }
-  .qty-btn { width: 36px; height: 36px; }
-  .qty-num { width: 36px; }
+  /* Los botones +/- de cantidad se sacan en mobile: tocarlos varias veces
+     seguidas rápido dispara el zoom nativo del navegador y rompe la UI.
+     Queda solo el campo, que ya se puede editar con el teclado. */
+  .qty-btn { display: none; }
+  .qty-num-wrap { border-left: none; border-right: none; }
+  .qty-num { width: 64px; font-size: 0.95rem; padding: 8px 0; }
   .agregar-btn { height: 40px; }
   .cerrar-card { padding: var(--space-2); }
   .carrito-panel { max-height: 92dvh; }
   .carrito-close { width: 36px; height: 36px; }
-  .ci-qty-btn { width: 32px; height: 32px; }
+  .ci-qty-btn { display: none; }
+  .ci-qty-wrap { border-style: solid; }
+  .ci-qty-num { width: 48px; font-size: 0.9rem; padding: 6px 0; }
   .ci-eliminar { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; padding: 0; }
   .carrito-footer { padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
   /* Hero móvil: la foto pasa a ser el escenario completo, no un bloque aparte. */
