@@ -11,6 +11,12 @@ let catalogo        = {};  // id_grupo → [productos]
 let carrito         = [];  // items del carrito
 const rotaciones    = {};  // id_grupo → { timer, indexActual }
 
+// Handler de swipe activo por card mientras está expandida (gid → función
+// que recibe +1/-1 y cambia a la variante siguiente/anterior). Se registra
+// al abrir la card y se borra al cerrarla; ver crearCard/renderExpanded.
+const swipeHandlers = {};
+
+
 // Productos destacados en la landing (solo B2B, sección "Los más pedidos").
 // Poné acá los Id_Grupo de los productos que querés mostrar, en el orden
 // en que querés que aparezcan. El Id_Grupo se ve en la columna "Id_Grupo"
@@ -22,6 +28,10 @@ const PRODUCTOS_DESTACADOS = [
 let filtroActivo    = 'Todos';
 let filtroSubcat    = null;
 let busquedaActiva  = '';
+
+// Onboarding del catálogo: se muestra una sola vez por carga de página
+// (si el usuario recarga o vuelve a entrar al sitio, se vuelve a mostrar).
+let onbMostrado     = false;
 
 // ══ PARSEO ══
 function parsePrecio(str) {
@@ -477,11 +487,68 @@ function crearCard(gid, vars) {
 
   // Click para expandir
   card.addEventListener('click', (e) => {
+    // Si el click viene justo después de un swipe de variante (mobile),
+    // lo ignoramos: si no, cerraría la card recién abierta por el swipe.
+    if (imgWrap.dataset.suppressClick) {
+      delete imgWrap.dataset.suppressClick;
+      return;
+    }
     if (e.target.closest('.card-expanded')) return;
     toggleCard(gid, vars, card, img);
   });
 
+  // Deslizar sobre la imagen (mobile) para cambiar de variante, solo con
+  // la card abierta — es más intuitivo que tocar los chips. Sin flechas
+  // ni indicadores: el gesto mismo alcanza.
+  attachSwipeVariantes(imgWrap, gid);
+
   return card;
+}
+
+// Detecta un swipe horizontal sobre la imagen de una card y, si está
+// expandida y tiene más de una variante, llama al handler registrado en
+// swipeHandlers[gid] (ver renderExpanded) para pasar a la variante
+// siguiente/anterior. No interfiere con el scroll vertical de la página
+// ni con el tap normal para abrir/cerrar la card.
+function attachSwipeVariantes(imgWrap, gid) {
+  let startX = 0, startY = 0, tracking = false, decidido = false, esHorizontal = false;
+  const UMBRAL = 32; // px mínimos para contar como swipe
+
+  imgWrap.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    const card = document.getElementById(`card-${gid}`);
+    if (!card || !card.classList.contains('expanded')) return;
+    if (!swipeHandlers[gid]) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+    decidido = false;
+    esHorizontal = false;
+  }, { passive: true });
+
+  imgWrap.addEventListener('touchmove', (e) => {
+    if (!tracking) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+    if (!decidido && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      decidido = true;
+      esHorizontal = Math.abs(dx) > Math.abs(dy);
+    }
+    // Solo se "toma" el gesto si es horizontal: evita romper el scroll
+    // vertical normal de la página cuando el usuario quiso scrollear.
+    if (esHorizontal) e.preventDefault();
+  }, { passive: false });
+
+  imgWrap.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+    if (!esHorizontal) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) < UMBRAL) return;
+    const dir = dx < 0 ? 1 : -1; // deslizar a la izquierda → siguiente variante
+    swipeHandlers[gid]?.(dir);
+    imgWrap.dataset.suppressClick = '1';
+  }, { passive: true });
 }
 
 function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, animar = true) {
@@ -634,6 +701,7 @@ function toggleCard(gid, vars, card, imgEl) {
     const id = c.id.replace('card-', '');
     const exp = document.getElementById(`exp-${id}`);
     if (exp) exp.innerHTML = '';
+    delete swipeHandlers[id];
     // Reanudar rotación de cualquier otra card que se esté cerrando acá
     // (por ejemplo, al abrir una card distinta mientras esta quedó expandida)
     if (id !== gid) sincronizarYReanudarRotacion(id);
@@ -647,6 +715,7 @@ function toggleCard(gid, vars, card, imgEl) {
   } else {
     // Reanudar rotación, retomando desde la variante que quedó seleccionada
     // manualmente (si la hay) en vez de un índice viejo.
+    delete swipeHandlers[gid];
     sincronizarYReanudarRotacion(gid);
   }
 }
@@ -953,9 +1022,28 @@ function renderExpanded(gid, vars, imgEl) {
       const card = document.getElementById(`card-${gid}`);
       card.classList.remove('expanded');
       expanded.innerHTML = '';
+      delete swipeHandlers[gid];
       sincronizarYReanudarRotacion(gid);
     });
     expanded.appendChild(cerrarBtn);
+  }
+
+  // Swipe sobre la imagen (mobile) para cambiar de variante mientras la
+  // card está expandida: recorre vars en orden y sincroniza los chips de
+  // variante/tamaño con la que quede seleccionada. Sin flechas ni dots,
+  // el gesto solo alcanza.
+  if (vars.length > 1) {
+    swipeHandlers[gid] = (dir) => {
+      const actual = getVarianteSeleccionada() || vars[0];
+      const idxActual = vars.indexOf(actual);
+      const idxNuevo = (idxActual + dir + vars.length) % vars.length;
+      const nuevaVar = vars[idxNuevo];
+      selVariante = nuevaVar['Label_Variante'] || null;
+      selTamaño   = nuevaVar['Label_Tamaño']   || null;
+      dibujar();
+    };
+  } else {
+    delete swipeHandlers[gid];
   }
 
   dibujar();
@@ -1231,6 +1319,35 @@ function mostrarCatalogo(cat, sub) {
 
   const label = sub || (cat && cat !== 'Todos' ? cat : 'Catálogo completo');
   document.getElementById('catalogo-titulo-label').textContent = label;
+
+  mostrarOnboardingToast();
+}
+
+// Franja de onboarding: avisa una sola vez por carga de página que las
+// cards se pueden tocar para ver variantes y precio por cantidad. Solo
+// se cierra con el botón "Entendido" — no sola ni al tocar un producto,
+// para asegurarnos de que se lea. Si el usuario recarga o vuelve a entrar
+// más tarde, se vuelve a mostrar (no se guarda en localStorage a propósito).
+function mostrarOnboardingToast() {
+  if (onbMostrado) return;
+  if (document.getElementById('onbToast')) return;
+  onbMostrado = true;
+
+  const toast = document.createElement('div');
+  toast.id = 'onbToast';
+  toast.className = 'onb-toast';
+  toast.innerHTML = `
+    <span class="onb-toast-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+    </span>
+    <span class="onb-toast-text">Tocá cualquier producto para ver sus variantes y precios por cantidad.</span>
+    <button class="onb-toast-close">Entendido</button>
+  `;
+  document.body.appendChild(toast);
+
+  toast.querySelector('.onb-toast-close').addEventListener('click', () => {
+    document.getElementById('onbToast')?.remove();
+  });
 }
 
 function scrollLanding(id) {
