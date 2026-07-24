@@ -1231,6 +1231,37 @@ function mostrarCatalogo(cat, sub) {
 
   const label = sub || (cat && cat !== 'Todos' ? cat : 'Catálogo completo');
   document.getElementById('catalogo-titulo-label').textContent = label;
+
+  mostrarOnboardingToast();
+}
+
+// Franja de onboarding: avisa una sola vez (por navegador) que las cards
+// se pueden tocar para ver variantes y precio por cantidad. Se cierra
+// sola a los 6s, con el botón "Listo", o al tocar cualquier producto.
+function mostrarOnboardingToast() {
+  if (localStorage.getItem('mv_onb_catalogo')) return;
+  if (document.getElementById('onbToast')) return;
+
+  const toast = document.createElement('div');
+  toast.id = 'onbToast';
+  toast.className = 'onb-toast';
+  toast.innerHTML = `
+    <span class="onb-toast-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+    </span>
+    <span class="onb-toast-text">Tocá cualquier producto para ver sus variantes y precios por cantidad.</span>
+    <button class="onb-toast-close">Listo</button>
+  `;
+  document.body.appendChild(toast);
+
+  const cerrar = () => {
+    document.getElementById('onbToast')?.remove();
+    localStorage.setItem('mv_onb_catalogo', '1');
+  };
+
+  toast.querySelector('.onb-toast-close').addEventListener('click', cerrar);
+  document.getElementById('catalogo')?.addEventListener('click', cerrar, { once: true });
+  setTimeout(cerrar, 6000);
 }
 
 function scrollLanding(id) {

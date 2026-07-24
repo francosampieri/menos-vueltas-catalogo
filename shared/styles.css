@@ -2315,6 +2315,13 @@ img { display: block; max-width: 100%; }
   .footer-dot { display: none; }
   .footer-copy { font-size: .72rem; }
   .footer-whatsapp { grid-column: 1 / -1; grid-row: 1; display: flex; align-items: center; justify-content: center; height: 42px; border: 1px solid rgba(255,255,255,.55); border-radius: var(--r2); font-size: .82rem; }
+
+  /* En mobile el botón flotante del carrito vive abajo a la derecha;
+     subimos la franja de onboarding para que no se solapen */
+  .onb-toast {
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    width: calc(100vw - 32px);
+  }
 }
 
 @media (max-width: 380px) {
@@ -2436,6 +2443,63 @@ img { display: block; max-width: 100%; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════
+   ONBOARDING: franja flotante que explica que se puede
+   tocar una card, se muestra una sola vez (ver app.js)
+══════════════════════════════════════════════════════ */
+.onb-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translate(-50%, 0);
+  width: min(92vw, 460px);
+  background: var(--t1);
+  color: white;
+  border-radius: var(--r3);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.22);
+  z-index: 260; /* por encima de las cards, por debajo del carrito (300) */
+  animation: onbUp 0.35s ease;
+}
+@keyframes onbUp {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+.onb-toast-icon {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.onb-toast-icon svg { width: 16px; height: 16px; }
+.onb-toast-text {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+.onb-toast-close {
+  background: rgba(255,255,255,.14);
+  border: none;
+  color: white;
+  font-family: var(--font);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--rf);
+  cursor: pointer;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
 
 /* ══════════════════════════════════════════════════════
    BOTÓN FLOTANTE CARRITO
