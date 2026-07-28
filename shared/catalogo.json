@@ -5083,43 +5083,22 @@
       "Precio_Costo": "$2.462,38"
     },
     {
-      "Id": "336",
-      "Activo": "OFF",
-      "Cat B2C": "OFF",
-      "Cat B2B": "OFF",
-      "Id_Proveedor": "cal130135",
-      "Producto": "Protector Discreet Extra Largos XL 50u",
-      "Marca": "TENA",
-      "Tamaño": "50",
-      "UM": "u",
-      "Categoria": "Higiene Personal",
-      "Subcategoria": "Higiene Femenina",
-      "Tags": "protector, incontinencia, extra largo, xl, tena",
-      "Id_Grupo": "191",
-      "Tipo_Variante": "",
-      "Label_Variante": "",
-      "Label_Tamaño": "50 u XL",
-      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/336-tena-protector-discreet-extra-largos-xl-50u-50-u-xl.webp",
-      "Tipo": "Rentable",
-      "Precio_Costo": "$8.759,10"
-    },
-    {
       "Id": "337",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "cal203503",
-      "Producto": "Protector Discreet Largos L 15u",
+      "Producto": "Protector Discreet L 15u",
       "Marca": "TENA",
       "Tamaño": "15",
       "UM": "u",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina",
       "Tags": "protector, incontinencia, largo, tena, discreto",
-      "Id_Grupo": "192",
+      "Id_Grupo": "191",
       "Tipo_Variante": "",
       "Label_Variante": "",
-      "Label_Tamaño": "",
+      "Label_Tamaño": "15 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/337-tena-protector-discreet-largos-l-15u-15-u.webp",
       "Tipo": "Rentable",
       "Precio_Costo": "$2.448,29"
@@ -5172,7 +5151,7 @@
       "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "cal203504",
-      "Producto": "Protector Discreet Largos L 50u",
+      "Producto": "Protector Discreet L 50 u",
       "Marca": "TENA",
       "Tamaño": "50",
       "UM": "u",
@@ -5182,7 +5161,7 @@
       "Id_Grupo": "191",
       "Tipo_Variante": "",
       "Label_Variante": "",
-      "Label_Tamaño": "50 u L",
+      "Label_Tamaño": "50u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/343-tena-protector-discreet-largos-l-50u-50-u-l.webp",
       "Tipo": "Rentable",
       "Precio_Costo": "$7.962,81"
@@ -20878,21 +20857,21 @@
     },
     {
       "Id_Grupo": "179",
-      "Nombre_Grupo": "Toalla Clásica",
+      "Nombre_Grupo": "Toalla Normal",
       "Marca": "NOSOTRAS",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
     },
     {
       "Id_Grupo": "180",
-      "Nombre_Grupo": "Toalla Buenas Noches",
+      "Nombre_Grupo": "Toalla Nocturna",
       "Marca": "NOSOTRAS",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
     },
     {
       "Id_Grupo": "181",
-      "Nombre_Grupo": "Toalla Dia y Noche Tela 8u",
+      "Nombre_Grupo": "Toalla Dia y Noche",
       "Marca": "NOSOTRAS",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
@@ -20920,14 +20899,14 @@
     },
     {
       "Id_Grupo": "185",
-      "Nombre_Grupo": "Toalla Super Anatómica 8u",
+      "Nombre_Grupo": "Toalla Super Anatómica",
       "Marca": "CALIPSO",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
     },
     {
       "Id_Grupo": "186",
-      "Nombre_Grupo": "Toalla Nocturna 8u",
+      "Nombre_Grupo": "Toalla Nocturna",
       "Marca": "CALIPSO",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
@@ -20941,14 +20920,14 @@
     },
     {
       "Id_Grupo": "188",
-      "Nombre_Grupo": "Protector Normal",
+      "Nombre_Grupo": "Protector Diario",
       "Marca": "CALIPSO",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
     },
     {
       "Id_Grupo": "189",
-      "Nombre_Grupo": "Protector Respirable 20u",
+      "Nombre_Grupo": "Protector Respirable",
       "Marca": "CALIPSO",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
@@ -20962,21 +20941,14 @@
     },
     {
       "Id_Grupo": "191",
-      "Nombre_Grupo": "Protector Discreet 50u",
-      "Marca": "TENA",
-      "Categoria": "Higiene Personal",
-      "Subcategoria": "Higiene Femenina"
-    },
-    {
-      "Id_Grupo": "192",
-      "Nombre_Grupo": "Protector Discreet Largos L 15u",
+      "Nombre_Grupo": "Protector Diario",
       "Marca": "TENA",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
     },
     {
       "Id_Grupo": "193",
-      "Nombre_Grupo": "Toalla Discreet Natural Care 8u",
+      "Nombre_Grupo": "Toalla Normal",
       "Marca": "TENA",
       "Categoria": "Higiene Personal",
       "Subcategoria": "Higiene Femenina"
@@ -25941,22 +25913,22 @@
     },
     {
       "Id": "336",
-      "Id_proveedor": "cal130135",
-      "Producto": "Protector Discreet Extra Largos XL 50u TENA 50 u",
-      "Tipo": "Rentable",
-      "Precio_Costo": "$8.759,10",
+      "Id_proveedor": "#N/A",
+      "Producto": "#N/A",
+      "Tipo": "#N/A",
+      "Precio_Costo": "#N/A",
       "Precio_Venta": "$13.000,00",
       "Uni Dto": "2",
       "Dto": "15%",
       "Precio_Dto": "$11.050,00",
-      "Markup": "48,42%",
-      "Ganancia_Bruta": "$4.240,90",
+      "Markup": "#N/A",
+      "Ganancia_Bruta": "#N/A",
       "Strat": "48,40%"
     },
     {
       "Id": "337",
       "Id_proveedor": "cal203503",
-      "Producto": "Protector Discreet Largos L 15u TENA 15 u",
+      "Producto": "Protector Discreet L 15u TENA 15 u",
       "Tipo": "Rentable",
       "Precio_Costo": "$2.448,29",
       "Precio_Venta": "$3.700,00",
@@ -25984,7 +25956,7 @@
     {
       "Id": "343",
       "Id_proveedor": "cal203504",
-      "Producto": "Protector Discreet Largos L 50u TENA 50 u",
+      "Producto": "Protector Discreet L 50 u TENA 50 u",
       "Tipo": "Rentable",
       "Precio_Costo": "$7.962,81",
       "Precio_Venta": "$11.900,00",
@@ -32047,22 +32019,22 @@
     },
     {
       "Id": "336",
-      "Id_proveedor": "cal130135",
-      "Producto": "Protector Discreet Extra Largos XL 50u TENA 50 u",
-      "Tipo": "Rentable",
-      "Precio_Costo": "$8.759,10",
+      "Id_proveedor": "#N/A",
+      "Producto": "#N/A",
+      "Tipo": "#N/A",
+      "Precio_Costo": "#N/A",
       "Precio_Venta": "$11.400,00",
       "Uni Dto": "2",
       "Dto": "10%",
       "Precio_Dto": "$10.250,00",
-      "Markup": "30,15%",
-      "Ganancia_Bruta": "$2.640,90",
+      "Markup": "#N/A",
+      "Ganancia_Bruta": "#N/A",
       "Strat": "30,15%"
     },
     {
       "Id": "337",
       "Id_proveedor": "cal203503",
-      "Producto": "Protector Discreet Largos L 15u TENA 15 u",
+      "Producto": "Protector Discreet L 15u TENA 15 u",
       "Tipo": "Rentable",
       "Precio_Costo": "$2.448,29",
       "Precio_Venta": "$3.200,00",
@@ -32090,7 +32062,7 @@
     {
       "Id": "343",
       "Id_proveedor": "cal203504",
-      "Producto": "Protector Discreet Largos L 50u TENA 50 u",
+      "Producto": "Protector Discreet L 50 u TENA 50 u",
       "Tipo": "Rentable",
       "Precio_Costo": "$7.962,81",
       "Precio_Venta": "$10.500,00",
