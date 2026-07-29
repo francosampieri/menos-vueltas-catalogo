@@ -51,6 +51,9 @@ function formatPrecio(n) {
 // ══ CARGA DE DATOS ══
 async function cargarDatos() {
   try {
+    // El build de Vercel copia app.js, styles.css, logo.svg y catalogo.json
+    // desde shared/ hacia la raíz de b2b/ y b2c/ (ver vercel.json), así que
+    // en producción catalogo.json queda junto a este script — ruta plana.
     const data = await fetch('catalogo.json').then(r => r.json());
 
     data.grupos.forEach(g => {
