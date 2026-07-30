@@ -547,7 +547,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 ══════════════════════════════════════════════════════ */
 .hero-promo-bg {
   position: relative;
-  aspect-ratio: 1376 / 768; /* debe coincidir con la proporción real de hero-promo.jpg */
+  aspect-ratio: 1376 / 703; /* debe coincidir con la proporción real de hero-promo.jpg */
   width: 100%;
   /* Tope de seguridad: en pantallas anchas y no muy altas (ej. monitores
      1920×1080) el aspect-ratio de la foto puede dar un hero apenas más
