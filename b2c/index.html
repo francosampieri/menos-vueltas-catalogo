@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Cabin:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body data-hero="promo">
+<body data-hero="estandar">
 <!-- ═ HERO ACTIVO ═
      Cambiá el atributo data-hero del <body> (arriba) a "promo" o
      "estandar" para elegir qué hero se muestra en la landing. El que no
@@ -112,15 +112,16 @@
   </section>
 
   <!-- ═ HERO DE CAMPAÑA ═ (se muestra cuando data-hero="promo")
-       Ejemplo: 10% OFF de lanzamiento. Se rediseña de cero en cada
-       campaña — no hace falta reutilizar esta estructura, es solo un
-       punto de partida. Cambiá data-hero en el <body> para activarlo. -->
+       10% OFF + envío gratis en la primera compra, con foto de campaña
+       (hero-promo.jpg). Se rediseña de cero en cada campaña — no hace
+       falta reutilizar esta estructura, es solo el punto de partida
+       actual. Cambiá data-hero en el <body> para activarlo. -->
   <section class="hero-promo-bg">
+    <img src="hero-promo.jpg" alt="" class="hero-promo-photo">
     <div class="hero-promo">
       <div class="hero-promo-inner">
         <span class="hero-promo-badge">Solo por tiempo limitado</span>
-        <div class="hero-promo-numero">10% OFF</div>
-        <h1 class="hero-promo-titulo">En tu primera compra</h1>
+        <h1 class="hero-promo-titulo"><strong>10% OFF</strong><br>en tu primera compra</h1>
         <p class="hero-promo-texto">Aprovechá esta semana de lanzamiento: 10% de descuento en todo el catálogo para nuevos clientes.</p>
         <div class="hero-promo-actions">
           <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
@@ -637,6 +638,5 @@
 
 <script>window.CANAL = 'B2C';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a22ebf2d1dabf03f',t:'MTc4NTM1NTYxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a231bc867a94b522',t:'MTc4NTM4Njk2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
