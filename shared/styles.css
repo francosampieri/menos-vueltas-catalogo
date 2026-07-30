@@ -547,8 +547,14 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 ══════════════════════════════════════════════════════ */
 .hero-promo-bg {
   position: relative;
-  aspect-ratio: 1584 / 672; /* debe coincidir con la proporción real de hero-promo.jpg */
+  aspect-ratio: 1376 / 768; /* debe coincidir con la proporción real de hero-promo.jpg */
   width: 100%;
+  /* Tope de seguridad: en pantallas anchas y no muy altas (ej. monitores
+     1920×1080) el aspect-ratio de la foto puede dar un hero apenas más
+     alto que el espacio visible bajo la topbar. Este límite evita que
+     haga falta scrollear un poquito en esos casos, sin afectar el
+     encuadre (la imagen sigue centrada con object-fit: cover). */
+  max-height: calc(100vh - 72px);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -672,7 +678,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     align-items: flex-end;
   }
   .hero-promo-photo {
-    object-position: 96% center;
+    object-position: 90% center;
   }
   .hero-promo-bg::after {
     background: linear-gradient(180deg, rgba(20,28,18,.05) 0%, rgba(20,28,18,.15) 45%, rgba(20,28,18,.88) 100%);
