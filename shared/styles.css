@@ -528,72 +528,84 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    clases son un punto de partida, no un molde fijo — la próxima promo
    puede tener otra estructura, otros colores, otro layout, lo que haga
    falta para esa comunicación puntual.
+
+   Esta versión: foto de campaña a pantalla completa (hero-promo.jpg) con
+   degradé oscuro a la izquierda para que el texto sea siempre legible.
 ══════════════════════════════════════════════════════ */
 .hero-promo-bg {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  position: relative;
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
   overflow: hidden;
+  background: var(--accent-2); /* color de respaldo mientras carga la foto */
+}
+
+.hero-promo-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-promo-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(20,28,18,.78) 0%, rgba(20,28,18,.42) 45%, rgba(20,28,18,.05) 75%);
 }
 
 .hero-promo {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 72px);
-  padding: var(--space-8) var(--space-5);
-  text-align: center;
+  z-index: 1;
+  width: 100%;
 }
 
 .hero-promo-inner {
-  position: relative;
-  z-index: 1;
-  max-width: 640px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 560px;
+  padding: var(--space-8) var(--space-5) var(--space-8) var(--content-gutter);
 }
 
 .hero-promo-badge {
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
-  background: rgba(255,255,255,.14);
-  border: 1px solid rgba(255,255,255,.4);
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.5);
   border-radius: var(--rf);
-  padding: 6px 18px;
+  padding: 6px 16px;
   margin-bottom: var(--space-5);
   color: white;
   font-family: var(--font);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: .04em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: .05em;
   text-transform: uppercase;
   backdrop-filter: blur(4px);
 }
 
-.hero-promo-numero {
-  font-size: clamp(3.4rem, 11vw, 6rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: white;
-  margin-bottom: var(--space-4);
-}
-
 .hero-promo-titulo {
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
-  font-weight: 600;
+  font-size: clamp(2.1rem, 4.6vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
   color: white;
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-5);
+  text-shadow: 0 2px 20px rgba(0,0,0,.25);
+}
+.hero-promo-titulo strong {
+  font: inherit;
+  color: #D9E8C9;
 }
 
 .hero-promo-texto {
   font-family: var(--font-body);
   font-size: 0.95rem;
-  color: rgba(255,255,255,.88);
+  color: rgba(255,255,255,.9);
   line-height: 1.6;
-  max-width: 440px;
+  max-width: 420px;
   margin-bottom: var(--space-7);
 }
 
@@ -602,11 +614,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   align-items: center;
   gap: var(--space-3);
   flex-wrap: wrap;
-  justify-content: center;
 }
 
-/* Botón principal sobre fondo de color: variante clara del btn-primary,
-   ya que el verde de marca no resalta sobre sí mismo. */
+/* Botón principal sobre foto: variante clara del btn-primary, ya que el
+   verde de marca no resalta sobre sí mismo. */
 .hero-promo-actions .btn-primary {
   background: white;
   color: var(--accent-2);
@@ -617,18 +628,23 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   color: var(--accent-2);
 }
 .hero-promo-actions .btn-ghost-dark {
-  background: rgba(255,255,255,.12);
-  border-color: rgba(255,255,255,.6);
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.65);
   color: white;
 }
 .hero-promo-actions .btn-ghost-dark:hover {
-  background: rgba(255,255,255,.2);
+  background: rgba(255,255,255,.22);
   color: white;
   border-color: white;
 }
 
+@media (max-width: 900px) {
+  .hero-promo-bg { min-height: unset; }
+  .hero-promo-inner { padding: var(--space-7) var(--space-4); max-width: none; }
+}
+
 @media (max-width: 600px) {
-  .hero-promo { min-height: 480px; padding: var(--space-7) var(--space-4); }
+  .hero-promo-bg { min-height: 560px; }
   .hero-promo-actions { flex-direction: column; align-items: stretch; width: 100%; }
   .hero-promo-actions .btn-primary,
   .hero-promo-actions .btn-ghost-dark { width: 100%; }
