@@ -617,20 +617,12 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   line-height: 1.06;
   letter-spacing: -0.03em;
   color: white;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-5);
   text-shadow: 0 2px 20px rgba(0,0,0,.25);
 }
 .hero-promo-titulo strong {
   font: inherit;
   color: #D9E8C9;
-}
-
-.hero-promo-subtitulo {
-  font-family: var(--font-body);
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: rgba(255,255,255,.95);
-  margin-bottom: var(--space-4);
 }
 
 .hero-promo-texto {
