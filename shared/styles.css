@@ -537,13 +537,17 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    nunca necesita agrandarse para cubrir el alto, y por lo tanto nunca
    recorta la parte de arriba (la mano) ni la de abajo (los escalones),
    sea cual sea el ancho de la pantalla (notebook, monitor de escritorio,
-   etc). Si el día de mañana se reemplaza hero-promo.jpg por una foto con
-   otra proporción, hay que actualizar este aspect-ratio para que
-   coincida con el nuevo archivo.
+   etc). La foto es panorámica (ancha en relación a su alto) a propósito,
+   para que el hero entre completo en el primer vistazo sin necesidad de
+   scrollear. Si el día de mañana se reemplaza hero-promo.jpg por una
+   foto con otra proporción, hay que actualizar este aspect-ratio para
+   que coincida con el nuevo archivo (y, si la foto es más "cuadrada",
+   conviene pedir una versión más panorámica en vez de solo ajustar el
+   número, para no volver a quedar con un hero demasiado alto).
 ══════════════════════════════════════════════════════ */
 .hero-promo-bg {
   position: relative;
-  aspect-ratio: 1264 / 843; /* debe coincidir con la proporción real de hero-promo.jpg */
+  aspect-ratio: 1584 / 672; /* debe coincidir con la proporción real de hero-promo.jpg */
   width: 100%;
   display: flex;
   align-items: center;
@@ -668,7 +672,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     align-items: flex-end;
   }
   .hero-promo-photo {
-    object-position: 78% center;
+    object-position: 96% center;
   }
   .hero-promo-bg::after {
     background: linear-gradient(180deg, rgba(20,28,18,.05) 0%, rgba(20,28,18,.15) 45%, rgba(20,28,18,.88) 100%);
