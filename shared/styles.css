@@ -531,10 +531,20 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
    Esta versión: foto de campaña a pantalla completa (hero-promo.jpg) con
    degradé oscuro a la izquierda para que el texto sea siempre legible.
+
+   El contenedor mantiene la MISMA proporción que la foto (aspect-ratio)
+   en vez de basarse en el alto de la pantalla (100vh): así la imagen
+   nunca necesita agrandarse para cubrir el alto, y por lo tanto nunca
+   recorta la parte de arriba (la mano) ni la de abajo (los escalones),
+   sea cual sea el ancho de la pantalla (notebook, monitor de escritorio,
+   etc). Si el día de mañana se reemplaza hero-promo.jpg por una foto con
+   otra proporción, hay que actualizar este aspect-ratio para que
+   coincida con el nuevo archivo.
 ══════════════════════════════════════════════════════ */
 .hero-promo-bg {
   position: relative;
-  min-height: calc(100vh - 72px);
+  aspect-ratio: 1264 / 843; /* debe coincidir con la proporción real de hero-promo.jpg */
+  width: 100%;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -638,16 +648,47 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   border-color: white;
 }
 
+/* Tablet: la proporción fija ya resuelve el alto, solo achicamos el
+   padding lateral para que el texto no quede pegado al borde. */
 @media (max-width: 900px) {
-  .hero-promo-bg { min-height: unset; }
   .hero-promo-inner { padding: var(--space-7) var(--space-4); max-width: none; }
 }
 
+/* Mobile: la proporción de la pantalla es tan distinta a la de la foto
+   (angosta y alta vs. panorámica) que mantener el aspect-ratio dejaría
+   un hero larguísimo. Acá se usa el mismo recurso que ya tiene el hero
+   estándar en mobile: alto fijo, foto de fondo enfocada hacia la derecha
+   (donde están la bolsa y la mano) y degradé de arriba hacia abajo con
+   el texto apoyado abajo, sobre la parte más "tranquila" de la imagen
+   (el escalón), para que siempre se lea bien. */
 @media (max-width: 600px) {
-  .hero-promo-bg { min-height: 560px; }
-  .hero-promo-actions { flex-direction: column; align-items: stretch; width: 100%; }
+  .hero-promo-bg {
+    aspect-ratio: unset;
+    min-height: 620px;
+    align-items: flex-end;
+  }
+  .hero-promo-photo {
+    object-position: 78% center;
+  }
+  .hero-promo-bg::after {
+    background: linear-gradient(180deg, rgba(20,28,18,.05) 0%, rgba(20,28,18,.15) 45%, rgba(20,28,18,.88) 100%);
+  }
+  .hero-promo-inner {
+    padding: var(--space-6) var(--space-4) var(--space-7);
+    max-width: none;
+  }
+  .hero-promo-titulo {
+    font-size: clamp(2rem, 9vw, 2.5rem);
+  }
+  .hero-promo-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
   .hero-promo-actions .btn-primary,
-  .hero-promo-actions .btn-ghost-dark { width: 100%; }
+  .hero-promo-actions .btn-ghost-dark {
+    width: 100%;
+  }
 }
 
 
