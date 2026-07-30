@@ -547,7 +547,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 ══════════════════════════════════════════════════════ */
 .hero-promo-bg {
   position: relative;
-  aspect-ratio: 1376 / 703; /* debe coincidir con la proporción real de hero-promo.jpg */
+  aspect-ratio: 1528 / 704; /* debe coincidir con la proporción real de hero-promo.jpg */
   width: 100%;
   /* Tope de seguridad: en pantallas anchas y no muy altas (ej. monitores
      1920×1080) el aspect-ratio de la foto puede dar un hero apenas más
@@ -590,8 +590,8 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 .hero-promo-badge {
   display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
+  align-items: center;
+  gap: 7px;
   background: rgba(255,255,255,.16);
   border: 1px solid rgba(255,255,255,.5);
   border-radius: var(--rf);
@@ -605,6 +605,11 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   text-transform: uppercase;
   backdrop-filter: blur(4px);
 }
+.hero-promo-badge svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
 
 .hero-promo-titulo {
   font-size: clamp(2.1rem, 4.6vw, 3.2rem);
@@ -612,12 +617,20 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   line-height: 1.06;
   letter-spacing: -0.03em;
   color: white;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-3);
   text-shadow: 0 2px 20px rgba(0,0,0,.25);
 }
 .hero-promo-titulo strong {
   font: inherit;
   color: #D9E8C9;
+}
+
+.hero-promo-subtitulo {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.95);
+  margin-bottom: var(--space-4);
 }
 
 .hero-promo-texto {
@@ -626,7 +639,16 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   color: rgba(255,255,255,.9);
   line-height: 1.6;
   max-width: 420px;
-  margin-bottom: var(--space-7);
+  margin-bottom: var(--space-6);
+}
+
+.hero-promo-nota {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,.72);
+  line-height: 1.5;
+  max-width: 420px;
+  margin-top: var(--space-4);
 }
 
 .hero-promo-actions {
@@ -678,7 +700,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     align-items: flex-end;
   }
   .hero-promo-photo {
-    object-position: 90% center;
+    object-position: 85% center;
   }
   .hero-promo-bg::after {
     background: linear-gradient(180deg, rgba(20,28,18,.05) 0%, rgba(20,28,18,.15) 45%, rgba(20,28,18,.88) 100%);
