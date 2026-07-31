@@ -8372,9 +8372,9 @@
       "Subcategoria": "Harinas",
       "Tags": "harina, 000, pan, panadería, pizza",
       "Id_Grupo": "80",
-      "Tipo_Variante": "",
-      "Label_Variante": "",
-      "Label_Tamaño": "5 kg",
+      "Tipo_Variante": "Tipo",
+      "Label_Variante": "0­00",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/77-florencia-harina-000-5-kg.webp",
       "Tipo": "Ancla",
       "Precio_Costo": "$3.716,29"
@@ -8392,10 +8392,10 @@
       "Categoria": "Almacén",
       "Subcategoria": "Harinas",
       "Tags": "harina, 0000, pastelería, tortas, fina",
-      "Id_Grupo": "81",
-      "Tipo_Variante": "",
-      "Label_Variante": "",
-      "Label_Tamaño": "5 kg",
+      "Id_Grupo": "80",
+      "Tipo_Variante": "Tipo",
+      "Label_Variante": "0­000",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/78-florencia-harina-0000-5-kg.webp",
       "Tipo": "Ancla",
       "Precio_Costo": "$5.036,30"
@@ -8413,10 +8413,10 @@
       "Categoria": "Almacén",
       "Subcategoria": "Harinas",
       "Tags": "harina, leudante, tortas, bizcochuelo, facturas",
-      "Id_Grupo": "82",
-      "Tipo_Variante": "",
-      "Label_Variante": "",
-      "Label_Tamaño": "5 kg",
+      "Id_Grupo": "80",
+      "Tipo_Variante": "Tipo",
+      "Label_Variante": "Leudante",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/79-florencia-harina-leudante-5-kg.webp",
       "Tipo": "Ancla",
       "Precio_Costo": "$5.448,72"
@@ -20171,21 +20171,7 @@
     },
     {
       "Id_Grupo": "80",
-      "Nombre_Grupo": "Harina 000 5kg",
-      "Marca": "FLORENCIA",
-      "Categoria": "Almacén",
-      "Subcategoria": "Harinas"
-    },
-    {
-      "Id_Grupo": "81",
-      "Nombre_Grupo": "Harina 0000 5kg",
-      "Marca": "FLORENCIA",
-      "Categoria": "Almacén",
-      "Subcategoria": "Harinas"
-    },
-    {
-      "Id_Grupo": "82",
-      "Nombre_Grupo": "Harina Leudante 5kg",
+      "Nombre_Grupo": "Harina 5kg Florencia",
       "Marca": "FLORENCIA",
       "Categoria": "Almacén",
       "Subcategoria": "Harinas"
@@ -28532,11 +28518,11 @@
       "Subcategoria": "Harinas",
       "Tipo": "Ancla",
       "Precio_Costo": "$3.716,29",
-      "Precio_Venta": "$0,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Dto": "$0,00",
-      "Markup": "-100,00%"
+      "Precio_Venta": "$4.400,00",
+      "Uni Dto": "2",
+      "Dto": "8%",
+      "Precio_Dto": "$4.050,00",
+      "Markup": "18,40%"
     },
     {
       "Id": "78",
@@ -28546,11 +28532,11 @@
       "Subcategoria": "Harinas",
       "Tipo": "Ancla",
       "Precio_Costo": "$5.036,30",
-      "Precio_Venta": "$0,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Dto": "$0,00",
-      "Markup": "-100,00%"
+      "Precio_Venta": "$5.900,00",
+      "Uni Dto": "2",
+      "Dto": "8%",
+      "Precio_Dto": "$5.450,00",
+      "Markup": "17,15%"
     },
     {
       "Id": "79",
@@ -28560,11 +28546,11 @@
       "Subcategoria": "Harinas",
       "Tipo": "Ancla",
       "Precio_Costo": "$5.448,72",
-      "Precio_Venta": "$0,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Dto": "$0,00",
-      "Markup": "-100,00%"
+      "Precio_Venta": "$6.500,00",
+      "Uni Dto": "2",
+      "Dto": "8%",
+      "Precio_Dto": "$6.000,00",
+      "Markup": "19,29%"
     },
     {
       "Id": "80",
