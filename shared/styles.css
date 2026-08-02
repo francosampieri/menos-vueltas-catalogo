@@ -700,31 +700,34 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   .hero-promo {
     display: flex;
   }
-  /* La pill y el título suben al tope del hero (aprovechando el espacio
-     vacío del encuadre) y el resto del contenido queda apoyado abajo,
-     exactamente donde estaba. */
+  /* El título (con el párrafo debajo) sube al tope del hero, aprovechando
+     el espacio vacío del encuadre; los botones y la nota quedan apoyados
+     abajo, exactamente donde estaban. La pill no se muestra en mobile. */
   .hero-promo-inner {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* la pill conserva su ancho de contenido */
+    align-items: flex-start;
     width: 100%;
     padding: var(--space-4) var(--space-4) var(--space-7);
     max-width: none;
   }
   .hero-promo-badge {
-    margin-bottom: var(--space-3);
+    display: none;
   }
   .hero-promo-titulo {
-    font-size: clamp(2rem, 9vw, 2.5rem);
+    font-size: clamp(1.84rem, 8.3vw, 2.3rem);
+    margin-bottom: var(--space-3);
+  }
+  .hero-promo-texto {
+    max-width: 60%; /* corta antes de chocar con la bolsa de la foto */
     margin-bottom: 0;
   }
-  .hero-promo-texto,
   .hero-promo-nota {
     align-self: stretch;
     max-width: none;
   }
-  .hero-promo-texto {
-    margin-top: auto; /* empuja párrafo + botones + nota al pie */
+  .hero-promo-actions {
+    margin-top: auto; /* empuja botones + nota al pie */
   }
   .hero-promo-actions {
     flex-direction: column;
