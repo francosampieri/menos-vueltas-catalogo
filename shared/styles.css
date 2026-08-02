@@ -689,20 +689,42 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   .hero-promo-bg {
     aspect-ratio: unset;
     min-height: 620px;
-    align-items: flex-end;
+    align-items: stretch; /* el bloque de texto ocupa todo el alto del hero */
   }
   .hero-promo-photo {
     object-position: 85% center;
   }
   .hero-promo-bg::after {
-    background: linear-gradient(180deg, rgba(20,28,18,.05) 0%, rgba(20,28,18,.15) 45%, rgba(20,28,18,.88) 100%);
+    background: linear-gradient(180deg, rgba(20,28,18,.18) 0%, rgba(20,28,18,.10) 35%, rgba(20,28,18,.88) 100%);
   }
+  .hero-promo {
+    display: flex;
+  }
+  /* La pill y el título suben al tope del hero (aprovechando el espacio
+     vacío del encuadre) y el resto del contenido queda apoyado abajo,
+     exactamente donde estaba. */
   .hero-promo-inner {
-    padding: var(--space-6) var(--space-4) var(--space-7);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* la pill conserva su ancho de contenido */
+    width: 100%;
+    padding: var(--space-4) var(--space-4) var(--space-7);
     max-width: none;
+  }
+  .hero-promo-badge {
+    margin-bottom: var(--space-3);
   }
   .hero-promo-titulo {
     font-size: clamp(2rem, 9vw, 2.5rem);
+    margin-bottom: 0;
+  }
+  .hero-promo-texto,
+  .hero-promo-nota {
+    align-self: stretch;
+    max-width: none;
+  }
+  .hero-promo-texto {
+    margin-top: auto; /* empuja párrafo + botones + nota al pie */
   }
   .hero-promo-actions {
     flex-direction: column;
