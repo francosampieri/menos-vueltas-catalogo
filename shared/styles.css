@@ -695,7 +695,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     object-position: 85% center;
   }
   .hero-promo-bg::after {
-    background: linear-gradient(180deg, rgba(20,28,18,.18) 0%, rgba(20,28,18,.10) 35%, rgba(20,28,18,.88) 100%);
+    background: linear-gradient(180deg, rgba(20,28,18,.42) 0%, rgba(20,28,18,.16) 32%, rgba(20,28,18,.08) 45%, rgba(20,28,18,.88) 100%);
   }
   .hero-promo {
     display: flex;
@@ -708,19 +708,26 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    padding: var(--space-4) var(--space-4) var(--space-7);
+    padding: var(--space-6) var(--space-4) var(--space-7);
     max-width: none;
   }
   .hero-promo-badge {
     display: none;
   }
   .hero-promo-titulo {
-    font-size: clamp(1.84rem, 8.3vw, 2.3rem);
+    font-size: clamp(1.92rem, 8.65vw, 2.4rem);
     margin-bottom: var(--space-3);
+    /* Sin la pill arriba, el título necesita más peso visual: sombra más
+       marcada + un leve halo oscuro que lo despega de la foto clara. */
+    text-shadow: 0 2px 6px rgba(0,0,0,.45), 0 8px 30px rgba(0,0,0,.35);
+  }
+  .hero-promo-titulo strong {
+    text-shadow: 0 2px 6px rgba(0,0,0,.5), 0 8px 30px rgba(0,0,0,.35);
   }
   .hero-promo-texto {
     max-width: 60%; /* corta antes de chocar con la bolsa de la foto */
     margin-bottom: 0;
+    text-shadow: 0 1px 5px rgba(0,0,0,.45);
   }
   .hero-promo-nota {
     align-self: stretch;
