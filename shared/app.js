@@ -328,41 +328,27 @@ function renderGrupos() {
       riel.className = 'riel';
       items.forEach(([gid, vars]) => riel.appendChild(crearCard(gid, vars)));
 
-      // Flechas laterales: sobre todo son un indicador de que hay más
-      // productos para ese lado; tocarlas también desplaza, pero el gesto
-      // principal sigue siendo deslizar (ver hintDeslizar).
+      // Chevrons laterales: son solo una señal visual de que hay más
+      // productos para ese lado. A propósito NO son botones (no se pueden
+      // tocar): la forma de moverse es deslizando.
       const mkFlecha = (dir) => {
-        const f = document.createElement('button');
+        const f = document.createElement('span');
         f.className = 'riel-flecha riel-flecha-' + (dir > 0 ? 'der' : 'izq');
-        f.setAttribute('aria-label', (dir > 0 ? 'Ver más productos de ' : 'Volver en ') + (sub || cat));
+        f.setAttribute('aria-hidden', 'true');
         f.innerHTML = dir > 0
-          ? '<svg viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-          : '<svg viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        f.onclick = () => riel.scrollBy({ left: dir * riel.clientWidth * 0.8, behavior: 'smooth' });
+          ? '<svg viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          : '<svg viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
         return f;
       };
       const flechaIzq = mkFlecha(-1);
       const flecha = mkFlecha(1);
-
-      // Pista de gesto: mano deslizando + texto. Se muestra en la primera
-      // sección visible y desaparece apenas el usuario desliza algo.
-      const hint = document.createElement('div');
-      hint.className = 'riel-hint';
-      hint.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12"/>
-          <path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0V12"/>
-          <path d="M14 10.5a1.5 1.5 0 0 1 3 0V12"/>
-          <path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-1l-1.4-2.8a1.5 1.5 0 0 1 2.6-1.5L8 13"/>
-        </svg>
-        <span>Deslizá para ver más</span>`;
 
       // Barra de progreso: muestra cuánto del riel se recorrió y cuánto falta.
       const barra = document.createElement('div');
       barra.className = 'riel-barra';
       barra.innerHTML = '<span></span>';
 
-      wrap.append(riel, flechaIzq, flecha, hint);
+      wrap.append(riel, flechaIzq, flecha);
       sec.append(wrap, barra);
       cont.appendChild(sec);
 
@@ -385,50 +371,11 @@ function usarRieles() {
   return MQ_MOBILE.matches && !busquedaActiva && !filtroSubcat;
 }
 
-// Una sola pista de gesto por visita: alcanza con enseñarlo una vez.
-let hintDeslizarMostrado = false;
-
-function ocultarHint(wrap) {
-  const h = wrap.querySelector('.riel-hint');
-  if (h) h.classList.remove('visible');
-}
-
-// Cuando el primer riel entra en pantalla, se autodesplaza unos píxeles y
-// vuelve, mostrando al mismo tiempo la pista "Deslizá para ver más".
-function observarRielParaHint(wrap, riel) {
-  if (hintDeslizarMostrado) return;
-  if (!('IntersectionObserver' in window)) return;
-
-  const obs = new IntersectionObserver((entradas) => {
-    entradas.forEach(e => {
-      if (!e.isIntersecting || hintDeslizarMostrado) return;
-      if (riel.scrollWidth - riel.clientWidth < 40) return;
-      hintDeslizarMostrado = true;
-      obs.disconnect();
-
-      const hint = wrap.querySelector('.riel-hint');
-      if (hint) hint.classList.add('visible');
-
-      const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!reducido) {
-        setTimeout(() => riel.scrollTo({ left: 74, behavior: 'smooth' }), 550);
-        setTimeout(() => riel.scrollTo({ left: 0,  behavior: 'smooth' }), 1250);
-        setTimeout(() => riel.scrollTo({ left: 52, behavior: 'smooth' }), 1900);
-        setTimeout(() => riel.scrollTo({ left: 0,  behavior: 'smooth' }), 2500);
-      }
-      setTimeout(() => ocultarHint(wrap), 5200);
-    });
-  }, { threshold: 0.6 });
-
-  obs.observe(wrap);
-}
-
 // Mantiene sincronizados los indicadores de un riel: sombra/flecha a la
 // derecha mientras queden productos por ver, sombra a la izquierda cuando
 // ya se desplazó, y barra de progreso proporcional al recorrido.
 function conectarIndicadoresRiel(wrap, riel, barra) {
   const fill = barra.querySelector('span');
-  const hint = wrap.querySelector('.riel-hint');
 
   const actualizar = () => {
     const max = riel.scrollWidth - riel.clientWidth;
@@ -452,15 +399,6 @@ function conectarIndicadoresRiel(wrap, riel, barra) {
     riel._rafPend = true;
     requestAnimationFrame(() => { riel._rafPend = false; actualizar(); });
   }, { passive: true });
-
-  // El usuario ya entendió el gesto: fuera la pista.
-  riel.addEventListener('touchstart', () => ocultarHint(wrap), { passive: true, once: true });
-  riel.addEventListener('wheel', () => ocultarHint(wrap), { passive: true, once: true });
-
-  // Pista automática: la primera vez que la sección entra en pantalla, el
-  // riel se corre unos píxeles y vuelve. Es el gesto que queremos enseñar,
-  // hecho por la propia interfaz.
-  observarRielParaHint(wrap, riel);
 
   // El scrollWidth recién es correcto cuando cargaron las imágenes.
   // Además se fuerza el arranque en 0: si el navegador aplica el snap antes
@@ -842,17 +780,28 @@ function abrirModalProducto(gid, vars) {
   overlay.id = 'productoModal';
   overlay.dataset.gid = gid;
 
+  // Estructura en dos columnas: en desktop la foto va a la izquierda y toda
+  // la información a la derecha (modal apaisado que entra sin scroll); en
+  // mobile las columnas se apilan.
   overlay.innerHTML = `
     <div class="pm-panel" role="dialog" aria-modal="true" aria-label="${nombre}">
       <button class="pm-close" aria-label="Cerrar">
         <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
-      <div class="pm-scroll">
+      <div class="pm-media">
         <div class="pm-img">
           <div class="pm-img-placeholder"></div>
           <img alt="" style="display:none">
-          <div class="pm-dots"></div>
         </div>
+        <button class="pm-nav pm-nav-prev" aria-label="Opción anterior">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="pm-nav pm-nav-next" aria-label="Opción siguiente">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="pm-dots"></div>
+      </div>
+      <div class="pm-col">
         <div class="pm-info">
           <div class="pm-marca"></div>
           <h3 class="pm-nombre"></h3>
@@ -867,6 +816,7 @@ function abrirModalProducto(gid, vars) {
     </div>`;
 
   const panel   = overlay.querySelector('.pm-panel');
+  const media   = overlay.querySelector('.pm-media');
   const imgEl   = overlay.querySelector('.pm-img img');
   const dotsEl  = overlay.querySelector('.pm-dots');
   const detalle = overlay.querySelector('.pm-detalle');
@@ -881,12 +831,14 @@ function abrirModalProducto(gid, vars) {
       d.className = 'variante-dot' + (i === 0 ? ' active' : '');
       dotsEl.appendChild(d);
     });
+  } else {
+    panel.classList.add('sin-variantes');
   }
 
   document.body.appendChild(overlay);
-  document.body.classList.add('modal-abierto');
+  bloquearScrollFondo(true);
 
-  renderDetalleProducto(gid, vars, {
+  const api = renderDetalleProducto(gid, vars, {
     cont: detalle,
     imgEl,
     vlabelEl:     overlay.querySelector('.pm-variante'),
@@ -894,6 +846,14 @@ function abrirModalProducto(gid, vars) {
     vprecioDtoEl: overlay.querySelector('.pm-precio-dto'),
     dotsEl
   });
+
+  // Cambio de variante: flechas al costado de la foto (desktop y mobile) y
+  // deslizando sobre la imagen (mobile).
+  if (vars.length > 1 && api && api.irAVariante) {
+    overlay.querySelector('.pm-nav-prev').addEventListener('click', e => { e.stopPropagation(); api.irAVariante(-1); });
+    overlay.querySelector('.pm-nav-next').addEventListener('click', e => { e.stopPropagation(); api.irAVariante(1); });
+    attachSwipeModal(media, api.irAVariante);
+  }
 
   // Cerrar: la X, tocar fuera del panel o Escape.
   overlay.querySelector('.pm-close').addEventListener('click', () => cerrarModalProducto());
@@ -904,6 +864,62 @@ function abrirModalProducto(gid, vars) {
   requestAnimationFrame(() => overlay.classList.add('visible'));
 }
 
+// Deslizar horizontalmente sobre la foto del modal para pasar de una
+// variante a otra. No interfiere con el scroll vertical del panel.
+function attachSwipeModal(zona, irAVariante) {
+  let x0 = 0, y0 = 0, activo = false, decidido = false, horizontal = false;
+  const UMBRAL = 34;
+
+  zona.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    x0 = e.touches[0].clientX;
+    y0 = e.touches[0].clientY;
+    activo = true; decidido = false; horizontal = false;
+  }, { passive: true });
+
+  zona.addEventListener('touchmove', e => {
+    if (!activo) return;
+    const dx = e.touches[0].clientX - x0;
+    const dy = e.touches[0].clientY - y0;
+    if (!decidido && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      decidido = true;
+      horizontal = Math.abs(dx) > Math.abs(dy);
+    }
+    if (horizontal) e.preventDefault();
+  }, { passive: false });
+
+  zona.addEventListener('touchend', e => {
+    if (!activo) return;
+    activo = false;
+    if (!horizontal) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) < UMBRAL) return;
+    irAVariante(dx < 0 ? 1 : -1);
+  }, { passive: true });
+}
+
+// Bloquea el scroll de la página de fondo mientras hay un modal abierto,
+// conservando la posición (en iOS no alcanza con overflow:hidden).
+let scrollGuardado = 0;
+function bloquearScrollFondo(activar) {
+  if (activar) {
+    scrollGuardado = window.scrollY || window.pageYOffset || 0;
+    document.body.style.top = `-${scrollGuardado}px`;
+    document.body.classList.add('modal-abierto');
+  } else {
+    document.body.classList.remove('modal-abierto');
+    document.body.style.top = '';
+    // Restaurar la posición. Se hace en el frame siguiente porque, al sacar
+    // el position:fixed, el documento todavía no recuperó su altura y el
+    // scrollTo quedaría recortado.
+    // 'instant' evita que el scroll-behavior:smooth global anime la vuelta
+    // (se vería como un salto raro al cerrar el modal).
+    const y = scrollGuardado;
+    window.scrollTo({ top: y, behavior: 'instant' });
+    requestAnimationFrame(() => window.scrollTo({ top: y, behavior: 'instant' }));
+  }
+}
+
 function escCerrarModal(e) {
   if (e.key === 'Escape') cerrarModalProducto();
 }
@@ -912,7 +928,7 @@ function cerrarModalProducto(inmediato = false) {
   const overlay = document.getElementById('productoModal');
   if (!overlay) return;
   document.removeEventListener('keydown', escCerrarModal);
-  document.body.classList.remove('modal-abierto');
+  bloquearScrollFondo(false);
 
   const gid = overlay.dataset.gid;
   const quitar = () => {
@@ -1224,6 +1240,21 @@ function renderDetalleProducto(gid, vars, refs) {
   }
 
   dibujar();
+
+  // API para el modal: permite pasar a la variante siguiente/anterior desde
+  // las flechas laterales o deslizando sobre la foto, manteniendo los chips
+  // sincronizados con lo que se ve.
+  return {
+    irAVariante(dir) {
+      if (vars.length < 2) return;
+      const actual = getVarianteSeleccionada() || vars[0];
+      const idx = vars.indexOf(actual);
+      const nueva = vars[((idx >= 0 ? idx : 0) + dir + vars.length) % vars.length];
+      selVariante = nueva['Label_Variante'] || null;
+      selTamaño   = nueva['Label_Tamaño']   || null;
+      dibujar();
+    }
+  };
 }
 
 // ══ CARRITO ══

@@ -1645,20 +1645,18 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .riel::-webkit-scrollbar { display: none; }
 .riel > .card {
-  /* Medida pensada para que entren 3 cards por pantalla y se asome un
-     pedacito de la cuarta: así el corte lateral avisa que hay más. */
-  flex: 0 0 29vw;
-  max-width: 132px;
+  /* Entran 2 cards y media por pantalla: la mitad de la tercera asomando
+     es, en sí misma, la señal de que la sección sigue hacia la derecha. */
+  flex: 0 0 36vw;
+  max-width: 158px;
   scroll-snap-align: start;
 }
-/* Textos más compactos: interlineado y márgenes al mínimo cómodo para que
-   la card sea más baja y entren más productos en pantalla. */
-.riel > .card .card-body { padding: 7px var(--space-3) 10px; }
-.riel > .card .card-marca { font-size: 0.58rem; line-height: 1.1; margin-bottom: 1px; }
-.riel > .card .card-nombre { font-size: 0.775rem; line-height: 1.15; margin-bottom: 0; }
-.riel > .card .card-variante-label { font-size: 0.68rem; line-height: 1.15; margin-bottom: 3px; min-height: 0; }
-.riel > .card .card-precio { font-size: 0.92rem; line-height: 1.2; }
-.riel > .card .card-precio-dto { font-size: 0.66rem; line-height: 1.2; margin-top: 1px; }
+.riel > .card .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+.riel > .card .card-marca { font-size: 0.6rem; }
+.riel > .card .card-nombre { font-size: 0.8rem; }
+.riel > .card .card-variante-label { font-size: 0.7rem; }
+.riel > .card .card-precio { font-size: 0.95rem; }
+.riel > .card .card-precio-dto { font-size: 0.68rem; }
 .riel > .card .card-img-wrap { touch-action: pan-x pan-y; }
 
 /* ── Indicadores de "hay más al costado" ──
@@ -1670,7 +1668,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 74px;
+  width: 46px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 180ms var(--ease);
@@ -1678,81 +1676,38 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .riel-wrap::before {
   left: 0;
-  background: linear-gradient(90deg, var(--bg) 34%, rgba(250,250,247,.82) 62%, rgba(250,250,247,0) 100%);
+  background: linear-gradient(90deg, rgba(250,250,247,.92) 0%, rgba(250,250,247,.55) 45%, rgba(250,250,247,0) 100%);
 }
 .riel-wrap::after {
   right: 0;
-  background: linear-gradient(270deg, var(--bg) 34%, rgba(250,250,247,.82) 62%, rgba(250,250,247,0) 100%);
+  background: linear-gradient(270deg, rgba(250,250,247,.92) 0%, rgba(250,250,247,.55) 45%, rgba(250,250,247,0) 100%);
 }
 .riel-wrap.hay-antes::before { opacity: 1; }
 .riel-wrap.hay-mas::after { opacity: 1; }
 
-/* Flechas: chicas y discretas — son una señal de "hay más para este lado",
-   no el mecanismo principal de navegación (ese es deslizar). */
+/* Chevron lateral: solo una insinuación de que la sección sigue para ese
+   lado. Sin fondo ni sombra, y sin ser tocable, para que nadie lo lea como
+   un botón — el movimiento se hace deslizando. */
 .riel-flecha {
   position: absolute;
-  top: 31%;
+  top: 30%;
   z-index: 3;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.96);
-  border: 1px solid var(--line-soft);
-  box-shadow: 0 2px 8px rgba(0,0,0,.16);
-  color: var(--t1);
   display: grid;
   place-items: center;
+  color: var(--t3);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 180ms var(--ease);
+  transition: opacity 200ms var(--ease);
 }
-.riel-flecha svg { width: 13px; height: 13px; }
-.riel-flecha-der { right: 6px; }
-.riel-flecha-izq { left: 6px; }
+.riel-flecha svg {
+  width: 15px;
+  height: 15px;
+  filter: drop-shadow(0 0 3px rgba(250,250,247,.95));
+}
+.riel-flecha-der { right: 5px; }
+.riel-flecha-izq { left: 5px; }
 .riel-wrap.hay-mas   .riel-flecha-der,
-.riel-wrap.hay-antes .riel-flecha-izq {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Pista de gesto: aparece una sola vez, sobre el riel, mientras el propio
-   riel se mueve solo unos píxeles para mostrar que se desliza. */
-.riel-hint {
-  position: absolute;
-  left: 50%;
-  top: 30%;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 14px 7px 11px;
-  border-radius: var(--rf);
-  background: rgba(47,52,48,.92);
-  color: white;
-  font-size: 0.74rem;
-  font-weight: 600;
-  white-space: nowrap;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 6px 20px rgba(0,0,0,.22);
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, 4px);
-  transition: opacity 260ms var(--ease), transform 260ms var(--ease);
-}
-.riel-hint.visible { opacity: 1; transform: translate(-50%, 0); }
-.riel-hint svg {
-  width: 17px;
-  height: 17px;
-  flex-shrink: 0;
-  animation: riel-mano 1.5s var(--ease) infinite;
-}
-@keyframes riel-mano {
-  0%, 100% { transform: translateX(3px); }
-  50%      { transform: translateX(-3px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .riel-hint svg { animation: none; }
-}
+.riel-wrap.hay-antes .riel-flecha-izq { opacity: .85; }
 
 /* ── Barra de progreso del riel ── */
 .riel-barra {
@@ -2192,9 +2147,18 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 /* ══════════════════════════════════════════════════════
    MODAL DE PRODUCTO
    Tocar una card abre el detalle centrado, con el catálogo desenfocado
-   detrás. Reemplaza a la vieja card que se expandía en el lugar.
+   detrás. En escritorio el panel es apaisado (foto a la izquierda, datos a
+   la derecha) para que entre entero sin scroll; en mobile se apila.
 ══════════════════════════════════════════════════════ */
-body.modal-abierto { overflow: hidden; }
+body.modal-abierto {
+  /* position:fixed + top negativo congela la página de fondo sin perder la
+     posición de scroll (overflow:hidden solo no alcanza en iOS). */
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+}
 
 .pm-overlay {
   position: fixed;
@@ -2209,21 +2173,21 @@ body.modal-abierto { overflow: hidden; }
   -webkit-backdrop-filter: blur(7px);
   opacity: 0;
   transition: opacity 200ms var(--ease);
+  overscroll-behavior: contain;
 }
 .pm-overlay.visible { opacity: 1; }
 
 .pm-panel {
   position: relative;
+  display: flex;
   width: 100%;
-  max-width: 400px;
-  max-height: min(88dvh, 720px);
+  max-width: 840px;
+  max-height: min(86dvh, 560px);
   background: var(--surface);
   border-radius: var(--r5);
   box-shadow: var(--s4);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transform: translateY(12px) scale(.98);
+  transform: translateY(10px) scale(.98);
   transition: transform 220ms var(--ease);
 }
 .pm-overlay.visible .pm-panel { transform: translateY(0) scale(1); }
@@ -2232,7 +2196,7 @@ body.modal-abierto { overflow: hidden; }
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 3;
+  z-index: 5;
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -2247,17 +2211,20 @@ body.modal-abierto { overflow: hidden; }
 .pm-close svg { width: 15px; height: 15px; }
 .pm-close:hover { background: var(--surface-2); color: var(--accent-2); }
 
-.pm-scroll {
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+/* ── Columna de la foto ── */
+.pm-media {
+  position: relative;
+  flex: 0 0 46%;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
 }
-
 .pm-img {
   position: relative;
   width: 100%;
-  aspect-ratio: 1.35;
-  background: var(--surface-2);
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2267,22 +2234,58 @@ body.modal-abierto { overflow: hidden; }
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: var(--space-4);
+  padding: var(--space-5);
   mix-blend-mode: multiply;
 }
-.pm-img-placeholder { font-size: 2.4rem; opacity: .35; }
+.pm-img-placeholder { font-size: 2.6rem; opacity: .35; }
+
+/* Flechas para cambiar de variante: discretas, al costado de la foto. */
+.pm-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(0,0,0,.06);
+  color: var(--t2);
+  display: grid;
+  place-items: center;
+  transition: background var(--t), color var(--t);
+}
+.pm-nav svg { width: 14px; height: 14px; }
+.pm-nav:hover { background: white; color: var(--accent-2); }
+.pm-nav-prev { left: 8px; }
+.pm-nav-next { right: 8px; }
+.pm-panel.sin-variantes .pm-nav,
+.pm-panel.sin-variantes .pm-dots { display: none; }
+
 .pm-dots {
   position: absolute;
   bottom: var(--space-3);
   left: 50%;
   transform: translateX(-50%);
+  z-index: 4;
   display: flex;
   gap: 5px;
 }
-.pm-dots .variante-dot { width: 5px; height: 5px; }
+.pm-dots .variante-dot { width: 5px; height: 5px; background: rgba(0,0,0,.2); }
+
+/* ── Columna de datos ── */
+.pm-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
 
 .pm-info {
-  padding: var(--space-4) var(--space-5) var(--space-3);
+  padding: var(--space-6) var(--space-5) var(--space-3);
   border-bottom: 1px solid var(--line-soft);
 }
 .pm-marca {
@@ -2294,22 +2297,22 @@ body.modal-abierto { overflow: hidden; }
   margin-bottom: 3px;
 }
 .pm-nombre {
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--t1);
-  line-height: 1.2;
+  line-height: 1.15;
 }
 .pm-variante {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--t2);
-  margin-top: 3px;
+  margin-top: 4px;
   min-height: 16px;
   transition: opacity .2s var(--ease);
 }
-.pm-precio-wrap { margin-top: var(--space-3); }
+.pm-precio-wrap { margin-top: var(--space-4); }
 .pm-precio {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: var(--accent);
   letter-spacing: -0.03em;
@@ -2317,7 +2320,7 @@ body.modal-abierto { overflow: hidden; }
 }
 .pm-precio.sin-precio { font-size: 0.9rem; color: var(--t3); font-weight: 400; }
 .pm-precio-dto {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--t3);
   margin-top: 2px;
   transition: opacity .2s var(--ease);
@@ -2325,9 +2328,8 @@ body.modal-abierto { overflow: hidden; }
 .pm-precio-dto strong { color: var(--accent-2); font-weight: 700; }
 
 /* El detalle reutiliza los estilos de chips / precio / cantidad que ya
-   tenía la card expandida, solo se ajusta el espaciado y el tamaño: en el
-   modal hay lugar de sobra, así que los controles van más cómodos. */
-.pm-detalle { padding-top: var(--space-3); }
+   tenía la card expandida, solo se ajusta el espaciado y el tamaño. */
+.pm-detalle { padding: var(--space-3) var(--space-5) var(--space-5); margin-top: auto; }
 /* En el modal el precio unitario ya está arriba, en grande. */
 .pm-detalle .precio-detalle { display: none; }
 .pm-detalle .chip { height: 32px; padding: 0 13px; font-size: 0.8rem; }
@@ -2339,17 +2341,28 @@ body.modal-abierto { overflow: hidden; }
 .pm-detalle .agregar-btn-text { display: inline; margin-left: 4px; }
 .pm-detalle .cerrar-card { display: none; }
 
-@media (max-width: 600px) {
-  .pm-overlay { padding: var(--space-3); align-items: flex-end; }
+/* ── Mobile: columnas apiladas, panel centrado ── */
+@media (max-width: 700px) {
+  .pm-overlay { padding: var(--space-4); align-items: center; }
   .pm-panel {
-    max-width: none;
-    max-height: 90dvh;
-    border-radius: var(--r5);
-    margin-bottom: env(safe-area-inset-bottom, 0px);
+    flex-direction: column;
+    max-width: 420px;
+    max-height: 84dvh;
   }
-  .pm-img { aspect-ratio: 1.6; }
-  .pm-nombre { font-size: 1.1rem; }
-  .pm-precio { font-size: 1.35rem; }
+  /* Alto fijo para la foto: así los chips de variante y el botón de
+     agregar entran siempre en pantalla, sin scrollear. */
+  .pm-media { flex: 0 0 auto; width: 100%; height: min(30dvh, 210px); }
+  .pm-img img { padding: var(--space-3); }
+  .pm-col { flex: 1 1 auto; }
+  .pm-info { padding: var(--space-4) var(--space-5) var(--space-3); }
+  .pm-detalle .variantes-chips { margin-bottom: 0; }
+  .pm-detalle .variantes-titulo { margin-top: var(--space-2); }
+  .pm-detalle .qty-row { margin-top: var(--space-3); }
+  .pm-nombre { font-size: 1.15rem; }
+  .pm-precio { font-size: 1.4rem; }
+  .pm-precio-wrap { margin-top: var(--space-3); }
+  .pm-detalle { padding: var(--space-3) var(--space-5) var(--space-5); }
+  .pm-nav { width: 32px; height: 32px; }
 }
 
 
