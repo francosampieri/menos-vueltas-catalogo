@@ -97,6 +97,11 @@ async function cargarDatos() {
   }
 }
 
+// Cantidad de productos que se muestran en cada riel horizontal (mobile)
+// antes del acceso "ver toda la sección".
+const PRODUCTOS_POR_RIEL = 10;
+const MQ_MOBILE = window.matchMedia('(max-width: 600px)');
+
 // ══ RENDER CATÁLOGO ══
 function renderCatalogo() {
   document.getElementById('loading').style.display = 'none';
@@ -291,12 +296,101 @@ function renderGrupos() {
     titulo.textContent = sub || cat;
     cont.appendChild(titulo);
 
+    // ── Mobile: riel horizontal por subcategoría ──
+    // Con 500+ productos, la grilla vertical obliga a un scroll infinito.
+    // En mobile cada subcategoría se muestra como un carrusel horizontal
+    // con los primeros PRODUCTOS_POR_RIEL productos; el resto se ve
+    // entrando a la subcategoría completa ("Ver los N").
+    if (usarRieles()) {
+      const head = document.createElement('div');
+      head.className = 'riel-head';
+
+      const txt = document.createElement('div');
+      txt.className = 'riel-head-txt';
+      const catEl = document.createElement('span');
+      catEl.className = 'riel-head-cat';
+      catEl.textContent = cat;
+      const tituloEl = document.createElement('h3');
+      tituloEl.className = 'riel-head-titulo';
+      tituloEl.textContent = sub || cat;
+      txt.append(catEl, tituloEl);
+
+      head.appendChild(txt);
+
+      // El acceso a la sección completa solo tiene sentido si hay más
+      // productos de los que entran en el riel.
+      if (items.length > PRODUCTOS_POR_RIEL) {
+        const verTodo = document.createElement('button');
+        verTodo.className = 'riel-ver-todo';
+        verTodo.textContent = `Ver los ${items.length}`;
+        verTodo.onclick = () => abrirSeccionCompleta(cat, sub);
+        head.appendChild(verTodo);
+      } else {
+        const cuenta = document.createElement('span');
+        cuenta.className = 'riel-head-cuenta';
+        cuenta.textContent = `${items.length} productos`;
+        head.appendChild(cuenta);
+      }
+      cont.appendChild(head);
+
+      const riel = document.createElement('div');
+      riel.className = 'riel';
+      items.slice(0, PRODUCTOS_POR_RIEL).forEach(([gid, vars]) => riel.appendChild(crearCard(gid, vars)));
+
+      if (items.length > PRODUCTOS_POR_RIEL) {
+        const tile = document.createElement('button');
+        tile.className = 'riel-tile-todos';
+        tile.innerHTML = `<span class="riel-tile-num">+${items.length - PRODUCTOS_POR_RIEL}</span>
+                          <span class="riel-tile-txt">Ver toda la<br>sección</span>`;
+        tile.onclick = () => abrirSeccionCompleta(cat, sub);
+        riel.appendChild(tile);
+      }
+
+      cont.appendChild(riel);
+      return;
+    }
+
     const grid = document.createElement('div');
     grid.className = 'grid';
     items.forEach(([gid, vars]) => grid.appendChild(crearCard(gid, vars)));
     cont.appendChild(grid);
   });
 }
+
+// ¿Corresponde mostrar el catálogo como rieles horizontales?
+// Solo en mobile, mientras se está "explorando": si hay una búsqueda activa
+// o el usuario ya entró a una subcategoría puntual, se muestra la grilla
+// completa de siempre.
+function usarRieles() {
+  return MQ_MOBILE.matches && !busquedaActiva && !filtroSubcat;
+}
+
+// Entrar a una subcategoría desde un riel: fija categoría + subcategoría y
+// vuelve a renderizar, con lo cual usarRieles() pasa a ser false y se ve la
+// grilla completa. Los chips de subcategoría (con "Todos") permiten volver.
+function abrirSeccionCompleta(cat, sub) {
+  busquedaActiva = '';
+  const input = document.getElementById('buscador');
+  if (input) input.value = '';
+  filtroActivo = cat;
+  filtroSubcat = sub || null;
+
+  document.querySelectorAll('.filtro-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.cat === cat);
+  });
+  const label = document.getElementById('catalogo-titulo-label');
+  if (label) label.textContent = sub || cat;
+
+  renderSubfiltros();
+  renderGrupos();
+  window.scrollTo({ top: 0 });
+}
+
+// Al girar el teléfono o cambiar de breakpoint hay que rearmar el catálogo
+// (rieles ⇄ grilla).
+MQ_MOBILE.addEventListener('change', () => {
+  if (document.getElementById('catalogo')?.childElementCount) renderGrupos();
+});
 
 // ══ CARD ══
 function getEmoji(cat) {

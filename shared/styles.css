@@ -1567,6 +1567,109 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 
 /* ══════════════════════════════════════════════════════
+   RIELES HORIZONTALES (catálogo mobile)
+   Con 500+ productos la grilla vertical es un scroll sin fin: en mobile
+   cada subcategoría se muestra como un carrusel horizontal con los
+   primeros productos y un acceso a la sección completa.
+══════════════════════════════════════════════════════ */
+.riel-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: var(--space-6) 0 var(--space-3);
+}
+.riel-head-cat {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  margin-bottom: 2px;
+}
+.riel-head-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--t1);
+}
+.riel-ver-todo {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 4px 0;
+}
+.riel-ver-todo::after { content: ' →'; }
+.riel-head-cuenta {
+  font-size: 0.72rem;
+  color: var(--t3);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 4px 0;
+}
+
+.riel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  /* El padding lateral replica el del contenedor para que las cards
+     "sangren" hasta el borde de la pantalla al hacer scroll. */
+  margin: 0 calc(var(--space-4) * -1);
+  padding: 2px var(--space-4) var(--space-3);
+}
+.riel::-webkit-scrollbar { display: none; }
+.riel > .card {
+  flex: 0 0 44vw;
+  max-width: 190px;
+  scroll-snap-align: start;
+}
+/* Al abrir una card dentro de un riel, ocupa casi todo el ancho para que
+   los chips de variante y el bloque de cantidad entren cómodos. */
+.riel > .card.expanded {
+  flex-basis: min(86vw, 340px);
+  max-width: min(86vw, 340px);
+}
+.riel-tile-todos {
+  flex: 0 0 34vw;
+  max-width: 140px;
+  align-self: stretch;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: var(--surface-2);
+  border: 1px dashed var(--line);
+  border-radius: var(--r4);
+  color: var(--accent-2);
+  text-align: center;
+  padding: 12px;
+}
+.riel-tile-num {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.riel-tile-txt {
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+/* Dentro de un riel, arrastrar sobre la foto tiene que poder desplazar el
+   carrusel; el swipe de variantes solo aplica con la card abierta. */
+.riel > .card .card-img-wrap { touch-action: pan-x pan-y; }
+.riel > .card.expanded .card-img-wrap { touch-action: pan-y; }
+
+
+/* ══════════════════════════════════════════════════════
    CARD
 ══════════════════════════════════════════════════════ */
 .card {
