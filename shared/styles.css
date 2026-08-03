@@ -1639,20 +1639,19 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .riel::-webkit-scrollbar { display: none; }
 .riel > .card {
-  flex: 0 0 43vw;
-  max-width: 185px;
+  /* Medida pensada para que entren 3 cards por pantalla y se asome un
+     pedacito de la cuarta: así el corte lateral avisa que hay más. */
+  flex: 0 0 29vw;
+  max-width: 132px;
   scroll-snap-align: start;
 }
-/* Al abrir una card dentro de un riel, ocupa casi todo el ancho para que
-   los chips de variante y el bloque de cantidad entren cómodos. */
-.riel > .card.expanded {
-  flex-basis: min(86vw, 340px);
-  max-width: min(86vw, 340px);
-}
-/* Dentro de un riel, arrastrar sobre la foto tiene que poder desplazar el
-   carrusel; el swipe de variantes solo aplica con la card abierta. */
+.riel > .card .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+.riel > .card .card-marca { font-size: 0.58rem; margin-bottom: 2px; }
+.riel > .card .card-nombre { font-size: 0.775rem; line-height: 1.25; }
+.riel > .card .card-variante-label { font-size: 0.68rem; margin-bottom: 4px; min-height: 12px; }
+.riel > .card .card-precio { font-size: 0.92rem; }
+.riel > .card .card-precio-dto { font-size: 0.66rem; }
 .riel > .card .card-img-wrap { touch-action: pan-x pan-y; }
-.riel > .card.expanded .card-img-wrap { touch-action: pan-y; }
 
 /* ── Indicadores de "hay más al costado" ──
    Degradés que tapan a medias la card siguiente + flecha tocable. Aparecen
@@ -1663,7 +1662,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 52px;
+  width: 74px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 180ms var(--ease);
@@ -1671,48 +1670,80 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .riel-wrap::before {
   left: 0;
-  background: linear-gradient(90deg, var(--bg) 20%, rgba(250,250,247,0) 100%);
+  background: linear-gradient(90deg, var(--bg) 34%, rgba(250,250,247,.82) 62%, rgba(250,250,247,0) 100%);
 }
 .riel-wrap::after {
   right: 0;
-  background: linear-gradient(270deg, var(--bg) 20%, rgba(250,250,247,0) 100%);
+  background: linear-gradient(270deg, var(--bg) 34%, rgba(250,250,247,.82) 62%, rgba(250,250,247,0) 100%);
 }
 .riel-wrap.hay-antes::before { opacity: 1; }
 .riel-wrap.hay-mas::after { opacity: 1; }
 
+/* Flechas: chicas y discretas — son una señal de "hay más para este lado",
+   no el mecanismo principal de navegación (ese es deslizar). */
 .riel-flecha {
   position: absolute;
-  right: 8px;
-  top: 33%;
+  top: 31%;
   z-index: 3;
-  width: 34px;
-  height: 34px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: var(--surface);
+  background: rgba(255,255,255,.96);
   border: 1px solid var(--line-soft);
-  box-shadow: 0 3px 12px rgba(0,0,0,.14);
+  box-shadow: 0 2px 8px rgba(0,0,0,.16);
   color: var(--t1);
   display: grid;
   place-items: center;
   opacity: 0;
-  transform: translateX(6px);
   pointer-events: none;
-  transition: opacity 180ms var(--ease), transform 180ms var(--ease);
-  animation: riel-latido 2.4s var(--ease) 1s 3;
+  transition: opacity 180ms var(--ease);
 }
-.riel-flecha svg { width: 17px; height: 17px; }
-.riel-wrap.hay-mas .riel-flecha {
+.riel-flecha svg { width: 13px; height: 13px; }
+.riel-flecha-der { right: 6px; }
+.riel-flecha-izq { left: 6px; }
+.riel-wrap.hay-mas   .riel-flecha-der,
+.riel-wrap.hay-antes .riel-flecha-izq {
   opacity: 1;
-  transform: translateX(0);
   pointer-events: auto;
 }
-@keyframes riel-latido {
-  0%, 100% { transform: translateX(0); }
-  40%      { transform: translateX(5px); }
-  70%      { transform: translateX(0); }
+
+/* Pista de gesto: aparece una sola vez, sobre el riel, mientras el propio
+   riel se mueve solo unos píxeles para mostrar que se desliza. */
+.riel-hint {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 11px;
+  border-radius: var(--rf);
+  background: rgba(47,52,48,.92);
+  color: white;
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.22);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+}
+.riel-hint.visible { opacity: 1; transform: translate(-50%, 0); }
+.riel-hint svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  animation: riel-mano 1.5s var(--ease) infinite;
+}
+@keyframes riel-mano {
+  0%, 100% { transform: translateX(3px); }
+  50%      { transform: translateX(-3px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .riel-flecha { animation: none; }
+  .riel-hint svg { animation: none; }
 }
 
 /* ── Barra de progreso del riel ── */
@@ -1879,14 +1910,12 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 700;
 }
 
-/* Expanded */
+/* Bloque de opciones + cantidad (vive dentro del modal de producto) */
 .card-expanded {
   display: none;
-  padding: 0 var(--space-4) var(--space-4);
-  border-top: 1px solid var(--line-soft);
-  margin-top: var(--space-1);
+  padding: 0 var(--space-5) var(--space-5);
 }
-.card.expanded .card-expanded { display: block; }
+.card-expanded.pm-detalle-visible { display: block; }
 
 .variantes-titulo {
   font-size: 0.65rem;
@@ -2150,6 +2179,170 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   transition: color var(--t);
 }
 .cerrar-card:hover { color: var(--t2); }
+
+
+/* ══════════════════════════════════════════════════════
+   MODAL DE PRODUCTO
+   Tocar una card abre el detalle centrado, con el catálogo desenfocado
+   detrás. Reemplaza a la vieja card que se expandía en el lugar.
+══════════════════════════════════════════════════════ */
+body.modal-abierto { overflow: hidden; }
+
+.pm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: rgba(28, 34, 28, .48);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  opacity: 0;
+  transition: opacity 200ms var(--ease);
+}
+.pm-overlay.visible { opacity: 1; }
+
+.pm-panel {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  max-height: min(88dvh, 720px);
+  background: var(--surface);
+  border-radius: var(--r5);
+  box-shadow: var(--s4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(12px) scale(.98);
+  transition: transform 220ms var(--ease);
+}
+.pm-overlay.visible .pm-panel { transform: translateY(0) scale(1); }
+
+.pm-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  color: var(--t1);
+  display: grid;
+  place-items: center;
+  transition: background var(--t), color var(--t);
+}
+.pm-close svg { width: 15px; height: 15px; }
+.pm-close:hover { background: var(--surface-2); color: var(--accent-2); }
+
+.pm-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pm-img {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.35;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.pm-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: var(--space-4);
+  mix-blend-mode: multiply;
+}
+.pm-img-placeholder { font-size: 2.4rem; opacity: .35; }
+.pm-dots {
+  position: absolute;
+  bottom: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+}
+.pm-dots .variante-dot { width: 5px; height: 5px; }
+
+.pm-info {
+  padding: var(--space-4) var(--space-5) var(--space-3);
+  border-bottom: 1px solid var(--line-soft);
+}
+.pm-marca {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 3px;
+}
+.pm-nombre {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+  line-height: 1.2;
+}
+.pm-variante {
+  font-size: 0.8rem;
+  color: var(--t2);
+  margin-top: 3px;
+  min-height: 16px;
+  transition: opacity .2s var(--ease);
+}
+.pm-precio-wrap { margin-top: var(--space-3); }
+.pm-precio {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  transition: opacity .2s var(--ease);
+}
+.pm-precio.sin-precio { font-size: 0.9rem; color: var(--t3); font-weight: 400; }
+.pm-precio-dto {
+  font-size: 0.8rem;
+  color: var(--t3);
+  margin-top: 2px;
+  transition: opacity .2s var(--ease);
+}
+.pm-precio-dto strong { color: var(--accent-2); font-weight: 700; }
+
+/* El detalle reutiliza los estilos de chips / precio / cantidad que ya
+   tenía la card expandida, solo se ajusta el espaciado y el tamaño: en el
+   modal hay lugar de sobra, así que los controles van más cómodos. */
+.pm-detalle { padding-top: var(--space-3); }
+/* En el modal el precio unitario ya está arriba, en grande. */
+.pm-detalle .precio-detalle { display: none; }
+.pm-detalle .chip { height: 32px; padding: 0 13px; font-size: 0.8rem; }
+.pm-detalle .variantes-titulo { margin-top: var(--space-3); }
+.pm-detalle .qty-row { margin-top: var(--space-4); }
+.pm-detalle .agregar-btn { height: 46px; font-size: 0.9rem; }
+/* La card del catálogo es angosta y ahí el botón va solo con el "+";
+   dentro del modal siempre se muestra el texto completo. */
+.pm-detalle .agregar-btn-text { display: inline; margin-left: 4px; }
+.pm-detalle .cerrar-card { display: none; }
+
+@media (max-width: 600px) {
+  .pm-overlay { padding: var(--space-3); align-items: flex-end; }
+  .pm-panel {
+    max-width: none;
+    max-height: 90dvh;
+    border-radius: var(--r5);
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pm-img { aspect-ratio: 1.6; }
+  .pm-nombre { font-size: 1.1rem; }
+  .pm-precio { font-size: 1.35rem; }
+}
 
 
 /* ══════════════════════════════════════════════════════

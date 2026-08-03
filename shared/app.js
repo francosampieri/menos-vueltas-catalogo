@@ -11,10 +11,6 @@ let catalogo        = {};  // id_grupo → [productos]
 let carrito         = [];  // items del carrito
 const rotaciones    = {};  // id_grupo → { timer, indexActual }
 
-// Handler de swipe activo por card mientras está expandida (gid → función
-// que recibe +1/-1 y cambia a la variante siguiente/anterior). Se registra
-// al abrir la card y se borra al cerrarla; ver crearCard/renderExpanded.
-const swipeHandlers = {};
 
 
 // Productos destacados en la landing (solo B2B, sección "Los más pedidos").
@@ -332,20 +328,41 @@ function renderGrupos() {
       riel.className = 'riel';
       items.forEach(([gid, vars]) => riel.appendChild(crearCard(gid, vars)));
 
-      // Flecha flotante: además de indicar que hay más, al tocarla avanza
-      // una "pantalla" de productos (para quien no descubre el gesto).
-      const flecha = document.createElement('button');
-      flecha.className = 'riel-flecha';
-      flecha.setAttribute('aria-label', 'Ver más productos de ' + (sub || cat));
-      flecha.innerHTML = '<svg viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-      flecha.onclick = () => riel.scrollBy({ left: riel.clientWidth * 0.8, behavior: 'smooth' });
+      // Flechas laterales: sobre todo son un indicador de que hay más
+      // productos para ese lado; tocarlas también desplaza, pero el gesto
+      // principal sigue siendo deslizar (ver hintDeslizar).
+      const mkFlecha = (dir) => {
+        const f = document.createElement('button');
+        f.className = 'riel-flecha riel-flecha-' + (dir > 0 ? 'der' : 'izq');
+        f.setAttribute('aria-label', (dir > 0 ? 'Ver más productos de ' : 'Volver en ') + (sub || cat));
+        f.innerHTML = dir > 0
+          ? '<svg viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          : '<svg viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        f.onclick = () => riel.scrollBy({ left: dir * riel.clientWidth * 0.8, behavior: 'smooth' });
+        return f;
+      };
+      const flechaIzq = mkFlecha(-1);
+      const flecha = mkFlecha(1);
+
+      // Pista de gesto: mano deslizando + texto. Se muestra en la primera
+      // sección visible y desaparece apenas el usuario desliza algo.
+      const hint = document.createElement('div');
+      hint.className = 'riel-hint';
+      hint.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12"/>
+          <path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0V12"/>
+          <path d="M14 10.5a1.5 1.5 0 0 1 3 0V12"/>
+          <path d="M17 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-1l-1.4-2.8a1.5 1.5 0 0 1 2.6-1.5L8 13"/>
+        </svg>
+        <span>Deslizá para ver más</span>`;
 
       // Barra de progreso: muestra cuánto del riel se recorrió y cuánto falta.
       const barra = document.createElement('div');
       barra.className = 'riel-barra';
       barra.innerHTML = '<span></span>';
 
-      wrap.append(riel, flecha);
+      wrap.append(riel, flechaIzq, flecha, hint);
       sec.append(wrap, barra);
       cont.appendChild(sec);
 
@@ -368,11 +385,50 @@ function usarRieles() {
   return MQ_MOBILE.matches && !busquedaActiva && !filtroSubcat;
 }
 
+// Una sola pista de gesto por visita: alcanza con enseñarlo una vez.
+let hintDeslizarMostrado = false;
+
+function ocultarHint(wrap) {
+  const h = wrap.querySelector('.riel-hint');
+  if (h) h.classList.remove('visible');
+}
+
+// Cuando el primer riel entra en pantalla, se autodesplaza unos píxeles y
+// vuelve, mostrando al mismo tiempo la pista "Deslizá para ver más".
+function observarRielParaHint(wrap, riel) {
+  if (hintDeslizarMostrado) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  const obs = new IntersectionObserver((entradas) => {
+    entradas.forEach(e => {
+      if (!e.isIntersecting || hintDeslizarMostrado) return;
+      if (riel.scrollWidth - riel.clientWidth < 40) return;
+      hintDeslizarMostrado = true;
+      obs.disconnect();
+
+      const hint = wrap.querySelector('.riel-hint');
+      if (hint) hint.classList.add('visible');
+
+      const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reducido) {
+        setTimeout(() => riel.scrollTo({ left: 74, behavior: 'smooth' }), 550);
+        setTimeout(() => riel.scrollTo({ left: 0,  behavior: 'smooth' }), 1250);
+        setTimeout(() => riel.scrollTo({ left: 52, behavior: 'smooth' }), 1900);
+        setTimeout(() => riel.scrollTo({ left: 0,  behavior: 'smooth' }), 2500);
+      }
+      setTimeout(() => ocultarHint(wrap), 5200);
+    });
+  }, { threshold: 0.6 });
+
+  obs.observe(wrap);
+}
+
 // Mantiene sincronizados los indicadores de un riel: sombra/flecha a la
 // derecha mientras queden productos por ver, sombra a la izquierda cuando
 // ya se desplazó, y barra de progreso proporcional al recorrido.
 function conectarIndicadoresRiel(wrap, riel, barra) {
   const fill = barra.querySelector('span');
+  const hint = wrap.querySelector('.riel-hint');
 
   const actualizar = () => {
     const max = riel.scrollWidth - riel.clientWidth;
@@ -396,6 +452,15 @@ function conectarIndicadoresRiel(wrap, riel, barra) {
     riel._rafPend = true;
     requestAnimationFrame(() => { riel._rafPend = false; actualizar(); });
   }, { passive: true });
+
+  // El usuario ya entendió el gesto: fuera la pista.
+  riel.addEventListener('touchstart', () => ocultarHint(wrap), { passive: true, once: true });
+  riel.addEventListener('wheel', () => ocultarHint(wrap), { passive: true, once: true });
+
+  // Pista automática: la primera vez que la sección entra en pantalla, el
+  // riel se corre unos píxeles y vuelve. Es el gesto que queremos enseñar,
+  // hecho por la propia interfaz.
+  observarRielParaHint(wrap, riel);
 
   // El scrollWidth recién es correcto cuando cargaron las imágenes.
   requestAnimationFrame(actualizar);
@@ -585,12 +650,7 @@ function crearCard(gid, vars) {
 
   body.append(marcaEl, nombreEl, vlabelEl, vprecioEl, vprecioDtoEl);
 
-  // ── Expanded ──
-  const expanded = document.createElement('div');
-  expanded.className = 'card-expanded';
-  expanded.id = `exp-${gid}`;
-
-  card.append(imgWrap, badge, body, expanded);
+  card.append(imgWrap, badge, body);
 
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
@@ -600,73 +660,18 @@ function crearCard(gid, vars) {
   // Rotación automática si hay múltiples variantes
   if (vars.length > 1) iniciarRotacion(gid, vars, img, vlabelEl, vprecioEl, vprecioDtoEl);
 
-  // Click para expandir
-  card.addEventListener('click', (e) => {
-    // Si el click viene justo después de un swipe de variante (mobile),
-    // lo ignoramos: si no, cerraría la card recién abierta por el swipe.
-    if (imgWrap.dataset.suppressClick) {
-      delete imgWrap.dataset.suppressClick;
-      return;
-    }
-    if (e.target.closest('.card-expanded')) return;
-    toggleCard(gid, vars, card, img);
-  });
-
-  // Deslizar sobre la imagen (mobile) para cambiar de variante, solo con
-  // la card abierta — es más intuitivo que tocar los chips. Sin flechas
-  // ni indicadores: el gesto mismo alcanza.
-  attachSwipeVariantes(imgWrap, gid);
+  // Click: abre el detalle en una ventana centrada (modal). Antes la card
+  // se expandía en el lugar, lo que en mobile descolocaba todo el catálogo.
+  card.addEventListener('click', () => abrirModalProducto(gid, vars));
 
   return card;
 }
 
-// Detecta un swipe horizontal sobre la imagen de una card y, si está
-// expandida y tiene más de una variante, llama al handler registrado en
-// swipeHandlers[gid] (ver renderExpanded) para pasar a la variante
-// siguiente/anterior. No interfiere con el scroll vertical de la página
-// ni con el tap normal para abrir/cerrar la card.
-function attachSwipeVariantes(imgWrap, gid) {
-  let startX = 0, startY = 0, tracking = false, decidido = false, esHorizontal = false;
-  const UMBRAL = 32; // px mínimos para contar como swipe
-
-  imgWrap.addEventListener('touchstart', (e) => {
-    if (e.touches.length !== 1) return;
-    const card = document.getElementById(`card-${gid}`);
-    if (!card || !card.classList.contains('expanded')) return;
-    if (!swipeHandlers[gid]) return;
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    tracking = true;
-    decidido = false;
-    esHorizontal = false;
-  }, { passive: true });
-
-  imgWrap.addEventListener('touchmove', (e) => {
-    if (!tracking) return;
-    const dx = e.touches[0].clientX - startX;
-    const dy = e.touches[0].clientY - startY;
-    if (!decidido && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
-      decidido = true;
-      esHorizontal = Math.abs(dx) > Math.abs(dy);
-    }
-    // Solo se "toma" el gesto si es horizontal: evita romper el scroll
-    // vertical normal de la página cuando el usuario quiso scrollear.
-    if (esHorizontal) e.preventDefault();
-  }, { passive: false });
-
-  imgWrap.addEventListener('touchend', (e) => {
-    if (!tracking) return;
-    tracking = false;
-    if (!esHorizontal) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) < UMBRAL) return;
-    const dir = dx < 0 ? 1 : -1; // deslizar a la izquierda → siguiente variante
-    swipeHandlers[gid]?.(dir);
-    imgWrap.dataset.suppressClick = '1';
-  }, { passive: true });
-}
-
-function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, animar = true) {
+// Refresca la parte "de arriba" de una card (o del modal): label de
+// variante, precio, precio con descuento, imagen y dots.
+// Los elementos se pasan por parámetro para que sirva tanto para la card
+// del catálogo como para el modal de producto.
+function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, animar = true, dotsEl = null) {
   const v = vars[idx];
   const precio    = parsePrecio(v['Precio_Venta']);
   const precioDto = parsePrecio(v['Precio_Dto']);
@@ -677,14 +682,19 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
     // Label
     if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(v, vars);
 
-    // Precio
+    // Precio. La clase base se recuerda la primera vez, así el mismo código
+    // sirve para .card-precio (catálogo) y .pm-precio (modal).
     if (vprecioEl) {
+      if (!vprecioEl.dataset.claseBase) {
+        vprecioEl.dataset.claseBase = vprecioEl.className || 'card-precio';
+      }
+      const base = vprecioEl.dataset.claseBase;
       if (precio !== null) {
         vprecioEl.textContent = formatPrecio(precio);
-        vprecioEl.className = 'card-precio';
+        vprecioEl.className = base;
       } else {
         vprecioEl.textContent = 'Precio a confirmar';
-        vprecioEl.className = 'card-precio sin-precio';
+        vprecioEl.className = base + ' sin-precio';
       }
     }
 
@@ -705,7 +715,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
       const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
 
       const finalizar = () => {
-        actualizarDots(gid, idx);
+        actualizarDots(gid, idx, dotsEl);
         if (entrando) entrando();
       };
 
@@ -764,8 +774,8 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
   }, 280);
 }
 
-function actualizarDots(gid, idx) {
-  const dotsEl = document.getElementById(`dots-${gid}`);
+function actualizarDots(gid, idx, dotsEl) {
+  dotsEl = dotsEl || document.getElementById(`dots-${gid}`);
   if (dotsEl) {
     dotsEl.querySelectorAll('.variante-dot').forEach((d, i) => {
       d.classList.toggle('active', i === idx);
@@ -775,10 +785,12 @@ function actualizarDots(gid, idx) {
 
 function iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl, vprecioDtoEl) {
   const rot = rotaciones[gid];
+  if (!rot) return;
   if (rot.timer) clearInterval(rot.timer);
   rot.timer = setInterval(() => {
     const card = document.getElementById(`card-${gid}`);
-    if (!card || card.classList.contains('expanded')) return;
+    // Mientras el producto esté abierto en el modal, la card no rota.
+    if (!card || document.getElementById('productoModal')) return;
     rot.indexActual = (rot.indexActual + 1) % vars.length;
     actualizarVistaCerrada(gid, vars, rot.indexActual, imgEl, vlabelEl, vprecioEl, vprecioDtoEl);
   }, 3000);
@@ -807,37 +819,115 @@ function sincronizarYReanudarRotacion(gid) {
   if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl, vprecioDtoEl);
 }
 
-function toggleCard(gid, vars, card, imgEl) {
-  const estaExpandida = card.classList.contains('expanded');
+// ══════════════════════════════════════════════════════
+//  MODAL DE PRODUCTO
+//  Tocar una card abre el detalle en una ventana centrada con el fondo
+//  desenfocado, en vez de expandir la card dentro del catálogo (que en
+//  mobile desacomodaba el riel y dejaba al usuario perdido).
+// ══════════════════════════════════════════════════════
+function abrirModalProducto(gid, vars) {
+  cerrarModalProducto(true);
 
-  // Cerrar todas
-  document.querySelectorAll('.card.expanded').forEach(c => {
-    c.classList.remove('expanded');
-    const id = c.id.replace('card-', '');
-    const exp = document.getElementById(`exp-${id}`);
-    if (exp) exp.innerHTML = '';
-    delete swipeHandlers[id];
-    // Reanudar rotación de cualquier otra card que se esté cerrando acá
-    // (por ejemplo, al abrir una card distinta mientras esta quedó expandida)
-    if (id !== gid) sincronizarYReanudarRotacion(id);
+  const g = grupos[gid] || {};
+  const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
+  const marca  = g.marca  || vars[0]['Marca']    || '';
+  const cat    = g.categoria || vars[0]['Categoria'] || '';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'pm-overlay';
+  overlay.id = 'productoModal';
+  overlay.dataset.gid = gid;
+
+  overlay.innerHTML = `
+    <div class="pm-panel" role="dialog" aria-modal="true" aria-label="${nombre}">
+      <button class="pm-close" aria-label="Cerrar">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="pm-scroll">
+        <div class="pm-img">
+          <div class="pm-img-placeholder"></div>
+          <img alt="" style="display:none">
+          <div class="pm-dots"></div>
+        </div>
+        <div class="pm-info">
+          <div class="pm-marca"></div>
+          <h3 class="pm-nombre"></h3>
+          <div class="pm-variante"></div>
+          <div class="pm-precio-wrap">
+            <div class="pm-precio"></div>
+            <div class="pm-precio-dto" style="display:none"></div>
+          </div>
+        </div>
+        <div class="pm-detalle card-expanded pm-detalle-visible"></div>
+      </div>
+    </div>`;
+
+  const panel   = overlay.querySelector('.pm-panel');
+  const imgEl   = overlay.querySelector('.pm-img img');
+  const dotsEl  = overlay.querySelector('.pm-dots');
+  const detalle = overlay.querySelector('.pm-detalle');
+
+  overlay.querySelector('.pm-img-placeholder').textContent = getEmoji(cat);
+  overlay.querySelector('.pm-marca').textContent  = marca;
+  overlay.querySelector('.pm-nombre').textContent = nombre;
+
+  if (vars.length > 1) {
+    vars.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'variante-dot' + (i === 0 ? ' active' : '');
+      dotsEl.appendChild(d);
+    });
+  }
+
+  document.body.appendChild(overlay);
+  document.body.classList.add('modal-abierto');
+
+  renderDetalleProducto(gid, vars, {
+    cont: detalle,
+    imgEl,
+    vlabelEl:     overlay.querySelector('.pm-variante'),
+    vprecioEl:    overlay.querySelector('.pm-precio'),
+    vprecioDtoEl: overlay.querySelector('.pm-precio-dto'),
+    dotsEl
   });
 
-  if (!estaExpandida) {
-    card.classList.add('expanded');
-    if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
-    renderExpanded(gid, vars, imgEl);
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  } else {
-    // Reanudar rotación, retomando desde la variante que quedó seleccionada
-    // manualmente (si la hay) en vez de un índice viejo.
-    delete swipeHandlers[gid];
-    sincronizarYReanudarRotacion(gid);
-  }
+  // Cerrar: la X, tocar fuera del panel o Escape.
+  overlay.querySelector('.pm-close').addEventListener('click', () => cerrarModalProducto());
+  overlay.addEventListener('click', e => { if (e.target === overlay) cerrarModalProducto(); });
+  panel.addEventListener('click', e => e.stopPropagation());
+  document.addEventListener('keydown', escCerrarModal);
+
+  requestAnimationFrame(() => overlay.classList.add('visible'));
 }
 
-// ══ EXPANDED ══
-function renderExpanded(gid, vars, imgEl) {
-  const expanded = document.getElementById(`exp-${gid}`);
+function escCerrarModal(e) {
+  if (e.key === 'Escape') cerrarModalProducto();
+}
+
+function cerrarModalProducto(inmediato = false) {
+  const overlay = document.getElementById('productoModal');
+  if (!overlay) return;
+  document.removeEventListener('keydown', escCerrarModal);
+  document.body.classList.remove('modal-abierto');
+
+  const gid = overlay.dataset.gid;
+  const quitar = () => {
+    overlay.remove();
+    // La card del catálogo quedó con la variante que rotaba antes: se
+    // reanuda su rotación normalmente.
+    if (gid) sincronizarYReanudarRotacion(gid);
+  };
+
+  if (inmediato) { overlay.remove(); return; }
+  overlay.classList.remove('visible');
+  setTimeout(quitar, 200);
+}
+
+// ══ DETALLE DE PRODUCTO (contenido del modal) ══
+// refs = { cont, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, dotsEl }
+function renderDetalleProducto(gid, vars, refs) {
+  const expanded = refs.cont;
+  const imgEl = refs.imgEl;
   expanded.innerHTML = '';
 
   const variantesUnicas = [...new Set(vars.map(v => v['Label_Variante']).filter(Boolean))];
@@ -947,13 +1037,12 @@ function renderExpanded(gid, vars, imgEl) {
     // Sincronizar la parte de arriba de la card (label, precio e imagen) con
     // la variante elegida, usando la misma animación de deslizamiento que la
     // rotación automática (excepto en el primer render, que no debe animar).
-    if (varSel) {
-      const vlabelEl  = document.getElementById(`vlabel-${gid}`);
-      const vprecioEl = document.getElementById(`vprecio-${gid}`);
-      const vprecioDtoEl = document.getElementById(`vprecio-dto-${gid}`);
-      const idxSel = vars.indexOf(varSel);
-      actualizarVistaCerrada(gid, vars, idxSel >= 0 ? idxSel : 0, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, !esPrimeraDibujada);
-    }
+    // Encabezado del modal (foto, variante y precio). Si todavía no se
+    // eligió opción, se muestra la primera a modo de vista previa: si no,
+    // el modal abriría sin foto ni precio y parecería roto.
+    const idxSel = varSel ? vars.indexOf(varSel) : 0;
+    actualizarVistaCerrada(gid, vars, idxSel >= 0 ? idxSel : 0, imgEl,
+      refs.vlabelEl, refs.vprecioEl, refs.vprecioDtoEl, !esPrimeraDibujada, refs.dotsEl);
     esPrimeraDibujada = false;
 
     const pdiv = document.createElement('div');
@@ -1128,37 +1217,6 @@ function renderExpanded(gid, vars, imgEl) {
     qtyRow.append(qtyCtrl, agregarBtn);
     expanded.appendChild(qtyRow);
 
-    // Cerrar
-    const cerrarBtn = document.createElement('button');
-    cerrarBtn.className = 'cerrar-card';
-    cerrarBtn.textContent = '↑ Cerrar';
-    cerrarBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      const card = document.getElementById(`card-${gid}`);
-      card.classList.remove('expanded');
-      expanded.innerHTML = '';
-      delete swipeHandlers[gid];
-      sincronizarYReanudarRotacion(gid);
-    });
-    expanded.appendChild(cerrarBtn);
-  }
-
-  // Swipe sobre la imagen (mobile) para cambiar de variante mientras la
-  // card está expandida: recorre vars en orden y sincroniza los chips de
-  // variante/tamaño con la que quede seleccionada. Sin flechas ni dots,
-  // el gesto solo alcanza.
-  if (vars.length > 1) {
-    swipeHandlers[gid] = (dir) => {
-      const actual = getVarianteSeleccionada() || vars[0];
-      const idxActual = vars.indexOf(actual);
-      const idxNuevo = (idxActual + dir + vars.length) % vars.length;
-      const nuevaVar = vars[idxNuevo];
-      selVariante = nuevaVar['Label_Variante'] || null;
-      selTamaño   = nuevaVar['Label_Tamaño']   || null;
-      dibujar();
-    };
-  } else {
-    delete swipeHandlers[gid];
   }
 
   dibujar();
