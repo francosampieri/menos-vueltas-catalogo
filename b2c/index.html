@@ -16,7 +16,13 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Cabin:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-hero="promo">
+<!-- ═ HERO ACTIVO ═
+     Cambiá el atributo data-hero del <body> (arriba) a "promo" o
+     "estandar" para elegir qué hero se muestra en la landing. El que no
+     esté elegido queda armado más abajo en el HTML, sin borrarse, listo
+     para prenderlo de nuevo cuando haga falta. Es lo único que hay que
+     tocar. -->
 
 <!-- ═ BARRA SUPERIOR ═ -->
 <header class="topbar">
@@ -79,7 +85,7 @@
 <!-- ══ LANDING ══ -->
 <div id="vista-landing">
 
-  <!-- Hero -->
+  <!-- ═ HERO ESTÁNDAR ═ (el de siempre, se muestra cuando data-hero="estandar") -->
   <section class="hero-bg">
   <div class="hero">
     <div class="hero-inner">
@@ -103,6 +109,36 @@
       <img src="hero-bolsas.jpg" alt="Bolsas de compras Menos Vueltas" class="hero-photo">
     </div>
   </div>
+  </section>
+
+  <!-- ═ HERO DE CAMPAÑA ═ (se muestra cuando data-hero="promo")
+       10% OFF + envío gratis en la primera compra, con foto de campaña
+       (hero-promo.jpg). Se rediseña de cero en cada campaña — no hace
+       falta reutilizar esta estructura, es solo el punto de partida
+       actual. Cambiá data-hero en el <body> para activarlo. -->
+  <section class="hero-promo-bg">
+    <img src="hero-promo.jpg" alt="" class="hero-promo-photo">
+    <div class="hero-promo">
+      <div class="hero-promo-inner">
+        <span class="hero-promo-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z" />
+            <path d="M12 8l0 13" />
+            <path d="M19 12l0 7a2 2 0 0 1 -2 2l-10 0a2 2 0 0 1 -2 -2l0 -7" />
+            <path d="M7.5 8a2.5 2.5 0 0 1 0 -5c1.5 0 2.5 2 2.5 5" />
+            <path d="M16.5 8a2.5 2.5 0 0 0 0 -5c-1.5 0 -2.5 2 -2.5 5" />
+          </svg>
+          Promoción de Bienvenida
+        </span>
+        <h1 class="hero-promo-titulo"><strong>10% de descuento</strong><br>+ Envío Gratis</h1>
+        <p class="hero-promo-texto">Probá Menos Vueltas con esta promoción en tu primer pedido.</p>
+        <div class="hero-promo-actions">
+          <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
+          <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Como pedir</button>
+        </div>
+        <p class="hero-promo-nota">Te descontamos el 10% sobre el total cuando envíes el pedido por WhatsApp.</p>
+      </div>
+    </div>
   </section>
 
   <!-- Destacados: franjita angosta con scroll horizontal, no una sección
@@ -612,6 +648,5 @@
 
 <script>window.CANAL = 'B2C';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a22d669799920c2b',t:'MTc4NTM0MTUwMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
 </body>
 </html>
