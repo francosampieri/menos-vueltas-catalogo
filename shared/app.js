@@ -97,9 +97,6 @@ async function cargarDatos() {
   }
 }
 
-// Cantidad de productos que se muestran en cada riel horizontal (mobile)
-// antes del acceso "ver toda la sección".
-const PRODUCTOS_POR_RIEL = 10;
 const MQ_MOBILE = window.matchMedia('(max-width: 600px)');
 
 // ══ RENDER CATÁLOGO ══
@@ -291,62 +288,68 @@ function renderGrupos() {
       return marcaA.localeCompare(marcaB, 'es', { sensitivity: 'base' });
     });
 
-    const titulo = document.createElement('div');
-    titulo.className = 'seccion-titulo';
-    titulo.textContent = sub || cat;
-    cont.appendChild(titulo);
+    // El título "clásico" (línea gris con la subcategoría) solo se usa en la
+    // grilla; los rieles de mobile tienen su propio encabezado.
+    if (!usarRieles()) {
+      const titulo = document.createElement('div');
+      titulo.className = 'seccion-titulo';
+      titulo.textContent = sub || cat;
+      cont.appendChild(titulo);
+    }
 
     // ── Mobile: riel horizontal por subcategoría ──
     // Con 500+ productos, la grilla vertical obliga a un scroll infinito.
-    // En mobile cada subcategoría se muestra como un carrusel horizontal
-    // con los primeros PRODUCTOS_POR_RIEL productos; el resto se ve
-    // entrando a la subcategoría completa ("Ver los N").
+    // En mobile cada subcategoría se convierte en un carrusel horizontal con
+    // todos sus productos: se recorre la sección que interesa deslizando y
+    // se pasa a la siguiente scrolleando hacia abajo.
     if (usarRieles()) {
+      const sec = document.createElement('section');
+      sec.className = 'riel-sec';
+
+      // ── Encabezado ──
+      // Marca de color + nombre grande de la subcategoría, con la categoría
+      // madre como "breadcrumb" chiquito arriba y el conteo a la derecha.
       const head = document.createElement('div');
       head.className = 'riel-head';
+      head.innerHTML = `
+        <span class="riel-head-marca" aria-hidden="true"></span>
+        <div class="riel-head-txt">
+          <span class="riel-head-cat"></span>
+          <h3 class="riel-head-titulo"></h3>
+        </div>
+        <span class="riel-head-cuenta"></span>`;
+      head.querySelector('.riel-head-cat').textContent = cat;
+      head.querySelector('.riel-head-titulo').textContent = sub || cat;
+      head.querySelector('.riel-head-cuenta').textContent =
+        items.length === 1 ? '1 producto' : `${items.length} productos`;
+      sec.appendChild(head);
 
-      const txt = document.createElement('div');
-      txt.className = 'riel-head-txt';
-      const catEl = document.createElement('span');
-      catEl.className = 'riel-head-cat';
-      catEl.textContent = cat;
-      const tituloEl = document.createElement('h3');
-      tituloEl.className = 'riel-head-titulo';
-      tituloEl.textContent = sub || cat;
-      txt.append(catEl, tituloEl);
-
-      head.appendChild(txt);
-
-      // El acceso a la sección completa solo tiene sentido si hay más
-      // productos de los que entran en el riel.
-      if (items.length > PRODUCTOS_POR_RIEL) {
-        const verTodo = document.createElement('button');
-        verTodo.className = 'riel-ver-todo';
-        verTodo.textContent = `Ver los ${items.length}`;
-        verTodo.onclick = () => abrirSeccionCompleta(cat, sub);
-        head.appendChild(verTodo);
-      } else {
-        const cuenta = document.createElement('span');
-        cuenta.className = 'riel-head-cuenta';
-        cuenta.textContent = `${items.length} productos`;
-        head.appendChild(cuenta);
-      }
-      cont.appendChild(head);
+      // ── Riel + indicadores de desplazamiento ──
+      const wrap = document.createElement('div');
+      wrap.className = 'riel-wrap';
 
       const riel = document.createElement('div');
       riel.className = 'riel';
-      items.slice(0, PRODUCTOS_POR_RIEL).forEach(([gid, vars]) => riel.appendChild(crearCard(gid, vars)));
+      items.forEach(([gid, vars]) => riel.appendChild(crearCard(gid, vars)));
 
-      if (items.length > PRODUCTOS_POR_RIEL) {
-        const tile = document.createElement('button');
-        tile.className = 'riel-tile-todos';
-        tile.innerHTML = `<span class="riel-tile-num">+${items.length - PRODUCTOS_POR_RIEL}</span>
-                          <span class="riel-tile-txt">Ver toda la<br>sección</span>`;
-        tile.onclick = () => abrirSeccionCompleta(cat, sub);
-        riel.appendChild(tile);
-      }
+      // Flecha flotante: además de indicar que hay más, al tocarla avanza
+      // una "pantalla" de productos (para quien no descubre el gesto).
+      const flecha = document.createElement('button');
+      flecha.className = 'riel-flecha';
+      flecha.setAttribute('aria-label', 'Ver más productos de ' + (sub || cat));
+      flecha.innerHTML = '<svg viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      flecha.onclick = () => riel.scrollBy({ left: riel.clientWidth * 0.8, behavior: 'smooth' });
 
-      cont.appendChild(riel);
+      // Barra de progreso: muestra cuánto del riel se recorrió y cuánto falta.
+      const barra = document.createElement('div');
+      barra.className = 'riel-barra';
+      barra.innerHTML = '<span></span>';
+
+      wrap.append(riel, flecha);
+      sec.append(wrap, barra);
+      cont.appendChild(sec);
+
+      conectarIndicadoresRiel(wrap, riel, barra);
       return;
     }
 
@@ -365,25 +368,40 @@ function usarRieles() {
   return MQ_MOBILE.matches && !busquedaActiva && !filtroSubcat;
 }
 
-// Entrar a una subcategoría desde un riel: fija categoría + subcategoría y
-// vuelve a renderizar, con lo cual usarRieles() pasa a ser false y se ve la
-// grilla completa. Los chips de subcategoría (con "Todos") permiten volver.
-function abrirSeccionCompleta(cat, sub) {
-  busquedaActiva = '';
-  const input = document.getElementById('buscador');
-  if (input) input.value = '';
-  filtroActivo = cat;
-  filtroSubcat = sub || null;
+// Mantiene sincronizados los indicadores de un riel: sombra/flecha a la
+// derecha mientras queden productos por ver, sombra a la izquierda cuando
+// ya se desplazó, y barra de progreso proporcional al recorrido.
+function conectarIndicadoresRiel(wrap, riel, barra) {
+  const fill = barra.querySelector('span');
 
-  document.querySelectorAll('.filtro-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.cat === cat);
-  });
-  const label = document.getElementById('catalogo-titulo-label');
-  if (label) label.textContent = sub || cat;
+  const actualizar = () => {
+    const max = riel.scrollWidth - riel.clientWidth;
+    if (max <= 4) {
+      wrap.classList.remove('hay-mas', 'hay-antes');
+      barra.style.display = 'none';
+      return;
+    }
+    barra.style.display = '';
+    const x = riel.scrollLeft;
+    wrap.classList.toggle('hay-mas', x < max - 4);
+    wrap.classList.toggle('hay-antes', x > 4);
+    // El ancho del "pulgar" representa qué proporción del riel se ve.
+    const visible = Math.max(0.12, riel.clientWidth / riel.scrollWidth);
+    fill.style.width = (visible * 100) + '%';
+    fill.style.transform = `translateX(${(x / max) * (100 / visible - 100)}%)`;
+  };
 
-  renderSubfiltros();
-  renderGrupos();
-  window.scrollTo({ top: 0 });
+  riel.addEventListener('scroll', () => {
+    if (riel._rafPend) return;
+    riel._rafPend = true;
+    requestAnimationFrame(() => { riel._rafPend = false; actualizar(); });
+  }, { passive: true });
+
+  // El scrollWidth recién es correcto cuando cargaron las imágenes.
+  requestAnimationFrame(actualizar);
+  setTimeout(actualizar, 600);
+  setTimeout(actualizar, 1800);
+  window.addEventListener('resize', actualizar);
 }
 
 // Al girar el teléfono o cambiar de breakpoint hay que rearmar el catálogo
