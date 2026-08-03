@@ -1574,11 +1574,11 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 ══════════════════════════════════════════════════════ */
 .riel-sec {
   margin: 0 calc(var(--space-4) * -1);
-  padding: var(--space-5) 0 var(--space-4);
-  border-bottom: 1px solid var(--line-soft);
+  /* Sin líneas divisorias: el título de cada sección y su barra de scroll
+     ya separan visualmente lo suficiente, y las líneas comían alto. */
+  padding: var(--space-4) 0 var(--space-3);
 }
-.riel-sec:first-child { padding-top: var(--space-3); }
-.riel-sec:last-child { border-bottom: none; }
+.riel-sec:first-child { padding-top: var(--space-2); }
 
 /* ── Encabezado de sección ── */
 .riel-head {
@@ -1636,6 +1636,12 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   scroll-snap-type: x proximity;
   scrollbar-width: none;
   padding: 2px var(--space-4) var(--space-2);
+  /* Sin esto, el snap alinea la primera card contra el borde del contenedor
+     ignorando el padding izquierdo: el riel quedaba arrancado en ~16px y
+     nunca podía volver al 0 real (mostraba sombra y flecha izquierda desde
+     el principio). */
+  scroll-padding-left: var(--space-4);
+  scroll-padding-right: var(--space-4);
 }
 .riel::-webkit-scrollbar { display: none; }
 .riel > .card {
@@ -1645,12 +1651,14 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   max-width: 132px;
   scroll-snap-align: start;
 }
-.riel > .card .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
-.riel > .card .card-marca { font-size: 0.58rem; margin-bottom: 2px; }
-.riel > .card .card-nombre { font-size: 0.775rem; line-height: 1.25; }
-.riel > .card .card-variante-label { font-size: 0.68rem; margin-bottom: 4px; min-height: 12px; }
-.riel > .card .card-precio { font-size: 0.92rem; }
-.riel > .card .card-precio-dto { font-size: 0.66rem; }
+/* Textos más compactos: interlineado y márgenes al mínimo cómodo para que
+   la card sea más baja y entren más productos en pantalla. */
+.riel > .card .card-body { padding: 7px var(--space-3) 10px; }
+.riel > .card .card-marca { font-size: 0.58rem; line-height: 1.1; margin-bottom: 1px; }
+.riel > .card .card-nombre { font-size: 0.775rem; line-height: 1.15; margin-bottom: 0; }
+.riel > .card .card-variante-label { font-size: 0.68rem; line-height: 1.15; margin-bottom: 3px; min-height: 0; }
+.riel > .card .card-precio { font-size: 0.92rem; line-height: 1.2; }
+.riel > .card .card-precio-dto { font-size: 0.66rem; line-height: 1.2; margin-top: 1px; }
 .riel > .card .card-img-wrap { touch-action: pan-x pan-y; }
 
 /* ── Indicadores de "hay más al costado" ──

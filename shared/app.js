@@ -463,7 +463,11 @@ function conectarIndicadoresRiel(wrap, riel, barra) {
   observarRielParaHint(wrap, riel);
 
   // El scrollWidth recién es correcto cuando cargaron las imágenes.
-  requestAnimationFrame(actualizar);
+  // Además se fuerza el arranque en 0: si el navegador aplica el snap antes
+  // de tiempo, el riel puede quedar corrido unos píxeles y mostrar la sombra
+  // y la flecha izquierda sin que el usuario haya deslizado nada.
+  riel.scrollLeft = 0;
+  requestAnimationFrame(() => { riel.scrollLeft = 0; actualizar(); });
   setTimeout(actualizar, 600);
   setTimeout(actualizar, 1800);
   window.addEventListener('resize', actualizar);
