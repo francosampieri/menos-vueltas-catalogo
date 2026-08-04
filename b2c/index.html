@@ -426,114 +426,43 @@
     </div>
     <div class="vueltas-inner">
 
-      <div class="nosotros-intro">
-        <p class="nosotros-eyebrow">Nosotros</p>
-        <h3 class="nosotros-title">Comprar debería ser más simple</h3>
-        <p class="nosotros-text">Por eso nació Menos Vueltas.</p>
-        <p class="nosotros-text">Creemos que hacer las compras no tendría que significar perder tiempo. Comprar puede ser una tarea simple.<br>Elegís lo que necesitás, nos enviás el pedido y nosotros hacemos el resto.</p>
-        <p class="nosotros-text">Y todo eso, sin hacerte pagar de más</p>
+      <!-- Izquierda: el manifiesto -->
+      <div class="ns-txt">
+        <p class="ns-eyebrow">Nosotros</p>
+        <h2 class="ns-frase">Comprar debería ser más <em>simple<svg viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden="true"><path d="M4 8 C 90 2, 200 11, 396 5"/></svg></em></h2>
+        <p class="ns-bajada">Por eso nació <strong>Menos Vueltas</strong></p>
+        <p class="ns-bajada">Creemos que podés ahorrar mucho tiempo</p>
+        <p class="ns-bajada">Elegís lo que necesitás, nos enviás el pedido y nosotros hacemos el resto.</p>
+        <p class="ns-bajada">todo eso <strong>sin pagar de más</strong></p>
       </div>
 
-      <div class="nosotros-conector" aria-hidden="true">
-        <svg viewBox="0 0 24 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2v50M5 44l7 8 7-8"/>
-        </svg>
-      </div>
+      <!-- Derecha: las vueltas que te ahorramos -->
+      <div class="ns-esquema">
+        <h3 class="ns-esquema-tit">Las vueltas que te ahorramos</h3>
 
-      <h2 class="seccion-h2-center">Las vueltas que te ahorramos</h2>
+        <div class="ns-col ns-col--no">
+          <h4>Lo que dejás de hacer</h4>
+          <ul>
+            <li><i aria-hidden="true">✕</i>Ir al mayorista</li>
+            <li><i aria-hidden="true">✕</i>Buscar estacionamiento</li>
+            <li><i aria-hidden="true">✕</i>Recorrer góndolas</li>
+            <li><i aria-hidden="true">✕</i>Hacer la fila</li>
+            <li><i aria-hidden="true">✕</i>Cargar las bolsas</li>
+            <li><i aria-hidden="true">✕</i>Volver a casa</li>
+          </ul>
+        </div>
 
-      <div class="vueltas-svg-wrap">
-        <svg class="vueltas-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <marker id="arrowVueltas" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="#6E8B5B" stroke-width="1.5"/>
-            </marker>
-          </defs>
+        <div class="ns-flecha" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </div>
 
-          <!-- ══ ITEMS IZQUIERDA — badge pegado justo al texto ══ -->
-          <text x="20" y="62"  font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Ir al mayorista</text>
-          <circle cx="147" cy="57"  r="10" fill="#EAECE5"/>
-          <text   x="147" y="61"  font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="122" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Buscar estacionamiento</text>
-          <circle cx="190" cy="117" r="10" fill="#EAECE5"/>
-          <text   x="190" y="121" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="182" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Recorrer góndolas</text>
-          <circle cx="162" cy="177" r="10" fill="#EAECE5"/>
-          <text   x="162" y="181" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="242" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Hacer fila</text>
-          <circle cx="104" cy="237" r="10" fill="#EAECE5"/>
-          <text   x="104" y="241" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="302" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Cargar bolsas</text>
-          <circle cx="126" cy="297" r="10" fill="#EAECE5"/>
-          <text   x="126" y="301" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="362" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Volver a casa</text>
-          <circle cx="126" cy="357" r="10" fill="#EAECE5"/>
-          <text   x="126" y="361" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <!-- ══ CURVAS CON RULOS desde el borde derecho de cada badge ══ -->
-
-          <!-- Ir al mayorista (sale x=157): rulo hacia arriba -->
-          <path d="M157 57 C 210 57, 195 18, 245 27 C 290 36, 272 78, 244 88 C 218 98, 232 130, 280 142 C 325 152, 362 160, 385 205"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Buscar estacionamiento (sale x=200): rulo pequeño arriba -->
-          <path d="M200 117 C 240 117, 224 90, 260 96 C 295 102, 285 133, 262 138 C 242 142, 252 160, 387 205"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Recorrer góndolas (sale x=172): leve arco -->
-          <path d="M172 177 C 270 177, 350 183, 385 207"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Hacer fila (sale x=114): leve arco desde abajo -->
-          <path d="M114 237 C 230 237, 358 222, 385 215"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Cargar bolsas (sale x=136): rulo hacia abajo -->
-          <path d="M136 297 C 186 297, 170 336, 215 327 C 258 318, 242 276, 216 266 C 192 256, 205 236, 248 226 C 305 215, 362 216, 385 215"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Volver a casa (sale x=136): rulo grande hacia abajo -->
-          <path d="M136 357 C 188 357, 172 398, 218 388 C 262 378, 245 334, 218 324 C 192 314, 205 292, 250 282 C 300 272, 356 248, 383 220"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- ══ LOGO CENTRAL ══ -->
-          <circle cx="430" cy="210" r="58" fill="#6E8B5B"/>
-          <image href="logo.svg" x="379" y="192.6" width="102" height="34.7" style="filter: brightness(0) invert(1);"/>
-
-          <!-- ══ LÍNEA DE SALIDA ══ -->
-          <path d="M488 210 L 630 210" stroke="#6E8B5B" stroke-width="1.5" fill="none" marker-end="url(#arrowVueltas)"/>
-
-          <!-- Check + texto -->
-          <circle cx="648" cy="210" r="10" fill="#EEF2E9"/>
-          <text x="648" y="214" font-size="9" fill="#6E8B5B" text-anchor="middle" font-weight="700">✓</text>
-          <text x="668" y="205" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">Elegí,</text>
-          <text x="668" y="221" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">enviá y recibí.</text>
-
-        </svg>
-      </div>
-
-      <div class="vueltas-mobile" aria-label="Pasos que evitás al comprar con Menos Vueltas">
-        <p class="vueltas-ticket-heading">Tu compra sin Menos Vueltas</p>
-
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Ir al mayorista</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Buscar estacionamiento</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Recorrer góndolas</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Hacer fila</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Cargar bolsas</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Volver a casa</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-
-        <hr class="vueltas-ticket-divider">
-
-        <div class="vueltas-ticket-stamp">
-          <div class="vueltas-ticket-stamp-text">
-            <strong>Elegí, enviá y recibí.</strong>
-            <span>Nosotros hacemos el resto.</span>
-          </div>
+        <div class="ns-col ns-col--si">
+          <h4>Lo que hacés en su lugar</h4>
+          <ul>
+            <li><i aria-hidden="true">✓</i>Elegís desde el celular</li>
+            <li><i aria-hidden="true">✓</i>Enviás por WhatsApp</li>
+            <li><i aria-hidden="true">✓</i>Lo recibís en tu casa</li>
+          </ul>
         </div>
       </div>
 
@@ -737,6 +666,6 @@
 
 <script>window.CANAL = 'B2C';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a26167d56a0bdd2e',t:'MTc4NTg4NjgxMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2617c75380883fc',t:'MTc4NTg4NzY1NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

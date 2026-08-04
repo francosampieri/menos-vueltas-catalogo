@@ -2202,214 +2202,177 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 
 /* ══════════════════════════════════════════════════════
-   LAS VUELTAS QUE TE AHORRAMOS
+   NOSOTROS + LAS VUELTAS QUE TE AHORRAMOS
+   Dos columnas en escritorio: el manifiesto a la izquierda y el esquema de
+   vueltas a la derecha, para que la sección no se estire de largo. En
+   mobile se apila y el esquema queda como lista debajo del texto.
 ══════════════════════════════════════════════════════ */
 .vueltas {
   background: var(--surface-2);
   border-bottom: 1px solid var(--line-soft);
 }
 .vueltas-inner {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: var(--space-9) var(--space-5);
-}
-
-.nosotros-intro {
-  text-align: center;
-  padding-top: var(--space-2);
-}
-.nosotros-eyebrow {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  margin-bottom: var(--space-3);
-}
-.nosotros-title {
-  font-size: clamp(1.3rem, 2.6vw, 1.6rem);
-  font-weight: 600;
-  color: var(--t1);
-  letter-spacing: -0.02em;
-  margin: 0 auto var(--space-3);
-  max-width: 460px;
-}
-.nosotros-text {
-  font-size: 0.9rem;
-  color: var(--t2);
-  line-height: 1.75;
-  font-family: var(--font-body);
-  margin: 0 auto var(--space-3);
-  max-width: 460px;
-}
-.nosotros-text:last-child { margin-bottom: 0; }
-
-/* Conector visual entre la intro y el diagrama de vueltas */
-.nosotros-conector {
-  display: flex;
-  justify-content: center;
-  margin: var(--space-6) auto;
-}
-.nosotros-conector svg {
-  width: 24px;
-  height: 64px;
-  color: var(--accent);
-}
-
-.vueltas-svg-wrap {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.vueltas-svg {
-  width: 100%;
-  min-width: 600px;
-  display: block;
-}
-
-/* Alternativa compacta al diagrama para pantallas angostas. */
-.vueltas-mobile { display: none; }
-
-
-/* Destacados: franjita angosta con scroll horizontal (no una sección más) */
-.destacados-strip {
-  background: var(--accent-bg);
-  border-bottom: 1px solid var(--line-soft);
-}
-.destacados-strip-inner {
   max-width: var(--content-wide);
   margin: 0 auto;
-  padding: var(--space-4) var(--space-5);
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
-}
-.destacados-strip-label {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  padding-right: var(--space-4);
-  border-right: 1px solid var(--accent-line);
-}
-.destacados-strip-title {
-  font-family: var(--font);
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--t1);
-  white-space: nowrap;
-}
-
-.destacados-scroller {
-  position: relative;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.destacados-track {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  padding: 2px 2px 6px;
-  scrollbar-width: none;
-}
-.destacados-track::-webkit-scrollbar { display: none; }
-
-.destacados-track .card {
-  flex: 0 0 132px;
-  scroll-snap-align: start;
-}
-.destacados-track .card-img-wrap { aspect-ratio: 1.15; }
-.destacados-track .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
-.destacados-track .card-marca { font-size: 0.62rem; }
-.destacados-track .card-nombre { font-size: 0.78rem; -webkit-line-clamp: 2; }
-.destacados-track .card-variante-label { display: none; }
-.destacados-track .card-precio { font-size: 0.86rem; }
-.destacados-track .card-precio-dto { font-size: 0.68rem; }
-
-.destacados-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  box-shadow: var(--s2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--t1);
-  cursor: pointer;
-  z-index: 2;
-  transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
-}
-.destacados-arrow:hover { border-color: var(--accent-line); }
-.destacados-arrow svg { width: 16px; height: 16px; }
-.destacados-arrow--prev { left: -14px; }
-.destacados-arrow--next { right: -14px; }
-.destacados-arrow[disabled] { opacity: 0; pointer-events: none; }
-
-/* ══════════════════════════════════════════════════════
-   CTA FINAL
-══════════════════════════════════════════════════════ */
-.cta-final {
-  background: var(--bg);
-  padding: 0 var(--space-5) var(--space-9);
-}
-.cta-final-inner {
-  position: relative;
-  overflow: hidden;
-  max-width: 1040px;
-  margin: 0 auto;
   padding: var(--space-9) var(--space-5);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
+  gap: var(--space-9);
   align-items: center;
-  gap: var(--space-6);
-  background: var(--accent-bg);
-  border: 1px solid var(--accent-line);
-  border-radius: var(--r5);
 }
-.cta-final-inner > * { position: relative; z-index: 1; }
-.cta-final h2 {
-  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--t1);
-}
-/* Frase clave destacada, igual concepto que en móvil pero en línea,
-   sin apilar, ya que en escritorio/tablet hay ancho de sobra. */
-.cta-final h2 strong {
-  font: inherit;
-  color: var(--accent);
+
+/* ── Izquierda: manifiesto ── */
+.ns-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.66rem;
   font-weight: 700;
-}
-
-
-/* ══════════════════════════════════════════════════════
-   ETIQUETA Y TÍTULO COMPARTIDOS (usados por FAQ)
-══════════════════════════════════════════════════════ */
-.sobre-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent);
+  letter-spacing: .14em;
   text-transform: uppercase;
-  letter-spacing: .08em;
+  color: var(--accent);
   margin-bottom: var(--space-4);
 }
-.sobre-title {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
+.ns-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--accent-line);
+  max-width: 70px;
+}
+.ns-frase {
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -.04em;
+  line-height: 1.1;
   color: var(--t1);
   margin-bottom: var(--space-5);
+  max-width: 14ch;
+}
+/* La palabra clave en verde, con un subrayado dibujado a mano que se traza
+   solo cuando la sección entra en pantalla. */
+.ns-frase em {
+  font-style: normal;
+  position: relative;
+  color: var(--accent-2);
+  white-space: nowrap;
+}
+.ns-frase em svg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -.14em;
+  width: 100%;
+  height: .3em;
+  overflow: visible;
+}
+.ns-frase em path {
+  fill: none;
+  stroke: var(--accent-line);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
+}
+.vueltas.visible .ns-frase em path { animation: ns-trazo 1.1s var(--ease) .3s forwards; }
+@keyframes ns-trazo { to { stroke-dashoffset: 0; } }
+
+.ns-bajada {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--t2);
+  line-height: 1.7;
+  margin-bottom: var(--space-3);
+  max-width: 44ch;
+}
+.ns-bajada:last-child { margin-bottom: 0; }
+.ns-bajada strong {
+  font-family: var(--font);
+  font-weight: 600;
+  color: var(--t1);
+}
+
+/* ── Derecha: esquema de vueltas ── */
+.ns-esquema {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r5);
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  box-shadow: var(--s1);
+}
+.ns-esquema-tit {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+.ns-col h4 {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: var(--space-3);
+}
+.ns-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ns-col li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transform: translateY(7px);
+}
+.vueltas.visible .ns-col li { animation: ns-sube .45s var(--ease) forwards; }
+.vueltas.visible .ns-col li:nth-child(1) { animation-delay: .30s; }
+.vueltas.visible .ns-col li:nth-child(2) { animation-delay: .38s; }
+.vueltas.visible .ns-col li:nth-child(3) { animation-delay: .46s; }
+.vueltas.visible .ns-col li:nth-child(4) { animation-delay: .54s; }
+.vueltas.visible .ns-col li:nth-child(5) { animation-delay: .62s; }
+.vueltas.visible .ns-col li:nth-child(6) { animation-delay: .70s; }
+@keyframes ns-sube { to { opacity: 1; transform: none; } }
+.ns-col i {
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.62rem;
+  font-style: normal;
+  flex-shrink: 0;
+}
+/* Lo que dejás de hacer: tachado y en gris */
+.ns-col--no li {
+  color: var(--t3);
+  text-decoration: line-through;
+  text-decoration-color: var(--line);
+}
+.ns-col--no i { background: var(--surface-2); color: var(--t3); }
+/* Lo que hacés en su lugar: destacado */
+.ns-col--si li { color: var(--t1); font-weight: 500; }
+.ns-col--si i { background: var(--accent); color: white; }
+
+.ns-flecha {
+  display: flex;
+  justify-content: center;
+  color: var(--accent-line);
+  margin: var(--space-4) 0;
+}
+.ns-flecha svg { width: 26px; height: 26px; }
+
+/* ── Tablet y mobile: una sola columna ── */
+@media (max-width: 900px) {
+  .vueltas-inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    max-width: 560px;
+  }
+  .ns-frase { max-width: none; }
+  .ns-bajada { max-width: none; }
+  .ns-esquema { padding: var(--space-5) var(--space-5) var(--space-4); }
 }
 
 
@@ -4192,91 +4155,6 @@ body.modal-abierto {
   /* Beneficios: una lista de atajos, más fácil de recorrer que seis mini tarjetas. */
   .como-comprar-inner, .vueltas-inner,
   .cta-final-inner { padding: var(--space-7) var(--space-4); }
-  .vueltas-svg-wrap { display: none; }
-  .vueltas-mobile {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    max-width: 380px;
-    margin: 0 auto;
-    padding: var(--space-6) var(--space-5) var(--space-5);
-    background: var(--surface);
-    border-radius: var(--r3);
-    box-shadow: var(--s3);
-  }
-  /* Borde perforado arriba y abajo, como un tique */
-  .vueltas-mobile::before, .vueltas-mobile::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0;
-    height: 14px;
-    background-image: radial-gradient(circle at 8px 8px, var(--surface-2) 6px, transparent 7px);
-    background-size: 16px 16px;
-    background-repeat: repeat-x;
-  }
-  .vueltas-mobile::before { top: -1px; }
-  .vueltas-mobile::after { bottom: -1px; transform: rotate(180deg); }
-
-  .vueltas-ticket-heading {
-    text-align: center;
-    font-family: var(--font-body);
-    font-size: .78rem;
-    color: var(--t3);
-    letter-spacing: .04em;
-    margin-bottom: var(--space-4);
-  }
-  .vueltas-ticket-line {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    padding: 7px 0;
-    color: var(--t3);
-    font-size: .86rem;
-  }
-  .vueltas-ticket-dots {
-    flex: 1;
-    border-bottom: 1.5px dotted var(--line);
-    transform: translateY(-3px);
-  }
-  .vueltas-ticket-name {
-    text-decoration: line-through;
-    text-decoration-color: rgba(111, 116, 110, .4);
-    white-space: nowrap;
-  }
-  .vueltas-ticket-mark {
-    color: var(--t3);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .vueltas-ticket-divider {
-    border: none;
-    border-top: 1.5px dashed var(--line-soft);
-    margin: var(--space-4) 0;
-  }
-  .vueltas-ticket-stamp {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: var(--space-3);
-    border: 2px dashed var(--accent);
-    border-radius: var(--r3);
-    transform: rotate(-1.5deg);
-  }
-  .vueltas-ticket-stamp-text strong {
-    display: block;
-    color: var(--accent-2);
-    font-size: .95rem;
-    text-transform: uppercase;
-    letter-spacing: .03em;
-  }
-  .vueltas-ticket-stamp-text span {
-    display: block;
-    font-size: .8rem;
-    color: var(--t2);
-    font-family: var(--font-body);
-    margin-top: 2px;
-  }
   .card.expanded { grid-column: 1 / -1; }
   .carrito-items { padding: var(--space-4); }
   .carrito-header { padding: var(--space-4); }

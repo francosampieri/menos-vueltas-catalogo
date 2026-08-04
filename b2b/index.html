@@ -414,114 +414,43 @@
     </div>
     <div class="vueltas-inner">
 
-      <div class="nosotros-intro">
-        <p class="nosotros-eyebrow">Nosotros</p>
-        <h3 class="nosotros-title">Reponer debería ser más simple</h3>
-        <p class="nosotros-text">Por eso nació Menos Vueltas.</p>
-        <p class="nosotros-text">Creemos que hacer un pedido no tendría que significar listas interminables, cálculos manuales, ni entregas con errores. Reponer puede ser una tarea simple.<br>Elegís lo que tu negocio necesita, nos enviás el pedido y nosotros hacemos el resto.</p>
-        <p class="nosotros-text">Y todo eso, con precios competitivos y sin mínimos que te compliquen</p>
+      <!-- Izquierda: el manifiesto -->
+      <div class="ns-txt">
+        <p class="ns-eyebrow">Nosotros</p>
+        <h2 class="ns-frase">Reponer debería ser más <em>simple<svg viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden="true"><path d="M4 8 C 90 2, 200 11, 396 5"/></svg></em></h2>
+        <p class="ns-bajada">Por eso nació <strong>Menos Vueltas</strong></p>
+        <p class="ns-bajada">Creemos que podés ahorrar mucho tiempo</p>
+        <p class="ns-bajada">Elegís lo que tu negocio necesita, nos enviás el pedido y nosotros hacemos el resto.</p>
+        <p class="ns-bajada">todo eso <strong>con precios competitivos</strong></p>
       </div>
 
-      <div class="nosotros-conector" aria-hidden="true">
-        <svg viewBox="0 0 24 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2v50M5 44l7 8 7-8"/>
-        </svg>
-      </div>
+      <!-- Derecha: las vueltas que te ahorramos -->
+      <div class="ns-esquema">
+        <h3 class="ns-esquema-tit">Las vueltas que te ahorramos</h3>
 
-      <h2 class="seccion-h2-center">Las vueltas que te ahorramos</h2>
+        <div class="ns-col ns-col--no">
+          <h4>Lo que dejás de hacer</h4>
+          <ul>
+            <li><i aria-hidden="true">✕</i>Ir al mayorista</li>
+            <li><i aria-hidden="true">✕</i>Buscar estacionamiento</li>
+            <li><i aria-hidden="true">✕</i>Recorrer góndolas</li>
+            <li><i aria-hidden="true">✕</i>Hacer la fila</li>
+            <li><i aria-hidden="true">✕</i>Cargar el flete</li>
+            <li><i aria-hidden="true">✕</i>Volver al local</li>
+          </ul>
+        </div>
 
-      <div class="vueltas-svg-wrap">
-        <svg class="vueltas-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <marker id="arrowVueltas" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="#6E8B5B" stroke-width="1.5"/>
-            </marker>
-          </defs>
+        <div class="ns-flecha" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </div>
 
-          <!-- ══ ITEMS IZQUIERDA — badge pegado justo al texto ══ -->
-          <text x="20" y="62"  font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Buscar productos en una lista</text>
-          <circle cx="236" cy="57"  r="10" fill="#EAECE5"/>
-          <text   x="236" y="61"  font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="122" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Tener un proveedor por cada producto</text>
-          <circle cx="280" cy="117" r="10" fill="#EAECE5"/>
-          <text   x="280" y="121" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="182" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Sacar cuentas a mano</text>
-          <circle cx="187" cy="177" r="10" fill="#EAECE5"/>
-          <text   x="187" y="181" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="242" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Comprar por bulto sí o sí</text>
-          <circle cx="187" cy="237" r="10" fill="#EAECE5"/>
-          <text   x="187" y="241" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="302" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Escribir el pedido</text>
-          <circle cx="171" cy="297" r="10" fill="#EAECE5"/>
-          <text   x="171" y="301" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <text x="20" y="362" font-size="13" fill="#6F746E" font-family="DM Sans, sans-serif">Mínimos de pedido</text>
-          <circle cx="187" cy="357" r="10" fill="#EAECE5"/>
-          <text   x="187" y="361" font-size="9" fill="#9EA39D" text-anchor="middle" font-weight="600">✕</text>
-
-          <!-- ══ CURVAS CON RULOS desde el borde derecho de cada badge ══ -->
-
-          <!-- Buscar productos en una lista (sale x=246): rulo hacia arriba -->
-          <path d="M246 57 C 299 57, 284 18, 334 27 C 379 36, 361 78, 333 88 C 307 98, 321 130, 355 142 C 370 152, 378 160, 385 205"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Tener un proveedor por cada producto (sale x=290): arco suave hacia el centro -->
-          <path d="M290 117 C 324 117, 312 148, 338 156 C 364 163, 356 186, 382 204"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Sacar cuentas a mano (sale x=197): leve arco -->
-          <path d="M197 177 C 270 177, 350 183, 385 207"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Comprar por bulto sí o sí (sale x=197): leve arco desde abajo -->
-          <path d="M197 237 C 230 237, 358 222, 385 215"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Escribir el pedido (sale x=181): rulo hacia abajo -->
-          <path d="M181 297 C 210 297, 194 336, 236 327 C 276 318, 260 276, 234 266 C 210 256, 222 236, 262 226 C 315 215, 365 216, 385 215"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- Mínimos de pedido (sale x=197): rulo grande hacia abajo -->
-          <path d="M197 357 C 212 357, 196 398, 238 388 C 280 378, 263 334, 236 324 C 210 314, 222 292, 264 282 C 310 272, 362 248, 385 220"
-                stroke="#C8D6BB" stroke-width="1.5" fill="none"/>
-
-          <!-- ══ LOGO CENTRAL ══ -->
-          <circle cx="430" cy="210" r="58" fill="#6E8B5B"/>
-          <image href="logo.svg" x="379" y="192.6" width="102" height="34.7" style="filter: brightness(0) invert(1);"/>
-
-          <!-- ══ LÍNEA DE SALIDA ══ -->
-          <path d="M488 210 L 630 210" stroke="#6E8B5B" stroke-width="1.5" fill="none" marker-end="url(#arrowVueltas)"/>
-
-          <!-- Check + texto -->
-          <circle cx="648" cy="210" r="10" fill="#EEF2E9"/>
-          <text x="648" y="214" font-size="9" fill="#6E8B5B" text-anchor="middle" font-weight="700">✓</text>
-          <text x="668" y="205" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">Elegí,</text>
-          <text x="668" y="221" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">enviá y recibí.</text>
-
-        </svg>
-      </div>
-
-      <div class="vueltas-mobile" aria-label="Pasos que evitás al pedir con Menos Vueltas">
-        <p class="vueltas-ticket-heading">Tu pedido sin Menos Vueltas</p>
-
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Buscar productos en una lista</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Tener un proveedor por cada producto</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Sacar cuentas a mano</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Comprar por bulto sí o sí</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Escribir el pedido</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Mínimos de pedido</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
-
-        <hr class="vueltas-ticket-divider">
-
-        <div class="vueltas-ticket-stamp">
-          <div class="vueltas-ticket-stamp-text">
-            <strong>Elegí, enviá y recibí.</strong>
-            <span>Nosotros hacemos el resto.</span>
-          </div>
+        <div class="ns-col ns-col--si">
+          <h4>Lo que hacés en su lugar</h4>
+          <ul>
+            <li><i aria-hidden="true">✓</i>Elegís desde el celular</li>
+            <li><i aria-hidden="true">✓</i>Enviás por WhatsApp</li>
+            <li><i aria-hidden="true">✓</i>Lo recibís en tu local</li>
+          </ul>
         </div>
       </div>
 
@@ -734,6 +663,6 @@
 
 <script>window.CANAL = 'B2B';</script>
 <script src="app.js"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a261682b6c23dd2e',t:'MTc4NTg4NjgyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2617d1cfe5683fc',t:'MTc4NTg4NzY4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+</body>
 </html>

@@ -1960,6 +1960,31 @@ function initDemoPasos() {
 
 document.addEventListener('DOMContentLoaded', initDemoPasos);
 
+// ══════════════════════════════════════════════════════
+//  SECCIÓN NOSOTROS
+//  Al entrar en pantalla se traza el subrayado del titular y las vueltas
+//  aparecen de a una. Se dispara una sola vez.
+// ══════════════════════════════════════════════════════
+function initNosotros() {
+  const seccion = document.querySelector('.vueltas');
+  if (!seccion) return;
+
+  if (!('IntersectionObserver' in window)) {
+    seccion.classList.add('visible');
+    return;
+  }
+  const obs = new IntersectionObserver(entradas => {
+    entradas.forEach(e => {
+      if (!e.isIntersecting) return;
+      seccion.classList.add('visible');
+      obs.disconnect();
+    });
+  }, { threshold: 0.25 });
+  obs.observe(seccion);
+}
+
+document.addEventListener('DOMContentLoaded', initNosotros);
+
 // ══ SCROLL REVEAL ══
 function initReveal() {
   const observer = new IntersectionObserver((entries) => {
@@ -1989,10 +2014,6 @@ function addRevealClasses() {
   document.querySelectorAll('.faq-item').forEach((el, i) => {
     el.classList.add('reveal', `reveal-delay-${Math.min(i + 1, 3)}`);
   });
-
-  // Sección vueltas SVG
-  const vueltas = document.querySelector('.vueltas-svg-wrap');
-  if (vueltas) vueltas.classList.add('reveal');
 
   // CTA final
   const cta = document.querySelector('.cta-final-inner');
