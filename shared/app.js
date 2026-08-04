@@ -1861,7 +1861,7 @@ cargarDatos();
 //  La secuencia arranca recién cuando la sección entra en pantalla, para que
 //  nadie se pierda el principio, y se pausa al salir.
 // ══════════════════════════════════════════════════════
-const PASO_DURACION = 11000;
+const PASO_DURACION = 9000;
 let pasoActual = 1;
 let pasoTimer = null;
 let pasoEnPantalla = false;

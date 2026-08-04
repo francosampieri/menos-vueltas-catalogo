@@ -903,7 +903,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   background: var(--accent);
   border-radius: var(--rf);
 }
-.paso-item.activo .paso-item-barra { animation: paso-avance 11s linear forwards; }
+.paso-item.activo .paso-item-barra { animation: paso-avance 9s linear forwards; }
 @keyframes paso-avance { to { width: 100%; } }
 
 /* Las animaciones arrancan recién cuando la sección entra en pantalla
@@ -1131,54 +1131,55 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    El puntero baja a la card (32.8%, 30%), la abre; después va al "+" de
    cantidad (53%, 66.4%) y por último a "Agregar" (68.1%, 66.4%).
    Las coordenadas están medidas sobre la pantalla real del mockup. */
-.mk-pant[data-paso="1"].activa .mk-puntero { animation: pd1-puntero 11s var(--ease-mouse) infinite; }
+.mk-pant[data-paso="1"].activa .mk-puntero { animation: pd1-puntero 9s var(--ease-mouse) infinite; }
 @keyframes pd1-puntero {
   0%       { left: 56%;   top: 55%;   opacity: 0; }
-  3%       { left: 55%;   top: 54%;   opacity: 1; }
+  4%       { left: 55%;   top: 54%;   opacity: 1; }
   18%, 21% { left: 32.8%; top: 30%;   opacity: 1; }
-  34%      { left: 32.8%; top: 30%;   opacity: 1; }
-  53%, 55% { left: 53%;   top: 66.4%; opacity: 1; }
-  64%      { left: 53%;   top: 66.4%; opacity: 1; }
-  74%, 76% { left: 68.1%; top: 66.4%; opacity: 1; }
-  96%      { left: 68.1%; top: 66.4%; opacity: 1; }
-  100%     { left: 68.1%; top: 66.4%; opacity: 0; }
+  30%      { left: 32.8%; top: 30%;   opacity: 1; }
+  46%, 49% { left: 53%;   top: 66.4%; opacity: 1; }
+  55%      { left: 53%;   top: 66.4%; opacity: 1; }
+  68%, 71% { left: 68.1%; top: 66.4%; opacity: 1; }
+  /* Termina visible y en el mismo punto donde arranca el paso 2, para que
+     los dos pasos se lean como una sola toma continua. */
+  100%     { left: 68.1%; top: 66.4%; opacity: 1; }
 }
 /* Tres clics: card, "+" y "Agregar" */
-.mk-pant[data-paso="1"].activa .mk-click { animation: pd1-click 11s linear infinite; }
+.mk-pant[data-paso="1"].activa .mk-click { animation: pd1-click 9s linear infinite; }
 @keyframes pd1-click {
   0%, 20%  { opacity: 0; transform: scale(.35); }
   21%      { opacity: .9; transform: scale(.35); }
-  26%      { opacity: 0; transform: scale(1.15); }
-  54%      { opacity: 0; transform: scale(.35); }
-  55%      { opacity: .9; transform: scale(.35); }
-  60%      { opacity: 0; transform: scale(1.15); }
-  75%      { opacity: 0; transform: scale(.35); }
-  76%      { opacity: .9; transform: scale(.35); }
-  81%,100% { opacity: 0; transform: scale(1.15); }
+  27%      { opacity: 0; transform: scale(1.15); }
+  48%      { opacity: 0; transform: scale(.35); }
+  49%      { opacity: .9; transform: scale(.35); }
+  55%      { opacity: 0; transform: scale(1.15); }
+  70%      { opacity: 0; transform: scale(.35); }
+  71%      { opacity: .9; transform: scale(.35); }
+  77%,100% { opacity: 0; transform: scale(1.15); }
 }
-.mk-pant[data-paso="1"].activa .mkd-card.destino { animation: pd1-card 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-card.destino { animation: pd1-card 9s var(--ease) infinite; }
 @keyframes pd1-card {
   0%, 21%  { transform: scale(1); box-shadow: none; }
-  23%      { transform: scale(.95); box-shadow: 0 0 0 2px var(--accent-line); }
-  27%, 100%{ transform: scale(1); box-shadow: none; }
+  24%      { transform: scale(.95); box-shadow: 0 0 0 2px var(--accent-line); }
+  28%, 100%{ transform: scale(1); box-shadow: none; }
 }
 
 /* El badge del carrito recién aparece cuando se agregó el producto */
 .con-badge-tardio b { opacity: 0; }
-.mk-pant[data-paso="1"].activa .con-badge-tardio b { animation: pd1-badge 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .con-badge-tardio b { animation: pd1-badge 9s var(--ease) infinite; }
 @keyframes pd1-badge {
-  0%, 78%  { opacity: 0; transform: scale(.4); }
-  82%      { opacity: 1; transform: scale(1.3); }
-  86%, 100%{ opacity: 1; transform: scale(1); }
+  0%, 73%  { opacity: 0; transform: scale(.4); }
+  78%      { opacity: 1; transform: scale(1.3); }
+  83%, 100%{ opacity: 1; transform: scale(1); }
 }
 
 /* Modal de producto */
 .mk-pant[data-paso="1"].activa .mkd-modal-fondo,
-.mk-pant[data-paso="1"].activa .mkm-modal-fondo { animation: pd1-fondo 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-modal-fondo { animation: pd1-fondo 9s var(--ease) infinite; }
 @keyframes pd1-fondo {
   0%, 22%  { opacity: 0; }
-  27%, 92% { opacity: 1; }
-  98%, 100%{ opacity: 0; }
+  28%, 94% { opacity: 1; }
+  99%, 100%{ opacity: 0; }
 }
 
 .mkd-modal {
@@ -1196,11 +1197,11 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   opacity: 0;
 }
 .mk-pant[data-paso="1"].activa .mkd-modal,
-.mk-pant[data-paso="1"].activa .mkm-modal { animation: pd1-modal 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-modal { animation: pd1-modal 9s var(--ease) infinite; }
 @keyframes pd1-modal {
   0%, 22%   { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
-  28%, 92%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  98%, 100% { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
+  29%, 94%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  99%, 100% { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
 }
 .mkd-modal-foto {
   width: 42%;
@@ -1261,16 +1262,16 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 /* El número pasa de 1 a 2 justo cuando el puntero toca "+" (33%) */
 .mkd-qty u .q2, .mkm-qty u .q2 { opacity: 0; }
 .mk-pant[data-paso="1"].activa .mkd-qty u .q1,
-.mk-pant[data-paso="1"].activa .mkm-qty u .q1 { animation: pd1-q1 11s steps(1) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-qty u .q1 { animation: pd1-q1 9s steps(1) infinite; }
 .mk-pant[data-paso="1"].activa .mkd-qty u .q2,
-.mk-pant[data-paso="1"].activa .mkm-qty u .q2 { animation: pd1-q2 11s steps(1) infinite; }
-@keyframes pd1-q1 { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
-@keyframes pd1-q2 { 0%, 55% { opacity: 0; } 56%, 100% { opacity: 1; } }
-.mk-pant[data-paso="1"].activa .mkd-qty-mas { animation: pd1-boton 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-qty u .q2 { animation: pd1-q2 9s steps(1) infinite; }
+@keyframes pd1-q1 { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes pd1-q2 { 0%, 49% { opacity: 0; } 50%, 100% { opacity: 1; } }
+.mk-pant[data-paso="1"].activa .mkd-qty-mas { animation: pd1-boton 9s var(--ease) infinite; }
 @keyframes pd1-boton {
-  0%, 54%  { color: var(--t2); transform: scale(1); }
-  56%      { color: var(--accent); transform: scale(1.25); }
-  60%, 100%{ color: var(--t2); transform: scale(1); }
+  0%, 48%  { color: var(--t2); transform: scale(1); }
+  50%      { color: var(--accent); transform: scale(1.25); }
+  55%, 100%{ color: var(--t2); transform: scale(1); }
 }
 .mkd-add {
   flex: 1;
@@ -1291,18 +1292,18 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 700;
 }
 .mkd-add .add2, .mkm-add .add2 { opacity: 0; }
-.mk-pant[data-paso="1"].activa .mkd-add { animation: pd1-add 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-add { animation: pd1-add 9s var(--ease) infinite; }
 @keyframes pd1-add {
-  0%, 76%  { transform: scale(1); }
-  78%      { transform: scale(.95); }
-  82%, 100%{ transform: scale(1); }
+  0%, 71%  { transform: scale(1); }
+  73%      { transform: scale(.95); }
+  78%, 100%{ transform: scale(1); }
 }
 .mk-pant[data-paso="1"].activa .mkd-add .add1,
-.mk-pant[data-paso="1"].activa .mkm-add .add1 { animation: pd1-a1 11s steps(1) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-add .add1 { animation: pd1-a1 9s steps(1) infinite; }
 .mk-pant[data-paso="1"].activa .mkd-add .add2,
-.mk-pant[data-paso="1"].activa .mkm-add .add2 { animation: pd1-a2 11s steps(1) infinite; }
-@keyframes pd1-a1 { 0%, 77% { opacity: 1; } 78%, 100% { opacity: 0; } }
-@keyframes pd1-a2 { 0%, 77% { opacity: 0; } 78%, 100% { opacity: 1; } }
+.mk-pant[data-paso="1"].activa .mkm-add .add2 { animation: pd1-a2 9s steps(1) infinite; }
+@keyframes pd1-a1 { 0%, 72% { opacity: 1; } 73%, 100% { opacity: 0; } }
+@keyframes pd1-a2 { 0%, 72% { opacity: 0; } 73%, 100% { opacity: 1; } }
 
 /* ══ PASO 2 (escritorio) ══
    Puntero al botón flotante (95.6%, 93%) → se abre el drawer → puntero al
@@ -1312,56 +1313,55 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   right: 13px;
   bottom: 13px;
   z-index: 8;
-  width: 26px;
-  height: 26px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: var(--accent);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(88,117,71,.4);
+  box-shadow: 0 6px 18px rgba(88,117,71,.45);
 }
-.mkd-flotante svg { width: 13px; height: 13px; }
+.mkd-flotante svg { width: 26px; height: 26px; }
 .mkd-flotante b {
   position: absolute;
-  top: -3px; right: -3px;
-  width: 12px; height: 12px;
+  top: -4px; right: -4px;
+  width: 20px; height: 20px;
   border-radius: 50%;
   background: var(--t1);
   color: white;
-  font-size: 0.4rem;
+  font-size: 0.62rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.mk-pant[data-paso="2"].activa .mkd-flotante { animation: pd2-flotante 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-flotante { animation: pd2-flotante 9s var(--ease) infinite; }
 @keyframes pd2-flotante {
-  0%, 22%  { transform: scale(1); opacity: 1; }
-  25%      { transform: scale(.86); opacity: 1; }
-  29%      { transform: scale(1); opacity: 1; }
-  33%, 100%{ transform: scale(1); opacity: 0; }
+  0%, 23%  { transform: scale(1); opacity: 1; }
+  26%      { transform: scale(.86); opacity: 1; }
+  31%      { transform: scale(1); opacity: 1; }
+  36%, 100%{ transform: scale(1); opacity: 0; }
 }
 
-.mk-pant[data-paso="2"].activa .mk-puntero { animation: pd2-puntero 11s var(--ease-mouse) infinite; }
+.mk-pant[data-paso="2"].activa .mk-puntero { animation: pd2-puntero 9s var(--ease-mouse) infinite; }
 @keyframes pd2-puntero {
-  0%       { left: 70%;   top: 62%;   opacity: 0; }
-  3%       { left: 71%;   top: 64%;   opacity: 1; }
+  0%, 4%   { left: 68.1%; top: 66.4%; opacity: 1; }
   20%, 23% { left: 95.6%; top: 93%;   opacity: 1; }
-  45%      { left: 95.6%; top: 93%;   opacity: 1; }
-  57%, 59% { left: 80.1%; top: 94.1%; opacity: 1; }
-  64%      { left: 80.1%; top: 94.1%; opacity: 1; }
-  69%, 100%{ left: 80.1%; top: 94.1%; opacity: 0; }
+  38%      { left: 95.6%; top: 93%;   opacity: 1; }
+  54%, 57% { left: 80.1%; top: 94.1%; opacity: 1; }
+  62%      { left: 80.1%; top: 94.1%; opacity: 1; }
+  67%, 100%{ left: 80.1%; top: 94.1%; opacity: 0; }
 }
-.mk-pant[data-paso="2"].activa .mk-click { animation: pd2-click 11s linear infinite; }
+.mk-pant[data-paso="2"].activa .mk-click { animation: pd2-click 9s linear infinite; }
 @keyframes pd2-click {
   0%, 22%  { opacity: 0; transform: scale(.35); }
   23%      { opacity: .9; transform: scale(.35); }
-  28%      { opacity: 0; transform: scale(1.15); }
-  58%      { opacity: 0; transform: scale(.35); }
-  59%      { opacity: .9; transform: scale(.35); }
-  64%,100% { opacity: 0; transform: scale(1.15); }
+  29%      { opacity: 0; transform: scale(1.15); }
+  56%      { opacity: 0; transform: scale(.35); }
+  57%      { opacity: .9; transform: scale(.35); }
+  63%,100% { opacity: 0; transform: scale(1.15); }
 }
 
 .mkd-drawer {
@@ -1377,11 +1377,11 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   flex-direction: column;
   transform: translateX(100%);
 }
-.mk-pant[data-paso="2"].activa .mkd-drawer { animation: pd2-drawer 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-drawer { animation: pd2-drawer 9s var(--ease) infinite; }
 @keyframes pd2-drawer {
-  0%, 24%   { transform: translateX(100%); }
-  32%, 64%  { transform: translateX(0); }
-  71%, 100% { transform: translateX(100%); }
+  0%, 25%   { transform: translateX(100%); }
+  34%, 62%  { transform: translateX(0); }
+  69%, 100% { transform: translateX(100%); }
 }
 .mkd-drawer-tit { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
 .mkd-linea { display: flex; align-items: center; gap: 7px; padding: 4px 0; }
@@ -1414,11 +1414,11 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 700;
 }
 .mkd-wa-btn svg { width: 9px; height: 9px; }
-.mk-pant[data-paso="2"].activa .mkd-wa-btn { animation: pd2-btn 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-wa-btn { animation: pd2-btn 9s var(--ease) infinite; }
 @keyframes pd2-btn {
-  0%, 59%  { transform: scale(1); }
-  61%      { transform: scale(.94); }
-  65%, 100%{ transform: scale(1); }
+  0%, 57%  { transform: scale(1); }
+  59%      { transform: scale(.94); }
+  64%, 100%{ transform: scale(1); }
 }
 
 /* WhatsApp Web: ocupa toda la pantalla de la notebook */
@@ -1431,10 +1431,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   flex-direction: column;
   opacity: 0;
 }
-.mk-pant[data-paso="2"].activa .mkd-wa { animation: pd2-wa 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-wa { animation: pd2-wa 9s var(--ease) infinite; }
 @keyframes pd2-wa {
-  0%, 64%   { opacity: 0; }
-  70%, 96%  { opacity: 1; }
+  0%, 62%   { opacity: 0; }
+  69%, 96%  { opacity: 1; }
   99%, 100% { opacity: 0; }
 }
 .mkd-wa-barra {
@@ -1832,25 +1832,25 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   right: 9px;
   bottom: 11px;
   z-index: 8;
-  width: 24px;
-  height: 24px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--accent);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(88,117,71,.4);
+  box-shadow: 0 6px 16px rgba(88,117,71,.45);
 }
-.mkm-flotante svg { width: 12px; height: 12px; }
+.mkm-flotante svg { width: 24px; height: 24px; }
 .mkm-flotante b {
   position: absolute;
-  top: -3px; right: -3px;
-  width: 11px; height: 11px;
+  top: -4px; right: -4px;
+  width: 19px; height: 19px;
   border-radius: 50%;
   background: var(--t1);
   color: white;
-  font-size: 0.36rem;
+  font-size: 0.6rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -1861,45 +1861,45 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    Sin puntero: en una pantalla táctil no hay cursor visible. Lo que marca
    dónde se tocó es la reacción del propio elemento — se hunde y se ilumina,
    exagerado respecto de la web real para que el gesto se lea claro. */
-.mk-pant[data-paso="1"].activa .mkm-card.destino { animation: pm1-tap-card 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-card.destino { animation: pm1-tap-card 9s var(--ease) infinite; }
 @keyframes pm1-tap-card {
   0%, 20%  { transform: scale(1);    box-shadow: none; }
-  23%      { transform: scale(.93);  box-shadow: 0 0 0 2.5px var(--accent); }
-  27%      { transform: scale(1.01); box-shadow: 0 0 0 2px var(--accent-line); }
-  31%,100% { transform: scale(1);    box-shadow: none; }
+  24%      { transform: scale(.93);  box-shadow: 0 0 0 2.5px var(--accent); }
+  28%      { transform: scale(1.01); box-shadow: 0 0 0 2px var(--accent-line); }
+  33%,100% { transform: scale(1);    box-shadow: none; }
 }
 /* Botón "+" de cantidad */
-.mk-pant[data-paso="1"].activa .mkm-qty-mas { animation: pm1-tap-mas 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-qty-mas { animation: pm1-tap-mas 9s var(--ease) infinite; }
 @keyframes pm1-tap-mas {
-  0%, 53%  { transform: scale(1);   color: var(--t2);     background: transparent; }
-  56%      { transform: scale(.8);  color: white;         background: var(--accent); }
-  60%      { transform: scale(1.3); color: var(--accent); background: var(--accent-bg); }
-  65%,100% { transform: scale(1);   color: var(--t2);     background: transparent; }
+  0%, 47%  { transform: scale(1);   color: var(--t2);     background: transparent; }
+  51%      { transform: scale(.8);  color: white;         background: var(--accent); }
+  56%      { transform: scale(1.3); color: var(--accent); background: var(--accent-bg); }
+  61%,100% { transform: scale(1);   color: var(--t2);     background: transparent; }
 }
 /* Botón "Agregar" */
-.mk-pant[data-paso="1"].activa .mkm-add { animation: pm1-tap-add 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-add { animation: pm1-tap-add 9s var(--ease) infinite; }
 @keyframes pm1-tap-add {
-  0%, 75%  { transform: scale(1);   filter: brightness(1); }
-  78%      { transform: scale(.94); filter: brightness(.82); }
-  83%      { transform: scale(1.03);filter: brightness(1.08); }
-  88%,100% { transform: scale(1);   filter: brightness(1); }
+  0%, 70%  { transform: scale(1);   filter: brightness(1); }
+  74%      { transform: scale(.94); filter: brightness(.82); }
+  79%      { transform: scale(1.03);filter: brightness(1.08); }
+  85%,100% { transform: scale(1);   filter: brightness(1); }
 }
 
 /* ══ PASO 2 (mobile) ══ */
-.mk-pant[data-paso="2"].activa .mkm-flotante { animation: pm2-tap-flot 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkm-flotante { animation: pm2-tap-flot 9s var(--ease) infinite; }
 @keyframes pm2-tap-flot {
-  0%, 21%  { transform: scale(1);   filter: brightness(1);   opacity: 1; }
-  24%      { transform: scale(.84); filter: brightness(.8);  opacity: 1; }
-  28%      { transform: scale(1.08);filter: brightness(1.1); opacity: 1; }
-  32%      { transform: scale(1);   filter: brightness(1);   opacity: 1; }
-  36%,100% { transform: scale(1);   filter: brightness(1);   opacity: 0; }
+  0%, 22%  { transform: scale(1);   filter: brightness(1);   opacity: 1; }
+  26%      { transform: scale(.84); filter: brightness(.8);  opacity: 1; }
+  31%      { transform: scale(1.08);filter: brightness(1.1); opacity: 1; }
+  35%      { transform: scale(1);   filter: brightness(1);   opacity: 1; }
+  39%,100% { transform: scale(1);   filter: brightness(1);   opacity: 0; }
 }
-.mk-pant[data-paso="2"].activa .mkm-wa-btn { animation: pm2-tap-wa 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkm-wa-btn { animation: pm2-tap-wa 9s var(--ease) infinite; }
 @keyframes pm2-tap-wa {
-  0%, 58%  { transform: scale(1);   filter: brightness(1); }
-  61%      { transform: scale(.94); filter: brightness(.82); }
-  66%      { transform: scale(1.03);filter: brightness(1.1); }
-  71%,100% { transform: scale(1);   filter: brightness(1); }
+  0%, 56%  { transform: scale(1);   filter: brightness(1); }
+  60%      { transform: scale(.94); filter: brightness(.82); }
+  65%      { transform: scale(1.03);filter: brightness(1.1); }
+  70%,100% { transform: scale(1);   filter: brightness(1); }
 }
 
 .mkm-carrito {
@@ -1912,11 +1912,11 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   padding-top: 22px;
   transform: translateY(100%);
 }
-.mk-pant[data-paso="2"].activa .mkm-carrito { animation: pd2-carrito 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkm-carrito { animation: pd2-carrito 9s var(--ease) infinite; }
 @keyframes pd2-carrito {
-  0%, 24%   { transform: translateY(100%); }
-  32%, 64%  { transform: translateY(0); }
-  71%, 100% { transform: translateY(100%); }
+  0%, 25%   { transform: translateY(100%); }
+  34%, 62%  { transform: translateY(0); }
+  69%, 100% { transform: translateY(100%); }
 }
 .mkm-carrito-tit { display: block; padding: 7px 9px 5px; font-size: 0.58rem; font-weight: 700; letter-spacing: -0.02em; }
 .mkm-linea { display: flex; align-items: center; gap: 6px; padding: 4px 9px; }
@@ -1965,10 +1965,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   flex-direction: column;
   transform: translateY(100%);
 }
-.mk-pant[data-paso="2"].activa .mkm-wa { animation: pd2-wa-mobile 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkm-wa { animation: pd2-wa-mobile 9s var(--ease) infinite; }
 @keyframes pd2-wa-mobile {
-  0%, 64%   { transform: translateY(100%); }
-  71%, 96%  { transform: translateY(0); }
+  0%, 62%   { transform: translateY(100%); }
+  70%, 96%  { transform: translateY(0); }
   100%      { transform: translateY(100%); }
 }
 .mkm-wa-header {
