@@ -1567,6 +1567,149 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 
 /* ══════════════════════════════════════════════════════
+   RIELES HORIZONTALES (catálogo mobile)
+   Con 500+ productos la grilla vertical es un scroll sin fin: en mobile
+   cada subcategoría se recorre deslizando en horizontal, y se cambia de
+   subcategoría scrolleando hacia abajo.
+══════════════════════════════════════════════════════ */
+.riel-sec {
+  margin: 0 calc(var(--space-4) * -1);
+  /* Sin líneas divisorias: el título de cada sección y su barra de scroll
+     ya separan visualmente lo suficiente, y las líneas comían alto. */
+  padding: var(--space-4) 0 var(--space-3);
+}
+.riel-sec:first-child { padding-top: var(--space-2); }
+
+/* ── Encabezado de sección ── */
+.riel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 var(--space-4) var(--space-3);
+}
+.riel-head-marca {
+  width: 4px;
+  align-self: stretch;
+  min-height: 30px;
+  border-radius: var(--rf);
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-line) 100%);
+  flex-shrink: 0;
+}
+.riel-head-txt { flex: 1; min-width: 0; }
+.riel-head-cat {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 1px;
+}
+.riel-head-titulo {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+  line-height: 1.15;
+}
+.riel-head-cuenta {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--t2);
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--rf);
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* ── Riel ── */
+.riel-wrap { position: relative; }
+.riel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  padding: 2px var(--space-4) var(--space-2);
+  /* Sin esto, el snap alinea la primera card contra el borde del contenedor
+     ignorando el padding izquierdo: el riel quedaba arrancado en ~16px y
+     nunca podía volver al 0 real (mostraba sombra y flecha izquierda desde
+     el principio). */
+  scroll-padding-left: var(--space-4);
+  scroll-padding-right: var(--space-4);
+}
+.riel::-webkit-scrollbar { display: none; }
+.riel > .card {
+  /* Entran 2 cards y media por pantalla: la mitad de la tercera asomando
+     es, en sí misma, la señal de que la sección sigue hacia la derecha. */
+  flex: 0 0 36vw;
+  max-width: 158px;
+  scroll-snap-align: start;
+}
+.riel > .card .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+.riel > .card .card-marca { font-size: 0.6rem; }
+.riel > .card .card-nombre { font-size: 0.8rem; }
+.riel > .card .card-variante-label { font-size: 0.7rem; }
+.riel > .card .card-precio { font-size: 0.95rem; }
+.riel > .card .card-precio-dto { font-size: 0.68rem; }
+.riel > .card .card-img-wrap { touch-action: pan-x pan-y; }
+
+/* ── Indicadores de "hay más al costado" ──
+   Degradés que tapan a medias la card siguiente + flecha tocable. Aparecen
+   solo cuando efectivamente queda contenido para ese lado. */
+.riel-wrap::before,
+.riel-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 46px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms var(--ease);
+  z-index: 2;
+}
+.riel-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(250,250,247,.92) 0%, rgba(250,250,247,.55) 45%, rgba(250,250,247,0) 100%);
+}
+.riel-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(250,250,247,.92) 0%, rgba(250,250,247,.55) 45%, rgba(250,250,247,0) 100%);
+}
+.riel-wrap.hay-antes::before { opacity: 1; }
+.riel-wrap.hay-mas::after { opacity: 1; }
+
+/* Chevron lateral: solo una insinuación de que la sección sigue para ese
+   lado. Sin fondo ni sombra, y sin ser tocable, para que nadie lo lea como
+   un botón — el movimiento se hace deslizando. */
+.riel-flecha {
+  position: absolute;
+  top: 30%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  color: var(--t3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms var(--ease);
+}
+.riel-flecha svg {
+  width: 15px;
+  height: 15px;
+  filter: drop-shadow(0 0 3px rgba(250,250,247,.95));
+}
+.riel-flecha-der { right: 5px; }
+.riel-flecha-izq { left: 5px; }
+.riel-wrap.hay-mas   .riel-flecha-der,
+.riel-wrap.hay-antes .riel-flecha-izq { opacity: .85; }
+
+/* ══════════════════════════════════════════════════════
    CARD
 ══════════════════════════════════════════════════════ */
 .card {
@@ -1712,14 +1855,12 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 700;
 }
 
-/* Expanded */
+/* Bloque de opciones + cantidad (vive dentro del modal de producto) */
 .card-expanded {
   display: none;
-  padding: 0 var(--space-4) var(--space-4);
-  border-top: 1px solid var(--line-soft);
-  margin-top: var(--space-1);
+  padding: 0 var(--space-5) var(--space-5);
 }
-.card.expanded .card-expanded { display: block; }
+.card-expanded.pm-detalle-visible { display: block; }
 
 .variantes-titulo {
   font-size: 0.65rem;
@@ -1983,6 +2124,295 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   transition: color var(--t);
 }
 .cerrar-card:hover { color: var(--t2); }
+
+
+/* ══════════════════════════════════════════════════════
+   MODAL DE PRODUCTO
+   Tocar una card abre el detalle centrado, con el catálogo desenfocado
+   detrás. En escritorio el panel es apaisado (foto a la izquierda, datos a
+   la derecha) para que entre entero sin scroll; en mobile se apila.
+══════════════════════════════════════════════════════ */
+body.modal-abierto {
+  /* position:fixed + top negativo congela la página de fondo sin perder la
+     posición de scroll (overflow:hidden solo no alcanza en iOS). */
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.pm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: rgba(28, 34, 28, .48);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  opacity: 0;
+  transition: opacity 200ms var(--ease);
+  overscroll-behavior: contain;
+}
+.pm-overlay.visible { opacity: 1; }
+
+.pm-panel {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 700px;
+  max-height: min(86dvh, 500px);
+  background: var(--surface);
+  border-radius: var(--r5);
+  box-shadow: var(--s4);
+  overflow: hidden;
+  transform: translateY(10px) scale(.98);
+  transition: transform 220ms var(--ease);
+}
+.pm-overlay.visible .pm-panel { transform: translateY(0) scale(1); }
+
+.pm-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  color: var(--t1);
+  display: grid;
+  place-items: center;
+  transition: background var(--t), color var(--t);
+}
+.pm-close svg { width: 15px; height: 15px; }
+.pm-close:hover { background: var(--surface-2); color: var(--accent-2); }
+
+/* ── Columna de la foto ── */
+.pm-media {
+  position: relative;
+  flex: 0 0 44%;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+}
+.pm-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.pm-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: var(--space-5);
+  mix-blend-mode: multiply;
+}
+.pm-img-placeholder { font-size: 2.6rem; opacity: .35; }
+
+/* Flechas para cambiar de variante: discretas, al costado de la foto. */
+.pm-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(0,0,0,.06);
+  color: var(--t2);
+  display: grid;
+  place-items: center;
+  transition: background var(--t), color var(--t);
+}
+.pm-nav svg { width: 14px; height: 14px; }
+.pm-nav:hover { background: white; color: var(--accent-2); }
+.pm-nav-prev { left: 8px; }
+.pm-nav-next { right: 8px; }
+.pm-panel.sin-variantes .pm-nav,
+.pm-panel.sin-variantes .pm-dots { display: none; }
+
+.pm-dots {
+  position: absolute;
+  bottom: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  gap: 5px;
+}
+.pm-dots .variante-dot { width: 5px; height: 5px; background: rgba(0,0,0,.18); }
+/* Sin esta regla, la de arriba (misma especificidad pero posterior en el
+   archivo) dejaba también en gris el punto de la variante seleccionada. */
+.pm-dots .variante-dot.active { background: var(--accent); }
+
+/* ── Columna de datos ── */
+.pm-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pm-info {
+  padding: var(--space-6) var(--space-5) var(--space-3);
+  border-bottom: 1px solid var(--line-soft);
+}
+.pm-marca {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 3px;
+}
+.pm-nombre {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+  line-height: 1.15;
+}
+.pm-variante {
+  font-size: 0.82rem;
+  color: var(--t2);
+  margin-top: 4px;
+  min-height: 16px;
+  transition: opacity .2s var(--ease);
+}
+.pm-precio-wrap { margin-top: var(--space-4); }
+.pm-precio {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  transition: opacity .2s var(--ease);
+}
+.pm-precio.sin-precio { font-size: 0.9rem; color: var(--t3); font-weight: 400; }
+.pm-precio-dto {
+  font-size: 0.82rem;
+  color: var(--t3);
+  margin-top: 2px;
+  transition: opacity .2s var(--ease);
+}
+.pm-precio-dto strong { color: var(--accent-2); font-weight: 700; }
+
+/* El detalle reutiliza los estilos de chips / precio / cantidad que ya
+   tenía la card expandida, solo se ajusta el espaciado y el tamaño. */
+.pm-detalle { padding: var(--space-4) var(--space-5) var(--space-5); margin-top: auto; }
+/* En el modal el precio unitario ya está arriba, en grande. */
+.pm-detalle .precio-detalle { display: none; }
+.pm-detalle .chip { height: 32px; padding: 0 13px; font-size: 0.8rem; }
+/* Espaciado de los grupos de opciones: el primer título no separa (ya lo
+   hace el padding del bloque) y el último grupo deja aire antes del bloque
+   verde de descuento, que si no quedaba pegado a los chips. */
+.pm-detalle .variantes-titulo { margin: var(--space-3) 0 var(--space-2); }
+.pm-detalle .variantes-titulo:first-child { margin-top: 0; }
+.pm-detalle .variantes-chips { margin-bottom: var(--space-3); }
+.pm-detalle .qty-row { margin-top: var(--space-3); }
+.pm-detalle .agregar-btn { height: 46px; font-size: 0.9rem; }
+/* La card del catálogo es angosta y ahí el botón va solo con el "+";
+   dentro del modal siempre se muestra el texto completo. */
+.pm-detalle .agregar-btn-text { display: inline; margin-left: 4px; }
+.pm-detalle .cerrar-card { display: none; }
+
+/* Bloque de descuento por cantidad dentro del modal: en una sola línea,
+   para no estirar el alto cuando hay dos grupos de opciones. */
+.pm-detalle .descuento-bloque {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: 0;
+  box-shadow: 0 4px 12px rgba(88, 117, 71, .22);
+}
+.pm-detalle .descuento-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pm-detalle .descuento-info .dto-cantidad { display: inline; margin-bottom: 0; font-size: 0.68rem; }
+.pm-detalle .descuento-info strong { display: inline; font-size: 1.05rem; }
+
+/* ── Mobile: columnas apiladas, panel centrado ── */
+@media (max-width: 700px) {
+  .pm-overlay { padding: var(--space-4); align-items: center; }
+  .pm-panel {
+    flex-direction: column;
+    max-width: 340px;
+    max-height: 88dvh;
+  }
+  /* La foto arranca con un alto cómodo pero puede encogerse: cuando el
+     producto tiene dos grupos de opciones (sabor + tamaño) le cede lugar a
+     los datos, y así el modal entra entero sin scroll. */
+  .pm-media {
+    /* La foto absorbe casi toda la compresión antes que los datos: si el
+       producto tiene dos grupos de opciones, se achica ella y el modal
+       sigue entrando entero. El shrink alto es lo que hace que ceda
+       primero la imagen y no la ficha. */
+    flex: 0 1000 auto;
+    width: 100%;
+    /* Con el panel angosto (340px) este alto deja la foto casi cuadrada. */
+    height: min(34dvh, 260px);
+    min-height: 96px;
+  }
+  .pm-img img { padding: var(--space-3); }
+  /* La foto cede primero (shrink alto) y la columna de datos conserva su
+     alto natural: así no aparece scroll interno. En pantallas muy chicas la
+     columna sí puede encoger y scrollear, pero nunca queda contenido
+     cortado fuera del panel. */
+  .pm-col { flex: 0 1 auto; }
+  .pm-info { padding: var(--space-3) var(--space-5) var(--space-3); }
+  .pm-precio-wrap { margin-top: var(--space-2); }
+  /* Con dos grupos de opciones (sabor + tamaño) el detalle crece mucho:
+     acá se compacta todo un punto para que siga entrando sin scroll. */
+  .pm-detalle { padding: var(--space-3) var(--space-5) var(--space-4); }
+  .pm-detalle .variantes-titulo { margin: var(--space-2) 0 6px; }
+  .pm-detalle .variantes-chips { margin-bottom: var(--space-2); }
+  .pm-detalle .chip { height: 30px; }
+  .pm-detalle .qty-row { margin-top: var(--space-2); }
+  .pm-detalle .agregar-btn { height: 42px; }
+  .pm-nombre { font-size: 1.15rem; }
+  .pm-precio { font-size: 1.4rem; }
+  .pm-nav { width: 32px; height: 32px; }
+}
+
+/* Pantallas mobile muy bajas (iPhone SE y similares): con dos grupos de
+   opciones no alcanza con encoger la foto, así que se comprime también la
+   ficha de datos. */
+@media (max-width: 700px) and (max-height: 620px) {
+  .pm-media { height: min(26dvh, 180px); min-height: 84px; }
+  .pm-info { padding: var(--space-3) var(--space-4) var(--space-2); }
+  .pm-nombre { font-size: 1.02rem; }
+  .pm-variante { font-size: 0.76rem; margin-top: 2px; }
+  .pm-precio { font-size: 1.2rem; }
+  .pm-precio-dto { font-size: 0.74rem; }
+  .pm-detalle { padding: var(--space-2) var(--space-4) var(--space-3); }
+  .pm-detalle .variantes-titulo { margin: 8px 0 5px; }
+  .pm-detalle .variantes-chips { margin-bottom: 6px; }
+  .pm-detalle .chip { height: 28px; font-size: 0.76rem; }
+  .pm-detalle .descuento-bloque { padding: 6px var(--space-3); }
+  .pm-detalle .descuento-info strong { font-size: 0.95rem; }
+  .pm-detalle .agregar-btn { height: 40px; }
+}
 
 
 /* ══════════════════════════════════════════════════════
