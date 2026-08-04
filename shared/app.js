@@ -1854,6 +1854,74 @@ document.getElementById('buscador').addEventListener('input', function() {
 // ══ INIT ══
 cargarDatos();
 
+// ══════════════════════════════════════════════════════
+//  DEMO "CÓMO HACER UN PEDIDO"
+//  Un mockup (notebook en escritorio, teléfono en mobile) va mostrando el
+//  paso activo. Avanza solo cada 7 s y también se puede elegir a mano.
+//  Se pausa mientras la sección no está en pantalla para no gastar batería.
+// ══════════════════════════════════════════════════════
+const PASO_DURACION = 7000;
+let pasoActual = 1;
+let pasoTimer = null;
+let pasoEnPantalla = false;
+
+function irAPaso(n, manual = false) {
+  const items = document.querySelectorAll('.paso-item');
+  if (!items.length) return;
+
+  pasoActual = n;
+
+  items.forEach(b => {
+    const activo = Number(b.dataset.paso) === n;
+    b.classList.toggle('activo', activo);
+    b.setAttribute('aria-current', activo ? 'step' : 'false');
+  });
+
+  // Las dos maquetas (notebook y teléfono) se sincronizan a la vez: solo
+  // una está visible según el ancho, pero así no hay que preguntar cuál.
+  document.querySelectorAll('.mk-pant').forEach(p => {
+    p.classList.toggle('activa', Number(p.dataset.paso) === n);
+  });
+
+  // Reiniciar la barra de avance del paso recién activado
+  const barra = document.querySelector('.paso-item.activo .paso-item-barra');
+  if (barra) {
+    barra.style.animation = 'none';
+    void barra.offsetWidth;
+    barra.style.animation = '';
+  }
+
+  programarPasoSiguiente(manual);
+}
+
+function programarPasoSiguiente() {
+  clearTimeout(pasoTimer);
+  if (!pasoEnPantalla) return;
+  pasoTimer = setTimeout(() => irAPaso(pasoActual % 3 + 1), PASO_DURACION);
+}
+
+function initDemoPasos() {
+  const seccion = document.getElementById('como-comprar');
+  if (!seccion || !document.querySelector('.paso-item')) return;
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entradas => {
+      entradas.forEach(e => {
+        pasoEnPantalla = e.isIntersecting;
+        if (pasoEnPantalla) programarPasoSiguiente();
+        else clearTimeout(pasoTimer);
+      });
+    }, { threshold: 0.25 }).observe(seccion);
+  } else {
+    pasoEnPantalla = true;
+    programarPasoSiguiente();
+  }
+
+  irAPaso(1);
+}
+
+document.addEventListener('DOMContentLoaded', initDemoPasos);
+
 // ══ SCROLL REVEAL ══
 function initReveal() {
   const observer = new IntersectionObserver((entries) => {
@@ -1874,8 +1942,8 @@ function addRevealClasses() {
     el.classList.add('reveal');
   });
 
-  // Pasos
-  document.querySelectorAll('.paso').forEach((el, i) => {
+  // Pasos (lista de la demo animada)
+  document.querySelectorAll('.paso-item').forEach((el, i) => {
     el.classList.add('reveal', `reveal-delay-${i + 1}`);
   });
 

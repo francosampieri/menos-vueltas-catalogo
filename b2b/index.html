@@ -157,56 +157,258 @@
     </div>
     <div class="como-comprar-inner">
       <h2 class="seccion-h2-center">Como hacer un pedido</h2>
-      <div class="pasos-row">
+      <p class="seccion-sub-center">Tres pasos, sin apps ni registros.</p>
 
-        <div class="paso">
-          <div class="paso-icon">
-            <span class="paso-num">1</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="9" cy="21" r="1.5"/>
-              <circle cx="19" cy="21" r="1.5"/>
-              <path d="M2.5 3h2.5l2.6 12.4a2 2 0 002 1.6h9a2 2 0 002-1.8L22 8H6"/>
-            </svg>
+      <!-- Demo: mockup animado + lista de pasos.
+           El mockup cambia según el dispositivo — notebook con la interfaz de
+           escritorio (sidebar + grilla) o teléfono con la de mobile (rieles) —
+           así lo que ve cada visitante es exactamente lo que se va a encontrar. -->
+      <div class="demo-pasos">
+
+        <!-- ══ MOCKUP NOTEBOOK (escritorio) ══ -->
+        <div class="mk-note" aria-hidden="true">
+          <div class="mk-note-pantalla">
+            <div class="mk-note-screen">
+
+              <!-- Paso 1 · catálogo de escritorio: sidebar + grilla -->
+              <div class="mk-pant activa" data-paso="1">
+                <div class="mkd-top">
+                  <span class="mkd-logo">Menos Vueltas</span>
+                  <span class="mkd-search"></span>
+                  <span class="mkd-sp"></span>
+                  <span class="mkd-cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <b class="mkd-cart-num">1</b>
+                  </span>
+                </div>
+                <div class="mkd-cuerpo">
+                  <div class="mkd-side">
+                    <span class="mkd-side-tit">Categorías</span>
+                    <span class="mkd-side-item on">Almacén</span>
+                    <span class="mkd-side-item">Limpieza</span>
+                    <span class="mkd-side-item">Desayuno</span>
+                    <span class="mkd-side-item">Higiene</span>
+                    <span class="mkd-side-item">Snacks</span>
+                  </div>
+                  <div class="mkd-main">
+                    <span class="mkd-h1">Almacén</span>
+                    <div class="mkd-grid">
+                      <span class="mkd-card foco"><i>🫒</i><u>Aceite Girasol</u><s>1,5 L</s><b>$6.950</b></span>
+                      <span class="mkd-card"><i>🥫</i><u>Arvejas</u><s>300 g</s><b>$850</b></span>
+                      <span class="mkd-card"><i>🍝</i><u>Fideos</u><s>500 g</s><b>$1.200</b></span>
+                      <span class="mkd-card"><i>🧽</i><u>Detergente</u><s>750 ml</s><b>$2.400</b></span>
+                      <span class="mkd-card"><i>🍚</i><u>Arroz</u><s>1 kg</s><b>$1.900</b></span>
+                      <span class="mkd-card"><i>☕</i><u>Café</u><s>250 g</s><b>$5.100</b></span>
+                      <span class="mkd-card"><i>🧴</i><u>Shampoo</u><s>400 ml</s><b>$3.700</b></span>
+                      <span class="mkd-card"><i>🧻</i><u>Papel</u><s>4 un.</s><b>$2.850</b></span>
+                    </div>
+                  </div>
+                </div>
+                <span class="mk-cursor"></span>
+                <span class="mk-aviso">Agregado al pedido</span>
+              </div>
+
+              <!-- Paso 2 · carrito lateral → WhatsApp Web -->
+              <div class="mk-pant" data-paso="2">
+                <div class="mkd-top">
+                  <span class="mkd-logo">Menos Vueltas</span>
+                  <span class="mkd-search"></span>
+                  <span class="mkd-sp"></span>
+                  <span class="mkd-cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    <b class="mkd-cart-num">3</b>
+                  </span>
+                </div>
+                <div class="mkd-cuerpo">
+                  <div class="mkd-side"><span class="mkd-side-tit">Categorías</span>
+                    <span class="mkd-side-item">Almacén</span><span class="mkd-side-item">Limpieza</span>
+                    <span class="mkd-side-item">Desayuno</span></div>
+                  <div class="mkd-main atenuado">
+                    <span class="mkd-h1">Almacén</span>
+                    <div class="mkd-grid">
+                      <span class="mkd-card"><i>🫒</i><u>Aceite Girasol</u><s>1,5 L</s><b>$6.950</b></span>
+                      <span class="mkd-card"><i>🥫</i><u>Arvejas</u><s>300 g</s><b>$850</b></span>
+                      <span class="mkd-card"><i>🍝</i><u>Fideos</u><s>500 g</s><b>$1.200</b></span>
+                      <span class="mkd-card"><i>🧽</i><u>Detergente</u><s>750 ml</s><b>$2.400</b></span>
+                      <span class="mkd-card"><i>🍚</i><u>Arroz</u><s>1 kg</s><b>$1.900</b></span>
+                      <span class="mkd-card"><i>☕</i><u>Café</u><s>250 g</s><b>$5.100</b></span>
+                      <span class="mkd-card"><i>🧴</i><u>Shampoo</u><s>400 ml</s><b>$3.700</b></span>
+                      <span class="mkd-card"><i>🧻</i><u>Papel</u><s>4 un.</s><b>$2.850</b></span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Drawer del carrito, como en la web real -->
+                <div class="mkd-drawer">
+                  <span class="mkd-drawer-tit">Tu pedido</span>
+                  <span class="mkd-linea"><i>🫒</i><u>Aceite Girasol <em>1,5 L · 2 un.</em></u><b>$13.300</b></span>
+                  <span class="mkd-linea"><i>🥫</i><u>Arvejas <em>300 g · 4 un.</em></u><b>$3.000</b></span>
+                  <span class="mkd-linea"><i>🍝</i><u>Fideos <em>500 g · 3 un.</em></u><b>$3.600</b></span>
+                  <span class="mkd-drawer-pie">
+                    <span class="mkd-total"><u>Total estimado</u><b>$19.900</b></span>
+                    <span class="mkd-wa-btn">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.1.55 4.06 1.6 5.83L2 22l4.4-1.68a9.9 9.9 0 004.64 1.18h.01c5.46 0 9.91-4.45 9.91-9.91C20.96 6.45 16.5 2 12.04 2m5.8 14.1c-.24.68-1.4 1.3-1.96 1.38-.5.08-1.14.11-1.83-.11-.42-.14-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36l.56.01c.18 0 .42-.7.66.5.24.58.82 2 .89 2.15.7.14.12.31.02.5-.9.19-.14.31-.28.48l-.42.49c-.14.14-.28.29-.12.57.16.29.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.15.43.12.59-.07.16-.19.68-.79.86-1.07.18-.28.36-.23.61-.14.24.1 1.55.73 1.82.86.27.14.44.21.51.32.07.12.07.68-.17 1.36"/></svg>
+                      Enviar pedido
+                    </span>
+                  </span>
+                </div>
+                <!-- Ventana de WhatsApp Web que aparece encima -->
+                <div class="mkd-wa">
+                  <span class="mkd-wa-barra"><i></i><i></i><i></i><u>web.whatsapp.com</u></span>
+                  <span class="mkd-wa-chat">
+                    <span class="mkd-wa-header"><i>MV</i>Menos Vueltas</span>
+                    <span class="mkd-wa-burbuja">🛒 <b>PEDIDO</b>
+━━━━━━━━━━━━━
+1. Aceite Girasol 1,5 L
+    Cantidad: 2
+2. Arvejas 300 g
+    Cantidad: 4
+3. Fideos 500 g
+    Cantidad: 3
+━━━━━━━━━━━━━
+<b>TOTAL: $19.900</b><em>✓✓</em></span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Paso 3 · entrega y pago -->
+              <div class="mk-pant" data-paso="3">
+                <div class="mk-entrega">
+                  <div class="mk-mapa">
+                    <span class="mk-calle-h"></span>
+                    <span class="mk-calle-v"></span>
+                    <span class="mk-ruta"></span>
+                    <span class="mk-movil">🛵</span>
+                    <span class="mk-casa">🏠</span>
+                  </div>
+                  <div class="mk-entrega-info">
+                    <span class="mk-et">Pedido confirmado</span>
+                    <span class="mk-entrega-h">Llega entre 24 y 48 hs</span>
+                    <span class="mk-chip"><i>🏪</i>Entregamos en tu local</span>
+                    <span class="mk-chip"><i>💳</i>Efectivo o transferencia</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
-          <h3>Armá tu pedido</h3>
-          <p>Elegí lo que tu negocio necesita.</p>
+          <span class="mk-note-base"></span>
         </div>
 
-        <div class="paso-arrow-wrap">
-          <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M2 8h34M28 2l8 6-8 6"/>
-          </svg>
-        </div>
+        <!-- ══ MOCKUP TELÉFONO (mobile) ══ -->
+        <div class="mk-tel" aria-hidden="true">
+          <span class="mk-tel-notch"></span>
+          <div class="mk-tel-screen">
 
-        <div class="paso">
-          <div class="paso-icon">
-            <span class="paso-num">2</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 2L11 13"/>
-              <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
-            </svg>
+            <!-- Paso 1 · catálogo mobile: chips + riel horizontal -->
+            <div class="mk-pant activa" data-paso="1">
+              <span class="mkm-status"><u>9:41</u><i>▮▮▮</i></span>
+              <div class="mkm-top">
+                <span class="mkm-logo">Menos Vueltas</span>
+                <span class="mkm-search"></span>
+                <span class="mkm-cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                  <b>1</b>
+                </span>
+              </div>
+              <span class="mkm-chips"><i class="on">Todos</i><i>Almacén</i><i>Limpieza</i><i>Desa…</i></span>
+              <span class="mkm-sec"><u>Almacén</u><em>Aceites</em></span>
+              <div class="mkm-riel">
+                <span class="mkm-card foco"><i>🫒</i><u>Aceite Girasol</u><s>1,5 L</s><b>$6.950</b></span>
+                <span class="mkm-card"><i>🫒</i><u>Aceite Oliva</u><s>250 ml</s><b>$11.600</b></span>
+                <span class="mkm-card"><i>🥫</i><u>Arvejas</u><s>300 g</s><b>$850</b></span>
+              </div>
+              <span class="mkm-sec"><u>Almacén</u><em>Fideos</em></span>
+              <div class="mkm-riel">
+                <span class="mkm-card"><i>🍝</i><u>Fideos</u><s>500 g</s><b>$1.200</b></span>
+                <span class="mkm-card"><i>🍜</i><u>Tirabuzón</u><s>500 g</s><b>$1.300</b></span>
+                <span class="mkm-card"><i>🍚</i><u>Arroz</u><s>1 kg</s><b>$1.900</b></span>
+              </div>
+              <span class="mk-cursor"></span>
+              <span class="mk-aviso">Agregado al pedido</span>
+            </div>
+
+            <!-- Paso 2 · carrito mobile → app de WhatsApp -->
+            <div class="mk-pant" data-paso="2">
+              <span class="mkm-status"><u>9:42</u><i>▮▮▮</i></span>
+              <span class="mkm-carrito-tit">Tu pedido</span>
+              <span class="mkm-linea"><i>🫒</i><u>Aceite Girasol<em>1,5 L · 2 un.</em></u><b>$13.300</b></span>
+              <span class="mkm-linea"><i>🥫</i><u>Arvejas<em>300 g · 4 un.</em></u><b>$3.000</b></span>
+              <span class="mkm-linea"><i>🍝</i><u>Fideos<em>500 g · 3 un.</em></u><b>$3.600</b></span>
+              <span class="mkm-pie">
+                <span class="mkm-total"><u>Total estimado</u><b>$19.900</b></span>
+                <span class="mkm-wa-btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.1.55 4.06 1.6 5.83L2 22l4.4-1.68a9.9 9.9 0 004.64 1.18h.01c5.46 0 9.91-4.45 9.91-9.91C20.96 6.45 16.5 2 12.04 2m5.8 14.1c-.24.68-1.4 1.3-1.96 1.38-.5.08-1.14.11-1.83-.11-.42-.14-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36l.56.01c.18 0 .42-.7.66.5.24.58.82 2 .89 2.15.7.14.12.31.02.5-.9.19-.14.31-.28.48l-.42.49c-.14.14-.28.29-.12.57.16.29.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.15.43.12.59-.07.16-.19.68-.79.86-1.07.18-.28.36-.23.61-.14.24.1 1.55.73 1.82.86.27.14.44.21.51.32.07.12.07.68-.17 1.36"/></svg>
+                  Enviar pedido
+                </span>
+              </span>
+              <!-- La app de WhatsApp entra desde abajo, como en el celular real -->
+              <div class="mkm-wa">
+                <span class="mkm-wa-header"><i>MV</i>Menos Vueltas</span>
+                <span class="mkm-wa-burbuja">🛒 <b>PEDIDO</b>
+━━━━━━━━━━
+1. Aceite Girasol 1,5 L
+    Cantidad: 2
+2. Arvejas 300 g
+    Cantidad: 4
+3. Fideos 500 g
+    Cantidad: 3
+━━━━━━━━━━
+<b>TOTAL: $19.900</b><em>9:42 ✓✓</em></span>
+                <span class="mkm-wa-input"><u></u><i>➤</i></span>
+              </div>
+            </div>
+
+            <!-- Paso 3 · entrega y pago -->
+            <div class="mk-pant" data-paso="3">
+              <span class="mkm-status"><u>9:44</u><i>▮▮▮</i></span>
+              <div class="mk-entrega">
+                <div class="mk-mapa">
+                  <span class="mk-calle-h"></span>
+                  <span class="mk-calle-v"></span>
+                  <span class="mk-ruta"></span>
+                  <span class="mk-movil">🛵</span>
+                  <span class="mk-casa">🏠</span>
+                </div>
+                <div class="mk-entrega-info">
+                  <span class="mk-et">Pedido confirmado</span>
+                  <span class="mk-entrega-h">Llega entre 24 y 48 hs</span>
+                  <span class="mk-chip"><i>🏪</i>Entregamos en tu local</span>
+                  <span class="mk-chip"><i>💳</i>Efectivo o transferencia</span>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <h3>Nos enviás tu pedido</h3>
-          <p>Con un solo clic desde el carrito.</p>
         </div>
 
-        <div class="paso-arrow-wrap">
-          <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M2 8h34M28 2l8 6-8 6"/>
-          </svg>
-        </div>
+        <!-- ══ LISTA DE PASOS ══ -->
+        <div class="pasos-lista" id="pasosLista">
+          <button class="paso-item activo" data-paso="1" onclick="irAPaso(1)">
+            <span class="paso-item-num">1</span>
+            <span class="paso-item-txt">
+              <span class="paso-item-h3">Armá tu pedido</span>
+              <span class="paso-item-p">Entrá al catálogo mayorista, elegí marca, tamaño y cantidad. Los descuentos por volumen se aplican solos.</span>
+            </span>
+            <span class="paso-item-barra"></span>
+          </button>
 
-        <div class="paso">
-          <div class="paso-icon">
-            <span class="paso-num">3</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-          </div>
-          <h3>Lo recibís en tu negocio</h3>
-          <p>En el día y horario acordado (24 a 48 horas).</p>
+          <button class="paso-item" data-paso="2" onclick="irAPaso(2)">
+            <span class="paso-item-num">2</span>
+            <span class="paso-item-txt">
+              <span class="paso-item-h3">Enviálo por WhatsApp</span>
+              <span class="paso-item-p">Con un clic se abre WhatsApp con el detalle del pedido y el total ya escritos. Vos solo apretás enviar.</span>
+            </span>
+            <span class="paso-item-barra"></span>
+          </button>
+
+          <button class="paso-item" data-paso="3" onclick="irAPaso(3)">
+            <span class="paso-item-num">3</span>
+            <span class="paso-item-txt">
+              <span class="paso-item-h3">Lo recibís en tu negocio</span>
+              <span class="paso-item-p">Coordinamos día y horario por WhatsApp, y entregamos entre 24 y 48 hs directo en tu local.</span>
+            </span>
+            <span class="paso-item-barra"></span>
+          </button>
         </div>
 
       </div>
@@ -666,6 +868,6 @@
 
 <script>window.CANAL = 'B2B';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a25f56f50a463012',t:'MTc4NTg2NTE0Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2600e8d7d1435c2',t:'MTc4NTg3MjY2Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
