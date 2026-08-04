@@ -1,7 +1,7 @@
 {
   "productos": [
     {
-      "Id": "1",
+      "f": "1",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -22,7 +22,7 @@
       "Precio_Costo": "$19.096,61"
     },
     {
-      "Id": "10",
+      "f": "10",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -43,7 +43,7 @@
       "Precio_Costo": "$1.530,44"
     },
     {
-      "Id": "100",
+      "f": "100",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -64,7 +64,7 @@
       "Precio_Costo": "$352,06"
     },
     {
-      "Id": "101",
+      "f": "101",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -85,7 +85,7 @@
       "Precio_Costo": "$610,23"
     },
     {
-      "Id": "102",
+      "f": "102",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -106,7 +106,7 @@
       "Precio_Costo": "$592,62"
     },
     {
-      "Id": "103",
+      "f": "103",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -127,7 +127,7 @@
       "Precio_Costo": "$3.808,04"
     },
     {
-      "Id": "104",
+      "f": "104",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -148,7 +148,7 @@
       "Precio_Costo": "$3.538,14"
     },
     {
-      "Id": "105",
+      "f": "105",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -169,7 +169,7 @@
       "Precio_Costo": "$3.514,67"
     },
     {
-      "Id": "106",
+      "f": "106",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -190,7 +190,7 @@
       "Precio_Costo": "$9.431,53"
     },
     {
-      "Id": "107",
+      "f": "107",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -211,7 +211,7 @@
       "Precio_Costo": "$18.333,51"
     },
     {
-      "Id": "108",
+      "f": "108",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -232,7 +232,7 @@
       "Precio_Costo": "$528,14"
     },
     {
-      "Id": "109",
+      "f": "109",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -253,7 +253,7 @@
       "Precio_Costo": "$866,90"
     },
     {
-      "Id": "11",
+      "f": "11",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -274,7 +274,7 @@
       "Precio_Costo": "$877,86"
     },
     {
-      "Id": "110",
+      "f": "110",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -295,7 +295,7 @@
       "Precio_Costo": "$799,46"
     },
     {
-      "Id": "111",
+      "f": "111",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -316,7 +316,7 @@
       "Precio_Costo": "$669,06"
     },
     {
-      "Id": "112",
+      "f": "112",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -337,7 +337,7 @@
       "Precio_Costo": "$816,13"
     },
     {
-      "Id": "113",
+      "f": "113",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -358,7 +358,7 @@
       "Precio_Costo": "$1.193,87"
     },
     {
-      "Id": "114",
+      "f": "114",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -379,7 +379,7 @@
       "Precio_Costo": "$818,83"
     },
     {
-      "Id": "115",
+      "f": "115",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -400,7 +400,7 @@
       "Precio_Costo": "$819,64"
     },
     {
-      "Id": "117",
+      "f": "117",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -421,7 +421,7 @@
       "Precio_Costo": "$858,53"
     },
     {
-      "Id": "118",
+      "f": "118",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -442,7 +442,7 @@
       "Precio_Costo": "$858,53"
     },
     {
-      "Id": "119",
+      "f": "119",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -463,7 +463,7 @@
       "Precio_Costo": "$734,56"
     },
     {
-      "Id": "12",
+      "f": "12",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -484,7 +484,7 @@
       "Precio_Costo": "$1.923,62"
     },
     {
-      "Id": "120",
+      "f": "120",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -505,7 +505,7 @@
       "Precio_Costo": "$734,56"
     },
     {
-      "Id": "121",
+      "f": "121",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -526,7 +526,7 @@
       "Precio_Costo": "$1.056,17"
     },
     {
-      "Id": "122",
+      "f": "122",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -547,7 +547,7 @@
       "Precio_Costo": "$2.170,64"
     },
     {
-      "Id": "123",
+      "f": "123",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -568,7 +568,7 @@
       "Precio_Costo": "$1.608,98"
     },
     {
-      "Id": "124",
+      "f": "124",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -589,7 +589,7 @@
       "Precio_Costo": "$1.452,30"
     },
     {
-      "Id": "125",
+      "f": "125",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -610,7 +610,7 @@
       "Precio_Costo": "$1.415,63"
     },
     {
-      "Id": "126",
+      "f": "126",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -631,7 +631,7 @@
       "Precio_Costo": "$2.054,35"
     },
     {
-      "Id": "127",
+      "f": "127",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -652,7 +652,7 @@
       "Precio_Costo": "$1.014,33"
     },
     {
-      "Id": "128",
+      "f": "128",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -673,7 +673,7 @@
       "Precio_Costo": "$1.009,84"
     },
     {
-      "Id": "129",
+      "f": "129",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -694,7 +694,7 @@
       "Precio_Costo": "$1.745,47"
     },
     {
-      "Id": "13",
+      "f": "13",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -715,7 +715,7 @@
       "Precio_Costo": "$1.312,22"
     },
     {
-      "Id": "130",
+      "f": "130",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -736,7 +736,7 @@
       "Precio_Costo": "$1.745,47"
     },
     {
-      "Id": "131",
+      "f": "131",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -757,7 +757,7 @@
       "Precio_Costo": "$4.113,47"
     },
     {
-      "Id": "132",
+      "f": "132",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -778,7 +778,7 @@
       "Precio_Costo": "$3.793,89"
     },
     {
-      "Id": "133",
+      "f": "133",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -799,7 +799,7 @@
       "Precio_Costo": "$2.309,03"
     },
     {
-      "Id": "134",
+      "f": "134",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -820,7 +820,7 @@
       "Precio_Costo": "$857,15"
     },
     {
-      "Id": "135",
+      "f": "135",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -841,7 +841,7 @@
       "Precio_Costo": "$1.094,09"
     },
     {
-      "Id": "136",
+      "f": "136",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -862,7 +862,7 @@
       "Precio_Costo": "$1.307,44"
     },
     {
-      "Id": "137",
+      "f": "137",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -883,7 +883,7 @@
       "Precio_Costo": "$1.346,14"
     },
     {
-      "Id": "138",
+      "f": "138",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -904,7 +904,7 @@
       "Precio_Costo": "$1.554,77"
     },
     {
-      "Id": "139",
+      "f": "139",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -925,7 +925,7 @@
       "Precio_Costo": "$820,34"
     },
     {
-      "Id": "14",
+      "f": "14",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -946,7 +946,7 @@
       "Precio_Costo": "$2.570,78"
     },
     {
-      "Id": "140",
+      "f": "140",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -967,7 +967,7 @@
       "Precio_Costo": "$1.096,93"
     },
     {
-      "Id": "141",
+      "f": "141",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -988,7 +988,7 @@
       "Precio_Costo": "$990,26"
     },
     {
-      "Id": "142",
+      "f": "142",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1009,7 +1009,7 @@
       "Precio_Costo": "$762,82"
     },
     {
-      "Id": "143",
+      "f": "143",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1030,7 +1030,7 @@
       "Precio_Costo": "$323,30"
     },
     {
-      "Id": "144",
+      "f": "144",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1051,7 +1051,7 @@
       "Precio_Costo": "$339,48"
     },
     {
-      "Id": "145",
+      "f": "145",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1072,7 +1072,7 @@
       "Precio_Costo": "$556,60"
     },
     {
-      "Id": "146",
+      "f": "146",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1093,7 +1093,7 @@
       "Precio_Costo": "$411,97"
     },
     {
-      "Id": "147",
+      "f": "147",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1114,7 +1114,7 @@
       "Precio_Costo": "$442,31"
     },
     {
-      "Id": "148",
+      "f": "148",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1135,7 +1135,7 @@
       "Precio_Costo": "$471,90"
     },
     {
-      "Id": "149",
+      "f": "149",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1156,7 +1156,7 @@
       "Precio_Costo": "$311,74"
     },
     {
-      "Id": "15",
+      "f": "15",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1177,7 +1177,7 @@
       "Precio_Costo": "$5.040,40"
     },
     {
-      "Id": "150",
+      "f": "150",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1198,7 +1198,7 @@
       "Precio_Costo": "$348,51"
     },
     {
-      "Id": "151",
+      "f": "151",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1219,7 +1219,7 @@
       "Precio_Costo": "$1.129,79"
     },
     {
-      "Id": "152",
+      "f": "152",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1240,7 +1240,7 @@
       "Precio_Costo": "$395,63"
     },
     {
-      "Id": "153",
+      "f": "153",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1261,7 +1261,7 @@
       "Precio_Costo": "$439,18"
     },
     {
-      "Id": "154",
+      "f": "154",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1282,7 +1282,7 @@
       "Precio_Costo": "$475,18"
     },
     {
-      "Id": "155",
+      "f": "155",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1303,7 +1303,7 @@
       "Precio_Costo": "$1.079,87"
     },
     {
-      "Id": "156",
+      "f": "156",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1324,7 +1324,7 @@
       "Precio_Costo": "$853,47"
     },
     {
-      "Id": "157",
+      "f": "157",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1345,7 +1345,7 @@
       "Precio_Costo": "$392,55"
     },
     {
-      "Id": "158",
+      "f": "158",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1366,7 +1366,7 @@
       "Precio_Costo": "$833,56"
     },
     {
-      "Id": "159",
+      "f": "159",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1387,7 +1387,7 @@
       "Precio_Costo": "$422,06"
     },
     {
-      "Id": "16",
+      "f": "16",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1408,7 +1408,7 @@
       "Precio_Costo": "$2.086,25"
     },
     {
-      "Id": "160",
+      "f": "160",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1429,7 +1429,7 @@
       "Precio_Costo": "$212,76"
     },
     {
-      "Id": "161",
+      "f": "161",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1450,7 +1450,7 @@
       "Precio_Costo": "$355,35"
     },
     {
-      "Id": "162",
+      "f": "162",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1471,7 +1471,7 @@
       "Precio_Costo": "$428,38"
     },
     {
-      "Id": "163",
+      "f": "163",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1492,7 +1492,7 @@
       "Precio_Costo": "$795,65"
     },
     {
-      "Id": "164",
+      "f": "164",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1513,7 +1513,7 @@
       "Precio_Costo": "$795,65"
     },
     {
-      "Id": "165",
+      "f": "165",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1534,7 +1534,7 @@
       "Precio_Costo": "$795,65"
     },
     {
-      "Id": "166",
+      "f": "166",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1555,7 +1555,7 @@
       "Precio_Costo": "$795,65"
     },
     {
-      "Id": "167",
+      "f": "167",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1576,7 +1576,7 @@
       "Precio_Costo": "$544,92"
     },
     {
-      "Id": "168",
+      "f": "168",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1597,7 +1597,7 @@
       "Precio_Costo": "$761,03"
     },
     {
-      "Id": "169",
+      "f": "169",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1618,7 +1618,7 @@
       "Precio_Costo": "$1.325,34"
     },
     {
-      "Id": "17",
+      "f": "17",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1639,7 +1639,7 @@
       "Precio_Costo": "$4.058,21"
     },
     {
-      "Id": "170",
+      "f": "170",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1660,7 +1660,7 @@
       "Precio_Costo": "$1.111,59"
     },
     {
-      "Id": "171",
+      "f": "171",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1681,7 +1681,7 @@
       "Precio_Costo": "$1.772,64"
     },
     {
-      "Id": "172",
+      "f": "172",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1702,7 +1702,7 @@
       "Precio_Costo": "$1.772,64"
     },
     {
-      "Id": "173",
+      "f": "173",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1723,7 +1723,7 @@
       "Precio_Costo": "$1.579,96"
     },
     {
-      "Id": "174",
+      "f": "174",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1744,7 +1744,7 @@
       "Precio_Costo": "$2.100,19"
     },
     {
-      "Id": "175",
+      "f": "175",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1765,7 +1765,7 @@
       "Precio_Costo": "$1.849,71"
     },
     {
-      "Id": "176",
+      "f": "176",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1786,7 +1786,7 @@
       "Precio_Costo": "$2.273,61"
     },
     {
-      "Id": "177",
+      "f": "177",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1807,7 +1807,7 @@
       "Precio_Costo": "$4.761,70"
     },
     {
-      "Id": "178",
+      "f": "178",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1828,7 +1828,7 @@
       "Precio_Costo": "$9.522,99"
     },
     {
-      "Id": "179",
+      "f": "179",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "OFF",
@@ -1849,7 +1849,7 @@
       "Precio_Costo": "$19.045,93"
     },
     {
-      "Id": "18",
+      "f": "18",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1870,7 +1870,7 @@
       "Precio_Costo": "$770,02"
     },
     {
-      "Id": "180",
+      "f": "180",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1891,7 +1891,7 @@
       "Precio_Costo": "$5.714,01"
     },
     {
-      "Id": "181",
+      "f": "181",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1912,7 +1912,7 @@
       "Precio_Costo": "$5.868,43"
     },
     {
-      "Id": "182",
+      "f": "182",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1933,7 +1933,7 @@
       "Precio_Costo": "$4.337,97"
     },
     {
-      "Id": "183",
+      "f": "183",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1954,7 +1954,7 @@
       "Precio_Costo": "$827,71"
     },
     {
-      "Id": "184",
+      "f": "184",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1975,7 +1975,7 @@
       "Precio_Costo": "$1.276,92"
     },
     {
-      "Id": "185",
+      "f": "185",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -1996,7 +1996,7 @@
       "Precio_Costo": "$1.726,53"
     },
     {
-      "Id": "186",
+      "f": "186",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2017,7 +2017,7 @@
       "Precio_Costo": "$1.474,58"
     },
     {
-      "Id": "187",
+      "f": "187",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2038,7 +2038,7 @@
       "Precio_Costo": "$2.427,42"
     },
     {
-      "Id": "188",
+      "f": "188",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2059,7 +2059,7 @@
       "Precio_Costo": "$1.507,04"
     },
     {
-      "Id": "189",
+      "f": "189",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2080,7 +2080,7 @@
       "Precio_Costo": "$1.198,10"
     },
     {
-      "Id": "19",
+      "f": "19",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2101,7 +2101,7 @@
       "Precio_Costo": "$1.489,62"
     },
     {
-      "Id": "190",
+      "f": "190",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2122,7 +2122,7 @@
       "Precio_Costo": "$1.690,25"
     },
     {
-      "Id": "192",
+      "f": "192",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2143,7 +2143,7 @@
       "Precio_Costo": "$2.705,20"
     },
     {
-      "Id": "193",
+      "f": "193",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2164,7 +2164,7 @@
       "Precio_Costo": "$2.705,20"
     },
     {
-      "Id": "194",
+      "f": "194",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2185,7 +2185,7 @@
       "Precio_Costo": "$3.101,81"
     },
     {
-      "Id": "195",
+      "f": "195",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2206,7 +2206,7 @@
       "Precio_Costo": "$3.101,81"
     },
     {
-      "Id": "196",
+      "f": "196",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2227,7 +2227,7 @@
       "Precio_Costo": "$2.300,09"
     },
     {
-      "Id": "197",
+      "f": "197",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2248,7 +2248,7 @@
       "Precio_Costo": "$2.628,84"
     },
     {
-      "Id": "198",
+      "f": "198",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2269,7 +2269,7 @@
       "Precio_Costo": "$2.300,09"
     },
     {
-      "Id": "199",
+      "f": "199",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2290,7 +2290,7 @@
       "Precio_Costo": "$4.025,79"
     },
     {
-      "Id": "2",
+      "f": "2",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2311,7 +2311,7 @@
       "Precio_Costo": "$11.457,97"
     },
     {
-      "Id": "20",
+      "f": "20",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2332,7 +2332,7 @@
       "Precio_Costo": "$1.363,35"
     },
     {
-      "Id": "201",
+      "f": "201",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2353,7 +2353,7 @@
       "Precio_Costo": "$4.025,79"
     },
     {
-      "Id": "202",
+      "f": "202",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2374,7 +2374,7 @@
       "Precio_Costo": "$1.159,18"
     },
     {
-      "Id": "203",
+      "f": "203",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2395,7 +2395,7 @@
       "Precio_Costo": "$2.086,03"
     },
     {
-      "Id": "204",
+      "f": "204",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2416,7 +2416,7 @@
       "Precio_Costo": "$913,47"
     },
     {
-      "Id": "205",
+      "f": "205",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2437,7 +2437,7 @@
       "Precio_Costo": "$1.645,95"
     },
     {
-      "Id": "207",
+      "f": "207",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2447,7 +2447,7 @@
       "Tamaño": "104",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas, pringles, snack, salado, tubo",
       "Id_Grupo": "252",
       "Tipo_Variante": "Sabor",
@@ -2458,7 +2458,7 @@
       "Precio_Costo": "$3.573,11"
     },
     {
-      "Id": "208",
+      "f": "208",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2468,7 +2468,7 @@
       "Tamaño": "109",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas, pringles, crema, cebolla, snack",
       "Id_Grupo": "252",
       "Tipo_Variante": "Sabor",
@@ -2479,7 +2479,7 @@
       "Precio_Costo": "$3.572,96"
     },
     {
-      "Id": "209",
+      "f": "209",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2489,7 +2489,7 @@
       "Tamaño": "109",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas, pringles, queso, snack, salado",
       "Id_Grupo": "252",
       "Tipo_Variante": "Sabor",
@@ -2500,7 +2500,7 @@
       "Precio_Costo": "$3.572,96"
     },
     {
-      "Id": "21",
+      "f": "21",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -2521,7 +2521,7 @@
       "Precio_Costo": "$1.636,02"
     },
     {
-      "Id": "210",
+      "f": "210",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2531,7 +2531,7 @@
       "Tamaño": "105",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas, pringles, cheddar, bacon, snack",
       "Id_Grupo": "252",
       "Tipo_Variante": "Sabor",
@@ -2542,7 +2542,7 @@
       "Precio_Costo": "$3.572,96"
     },
     {
-      "Id": "211",
+      "f": "211",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2563,7 +2563,7 @@
       "Precio_Costo": "$2.243,73"
     },
     {
-      "Id": "212",
+      "f": "212",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2584,7 +2584,7 @@
       "Precio_Costo": "$2.973,72"
     },
     {
-      "Id": "213",
+      "f": "213",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2605,7 +2605,7 @@
       "Precio_Costo": "$2.857,97"
     },
     {
-      "Id": "214",
+      "f": "214",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2626,7 +2626,7 @@
       "Precio_Costo": "$695,91"
     },
     {
-      "Id": "215",
+      "f": "215",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2647,7 +2647,7 @@
       "Precio_Costo": "$695,84"
     },
     {
-      "Id": "216",
+      "f": "216",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2668,7 +2668,7 @@
       "Precio_Costo": "$1.123,60"
     },
     {
-      "Id": "217",
+      "f": "217",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2689,7 +2689,7 @@
       "Precio_Costo": "$1.123,60"
     },
     {
-      "Id": "218",
+      "f": "218",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2710,7 +2710,7 @@
       "Precio_Costo": "$1.376,27"
     },
     {
-      "Id": "219",
+      "f": "219",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2731,7 +2731,7 @@
       "Precio_Costo": "$1.376,27"
     },
     {
-      "Id": "22",
+      "f": "22",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -2752,7 +2752,7 @@
       "Precio_Costo": "$1.636,02"
     },
     {
-      "Id": "220",
+      "f": "220",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2773,7 +2773,7 @@
       "Precio_Costo": "$1.376,27"
     },
     {
-      "Id": "221",
+      "f": "221",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2794,7 +2794,7 @@
       "Precio_Costo": "$623,98"
     },
     {
-      "Id": "222",
+      "f": "222",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2815,7 +2815,7 @@
       "Precio_Costo": "$1.227,36"
     },
     {
-      "Id": "223",
+      "f": "223",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2836,7 +2836,7 @@
       "Precio_Costo": "$1.130,56"
     },
     {
-      "Id": "224",
+      "f": "224",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2857,7 +2857,7 @@
       "Precio_Costo": "$1.130,56"
     },
     {
-      "Id": "225",
+      "f": "225",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2878,7 +2878,7 @@
       "Precio_Costo": "$1.130,56"
     },
     {
-      "Id": "226",
+      "f": "226",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2899,7 +2899,7 @@
       "Precio_Costo": "$1.800,74"
     },
     {
-      "Id": "227",
+      "f": "227",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2920,7 +2920,7 @@
       "Precio_Costo": "$1.800,74"
     },
     {
-      "Id": "228",
+      "f": "228",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2941,7 +2941,7 @@
       "Precio_Costo": "$1.260,58"
     },
     {
-      "Id": "229",
+      "f": "229",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2962,7 +2962,7 @@
       "Precio_Costo": "$1.419,16"
     },
     {
-      "Id": "23",
+      "f": "23",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -2983,7 +2983,7 @@
       "Precio_Costo": "$1.024,39"
     },
     {
-      "Id": "230",
+      "f": "230",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3004,7 +3004,7 @@
       "Precio_Costo": "$1.419,16"
     },
     {
-      "Id": "231",
+      "f": "231",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3025,7 +3025,7 @@
       "Precio_Costo": "$1.419,16"
     },
     {
-      "Id": "233",
+      "f": "233",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3046,7 +3046,7 @@
       "Precio_Costo": "$519,82"
     },
     {
-      "Id": "234",
+      "f": "234",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3067,7 +3067,7 @@
       "Precio_Costo": "$917,99"
     },
     {
-      "Id": "235",
+      "f": "235",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3088,7 +3088,7 @@
       "Precio_Costo": "$1.775,68"
     },
     {
-      "Id": "236",
+      "f": "236",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "OFF",
@@ -3109,7 +3109,7 @@
       "Precio_Costo": "$2.639,96"
     },
     {
-      "Id": "238",
+      "f": "238",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3130,7 +3130,7 @@
       "Precio_Costo": "$1.030,46"
     },
     {
-      "Id": "239",
+      "f": "239",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3151,7 +3151,7 @@
       "Precio_Costo": "$1.007,45"
     },
     {
-      "Id": "24",
+      "f": "24",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3172,7 +3172,7 @@
       "Precio_Costo": "$1.262,20"
     },
     {
-      "Id": "240",
+      "f": "240",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3193,7 +3193,7 @@
       "Precio_Costo": "$1.007,45"
     },
     {
-      "Id": "241",
+      "f": "241",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3214,7 +3214,7 @@
       "Precio_Costo": "$1.007,45"
     },
     {
-      "Id": "242",
+      "f": "242",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3235,7 +3235,7 @@
       "Precio_Costo": "$578,45"
     },
     {
-      "Id": "243",
+      "f": "243",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3256,7 +3256,7 @@
       "Precio_Costo": "$1.012,36"
     },
     {
-      "Id": "244",
+      "f": "244",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3277,7 +3277,7 @@
       "Precio_Costo": "$1.569,49"
     },
     {
-      "Id": "245",
+      "f": "245",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3298,7 +3298,7 @@
       "Precio_Costo": "$1.569,49"
     },
     {
-      "Id": "246",
+      "f": "246",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3319,7 +3319,7 @@
       "Precio_Costo": "$1.569,49"
     },
     {
-      "Id": "247",
+      "f": "247",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3340,7 +3340,7 @@
       "Precio_Costo": "$1.306,78"
     },
     {
-      "Id": "248",
+      "f": "248",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3361,7 +3361,7 @@
       "Precio_Costo": "$1.217,18"
     },
     {
-      "Id": "249",
+      "f": "249",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3382,7 +3382,7 @@
       "Precio_Costo": "$983,60"
     },
     {
-      "Id": "25",
+      "f": "25",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3403,7 +3403,7 @@
       "Precio_Costo": "$3.419,25"
     },
     {
-      "Id": "250",
+      "f": "250",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3424,7 +3424,7 @@
       "Precio_Costo": "$983,60"
     },
     {
-      "Id": "252",
+      "f": "252",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3445,7 +3445,7 @@
       "Precio_Costo": "$4.476,79"
     },
     {
-      "Id": "253",
+      "f": "253",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3466,7 +3466,7 @@
       "Precio_Costo": "$1.821,89"
     },
     {
-      "Id": "254",
+      "f": "254",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3487,7 +3487,7 @@
       "Precio_Costo": "$1.434,00"
     },
     {
-      "Id": "499",
+      "f": "499",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3508,7 +3508,7 @@
       "Precio_Costo": "$1.437,37"
     },
     {
-      "Id": "503",
+      "f": "503",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3529,7 +3529,7 @@
       "Precio_Costo": "$2.715,48"
     },
     {
-      "Id": "26",
+      "f": "26",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3550,7 +3550,7 @@
       "Precio_Costo": "$5.522,46"
     },
     {
-      "Id": "504",
+      "f": "504",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3571,7 +3571,7 @@
       "Precio_Costo": "$433,83"
     },
     {
-      "Id": "511",
+      "f": "511",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3592,7 +3592,7 @@
       "Precio_Costo": "$1.053,22"
     },
     {
-      "Id": "265",
+      "f": "265",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3613,7 +3613,7 @@
       "Precio_Costo": "$707,13"
     },
     {
-      "Id": "266",
+      "f": "266",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -3634,7 +3634,7 @@
       "Precio_Costo": "$485,99"
     },
     {
-      "Id": "267",
+      "f": "267",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3655,7 +3655,7 @@
       "Precio_Costo": "$1.709,88"
     },
     {
-      "Id": "268",
+      "f": "268",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3676,7 +3676,7 @@
       "Precio_Costo": "$730,15"
     },
     {
-      "Id": "269",
+      "f": "269",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3697,7 +3697,7 @@
       "Precio_Costo": "$1.822,45"
     },
     {
-      "Id": "27",
+      "f": "27",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3718,7 +3718,7 @@
       "Precio_Costo": "$18.904,96"
     },
     {
-      "Id": "270",
+      "f": "270",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3739,7 +3739,7 @@
       "Precio_Costo": "$551,77"
     },
     {
-      "Id": "275",
+      "f": "275",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3760,7 +3760,7 @@
       "Precio_Costo": "$1.137,14"
     },
     {
-      "Id": "276",
+      "f": "276",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3781,7 +3781,7 @@
       "Precio_Costo": "$1.137,14"
     },
     {
-      "Id": "278",
+      "f": "278",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3802,7 +3802,7 @@
       "Precio_Costo": "$1.521,62"
     },
     {
-      "Id": "279",
+      "f": "279",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3823,7 +3823,7 @@
       "Precio_Costo": "$733,00"
     },
     {
-      "Id": "28",
+      "f": "28",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3844,7 +3844,7 @@
       "Precio_Costo": "$9.921,62"
     },
     {
-      "Id": "280",
+      "f": "280",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3865,7 +3865,7 @@
       "Precio_Costo": "$428,56"
     },
     {
-      "Id": "281",
+      "f": "281",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3886,7 +3886,7 @@
       "Precio_Costo": "$1.365,80"
     },
     {
-      "Id": "282",
+      "f": "282",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3907,7 +3907,7 @@
       "Precio_Costo": "$301,96"
     },
     {
-      "Id": "283",
+      "f": "283",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3928,7 +3928,7 @@
       "Precio_Costo": "$533,25"
     },
     {
-      "Id": "284",
+      "f": "284",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3949,7 +3949,7 @@
       "Precio_Costo": "$2.154,67"
     },
     {
-      "Id": "285",
+      "f": "285",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -3970,7 +3970,7 @@
       "Precio_Costo": "$1.865,37"
     },
     {
-      "Id": "286",
+      "f": "286",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -3991,7 +3991,7 @@
       "Precio_Costo": "$1.001,18"
     },
     {
-      "Id": "287",
+      "f": "287",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -4012,7 +4012,7 @@
       "Precio_Costo": "$2.443,36"
     },
     {
-      "Id": "288",
+      "f": "288",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4033,7 +4033,7 @@
       "Precio_Costo": "$2.114,45"
     },
     {
-      "Id": "289",
+      "f": "289",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -4054,7 +4054,7 @@
       "Precio_Costo": "$1.132,81"
     },
     {
-      "Id": "29",
+      "f": "29",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4075,7 +4075,7 @@
       "Precio_Costo": "$1.926,20"
     },
     {
-      "Id": "290",
+      "f": "290",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4096,7 +4096,7 @@
       "Precio_Costo": "$1.348,55"
     },
     {
-      "Id": "291",
+      "f": "291",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4117,7 +4117,7 @@
       "Precio_Costo": "$11.505,69"
     },
     {
-      "Id": "292",
+      "f": "292",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -4138,7 +4138,7 @@
       "Precio_Costo": "$3.943,98"
     },
     {
-      "Id": "294",
+      "f": "294",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4159,7 +4159,7 @@
       "Precio_Costo": "$5.796,34"
     },
     {
-      "Id": "295",
+      "f": "295",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4180,7 +4180,7 @@
       "Precio_Costo": "$9.992,30"
     },
     {
-      "Id": "296",
+      "f": "296",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4190,7 +4190,7 @@
       "Tamaño": "53",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas fritas, jamón, salado, snack, picada",
       "Id_Grupo": "253",
       "Tipo_Variante": "Sabor",
@@ -4201,7 +4201,7 @@
       "Precio_Costo": "$969,62"
     },
     {
-      "Id": "297",
+      "f": "297",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4211,7 +4211,7 @@
       "Tamaño": "53",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas fritas, crema, cebolla, snack, salado",
       "Id_Grupo": "253",
       "Tipo_Variante": "Sabor",
@@ -4222,7 +4222,7 @@
       "Precio_Costo": "$969,62"
     },
     {
-      "Id": "298",
+      "f": "298",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4232,7 +4232,7 @@
       "Tamaño": "63",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas fritas, pimienta, sal marina, snack, crujiente",
       "Id_Grupo": "253",
       "Tipo_Variante": "Sabor",
@@ -4243,7 +4243,7 @@
       "Precio_Costo": "$969,62"
     },
     {
-      "Id": "299",
+      "f": "299",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4253,7 +4253,7 @@
       "Tamaño": "53",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas fritas, cheddar, queso, snack, salado",
       "Id_Grupo": "253",
       "Tipo_Variante": "Sabor",
@@ -4264,7 +4264,7 @@
       "Precio_Costo": "$969,62"
     },
     {
-      "Id": "3",
+      "f": "3",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4285,7 +4285,7 @@
       "Precio_Costo": "$5.846,06"
     },
     {
-      "Id": "30",
+      "f": "30",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4306,7 +4306,7 @@
       "Precio_Costo": "$1.926,20"
     },
     {
-      "Id": "300",
+      "f": "300",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4316,7 +4316,7 @@
       "Tamaño": "53",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas fritas, picante, snack, salado, spicy",
       "Id_Grupo": "253",
       "Tipo_Variante": "Sabor",
@@ -4327,7 +4327,7 @@
       "Precio_Costo": "$969,62"
     },
     {
-      "Id": "301",
+      "f": "301",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4337,7 +4337,7 @@
       "Tamaño": "83",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas fritas, jamón, salado, snack, picada",
       "Id_Grupo": "253",
       "Tipo_Variante": "Sabor",
@@ -4348,7 +4348,7 @@
       "Precio_Costo": "$1.339,35"
     },
     {
-      "Id": "302",
+      "f": "302",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4358,7 +4358,7 @@
       "Tamaño": "83",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas fritas, cheddar, queso, snack, salado",
       "Id_Grupo": "253",
       "Tipo_Variante": "Sabor",
@@ -4369,7 +4369,7 @@
       "Precio_Costo": "$1.339,34"
     },
     {
-      "Id": "303",
+      "f": "303",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4379,7 +4379,7 @@
       "Tamaño": "63",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papas paja, snack, crujiente, salado, liviano",
       "Id_Grupo": "254",
       "Tipo_Variante": "",
@@ -4390,7 +4390,7 @@
       "Precio_Costo": "$969,62"
     },
     {
-      "Id": "304",
+      "f": "304",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4400,7 +4400,7 @@
       "Tamaño": "93",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "palitos, salados, snack, clásico, picada",
       "Id_Grupo": "255",
       "Tipo_Variante": "",
@@ -4411,7 +4411,7 @@
       "Precio_Costo": "$969,62"
     },
     {
-      "Id": "305",
+      "f": "305",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4421,7 +4421,7 @@
       "Tamaño": "53",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "conos, queso, snack, salado, crujiente",
       "Id_Grupo": "256",
       "Tipo_Variante": "",
@@ -4432,7 +4432,7 @@
       "Precio_Costo": "$969,62"
     },
     {
-      "Id": "307",
+      "f": "307",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -4453,7 +4453,7 @@
       "Precio_Costo": "$521,29"
     },
     {
-      "Id": "308",
+      "f": "308",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -4474,7 +4474,7 @@
       "Precio_Costo": "$521,29"
     },
     {
-      "Id": "309",
+      "f": "309",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -4495,7 +4495,7 @@
       "Precio_Costo": "$861,73"
     },
     {
-      "Id": "31",
+      "f": "31",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4516,7 +4516,7 @@
       "Precio_Costo": "$2.357,21"
     },
     {
-      "Id": "310",
+      "f": "310",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -4537,7 +4537,7 @@
       "Precio_Costo": "$286,52"
     },
     {
-      "Id": "311",
+      "f": "311",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -4558,7 +4558,7 @@
       "Precio_Costo": "$645,65"
     },
     {
-      "Id": "312",
+      "f": "312",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -4579,7 +4579,7 @@
       "Precio_Costo": "$645,65"
     },
     {
-      "Id": "313",
+      "f": "313",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -4600,7 +4600,7 @@
       "Precio_Costo": "$645,65"
     },
     {
-      "Id": "314",
+      "f": "314",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4621,7 +4621,7 @@
       "Precio_Costo": "$2.523,16"
     },
     {
-      "Id": "315",
+      "f": "315",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4642,7 +4642,7 @@
       "Precio_Costo": "$4.491,20"
     },
     {
-      "Id": "316",
+      "f": "316",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4663,7 +4663,7 @@
       "Precio_Costo": "$2.313,80"
     },
     {
-      "Id": "317",
+      "f": "317",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4684,7 +4684,7 @@
       "Precio_Costo": "$4.110,04"
     },
     {
-      "Id": "318",
+      "f": "318",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4705,7 +4705,7 @@
       "Precio_Costo": "$1.334,47"
     },
     {
-      "Id": "319",
+      "f": "319",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -4726,7 +4726,7 @@
       "Precio_Costo": "$2.179,72"
     },
     {
-      "Id": "32",
+      "f": "32",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4747,7 +4747,7 @@
       "Precio_Costo": "$2.302,36"
     },
     {
-      "Id": "320",
+      "f": "320",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -4768,7 +4768,7 @@
       "Precio_Costo": "$1.374,65"
     },
     {
-      "Id": "321",
+      "f": "321",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4789,7 +4789,7 @@
       "Precio_Costo": "$1.977,02"
     },
     {
-      "Id": "322",
+      "f": "322",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4810,7 +4810,7 @@
       "Precio_Costo": "$3.513,16"
     },
     {
-      "Id": "323",
+      "f": "323",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4831,7 +4831,7 @@
       "Precio_Costo": "$695,87"
     },
     {
-      "Id": "324",
+      "f": "324",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4852,7 +4852,7 @@
       "Precio_Costo": "$1.221,44"
     },
     {
-      "Id": "325",
+      "f": "325",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4873,7 +4873,7 @@
       "Precio_Costo": "$648,47"
     },
     {
-      "Id": "326",
+      "f": "326",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4894,7 +4894,7 @@
       "Precio_Costo": "$1.203,12"
     },
     {
-      "Id": "327",
+      "f": "327",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4915,7 +4915,7 @@
       "Precio_Costo": "$1.398,99"
     },
     {
-      "Id": "328",
+      "f": "328",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -4936,7 +4936,7 @@
       "Precio_Costo": "$6.108,00"
     },
     {
-      "Id": "329",
+      "f": "329",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4957,7 +4957,7 @@
       "Precio_Costo": "$726,20"
     },
     {
-      "Id": "33",
+      "f": "33",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4978,7 +4978,7 @@
       "Precio_Costo": "$1.926,20"
     },
     {
-      "Id": "330",
+      "f": "330",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4999,7 +4999,7 @@
       "Precio_Costo": "$2.156,21"
     },
     {
-      "Id": "331",
+      "f": "331",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5020,7 +5020,7 @@
       "Precio_Costo": "$800,11"
     },
     {
-      "Id": "332",
+      "f": "332",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5041,7 +5041,7 @@
       "Precio_Costo": "$2.462,38"
     },
     {
-      "Id": "333",
+      "f": "333",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5062,7 +5062,7 @@
       "Precio_Costo": "$2.462,38"
     },
     {
-      "Id": "337",
+      "f": "337",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5083,7 +5083,7 @@
       "Precio_Costo": "$2.448,29"
     },
     {
-      "Id": "338",
+      "f": "338",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5104,7 +5104,7 @@
       "Precio_Costo": "$1.905,66"
     },
     {
-      "Id": "34",
+      "f": "34",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5125,7 +5125,7 @@
       "Precio_Costo": "$1.408,74"
     },
     {
-      "Id": "343",
+      "f": "343",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5146,7 +5146,7 @@
       "Precio_Costo": "$7.962,81"
     },
     {
-      "Id": "35",
+      "f": "35",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5167,7 +5167,7 @@
       "Precio_Costo": "$1.408,74"
     },
     {
-      "Id": "354",
+      "f": "354",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5188,7 +5188,7 @@
       "Precio_Costo": "$1.301,60"
     },
     {
-      "Id": "355",
+      "f": "355",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5209,7 +5209,7 @@
       "Precio_Costo": "$1.627,88"
     },
     {
-      "Id": "356",
+      "f": "356",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5230,7 +5230,7 @@
       "Precio_Costo": "$7.370,49"
     },
     {
-      "Id": "357",
+      "f": "357",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5251,7 +5251,7 @@
       "Precio_Costo": "$3.874,20"
     },
     {
-      "Id": "358",
+      "f": "358",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5272,7 +5272,7 @@
       "Precio_Costo": "$3.014,09"
     },
     {
-      "Id": "359",
+      "f": "359",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5293,7 +5293,7 @@
       "Precio_Costo": "$2.181,23"
     },
     {
-      "Id": "36",
+      "f": "36",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5314,7 +5314,7 @@
       "Precio_Costo": "$2.632,35"
     },
     {
-      "Id": "360",
+      "f": "360",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5335,7 +5335,7 @@
       "Precio_Costo": "$1.374,70"
     },
     {
-      "Id": "361",
+      "f": "361",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5356,7 +5356,7 @@
       "Precio_Costo": "$6.449,01"
     },
     {
-      "Id": "362",
+      "f": "362",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5377,7 +5377,7 @@
       "Precio_Costo": "$1.270,10"
     },
     {
-      "Id": "363",
+      "f": "363",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5398,7 +5398,7 @@
       "Precio_Costo": "$1.254,48"
     },
     {
-      "Id": "364",
+      "f": "364",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5419,7 +5419,7 @@
       "Precio_Costo": "$2.155,28"
     },
     {
-      "Id": "365",
+      "f": "365",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5440,7 +5440,7 @@
       "Precio_Costo": "$1.229,18"
     },
     {
-      "Id": "366",
+      "f": "366",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5461,7 +5461,7 @@
       "Precio_Costo": "$1.920,98"
     },
     {
-      "Id": "367",
+      "f": "367",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5482,7 +5482,7 @@
       "Precio_Costo": "$3.093,73"
     },
     {
-      "Id": "368",
+      "f": "368",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5503,7 +5503,7 @@
       "Precio_Costo": "$10.288,08"
     },
     {
-      "Id": "369",
+      "f": "369",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5524,7 +5524,7 @@
       "Precio_Costo": "$1.360,92"
     },
     {
-      "Id": "37",
+      "f": "37",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5545,7 +5545,7 @@
       "Precio_Costo": "$1.259,98"
     },
     {
-      "Id": "370",
+      "f": "370",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5566,7 +5566,7 @@
       "Precio_Costo": "$1.717,38"
     },
     {
-      "Id": "371",
+      "f": "371",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5587,7 +5587,7 @@
       "Precio_Costo": "$20.426,18"
     },
     {
-      "Id": "373",
+      "f": "373",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5608,7 +5608,7 @@
       "Precio_Costo": "$1.029,60"
     },
     {
-      "Id": "374",
+      "f": "374",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5629,7 +5629,7 @@
       "Precio_Costo": "$1.281,74"
     },
     {
-      "Id": "375",
+      "f": "375",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5650,7 +5650,7 @@
       "Precio_Costo": "$761,10"
     },
     {
-      "Id": "376",
+      "f": "376",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5671,7 +5671,7 @@
       "Precio_Costo": "$1.362,90"
     },
     {
-      "Id": "377",
+      "f": "377",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5692,7 +5692,7 @@
       "Precio_Costo": "$2.360,00"
     },
     {
-      "Id": "378",
+      "f": "378",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5713,7 +5713,7 @@
       "Precio_Costo": "$3.094,40"
     },
     {
-      "Id": "379",
+      "f": "379",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5734,7 +5734,7 @@
       "Precio_Costo": "$1.938,16"
     },
     {
-      "Id": "38",
+      "f": "38",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -5755,7 +5755,7 @@
       "Precio_Costo": "$1.259,98"
     },
     {
-      "Id": "380",
+      "f": "380",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5776,7 +5776,7 @@
       "Precio_Costo": "$2.762,25"
     },
     {
-      "Id": "381",
+      "f": "381",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5797,7 +5797,7 @@
       "Precio_Costo": "$3.910,87"
     },
     {
-      "Id": "382",
+      "f": "382",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5818,7 +5818,7 @@
       "Precio_Costo": "$7.584,25"
     },
     {
-      "Id": "383",
+      "f": "383",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5839,7 +5839,7 @@
       "Precio_Costo": "$1.160,16"
     },
     {
-      "Id": "384",
+      "f": "384",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5860,7 +5860,7 @@
       "Precio_Costo": "$2.113,64"
     },
     {
-      "Id": "385",
+      "f": "385",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5881,7 +5881,7 @@
       "Precio_Costo": "$1.336,58"
     },
     {
-      "Id": "386",
+      "f": "386",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5902,7 +5902,7 @@
       "Precio_Costo": "$1.570,51"
     },
     {
-      "Id": "387",
+      "f": "387",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5923,7 +5923,7 @@
       "Precio_Costo": "$2.399,35"
     },
     {
-      "Id": "388",
+      "f": "388",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5944,7 +5944,7 @@
       "Precio_Costo": "$1.204,34"
     },
     {
-      "Id": "389",
+      "f": "389",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5965,7 +5965,7 @@
       "Precio_Costo": "$1.204,34"
     },
     {
-      "Id": "39",
+      "f": "39",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -5986,7 +5986,7 @@
       "Precio_Costo": "$636,07"
     },
     {
-      "Id": "390",
+      "f": "390",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6007,7 +6007,7 @@
       "Precio_Costo": "$171,39"
     },
     {
-      "Id": "391",
+      "f": "391",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6028,7 +6028,7 @@
       "Precio_Costo": "$507,30"
     },
     {
-      "Id": "392",
+      "f": "392",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6049,7 +6049,7 @@
       "Precio_Costo": "$251,93"
     },
     {
-      "Id": "393",
+      "f": "393",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6070,7 +6070,7 @@
       "Precio_Costo": "$1.268,01"
     },
     {
-      "Id": "395",
+      "f": "395",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6091,7 +6091,7 @@
       "Precio_Costo": "$716,66"
     },
     {
-      "Id": "396",
+      "f": "396",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6112,7 +6112,7 @@
       "Precio_Costo": "$666,71"
     },
     {
-      "Id": "397",
+      "f": "397",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6133,7 +6133,7 @@
       "Precio_Costo": "$1.069,75"
     },
     {
-      "Id": "4",
+      "f": "4",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6154,7 +6154,7 @@
       "Precio_Costo": "$3.692,32"
     },
     {
-      "Id": "40",
+      "f": "40",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6175,7 +6175,7 @@
       "Precio_Costo": "$1.084,91"
     },
     {
-      "Id": "401",
+      "f": "401",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6196,7 +6196,7 @@
       "Precio_Costo": "$717,90"
     },
     {
-      "Id": "402",
+      "f": "402",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6217,7 +6217,7 @@
       "Precio_Costo": "$1.356,51"
     },
     {
-      "Id": "403",
+      "f": "403",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6238,7 +6238,7 @@
       "Precio_Costo": "$1.019,32"
     },
     {
-      "Id": "404",
+      "f": "404",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6259,7 +6259,7 @@
       "Precio_Costo": "$816,84"
     },
     {
-      "Id": "405",
+      "f": "405",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6280,7 +6280,7 @@
       "Precio_Costo": "$816,84"
     },
     {
-      "Id": "406",
+      "f": "406",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6301,7 +6301,7 @@
       "Precio_Costo": "$816,84"
     },
     {
-      "Id": "407",
+      "f": "407",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6322,7 +6322,7 @@
       "Precio_Costo": "$1.019,32"
     },
     {
-      "Id": "408",
+      "f": "408",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6343,7 +6343,7 @@
       "Precio_Costo": "$519,06"
     },
     {
-      "Id": "409",
+      "f": "409",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6364,7 +6364,7 @@
       "Precio_Costo": "$1.443,55"
     },
     {
-      "Id": "41",
+      "f": "41",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6385,7 +6385,7 @@
       "Precio_Costo": "$1.084,91"
     },
     {
-      "Id": "410",
+      "f": "410",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6406,7 +6406,7 @@
       "Precio_Costo": "$1.615,58"
     },
     {
-      "Id": "411",
+      "f": "411",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6427,7 +6427,7 @@
       "Precio_Costo": "$1.411,20"
     },
     {
-      "Id": "412",
+      "f": "412",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6448,7 +6448,7 @@
       "Precio_Costo": "$1.768,77"
     },
     {
-      "Id": "413",
+      "f": "413",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6469,7 +6469,7 @@
       "Precio_Costo": "$2.375,22"
     },
     {
-      "Id": "414",
+      "f": "414",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6490,7 +6490,7 @@
       "Precio_Costo": "$584,18"
     },
     {
-      "Id": "415",
+      "f": "415",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6511,7 +6511,7 @@
       "Precio_Costo": "$584,18"
     },
     {
-      "Id": "416",
+      "f": "416",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6532,7 +6532,7 @@
       "Precio_Costo": "$1.691,02"
     },
     {
-      "Id": "417",
+      "f": "417",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6553,7 +6553,7 @@
       "Precio_Costo": "$1.691,02"
     },
     {
-      "Id": "42",
+      "f": "42",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6574,7 +6574,7 @@
       "Precio_Costo": "$1.084,91"
     },
     {
-      "Id": "420",
+      "f": "420",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6595,7 +6595,7 @@
       "Precio_Costo": "$1.698,68"
     },
     {
-      "Id": "421",
+      "f": "421",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6616,7 +6616,7 @@
       "Precio_Costo": "$1.698,68"
     },
     {
-      "Id": "424",
+      "f": "424",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6637,7 +6637,7 @@
       "Precio_Costo": "$219,61"
     },
     {
-      "Id": "425",
+      "f": "425",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6658,7 +6658,7 @@
       "Precio_Costo": "$2.208,10"
     },
     {
-      "Id": "426",
+      "f": "426",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6679,7 +6679,7 @@
       "Precio_Costo": "$3.041,51"
     },
     {
-      "Id": "427",
+      "f": "427",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6700,7 +6700,7 @@
       "Precio_Costo": "$1.140,26"
     },
     {
-      "Id": "428",
+      "f": "428",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6721,7 +6721,7 @@
       "Precio_Costo": "$655,46"
     },
     {
-      "Id": "429",
+      "f": "429",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6742,7 +6742,7 @@
       "Precio_Costo": "$655,46"
     },
     {
-      "Id": "43",
+      "f": "43",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6763,7 +6763,7 @@
       "Precio_Costo": "$1.244,16"
     },
     {
-      "Id": "430",
+      "f": "430",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6784,7 +6784,7 @@
       "Precio_Costo": "$745,65"
     },
     {
-      "Id": "431",
+      "f": "431",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6805,7 +6805,7 @@
       "Precio_Costo": "$745,65"
     },
     {
-      "Id": "432",
+      "f": "432",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6826,7 +6826,7 @@
       "Precio_Costo": "$911,46"
     },
     {
-      "Id": "433",
+      "f": "433",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6847,7 +6847,7 @@
       "Precio_Costo": "$911,46"
     },
     {
-      "Id": "434",
+      "f": "434",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6868,7 +6868,7 @@
       "Precio_Costo": "$2.718,18"
     },
     {
-      "Id": "435",
+      "f": "435",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6889,7 +6889,7 @@
       "Precio_Costo": "$3.175,18"
     },
     {
-      "Id": "436",
+      "f": "436",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6910,7 +6910,7 @@
       "Precio_Costo": "$3.408,66"
     },
     {
-      "Id": "437",
+      "f": "437",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6931,7 +6931,7 @@
       "Precio_Costo": "$4.362,84"
     },
     {
-      "Id": "438",
+      "f": "438",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6952,7 +6952,7 @@
       "Precio_Costo": "$8.550,79"
     },
     {
-      "Id": "439",
+      "f": "439",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6973,7 +6973,7 @@
       "Precio_Costo": "$817,28"
     },
     {
-      "Id": "44",
+      "f": "44",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -6994,7 +6994,7 @@
       "Precio_Costo": "$1.544,72"
     },
     {
-      "Id": "440",
+      "f": "440",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -7015,7 +7015,7 @@
       "Precio_Costo": "$856,82"
     },
     {
-      "Id": "441",
+      "f": "441",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -7036,7 +7036,7 @@
       "Precio_Costo": "$582,11"
     },
     {
-      "Id": "442",
+      "f": "442",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -7057,7 +7057,7 @@
       "Precio_Costo": "$330,80"
     },
     {
-      "Id": "443",
+      "f": "443",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7078,7 +7078,7 @@
       "Precio_Costo": "$355,88"
     },
     {
-      "Id": "444",
+      "f": "444",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7099,7 +7099,7 @@
       "Precio_Costo": "$1.458,17"
     },
     {
-      "Id": "445",
+      "f": "445",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7120,7 +7120,7 @@
       "Precio_Costo": "$344,27"
     },
     {
-      "Id": "446",
+      "f": "446",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7141,7 +7141,7 @@
       "Precio_Costo": "$344,27"
     },
     {
-      "Id": "447",
+      "f": "447",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -7162,7 +7162,7 @@
       "Precio_Costo": "$241,95"
     },
     {
-      "Id": "45",
+      "f": "45",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7183,7 +7183,7 @@
       "Precio_Costo": "$1.084,91"
     },
     {
-      "Id": "451",
+      "f": "451",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7193,7 +7193,7 @@
       "Tamaño": "220",
       "UM": "u",
       "Categoria": "Hogar y Ferreteria",
-      "Subcategoria": "Fósforo",
+      "Subcategoria": "Encendedores y Fósforos",
       "Tags": "fósforos, encendedor, fuego, caja, cocina",
       "Id_Grupo": "199",
       "Tipo_Variante": "",
@@ -7204,7 +7204,7 @@
       "Precio_Costo": "$600,46"
     },
     {
-      "Id": "46",
+      "f": "46",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7225,7 +7225,7 @@
       "Precio_Costo": "$759,93"
     },
     {
-      "Id": "462",
+      "f": "462",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7246,7 +7246,7 @@
       "Precio_Costo": "$983,90"
     },
     {
-      "Id": "464",
+      "f": "464",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7267,7 +7267,7 @@
       "Precio_Costo": "$2.060,64"
     },
     {
-      "Id": "465",
+      "f": "465",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7277,7 +7277,7 @@
       "Tamaño": "120",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "crujitas, snack, snack salado, galletitas saladas, crackers, clásicas, crocantes",
       "Id_Grupo": "257",
       "Tipo_Variante": "Sabor",
@@ -7288,7 +7288,7 @@
       "Precio_Costo": "$1.021,27"
     },
     {
-      "Id": "466",
+      "f": "466",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7298,7 +7298,7 @@
       "Tamaño": "120",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "crujitas, snack, snack salado, galletitas saladas, crackers, cebolla, crema, cebolla y crema, crocantes",
       "Id_Grupo": "257",
       "Tipo_Variante": "Sabor",
@@ -7309,7 +7309,7 @@
       "Precio_Costo": "$1.021,27"
     },
     {
-      "Id": "467",
+      "f": "467",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7319,7 +7319,7 @@
       "Tamaño": "120",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "crujitas, snack, snack salado, galletitas saladas, crackers, queso, sabor queso, crocantes",
       "Id_Grupo": "257",
       "Tipo_Variante": "Sabor",
@@ -7330,7 +7330,7 @@
       "Precio_Costo": "$1.021,27"
     },
     {
-      "Id": "468",
+      "f": "468",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7340,7 +7340,7 @@
       "Tamaño": "120",
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tags": "papitas, papas fritas, snack, snack salado, jamón serrano, sabor jamón, crocantes, jamon crudo",
       "Id_Grupo": "257",
       "Tipo_Variante": "Sabor",
@@ -7351,7 +7351,7 @@
       "Precio_Costo": "$1.021,27"
     },
     {
-      "Id": "469",
+      "f": "469",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7372,7 +7372,7 @@
       "Precio_Costo": "$629,39"
     },
     {
-      "Id": "47",
+      "f": "47",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7393,7 +7393,7 @@
       "Precio_Costo": "$759,93"
     },
     {
-      "Id": "470",
+      "f": "470",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7414,7 +7414,7 @@
       "Precio_Costo": "$3.043,79"
     },
     {
-      "Id": "471",
+      "f": "471",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7435,7 +7435,7 @@
       "Precio_Costo": "$603,92"
     },
     {
-      "Id": "472",
+      "f": "472",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7456,7 +7456,7 @@
       "Precio_Costo": "$603,92"
     },
     {
-      "Id": "473",
+      "f": "473",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7477,7 +7477,7 @@
       "Precio_Costo": "$603,92"
     },
     {
-      "Id": "474",
+      "f": "474",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7498,7 +7498,7 @@
       "Precio_Costo": "$1.000,13"
     },
     {
-      "Id": "475",
+      "f": "475",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7519,7 +7519,7 @@
       "Precio_Costo": "$1.821,15"
     },
     {
-      "Id": "476",
+      "f": "476",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7540,7 +7540,7 @@
       "Precio_Costo": "717,15"
     },
     {
-      "Id": "477",
+      "f": "477",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7561,7 +7561,7 @@
       "Precio_Costo": "1.277,82"
     },
     {
-      "Id": "478",
+      "f": "478",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7582,7 +7582,7 @@
       "Precio_Costo": "1.303,90"
     },
     {
-      "Id": "479",
+      "f": "479",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7603,7 +7603,7 @@
       "Precio_Costo": "1.010,52"
     },
     {
-      "Id": "48",
+      "f": "48",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7624,7 +7624,7 @@
       "Precio_Costo": "$759,93"
     },
     {
-      "Id": "480",
+      "f": "480",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7645,7 +7645,7 @@
       "Precio_Costo": "$2.776,01"
     },
     {
-      "Id": "481",
+      "f": "481",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7666,7 +7666,7 @@
       "Precio_Costo": "732,58"
     },
     {
-      "Id": "482",
+      "f": "482",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7687,7 +7687,7 @@
       "Precio_Costo": "1.212,15"
     },
     {
-      "Id": "483",
+      "f": "483",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -7708,7 +7708,7 @@
       "Precio_Costo": "775,4"
     },
     {
-      "Id": "484",
+      "f": "484",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -7729,7 +7729,7 @@
       "Precio_Costo": "5.986,30"
     },
     {
-      "Id": "485",
+      "f": "485",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7750,7 +7750,7 @@
       "Precio_Costo": "3.623,42"
     },
     {
-      "Id": "486",
+      "f": "486",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7771,7 +7771,7 @@
       "Precio_Costo": "2.677,72"
     },
     {
-      "Id": "487",
+      "f": "487",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7792,7 +7792,7 @@
       "Precio_Costo": "2.220,81"
     },
     {
-      "Id": "488",
+      "f": "488",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7813,7 +7813,7 @@
       "Precio_Costo": "2.405,87"
     },
     {
-      "Id": "489",
+      "f": "489",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7834,7 +7834,7 @@
       "Precio_Costo": "$2.220,81"
     },
     {
-      "Id": "49",
+      "f": "49",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7855,7 +7855,7 @@
       "Precio_Costo": "$1.332,57"
     },
     {
-      "Id": "5",
+      "f": "5",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7876,7 +7876,7 @@
       "Precio_Costo": "$2.715,22"
     },
     {
-      "Id": "50",
+      "f": "50",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7897,7 +7897,7 @@
       "Precio_Costo": "$2.563,06"
     },
     {
-      "Id": "57",
+      "f": "57",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7918,7 +7918,7 @@
       "Precio_Costo": "$688,47"
     },
     {
-      "Id": "58",
+      "f": "58",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7939,7 +7939,7 @@
       "Precio_Costo": "$976,13"
     },
     {
-      "Id": "59",
+      "f": "59",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7960,7 +7960,7 @@
       "Precio_Costo": "$1.096,31"
     },
     {
-      "Id": "6",
+      "f": "6",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -7981,7 +7981,7 @@
       "Precio_Costo": "$3.088,81"
     },
     {
-      "Id": "60",
+      "f": "60",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8002,7 +8002,7 @@
       "Precio_Costo": "$1.709,99"
     },
     {
-      "Id": "61",
+      "f": "61",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8023,7 +8023,7 @@
       "Precio_Costo": "$1.372,88"
     },
     {
-      "Id": "62",
+      "f": "62",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8044,7 +8044,7 @@
       "Precio_Costo": "$2.209,93"
     },
     {
-      "Id": "63",
+      "f": "63",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8065,7 +8065,7 @@
       "Precio_Costo": "$3.715,23"
     },
     {
-      "Id": "64",
+      "f": "64",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8086,7 +8086,7 @@
       "Precio_Costo": "$2.311,05"
     },
     {
-      "Id": "65",
+      "f": "65",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8107,7 +8107,7 @@
       "Precio_Costo": "$8.745,73"
     },
     {
-      "Id": "66",
+      "f": "66",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8128,7 +8128,7 @@
       "Precio_Costo": "$1.242,15"
     },
     {
-      "Id": "67",
+      "f": "67",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -8149,7 +8149,7 @@
       "Precio_Costo": "$1.770,82"
     },
     {
-      "Id": "68",
+      "f": "68",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8170,7 +8170,7 @@
       "Precio_Costo": "$1.046,56"
     },
     {
-      "Id": "69",
+      "f": "69",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8191,7 +8191,7 @@
       "Precio_Costo": "$1.710,40"
     },
     {
-      "Id": "7",
+      "f": "7",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8212,7 +8212,7 @@
       "Precio_Costo": "$712,67"
     },
     {
-      "Id": "70",
+      "f": "70",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8233,7 +8233,7 @@
       "Precio_Costo": "$3.003,67"
     },
     {
-      "Id": "71",
+      "f": "71",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8254,7 +8254,7 @@
       "Precio_Costo": "$1.010,07"
     },
     {
-      "Id": "72",
+      "f": "72",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8275,7 +8275,7 @@
       "Precio_Costo": "$1.535,92"
     },
     {
-      "Id": "73",
+      "f": "73",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8296,7 +8296,7 @@
       "Precio_Costo": "$2.630,96"
     },
     {
-      "Id": "74",
+      "f": "74",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8317,7 +8317,7 @@
       "Precio_Costo": "$753,25"
     },
     {
-      "Id": "75",
+      "f": "75",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8338,7 +8338,7 @@
       "Precio_Costo": "$1.032,47"
     },
     {
-      "Id": "76",
+      "f": "76",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8359,7 +8359,7 @@
       "Precio_Costo": "$1.111,85"
     },
     {
-      "Id": "77",
+      "f": "77",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -8380,7 +8380,7 @@
       "Precio_Costo": "$3.716,29"
     },
     {
-      "Id": "78",
+      "f": "78",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -8401,7 +8401,7 @@
       "Precio_Costo": "$5.036,30"
     },
     {
-      "Id": "79",
+      "f": "79",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -8422,7 +8422,7 @@
       "Precio_Costo": "$5.448,72"
     },
     {
-      "Id": "8",
+      "f": "8",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8443,7 +8443,7 @@
       "Precio_Costo": "$1.457,35"
     },
     {
-      "Id": "80",
+      "f": "80",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8464,7 +8464,7 @@
       "Precio_Costo": "$1.008,42"
     },
     {
-      "Id": "81",
+      "f": "81",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8485,7 +8485,7 @@
       "Precio_Costo": "$716,28"
     },
     {
-      "Id": "82",
+      "f": "82",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8506,7 +8506,7 @@
       "Precio_Costo": "$716,28"
     },
     {
-      "Id": "83",
+      "f": "83",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8527,7 +8527,7 @@
       "Precio_Costo": "$716,28"
     },
     {
-      "Id": "84",
+      "f": "84",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8548,7 +8548,7 @@
       "Precio_Costo": "$716,28"
     },
     {
-      "Id": "85",
+      "f": "85",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8569,7 +8569,7 @@
       "Precio_Costo": "$716,28"
     },
     {
-      "Id": "86",
+      "f": "86",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -8590,7 +8590,7 @@
       "Precio_Costo": "$716,28"
     },
     {
-      "Id": "87",
+      "f": "87",
       "Activo": "OFF",
       "Cat B2C": "OFF",
       "Cat B2B": "OFF",
@@ -8611,7 +8611,7 @@
       "Precio_Costo": "$1.014,65"
     },
     {
-      "Id": "88",
+      "f": "88",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8632,7 +8632,7 @@
       "Precio_Costo": "$1.014,65"
     },
     {
-      "Id": "89",
+      "f": "89",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8653,7 +8653,7 @@
       "Precio_Costo": "$1.738,86"
     },
     {
-      "Id": "9",
+      "f": "9",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8674,7 +8674,7 @@
       "Precio_Costo": "$2.866,51"
     },
     {
-      "Id": "90",
+      "f": "90",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8695,7 +8695,7 @@
       "Precio_Costo": "$1.097,80"
     },
     {
-      "Id": "91",
+      "f": "91",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8716,7 +8716,7 @@
       "Precio_Costo": "$1.443,15"
     },
     {
-      "Id": "92",
+      "f": "92",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8737,7 +8737,7 @@
       "Precio_Costo": "$1.493,70"
     },
     {
-      "Id": "93",
+      "f": "93",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8758,7 +8758,7 @@
       "Precio_Costo": "$1.493,70"
     },
     {
-      "Id": "490",
+      "f": "490",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -8779,7 +8779,7 @@
       "Precio_Costo": "$227,28"
     },
     {
-      "Id": "491",
+      "f": "491",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -8800,7 +8800,7 @@
       "Precio_Costo": "$1.719,71"
     },
     {
-      "Id": "492",
+      "f": "492",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -8821,7 +8821,7 @@
       "Precio_Costo": "$334,22"
     },
     {
-      "Id": "493",
+      "f": "493",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8842,7 +8842,7 @@
       "Precio_Costo": "$924,19"
     },
     {
-      "Id": "494",
+      "f": "494",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8863,7 +8863,7 @@
       "Precio_Costo": "$924,19"
     },
     {
-      "Id": "496",
+      "f": "496",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8884,7 +8884,7 @@
       "Precio_Costo": "$1.462,36"
     },
     {
-      "Id": "497",
+      "f": "497",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8905,7 +8905,7 @@
       "Precio_Costo": "$1.462,36"
     },
     {
-      "Id": "498",
+      "f": "498",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8926,7 +8926,7 @@
       "Precio_Costo": "$1.462,36"
     },
     {
-      "Id": "500",
+      "f": "500",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8947,7 +8947,7 @@
       "Precio_Costo": "$431,83"
     },
     {
-      "Id": "501",
+      "f": "501",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8968,7 +8968,7 @@
       "Precio_Costo": "$431,83"
     },
     {
-      "Id": "502",
+      "f": "502",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -8989,7 +8989,7 @@
       "Precio_Costo": "$431,83"
     },
     {
-      "Id": "505",
+      "f": "505",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -9010,7 +9010,7 @@
       "Precio_Costo": "$1.071,55"
     },
     {
-      "Id": "506",
+      "f": "506",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -9031,7 +9031,7 @@
       "Precio_Costo": "$1.071,55"
     },
     {
-      "Id": "507",
+      "f": "507",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -9052,7 +9052,7 @@
       "Precio_Costo": "$1.071,55"
     },
     {
-      "Id": "508",
+      "f": "508",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -9073,7 +9073,7 @@
       "Precio_Costo": "$767,98"
     },
     {
-      "Id": "509",
+      "f": "509",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -9094,7 +9094,7 @@
       "Precio_Costo": "$767,98"
     },
     {
-      "Id": "510",
+      "f": "510",
       "Activo": "ON",
       "Cat B2C": "OFF",
       "Cat B2B": "ON",
@@ -9115,7 +9115,7 @@
       "Precio_Costo": "$767,98"
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9136,7 +9136,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9157,7 +9157,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9178,7 +9178,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9199,7 +9199,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9220,7 +9220,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9241,7 +9241,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9262,7 +9262,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9283,7 +9283,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9304,7 +9304,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9325,7 +9325,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9346,7 +9346,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9367,7 +9367,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9388,7 +9388,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9409,7 +9409,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9430,7 +9430,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9451,7 +9451,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9472,7 +9472,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9493,7 +9493,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9514,7 +9514,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9535,7 +9535,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9556,7 +9556,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9577,7 +9577,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9598,7 +9598,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9619,7 +9619,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9640,7 +9640,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9661,7 +9661,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9682,7 +9682,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9703,7 +9703,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9724,7 +9724,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9745,7 +9745,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9766,7 +9766,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9787,7 +9787,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9808,7 +9808,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9829,7 +9829,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9850,7 +9850,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9871,7 +9871,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9892,7 +9892,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9913,7 +9913,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9934,7 +9934,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9955,7 +9955,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9976,7 +9976,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -9997,7 +9997,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10018,7 +10018,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10039,7 +10039,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10060,7 +10060,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10081,7 +10081,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10102,7 +10102,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10123,7 +10123,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10144,7 +10144,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10165,7 +10165,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10186,7 +10186,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10207,7 +10207,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10228,7 +10228,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10249,7 +10249,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10270,7 +10270,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10291,7 +10291,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10312,7 +10312,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10333,7 +10333,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10354,7 +10354,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10375,7 +10375,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10396,7 +10396,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10417,7 +10417,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10438,7 +10438,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10459,7 +10459,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10480,7 +10480,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10501,7 +10501,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10522,7 +10522,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10543,7 +10543,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10564,7 +10564,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10585,7 +10585,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10606,7 +10606,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10627,7 +10627,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10648,7 +10648,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10669,7 +10669,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10690,7 +10690,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10711,7 +10711,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10732,7 +10732,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10753,7 +10753,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10774,7 +10774,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10795,7 +10795,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10816,7 +10816,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10837,7 +10837,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10858,7 +10858,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10879,7 +10879,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10900,7 +10900,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10921,7 +10921,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10942,7 +10942,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10963,7 +10963,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -10984,7 +10984,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11005,7 +11005,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11026,7 +11026,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11047,7 +11047,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11068,7 +11068,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11089,7 +11089,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11110,7 +11110,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11131,7 +11131,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11152,7 +11152,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11173,7 +11173,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11194,7 +11194,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11215,7 +11215,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11236,7 +11236,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11257,7 +11257,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11278,7 +11278,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11299,7 +11299,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11320,7 +11320,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11341,7 +11341,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11362,7 +11362,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11383,7 +11383,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11404,7 +11404,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11425,7 +11425,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11446,7 +11446,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11467,7 +11467,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11488,7 +11488,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11509,7 +11509,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11530,7 +11530,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11551,7 +11551,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11572,7 +11572,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11593,7 +11593,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11614,7 +11614,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11635,7 +11635,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11656,7 +11656,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11677,7 +11677,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11698,7 +11698,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11719,7 +11719,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11740,7 +11740,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11761,7 +11761,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11782,7 +11782,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11803,7 +11803,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11824,7 +11824,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11845,7 +11845,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11866,7 +11866,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11887,7 +11887,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11908,7 +11908,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11929,7 +11929,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11950,7 +11950,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11971,7 +11971,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -11992,7 +11992,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12013,7 +12013,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12034,7 +12034,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12055,7 +12055,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12076,7 +12076,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12097,7 +12097,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12118,7 +12118,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12139,7 +12139,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12160,7 +12160,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12181,7 +12181,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12202,7 +12202,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12223,7 +12223,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12244,7 +12244,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12265,7 +12265,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12286,7 +12286,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12307,7 +12307,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12328,7 +12328,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12349,7 +12349,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12370,7 +12370,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12391,7 +12391,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12412,7 +12412,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12433,7 +12433,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12454,7 +12454,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12475,7 +12475,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12496,7 +12496,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12517,7 +12517,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12538,7 +12538,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12559,7 +12559,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12580,7 +12580,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12601,7 +12601,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12622,7 +12622,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12643,7 +12643,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12664,7 +12664,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12685,7 +12685,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12706,7 +12706,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12727,7 +12727,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12748,7 +12748,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12769,7 +12769,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12790,7 +12790,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12811,7 +12811,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12832,7 +12832,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12853,7 +12853,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12874,7 +12874,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12895,7 +12895,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12916,7 +12916,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12937,7 +12937,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12958,7 +12958,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -12979,7 +12979,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13000,7 +13000,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13021,7 +13021,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13042,7 +13042,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13063,7 +13063,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13084,7 +13084,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13105,7 +13105,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13126,7 +13126,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13147,7 +13147,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13168,7 +13168,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13189,7 +13189,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13210,7 +13210,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13231,7 +13231,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13252,7 +13252,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13273,7 +13273,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13294,7 +13294,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13315,7 +13315,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13336,7 +13336,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13357,7 +13357,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13378,7 +13378,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13399,7 +13399,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13420,7 +13420,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13441,7 +13441,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13462,7 +13462,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13483,7 +13483,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13504,7 +13504,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13525,7 +13525,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13546,7 +13546,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13567,7 +13567,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13588,7 +13588,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13609,7 +13609,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13630,7 +13630,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13651,7 +13651,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13672,7 +13672,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13693,7 +13693,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13714,7 +13714,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13735,7 +13735,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13756,7 +13756,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13777,7 +13777,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13798,7 +13798,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13819,7 +13819,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13840,7 +13840,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13861,7 +13861,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13882,7 +13882,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13903,7 +13903,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13924,7 +13924,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13945,7 +13945,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13966,7 +13966,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -13987,7 +13987,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14008,7 +14008,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14029,7 +14029,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14050,7 +14050,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14071,7 +14071,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14092,7 +14092,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14113,7 +14113,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14134,7 +14134,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14155,7 +14155,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14176,7 +14176,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14197,7 +14197,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14218,7 +14218,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14239,7 +14239,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14260,7 +14260,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14281,7 +14281,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14302,7 +14302,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14323,7 +14323,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14344,7 +14344,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14365,7 +14365,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14386,7 +14386,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14407,7 +14407,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14428,7 +14428,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14449,7 +14449,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14470,7 +14470,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14491,7 +14491,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14512,7 +14512,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14533,7 +14533,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14554,7 +14554,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14575,7 +14575,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14596,7 +14596,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14617,7 +14617,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14638,7 +14638,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14659,7 +14659,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14680,7 +14680,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14701,7 +14701,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14722,7 +14722,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14743,7 +14743,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14764,7 +14764,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14785,7 +14785,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14806,7 +14806,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14827,7 +14827,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14848,7 +14848,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14869,7 +14869,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14890,7 +14890,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14911,7 +14911,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14932,7 +14932,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14953,7 +14953,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14974,7 +14974,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -14995,7 +14995,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15016,7 +15016,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15037,7 +15037,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15058,7 +15058,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15079,7 +15079,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15100,7 +15100,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15121,7 +15121,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15142,7 +15142,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15163,7 +15163,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15184,7 +15184,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15205,7 +15205,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15226,7 +15226,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15247,7 +15247,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15268,7 +15268,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15289,7 +15289,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15310,7 +15310,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15331,7 +15331,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15352,7 +15352,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15373,7 +15373,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15394,7 +15394,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15415,7 +15415,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15436,7 +15436,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15457,7 +15457,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15478,7 +15478,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15499,7 +15499,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15520,7 +15520,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15541,7 +15541,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15562,7 +15562,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15583,7 +15583,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15604,7 +15604,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15625,7 +15625,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15646,7 +15646,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15667,7 +15667,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15688,7 +15688,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15709,7 +15709,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15730,7 +15730,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15751,7 +15751,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15772,7 +15772,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15793,7 +15793,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15814,7 +15814,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15835,7 +15835,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15856,7 +15856,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15877,7 +15877,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15898,7 +15898,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15919,7 +15919,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15940,7 +15940,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15961,7 +15961,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -15982,7 +15982,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16003,7 +16003,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16024,7 +16024,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16045,7 +16045,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16066,7 +16066,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16087,7 +16087,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16108,7 +16108,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16129,7 +16129,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16150,7 +16150,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16171,7 +16171,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16192,7 +16192,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16213,7 +16213,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16234,7 +16234,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16255,7 +16255,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16276,7 +16276,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16297,7 +16297,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16318,7 +16318,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16339,7 +16339,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16360,7 +16360,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16381,7 +16381,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16402,7 +16402,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16423,7 +16423,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16444,7 +16444,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16465,7 +16465,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16486,7 +16486,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16507,7 +16507,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16528,7 +16528,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16549,7 +16549,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16570,7 +16570,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16591,7 +16591,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16612,7 +16612,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16633,7 +16633,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16654,7 +16654,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16675,7 +16675,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16696,7 +16696,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16717,7 +16717,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16738,7 +16738,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16759,7 +16759,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16780,7 +16780,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16801,7 +16801,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16822,7 +16822,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16843,7 +16843,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16864,7 +16864,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16885,7 +16885,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16906,7 +16906,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16927,7 +16927,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16948,7 +16948,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16969,7 +16969,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -16990,7 +16990,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17011,7 +17011,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17032,7 +17032,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17053,7 +17053,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17074,7 +17074,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17095,7 +17095,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17116,7 +17116,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17137,7 +17137,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17158,7 +17158,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17179,7 +17179,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17200,7 +17200,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17221,7 +17221,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17242,7 +17242,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17263,7 +17263,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17284,7 +17284,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17305,7 +17305,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17326,7 +17326,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17347,7 +17347,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17368,7 +17368,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17389,7 +17389,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17410,7 +17410,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17431,7 +17431,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17452,7 +17452,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17473,7 +17473,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17494,7 +17494,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17515,7 +17515,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17536,7 +17536,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17557,7 +17557,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17578,7 +17578,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17599,7 +17599,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17620,7 +17620,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17641,7 +17641,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17662,7 +17662,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17683,7 +17683,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17704,7 +17704,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17725,7 +17725,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17746,7 +17746,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17767,7 +17767,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17788,7 +17788,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17809,7 +17809,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17830,7 +17830,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17851,7 +17851,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17872,7 +17872,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17893,7 +17893,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17914,7 +17914,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17935,7 +17935,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17956,7 +17956,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17977,7 +17977,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -17998,7 +17998,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18019,7 +18019,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18040,7 +18040,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18061,7 +18061,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18082,7 +18082,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18103,7 +18103,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18124,7 +18124,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18145,7 +18145,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18166,7 +18166,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18187,7 +18187,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18208,7 +18208,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18229,7 +18229,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18250,7 +18250,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18271,7 +18271,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18292,7 +18292,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18313,7 +18313,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18334,7 +18334,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18355,7 +18355,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18376,7 +18376,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18397,7 +18397,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18418,7 +18418,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18439,7 +18439,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18460,7 +18460,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18481,7 +18481,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18502,7 +18502,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18523,7 +18523,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18544,7 +18544,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18565,7 +18565,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18586,7 +18586,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18607,7 +18607,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18628,7 +18628,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18649,7 +18649,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18670,7 +18670,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18691,7 +18691,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18712,7 +18712,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18733,7 +18733,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18754,7 +18754,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18775,7 +18775,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18796,7 +18796,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18817,7 +18817,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18838,7 +18838,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18859,7 +18859,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18880,7 +18880,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18901,7 +18901,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18922,7 +18922,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18943,7 +18943,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18964,7 +18964,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -18985,7 +18985,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19006,7 +19006,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19027,7 +19027,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19048,7 +19048,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19069,7 +19069,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19090,7 +19090,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19111,7 +19111,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19132,7 +19132,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19153,7 +19153,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19174,7 +19174,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19195,7 +19195,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19216,7 +19216,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19237,7 +19237,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19258,7 +19258,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19279,7 +19279,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19300,7 +19300,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19321,7 +19321,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19342,7 +19342,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19363,7 +19363,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19384,7 +19384,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19405,7 +19405,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19426,7 +19426,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19447,7 +19447,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19468,7 +19468,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19489,7 +19489,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19510,7 +19510,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19531,7 +19531,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19552,7 +19552,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19573,7 +19573,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19594,7 +19594,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -19615,7 +19615,7 @@
       "Precio_Costo": ""
     },
     {
-      "Id": "",
+      "f": "",
       "Activo": "OFF",
       "Cat B2C": "",
       "Cat B2B": "",
@@ -20930,7 +20930,7 @@
       "Nombre_Grupo": "Fósforos",
       "Marca": "RODEO",
       "Categoria": "Hogar y Ferreteria",
-      "Subcategoria": "Fósforo"
+      "Subcategoria": "Encendedores y Fósforos"
     },
     {
       "Id_Grupo": "200",
@@ -21294,42 +21294,42 @@
       "Nombre_Grupo": "Pringles",
       "Marca": "PRINGLES",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados"
+      "Subcategoria": "Snacks Salados"
     },
     {
       "Id_Grupo": "253",
       "Nombre_Grupo": "Papas Fritas",
       "Marca": "GOOD SHOW",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados"
+      "Subcategoria": "Snacks Salados"
     },
     {
       "Id_Grupo": "254",
       "Nombre_Grupo": "Papas Pay",
       "Marca": "GOOD SHOW",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados"
+      "Subcategoria": "Snacks Salados"
     },
     {
       "Id_Grupo": "255",
       "Nombre_Grupo": "Palitos Salados Clásicos",
       "Marca": "GOOD SHOW",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados"
+      "Subcategoria": "Snacks Salados"
     },
     {
       "Id_Grupo": "256",
       "Nombre_Grupo": "Conos Queso",
       "Marca": "GOOD SHOW",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados"
+      "Subcategoria": "Snacks Salados"
     },
     {
       "Id_Grupo": "257",
       "Nombre_Grupo": "Crujitas",
       "Marca": "9 DE ORO",
       "Categoria": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados"
+      "Subcategoria": "Snacks Salados"
     },
     {
       "Id_Grupo": "258",
@@ -30209,7 +30209,7 @@
       "Id_proveedor": "LM6323",
       "Producto": "Pringles Original PRINGLES 104 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Ancla",
       "Precio_Costo": "$3.573,11",
       "Precio_Venta": "$4.400,00",
@@ -30223,7 +30223,7 @@
       "Id_proveedor": "LM6324",
       "Producto": "Pringles Crema y Cebolla PRINGLES 109 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Ancla",
       "Precio_Costo": "$3.572,96",
       "Precio_Venta": "$4.400,00",
@@ -30237,7 +30237,7 @@
       "Id_proveedor": "LM6325",
       "Producto": "Pringles Queso PRINGLES 109 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Ancla",
       "Precio_Costo": "$3.572,96",
       "Precio_Venta": "$4.400,00",
@@ -30251,7 +30251,7 @@
       "Id_proveedor": "LM6328",
       "Producto": "Pringles Cheddar y Bacon PRINGLES 105 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Ancla",
       "Precio_Costo": "$3.572,96",
       "Precio_Venta": "$4.400,00",
@@ -31441,7 +31441,7 @@
       "Id_proveedor": "GD1107",
       "Producto": "Papas Fritas Jamon Serrano GOOD SHOW 53 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$969,62",
       "Precio_Venta": "$1.250,00",
@@ -31455,7 +31455,7 @@
       "Id_proveedor": "GD1104",
       "Producto": "Papas Fritas Crema y Cebolla GOOD SHOW 53 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$969,62",
       "Precio_Venta": "$1.250,00",
@@ -31469,7 +31469,7 @@
       "Id_proveedor": "GD1110",
       "Producto": "Papas Fritas Pimienta y Sal Marina GOOD SHOW 63 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$969,62",
       "Precio_Venta": "$1.250,00",
@@ -31483,7 +31483,7 @@
       "Id_proveedor": "GD1103",
       "Producto": "Papas Fritas Cheddar GOOD SHOW 53 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$969,62",
       "Precio_Venta": "$1.250,00",
@@ -31497,7 +31497,7 @@
       "Id_proveedor": "GD1113",
       "Producto": "Papas Fritas Picantes GOOD SHOW 53 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$969,62",
       "Precio_Venta": "$1.250,00",
@@ -31511,7 +31511,7 @@
       "Id_proveedor": "GD1112",
       "Producto": "Papas Fritas Jamon Serrano GOOD SHOW 83 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.339,35",
       "Precio_Venta": "$1.750,00",
@@ -31525,7 +31525,7 @@
       "Id_proveedor": "GD1115",
       "Producto": "Papas Fritas Cheddar GOOD SHOW 83 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.339,34",
       "Precio_Venta": "$1.750,00",
@@ -31539,7 +31539,7 @@
       "Id_proveedor": "GD1111",
       "Producto": "Papas Pay GOOD SHOW 63 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$969,62",
       "Precio_Venta": "$1.250,00",
@@ -31553,7 +31553,7 @@
       "Id_proveedor": "GD1213",
       "Producto": "Palitos Salados Clásicos GOOD SHOW 93 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$969,62",
       "Precio_Venta": "$1.250,00",
@@ -31567,7 +31567,7 @@
       "Id_proveedor": "GD1603",
       "Producto": "Conos Queso GOOD SHOW 53 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$969,62",
       "Precio_Venta": "$1.250,00",
@@ -33205,7 +33205,7 @@
       "Id_proveedor": "fos360",
       "Producto": "Fosforos RODEO 220 u",
       "Categoría": "Hogar y Ferreteria",
-      "Subcategoria": "Fósforo",
+      "Subcategoria": "Encendedores y Fósforos",
       "Tipo": "Rentable",
       "Precio_Costo": "$600,46",
       "Precio_Venta": "$900,00",
@@ -33247,7 +33247,7 @@
       "Id_proveedor": "CANBIZ0412",
       "Producto": "Crujitas Clásicas  9 DE ORO  120 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.021,27",
       "Precio_Venta": "$1.400,00",
@@ -33261,7 +33261,7 @@
       "Id_proveedor": "CANBIZ0413",
       "Producto": "Crujitas Cebolla y Crema 9 DE ORO  120 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.021,27",
       "Precio_Venta": "$1.400,00",
@@ -33275,7 +33275,7 @@
       "Id_proveedor": "CANBIZ0414",
       "Producto": "Crujitas Queso 9 DE ORO  120 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.021,27",
       "Precio_Venta": "$1.400,00",
@@ -33289,7 +33289,7 @@
       "Id_proveedor": "CANBIZ0416",
       "Producto": "Crujitas Jamón Serrano 9 DE ORO  120 g",
       "Categoría": "Snacks y Golosinas",
-      "Subcategoria": "Papitas y Snacks Salados",
+      "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.021,27",
       "Precio_Venta": "$1.400,00",
