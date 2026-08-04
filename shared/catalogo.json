@@ -19,7 +19,8 @@
       "Label_Tamaño": "5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/1-natura-aceite-girasol-5-l.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$19.096,61"
+      "Precio_Costo": "$19.096,61",
+      "Id": "1"
     },
     {
       "f": "10",
@@ -40,7 +41,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/10-natura-salsa-golf-250-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.530,44"
+      "Precio_Costo": "$1.530,44",
+      "Id": "10"
     },
     {
       "f": "100",
@@ -61,7 +63,8 @@
       "Label_Tamaño": "500 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/100-tresal-sal-fina-500-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$352,06"
+      "Precio_Costo": "$352,06",
+      "Id": "100"
     },
     {
       "f": "101",
@@ -82,7 +85,8 @@
       "Label_Tamaño": "1 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/101-tresal-sal-entrefina-1-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$610,23"
+      "Precio_Costo": "$610,23",
+      "Id": "101"
     },
     {
       "f": "102",
@@ -103,7 +107,8 @@
       "Label_Tamaño": "1 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/102-tresal-sal-gruesa-1-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$592,62"
+      "Precio_Costo": "$592,62",
+      "Id": "102"
     },
     {
       "f": "103",
@@ -124,7 +129,8 @@
       "Label_Tamaño": "5 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/103-tresal-sal-fina-5-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.808,04"
+      "Precio_Costo": "$3.808,04",
+      "Id": "103"
     },
     {
       "f": "104",
@@ -145,7 +151,8 @@
       "Label_Tamaño": "5 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/104-tresal-sal-entrefina-5-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.538,14"
+      "Precio_Costo": "$3.538,14",
+      "Id": "104"
     },
     {
       "f": "105",
@@ -166,7 +173,8 @@
       "Label_Tamaño": "5 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/105-tresal-sal-gruesa-5-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.514,67"
+      "Precio_Costo": "$3.514,67",
+      "Id": "105"
     },
     {
       "f": "106",
@@ -187,7 +195,8 @@
       "Label_Tamaño": "25 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/106-tresal-sal-fina-25-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$9.431,53"
+      "Precio_Costo": "$9.431,53",
+      "Id": "106"
     },
     {
       "f": "107",
@@ -208,7 +217,8 @@
       "Label_Tamaño": "50 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/107-tresal-sal-fina-50-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$18.333,51"
+      "Precio_Costo": "$18.333,51",
+      "Id": "107"
     },
     {
       "f": "108",
@@ -221,7 +231,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "arveja, legumbre, lata, guiso, vegetal",
       "Id_Grupo": "14",
       "Tipo_Variante": "",
@@ -229,7 +239,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/108-inalpa-arveja-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$528,14"
+      "Precio_Costo": "$528,14",
+      "Id": "108"
     },
     {
       "f": "109",
@@ -242,7 +253,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "porotos, colorados, legumbre, lata, guiso",
       "Id_Grupo": "15",
       "Tipo_Variante": "",
@@ -250,7 +261,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/109-inalpa-porotos-colorados-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$866,90"
+      "Precio_Costo": "$866,90",
+      "Id": "109"
     },
     {
       "f": "11",
@@ -271,7 +283,8 @@
       "Label_Tamaño": "250 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/11-natura-mostaza-250-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$877,86"
+      "Precio_Costo": "$877,86",
+      "Id": "11"
     },
     {
       "f": "110",
@@ -284,7 +297,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "lentejas, legumbre, lata, guiso, proteína",
       "Id_Grupo": "16",
       "Tipo_Variante": "",
@@ -292,7 +305,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/110-inalpa-lenteja-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$799,46"
+      "Precio_Costo": "$799,46",
+      "Id": "110"
     },
     {
       "f": "111",
@@ -305,7 +319,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "garbanzo, legumbre, lata, hummus, cocina",
       "Id_Grupo": "17",
       "Tipo_Variante": "",
@@ -313,7 +327,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/111-inalpa-garbanzo-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$669,06"
+      "Precio_Costo": "$669,06",
+      "Id": "111"
     },
     {
       "f": "112",
@@ -326,7 +341,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "jardinera, verduras, mixto, lata, guiso",
       "Id_Grupo": "18",
       "Tipo_Variante": "",
@@ -334,7 +349,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/112-inalpa-jardinera-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$816,13"
+      "Precio_Costo": "$816,13",
+      "Id": "112"
     },
     {
       "f": "113",
@@ -347,7 +363,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "choclo, maíz, lata, ensalada, vegetal",
       "Id_Grupo": "19",
       "Tipo_Variante": "",
@@ -355,7 +371,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/113-inalpa-choclo-grano-amarillo-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.193,87"
+      "Precio_Costo": "$1.193,87",
+      "Id": "113"
     },
     {
       "f": "114",
@@ -368,7 +385,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "porotos, blancos, legumbre, lata, guiso",
       "Id_Grupo": "20",
       "Tipo_Variante": "",
@@ -376,7 +393,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/114-inalpa-porotos-blancos-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$818,83"
+      "Precio_Costo": "$818,83",
+      "Id": "114"
     },
     {
       "f": "115",
@@ -389,7 +407,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "porotos, negros, legumbre, lata, cocina",
       "Id_Grupo": "21",
       "Tipo_Variante": "",
@@ -397,7 +415,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/115-inalpa-porotos-negros-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$819,64"
+      "Precio_Costo": "$819,64",
+      "Id": "115"
     },
     {
       "f": "117",
@@ -410,7 +429,7 @@
       "Tamaño": "90",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "paté, foie, lata, fiambre, untable",
       "Id_Grupo": "23",
       "Tipo_Variante": "",
@@ -418,7 +437,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/117-swift-pate-de-foie-90-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$858,53"
+      "Precio_Costo": "$858,53",
+      "Id": "117"
     },
     {
       "f": "118",
@@ -431,7 +451,7 @@
       "Tamaño": "90",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "picadillo, carne, lata, empanadas, relleno",
       "Id_Grupo": "24",
       "Tipo_Variante": "",
@@ -439,7 +459,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/118-swift-picadillo-de-carne-90-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$858,53"
+      "Precio_Costo": "$858,53",
+      "Id": "118"
     },
     {
       "f": "119",
@@ -452,7 +473,7 @@
       "Tamaño": "90",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "picadillo, carne, lata, empanadas, relleno",
       "Id_Grupo": "25",
       "Tipo_Variante": "",
@@ -460,7 +481,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/119-la-blanca-picadillo-de-carne-90-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$734,56"
+      "Precio_Costo": "$734,56",
+      "Id": "119"
     },
     {
       "f": "12",
@@ -481,7 +503,8 @@
       "Label_Tamaño": "500 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/12-natura-mostaza-500-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.923,62"
+      "Precio_Costo": "$1.923,62",
+      "Id": "12"
     },
     {
       "f": "120",
@@ -494,7 +517,7 @@
       "Tamaño": "90",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "paté, foie, lata, fiambre, untable",
       "Id_Grupo": "26",
       "Tipo_Variante": "",
@@ -502,7 +525,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/120-la-blanca-pate-de-foie-90-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$734,56"
+      "Precio_Costo": "$734,56",
+      "Id": "120"
     },
     {
       "f": "121",
@@ -515,7 +539,7 @@
       "Tamaño": "170",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "atún, aceite, lata, proteína, mar",
       "Id_Grupo": "27",
       "Tipo_Variante": "",
@@ -523,7 +547,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/121-cumana-atun-desmenuzado-aceite-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.056,17"
+      "Precio_Costo": "$1.056,17",
+      "Id": "121"
     },
     {
       "f": "122",
@@ -536,7 +561,7 @@
       "Tamaño": "170",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "atún, natural, lata, proteína, light",
       "Id_Grupo": "28",
       "Tipo_Variante": "",
@@ -544,7 +569,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/122-cumana-lomo-atun-natural-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.170,64"
+      "Precio_Costo": "$2.170,64",
+      "Id": "122"
     },
     {
       "f": "123",
@@ -557,7 +583,7 @@
       "Tamaño": "125",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "sardinas, aceite, lata, mar, proteína",
       "Id_Grupo": "29",
       "Tipo_Variante": "",
@@ -565,7 +591,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/123-cumana-sardinas-en-aceite-125-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.608,98"
+      "Precio_Costo": "$1.608,98",
+      "Id": "123"
     },
     {
       "f": "124",
@@ -578,7 +605,7 @@
       "Tamaño": "396",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "palmito, lata, ensalada, gourmet, vegetal",
       "Id_Grupo": "30",
       "Tipo_Variante": "",
@@ -586,7 +613,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/124-cumana-palmito-en-trozo-396-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.452,30"
+      "Precio_Costo": "$1.452,30",
+      "Id": "124"
     },
     {
       "f": "125",
@@ -599,7 +627,7 @@
       "Tamaño": "185",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "morrón, pimiento, rojo, lata, ensalada",
       "Id_Grupo": "31",
       "Tipo_Variante": "",
@@ -607,7 +635,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/125-cumana-morron-185-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.415,63"
+      "Precio_Costo": "$1.415,63",
+      "Id": "125"
     },
     {
       "f": "126",
@@ -620,7 +649,7 @@
       "Tamaño": "400",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "champiñones, hongos, lata, pizza, cocina",
       "Id_Grupo": "32",
       "Tipo_Variante": "",
@@ -628,7 +657,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/126-cumana-champinones-laminados-400-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.054,35"
+      "Precio_Costo": "$2.054,35",
+      "Id": "126"
     },
     {
       "f": "127",
@@ -641,7 +671,7 @@
       "Tamaño": "400",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "tomate, perita, lata, salsa, cocina",
       "Id_Grupo": "33",
       "Tipo_Variante": "",
@@ -649,7 +679,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/127-cumana-tomate-perita-400-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.014,33"
+      "Precio_Costo": "$1.014,33",
+      "Id": "127"
     },
     {
       "f": "128",
@@ -662,7 +693,7 @@
       "Tamaño": "300",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "choclo, maíz, lata, ensalada, vegetal",
       "Id_Grupo": "34",
       "Tipo_Variante": "",
@@ -670,7 +701,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/128-cumana-choclo-amarillo-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.009,84"
+      "Precio_Costo": "$1.009,84",
+      "Id": "128"
     },
     {
       "f": "129",
@@ -691,7 +723,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/129-cumana-harina-de-avena-400-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.745,47"
+      "Precio_Costo": "$1.745,47",
+      "Id": "129"
     },
     {
       "f": "13",
@@ -712,7 +745,8 @@
       "Label_Tamaño": "250 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/13-natura-mayonesa-250-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.312,22"
+      "Precio_Costo": "$1.312,22",
+      "Id": "13"
     },
     {
       "f": "130",
@@ -733,7 +767,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/130-cumana-avena-en-copos-400-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.745,47"
+      "Precio_Costo": "$1.745,47",
+      "Id": "130"
     },
     {
       "f": "131",
@@ -746,7 +781,7 @@
       "Tamaño": "836",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "ananá, fruta, lata, tropical, postre",
       "Id_Grupo": "35",
       "Tipo_Variante": "",
@@ -754,7 +789,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/131-cumana-anana-en-trozos-836-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$4.113,47"
+      "Precio_Costo": "$4.113,47",
+      "Id": "131"
     },
     {
       "f": "132",
@@ -775,7 +811,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/132-cumana-caballa-aceite-380-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.793,89"
+      "Precio_Costo": "$3.793,89",
+      "Id": "132"
     },
     {
       "f": "133",
@@ -796,7 +833,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/133-marvavic-aceitunas-verdes-frasco-330-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.309,03"
+      "Precio_Costo": "$2.309,03",
+      "Id": "133"
     },
     {
       "f": "134",
@@ -817,7 +855,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/134-marvavic-aceitunas-verdes-bandeja-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$857,15"
+      "Precio_Costo": "$857,15",
+      "Id": "134"
     },
     {
       "f": "135",
@@ -838,7 +877,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/135-marvavic-aceitunas-negras-naturales-bandeja-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.094,09"
+      "Precio_Costo": "$1.094,09",
+      "Id": "135"
     },
     {
       "f": "136",
@@ -859,7 +899,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/136-marvavic-pepinillos-en-vinagre-bandeja-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.307,44"
+      "Precio_Costo": "$1.307,44",
+      "Id": "136"
     },
     {
       "f": "137",
@@ -880,7 +921,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/137-marvavic-aceitunas-verdes-sache-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.346,14"
+      "Precio_Costo": "$1.346,14",
+      "Id": "137"
     },
     {
       "f": "138",
@@ -901,7 +943,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/138-marvavic-aceitunas-negras-naturales-sache-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.554,77"
+      "Precio_Costo": "$1.554,77",
+      "Id": "138"
     },
     {
       "f": "139",
@@ -922,7 +965,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/139-marvavic-vinagre-de-alcohol-500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$820,34"
+      "Precio_Costo": "$820,34",
+      "Id": "139"
     },
     {
       "f": "14",
@@ -943,7 +987,8 @@
       "Label_Tamaño": "500 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/14-natura-mayonesa-500-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.570,78"
+      "Precio_Costo": "$2.570,78",
+      "Id": "14"
     },
     {
       "f": "140",
@@ -964,7 +1009,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/140-marvavic-vinagre-de-manzana-500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.096,93"
+      "Precio_Costo": "$1.096,93",
+      "Id": "140"
     },
     {
       "f": "141",
@@ -985,7 +1031,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/141-marvavic-vinagre-de-vino-500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$990,26"
+      "Precio_Costo": "$990,26",
+      "Id": "141"
     },
     {
       "f": "142",
@@ -1006,7 +1053,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/142-indias-pimienta-negra-en-grano-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$762,82"
+      "Precio_Costo": "$762,82",
+      "Id": "142"
     },
     {
       "f": "143",
@@ -1027,7 +1075,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/143-indias-aji-molido-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$323,30"
+      "Precio_Costo": "$323,30",
+      "Id": "143"
     },
     {
       "f": "144",
@@ -1048,7 +1097,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/144-indias-adobo-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$339,48"
+      "Precio_Costo": "$339,48",
+      "Id": "144"
     },
     {
       "f": "145",
@@ -1069,7 +1119,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/145-indias-canela-molida-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$556,60"
+      "Precio_Costo": "$556,60",
+      "Id": "145"
     },
     {
       "f": "146",
@@ -1090,7 +1141,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/146-indias-comino-molido-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$411,97"
+      "Precio_Costo": "$411,97",
+      "Id": "146"
     },
     {
       "f": "147",
@@ -1111,7 +1163,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/147-indias-provenzal-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$442,31"
+      "Precio_Costo": "$442,31",
+      "Id": "147"
     },
     {
       "f": "148",
@@ -1132,7 +1185,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/148-indias-extracto-de-vainilla-30-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$471,90"
+      "Precio_Costo": "$471,90",
+      "Id": "148"
     },
     {
       "f": "149",
@@ -1153,7 +1207,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/149-indias-oregano-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$311,74"
+      "Precio_Costo": "$311,74",
+      "Id": "149"
     },
     {
       "f": "15",
@@ -1174,7 +1229,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/15-natura-mayonesa-1-l.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$5.040,40"
+      "Precio_Costo": "$5.040,40",
+      "Id": "15"
     },
     {
       "f": "150",
@@ -1195,7 +1251,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/150-indias-pimenton-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$348,51"
+      "Precio_Costo": "$348,51",
+      "Id": "150"
     },
     {
       "f": "151",
@@ -1216,7 +1273,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/151-indias-pimienta-blanca-molida-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.129,79"
+      "Precio_Costo": "$1.129,79",
+      "Id": "151"
     },
     {
       "f": "152",
@@ -1237,7 +1295,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/152-indias-chimichurri-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$395,63"
+      "Precio_Costo": "$395,63",
+      "Id": "152"
     },
     {
       "f": "153",
@@ -1258,7 +1317,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/153-indias-ajo-molido-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$439,18"
+      "Precio_Costo": "$439,18",
+      "Id": "153"
     },
     {
       "f": "154",
@@ -1279,7 +1339,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/154-indias-coco-rallado-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$475,18"
+      "Precio_Costo": "$475,18",
+      "Id": "154"
     },
     {
       "f": "155",
@@ -1300,7 +1361,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/155-indias-almidon-de-maiz-400-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.079,87"
+      "Precio_Costo": "$1.079,87",
+      "Id": "155"
     },
     {
       "f": "156",
@@ -1321,7 +1383,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/156-indias-laurel-en-hojas-10-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$853,47"
+      "Precio_Costo": "$853,47",
+      "Id": "156"
     },
     {
       "f": "157",
@@ -1342,7 +1405,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/157-indias-condimento-para-arroz-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$392,55"
+      "Precio_Costo": "$392,55",
+      "Id": "157"
     },
     {
       "f": "158",
@@ -1363,7 +1427,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/158-indias-pimienta-negra-molida-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$833,56"
+      "Precio_Costo": "$833,56",
+      "Id": "158"
     },
     {
       "f": "159",
@@ -1384,7 +1449,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/159-indias-azucar-impalpable-100-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$422,06"
+      "Precio_Costo": "$422,06",
+      "Id": "159"
     },
     {
       "f": "16",
@@ -1405,7 +1471,8 @@
       "Label_Tamaño": "250 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/16-natura-mayoliva-250-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.086,25"
+      "Precio_Costo": "$2.086,25",
+      "Id": "16"
     },
     {
       "f": "160",
@@ -1426,7 +1493,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/160-indias-bicarbonato-de-sodio-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$212,76"
+      "Precio_Costo": "$212,76",
+      "Id": "160"
     },
     {
       "f": "161",
@@ -1447,7 +1515,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/161-indias-nuez-moscada-molida-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$355,35"
+      "Precio_Costo": "$355,35",
+      "Id": "161"
     },
     {
       "f": "162",
@@ -1468,7 +1537,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/162-indias-polvo-para-hornear-50-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$428,38"
+      "Precio_Costo": "$428,38",
+      "Id": "162"
     },
     {
       "f": "163",
@@ -1489,7 +1559,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/163-indias-gelatina-de-frutilla-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$795,65"
+      "Precio_Costo": "$795,65",
+      "Id": "163"
     },
     {
       "f": "164",
@@ -1510,7 +1581,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/164-indias-gelatina-de-naranja-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$795,65"
+      "Precio_Costo": "$795,65",
+      "Id": "164"
     },
     {
       "f": "165",
@@ -1531,7 +1603,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/165-indias-gelatina-de-frambuesa-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$795,65"
+      "Precio_Costo": "$795,65",
+      "Id": "165"
     },
     {
       "f": "166",
@@ -1552,7 +1625,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/166-indias-gelatina-de-cereza-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$795,65"
+      "Precio_Costo": "$795,65",
+      "Id": "166"
     },
     {
       "f": "167",
@@ -1573,7 +1647,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/167-indias-flan-de-vainilla-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$544,92"
+      "Precio_Costo": "$544,92",
+      "Id": "167"
     },
     {
       "f": "168",
@@ -1594,7 +1669,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/168-indias-postre-chocolate-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$761,03"
+      "Precio_Costo": "$761,03",
+      "Id": "168"
     },
     {
       "f": "169",
@@ -1615,7 +1691,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/169-indias-premezcla-bizcochuelo-chocolate-450-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.325,34"
+      "Precio_Costo": "$1.325,34",
+      "Id": "169"
     },
     {
       "f": "17",
@@ -1636,7 +1713,8 @@
       "Label_Tamaño": "500 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/17-natura-mayoliva-500-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$4.058,21"
+      "Precio_Costo": "$4.058,21",
+      "Id": "17"
     },
     {
       "f": "170",
@@ -1657,7 +1735,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/170-indias-premezcla-bizcochuelo-vainilla-450-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.111,59"
+      "Precio_Costo": "$1.111,59",
+      "Id": "170"
     },
     {
       "f": "171",
@@ -1678,7 +1757,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/171-parmesana-chimichurri-tradicional-300-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.772,64"
+      "Precio_Costo": "$1.772,64",
+      "Id": "171"
     },
     {
       "f": "172",
@@ -1699,7 +1779,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/172-parmesana-salsa-criolla-300-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.772,64"
+      "Precio_Costo": "$1.772,64",
+      "Id": "172"
     },
     {
       "f": "173",
@@ -1720,7 +1801,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/173-parmesana-salsa-de-soja-tradicional-300-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.579,96"
+      "Precio_Costo": "$1.579,96",
+      "Id": "173"
     },
     {
       "f": "174",
@@ -1741,7 +1823,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/174-parmesana-mostaza-con-miel-300-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.100,19"
+      "Precio_Costo": "$2.100,19",
+      "Id": "174"
     },
     {
       "f": "175",
@@ -1762,7 +1845,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/175-parmesana-salsa-de-aji-300-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.849,71"
+      "Precio_Costo": "$1.849,71",
+      "Id": "175"
     },
     {
       "f": "176",
@@ -1783,7 +1867,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/176-parmesana-salsa-cheddar-300-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.273,61"
+      "Precio_Costo": "$2.273,61",
+      "Id": "176"
     },
     {
       "f": "177",
@@ -1804,7 +1889,8 @@
       "Label_Tamaño": "250 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/177-la-virginia-cafe-molido-torrado-equilibrado-250-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$4.761,70"
+      "Precio_Costo": "$4.761,70",
+      "Id": "177"
     },
     {
       "f": "178",
@@ -1825,7 +1911,8 @@
       "Label_Tamaño": "500 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/178-la-virginia-cafe-molido-torrado-equilibrado-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$9.522,99"
+      "Precio_Costo": "$9.522,99",
+      "Id": "178"
     },
     {
       "f": "179",
@@ -1846,7 +1933,8 @@
       "Label_Tamaño": "1 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/179-la-virginia-cafe-molido-torrado-equilibrado-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$19.045,93"
+      "Precio_Costo": "$19.045,93",
+      "Id": "179"
     },
     {
       "f": "18",
@@ -1867,7 +1955,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$770,02"
+      "Precio_Costo": "$770,02",
+      "Id": "18"
     },
     {
       "f": "180",
@@ -1888,7 +1977,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/180-la-virginia-cafe-molido-tostado-250-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$5.714,01"
+      "Precio_Costo": "$5.714,01",
+      "Id": "180"
     },
     {
       "f": "181",
@@ -1909,7 +1999,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/181-la-virginia-cafe-instantaneo-clasico-repuesto-170-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$5.868,43"
+      "Precio_Costo": "$5.868,43",
+      "Id": "181"
     },
     {
       "f": "182",
@@ -1930,7 +2021,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/182-la-virginia-mix-cappuccino-tradicional-10u-12-5-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$4.337,97"
+      "Precio_Costo": "$4.337,97",
+      "Id": "182"
     },
     {
       "f": "183",
@@ -1951,7 +2043,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/183-la-virginia-te-negro-25-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$827,71"
+      "Precio_Costo": "$827,71",
+      "Id": "183"
     },
     {
       "f": "184",
@@ -1972,7 +2065,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/184-la-virginia-te-hierbas-manzanilla-25-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.276,92"
+      "Precio_Costo": "$1.276,92",
+      "Id": "184"
     },
     {
       "f": "185",
@@ -1993,7 +2087,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/185-chocolino-cacao-en-polvo-180-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.726,53"
+      "Precio_Costo": "$1.726,53",
+      "Id": "185"
     },
     {
       "f": "186",
@@ -2014,7 +2109,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/186-la-virginia-te-saborizado-limon-20-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.474,58"
+      "Precio_Costo": "$1.474,58",
+      "Id": "186"
     },
     {
       "f": "187",
@@ -2035,7 +2131,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/187-la-virginia-te-herboristeria-tilo-25-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.427,42"
+      "Precio_Costo": "$2.427,42",
+      "Id": "187"
     },
     {
       "f": "188",
@@ -2056,7 +2153,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/188-la-virginia-te-herboristeria-manzanilla-con-anis-25-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.507,04"
+      "Precio_Costo": "$1.507,04",
+      "Id": "188"
     },
     {
       "f": "189",
@@ -2077,7 +2175,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/189-la-virginia-te-verde-20-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.198,10"
+      "Precio_Costo": "$1.198,10",
+      "Id": "189"
     },
     {
       "f": "19",
@@ -2098,7 +2197,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/19-pureza-harina-con-levadura-para-pizza-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.489,62"
+      "Precio_Costo": "$1.489,62",
+      "Id": "19"
     },
     {
       "f": "190",
@@ -2119,7 +2219,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/190-la-virginia-te-equilibrio-relajar-25-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.690,25"
+      "Precio_Costo": "$1.690,25",
+      "Id": "190"
     },
     {
       "f": "192",
@@ -2140,7 +2241,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/192-alicante-sabor-en-polvo-carne-12u-7-5-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.705,20"
+      "Precio_Costo": "$2.705,20",
+      "Id": "192"
     },
     {
       "f": "193",
@@ -2161,7 +2263,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/193-alicante-sabor-en-polvo-verdura-12u-7-5-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.705,20"
+      "Precio_Costo": "$2.705,20",
+      "Id": "193"
     },
     {
       "f": "194",
@@ -2182,7 +2285,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/194-alicante-sabor-en-polvo-panceta-12u-7-5-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.101,81"
+      "Precio_Costo": "$3.101,81",
+      "Id": "194"
     },
     {
       "f": "195",
@@ -2203,7 +2307,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/195-alicante-sabor-en-polvo-4-quesos-12u-7-5-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.101,81"
+      "Precio_Costo": "$3.101,81",
+      "Id": "195"
     },
     {
       "f": "196",
@@ -2224,7 +2329,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/196-taragui-yerba-mate-con-palo-roja-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.300,09"
+      "Precio_Costo": "$2.300,09",
+      "Id": "196"
     },
     {
       "f": "197",
@@ -2245,7 +2351,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/197-taragui-yerba-mate-sin-palo-azul-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.628,84"
+      "Precio_Costo": "$2.628,84",
+      "Id": "197"
     },
     {
       "f": "198",
@@ -2266,7 +2373,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/198-mananita-yerba-mate-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.300,09"
+      "Precio_Costo": "$2.300,09",
+      "Id": "198"
     },
     {
       "f": "199",
@@ -2287,7 +2395,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/199-la-merced-yerba-mate-campo-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$4.025,79"
+      "Precio_Costo": "$4.025,79",
+      "Id": "199"
     },
     {
       "f": "2",
@@ -2308,7 +2417,8 @@
       "Label_Tamaño": "3 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$11.457,97"
+      "Precio_Costo": "$11.457,97",
+      "Id": "2"
     },
     {
       "f": "20",
@@ -2329,7 +2439,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/20-pureza-harina-integral-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.363,35"
+      "Precio_Costo": "$1.363,35",
+      "Id": "20"
     },
     {
       "f": "201",
@@ -2350,7 +2461,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/201-la-merced-yerba-mate-campo-y-monte-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$4.025,79"
+      "Precio_Costo": "$4.025,79",
+      "Id": "201"
     },
     {
       "f": "202",
@@ -2371,7 +2483,8 @@
       "Label_Tamaño": "25 saq",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/202-taragui-mate-cocido-25-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.159,18"
+      "Precio_Costo": "$1.159,18",
+      "Id": "202"
     },
     {
       "f": "203",
@@ -2392,7 +2505,8 @@
       "Label_Tamaño": "50 saq",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/203-taragui-mate-cocido-50-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.086,03"
+      "Precio_Costo": "$2.086,03",
+      "Id": "203"
     },
     {
       "f": "204",
@@ -2413,7 +2527,8 @@
       "Label_Tamaño": "25 saq",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/204-taragui-te-25-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$913,47"
+      "Precio_Costo": "$913,47",
+      "Id": "204"
     },
     {
       "f": "205",
@@ -2434,7 +2549,8 @@
       "Label_Tamaño": "50 saq",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/205-taragui-te-50-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.645,95"
+      "Precio_Costo": "$1.645,95",
+      "Id": "205"
     },
     {
       "f": "207",
@@ -2455,7 +2571,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/207-pringles-pringles-original-104-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.573,11"
+      "Precio_Costo": "$3.573,11",
+      "Id": "207"
     },
     {
       "f": "208",
@@ -2476,7 +2593,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/208-pringles-pringles-crema-y-cebolla-109-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.572,96"
+      "Precio_Costo": "$3.572,96",
+      "Id": "208"
     },
     {
       "f": "209",
@@ -2497,7 +2615,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/209-pringles-pringles-queso-109-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.572,96"
+      "Precio_Costo": "$3.572,96",
+      "Id": "209"
     },
     {
       "f": "21",
@@ -2518,7 +2637,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/21-pureza-harina-integral-leudante-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.636,02"
+      "Precio_Costo": "$1.636,02",
+      "Id": "21"
     },
     {
       "f": "210",
@@ -2539,7 +2659,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/210-pringles-pringles-cheddar-y-bacon-105-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.572,96"
+      "Precio_Costo": "$3.572,96",
+      "Id": "210"
     },
     {
       "f": "211",
@@ -2560,7 +2681,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/211-kelloggs-zucaritas-240-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.243,73"
+      "Precio_Costo": "$2.243,73",
+      "Id": "211"
     },
     {
       "f": "212",
@@ -2581,7 +2703,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/212-kelloggs-choco-krispis-pops-185-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.973,72"
+      "Precio_Costo": "$2.973,72",
+      "Id": "212"
     },
     {
       "f": "213",
@@ -2602,7 +2725,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/213-kelloggs-froot-loops-195-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.857,97"
+      "Precio_Costo": "$2.857,97",
+      "Id": "213"
     },
     {
       "f": "214",
@@ -2623,7 +2747,8 @@
       "Label_Tamaño": "78 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/214-bauducco-oblea-chocolate-78-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$695,91"
+      "Precio_Costo": "$695,91",
+      "Id": "214"
     },
     {
       "f": "215",
@@ -2644,7 +2769,8 @@
       "Label_Tamaño": "78 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/215-bauducco-oblea-frutilla-78-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$695,84"
+      "Precio_Costo": "$695,84",
+      "Id": "215"
     },
     {
       "f": "216",
@@ -2665,7 +2791,8 @@
       "Label_Tamaño": "140 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/216-bauducco-oblea-chocolate-140-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.123,60"
+      "Precio_Costo": "$1.123,60",
+      "Id": "216"
     },
     {
       "f": "217",
@@ -2686,7 +2813,8 @@
       "Label_Tamaño": "140 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/217-bauducco-oblea-frutilla-140-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.123,60"
+      "Precio_Costo": "$1.123,60",
+      "Id": "217"
     },
     {
       "f": "218",
@@ -2707,7 +2835,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/218-bauducco-tostada-clasica-142-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.376,27"
+      "Precio_Costo": "$1.376,27",
+      "Id": "218"
     },
     {
       "f": "219",
@@ -2728,7 +2857,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/219-bauducco-tostada-integral-142-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.376,27"
+      "Precio_Costo": "$1.376,27",
+      "Id": "219"
     },
     {
       "f": "22",
@@ -2749,7 +2879,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/22-pureza-harina-integral-con-lev-para-pizza-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.636,02"
+      "Precio_Costo": "$1.636,02",
+      "Id": "22"
     },
     {
       "f": "220",
@@ -2770,7 +2901,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/220-bauducco-tostada-multigrano-142-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.376,27"
+      "Precio_Costo": "$1.376,27",
+      "Id": "220"
     },
     {
       "f": "221",
@@ -2791,7 +2923,8 @@
       "Label_Tamaño": "25 saq",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/221-nory-mate-cocido-25-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$623,98"
+      "Precio_Costo": "$623,98",
+      "Id": "221"
     },
     {
       "f": "222",
@@ -2812,7 +2945,8 @@
       "Label_Tamaño": "50 saq",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/222-nory-mate-cocido-50-saq.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.227,36"
+      "Precio_Costo": "$1.227,36",
+      "Id": "222"
     },
     {
       "f": "223",
@@ -2833,7 +2967,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/223-don-satur-bizcochos-salados-200-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.130,56"
+      "Precio_Costo": "$1.130,56",
+      "Id": "223"
     },
     {
       "f": "224",
@@ -2854,7 +2989,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/224-don-satur-bizcochos-agridulces-200-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.130,56"
+      "Precio_Costo": "$1.130,56",
+      "Id": "224"
     },
     {
       "f": "225",
@@ -2875,7 +3011,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/225-don-satur-bizcochos-negritos-200-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.130,56"
+      "Precio_Costo": "$1.130,56",
+      "Id": "225"
     },
     {
       "f": "226",
@@ -2896,7 +3033,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/226-don-satur-magdalenas-vainilla-con-dulce-de-leche-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.800,74"
+      "Precio_Costo": "$1.800,74",
+      "Id": "226"
     },
     {
       "f": "227",
@@ -2917,7 +3055,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/227-don-satur-magdalenas-vainilla-con-chips-de-chocolate-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.800,74"
+      "Precio_Costo": "$1.800,74",
+      "Id": "227"
     },
     {
       "f": "228",
@@ -2938,7 +3077,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/228-don-satur-pepas-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.260,58"
+      "Precio_Costo": "$1.260,58",
+      "Id": "228"
     },
     {
       "f": "229",
@@ -2959,7 +3099,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/229-pozo-magdalena-con-chips-de-chocolate-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.419,16"
+      "Precio_Costo": "$1.419,16",
+      "Id": "229"
     },
     {
       "f": "23",
@@ -2980,7 +3121,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/23-pureza-harina-0000-ur-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.024,39"
+      "Precio_Costo": "$1.024,39",
+      "Id": "23"
     },
     {
       "f": "230",
@@ -3001,7 +3143,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/230-pozo-magdalena-coco-rellenas-de-ddl-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.419,16"
+      "Precio_Costo": "$1.419,16",
+      "Id": "230"
     },
     {
       "f": "231",
@@ -3022,7 +3165,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/231-pozo-magdalena-chocolate-rellenas-de-ddl-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.419,16"
+      "Precio_Costo": "$1.419,16",
+      "Id": "231"
     },
     {
       "f": "233",
@@ -3043,7 +3187,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/233-pozo-vainillas-7u-80-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$519,82"
+      "Precio_Costo": "$519,82",
+      "Id": "233"
     },
     {
       "f": "234",
@@ -3064,7 +3209,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/234-pozo-vainillas-12u-148-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$917,99"
+      "Precio_Costo": "$917,99",
+      "Id": "234"
     },
     {
       "f": "235",
@@ -3085,7 +3231,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/235-pozo-vainillas-24u-296-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.775,68"
+      "Precio_Costo": "$1.775,68",
+      "Id": "235"
     },
     {
       "f": "236",
@@ -3106,7 +3253,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/236-pozo-vainillas-36u-444-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.639,96"
+      "Precio_Costo": "$2.639,96",
+      "Id": "236"
     },
     {
       "f": "238",
@@ -3127,7 +3275,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/238-pozo-vainillas-chocolate-12u-148-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.030,46"
+      "Precio_Costo": "$1.030,46",
+      "Id": "238"
     },
     {
       "f": "239",
@@ -3148,7 +3297,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/239-pozo-budin-marmolado-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.007,45"
+      "Precio_Costo": "$1.007,45",
+      "Id": "239"
     },
     {
       "f": "24",
@@ -3169,7 +3319,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/24-pureza-harina-leudante-ur-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.262,20"
+      "Precio_Costo": "$1.262,20",
+      "Id": "24"
     },
     {
       "f": "240",
@@ -3190,7 +3341,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/240-pozo-budin-con-chips-de-chocolate-160-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.007,45"
+      "Precio_Costo": "$1.007,45",
+      "Id": "240"
     },
     {
       "f": "241",
@@ -3211,7 +3363,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/241-pozo-budin-vainilla-relleno-de-ddl-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.007,45"
+      "Precio_Costo": "$1.007,45",
+      "Id": "241"
     },
     {
       "f": "242",
@@ -3232,7 +3385,8 @@
       "Label_Tamaño": "200 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/242-toconato-pepas-200-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$578,45"
+      "Precio_Costo": "$578,45",
+      "Id": "242"
     },
     {
       "f": "243",
@@ -3253,7 +3407,8 @@
       "Label_Tamaño": "400 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/243-toconato-pepas-400-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.012,36"
+      "Precio_Costo": "$1.012,36",
+      "Id": "243"
     },
     {
       "f": "244",
@@ -3274,7 +3429,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/244-yaris-almohaditas-rellenas-sabor-chocolate-180-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.569,49"
+      "Precio_Costo": "$1.569,49",
+      "Id": "244"
     },
     {
       "f": "245",
@@ -3295,7 +3451,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/245-yaris-almohaditas-rellenas-sabor-frutilla-180-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.569,49"
+      "Precio_Costo": "$1.569,49",
+      "Id": "245"
     },
     {
       "f": "246",
@@ -3316,7 +3473,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/246-yaris-almohaditas-rellenas-sabor-limon-180-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.569,49"
+      "Precio_Costo": "$1.569,49",
+      "Id": "246"
     },
     {
       "f": "247",
@@ -3337,7 +3495,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/247-yaris-copos-azucarados-fortificados-240-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.306,78"
+      "Precio_Costo": "$1.306,78",
+      "Id": "247"
     },
     {
       "f": "248",
@@ -3358,7 +3517,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/248-yaris-bolitas-de-chocolate-150-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.217,18"
+      "Precio_Costo": "$1.217,18",
+      "Id": "248"
     },
     {
       "f": "249",
@@ -3379,7 +3539,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/249-yaris-aritos-frutales-130-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$983,60"
+      "Precio_Costo": "$983,60",
+      "Id": "249"
     },
     {
       "f": "25",
@@ -3400,7 +3561,8 @@
       "Label_Tamaño": "900 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/25-canuelas-aceite-girasol-900-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.419,25"
+      "Precio_Costo": "$3.419,25",
+      "Id": "25"
     },
     {
       "f": "250",
@@ -3421,7 +3583,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/250-yaris-aritos-de-avena-y-miel-130-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$983,60"
+      "Precio_Costo": "$983,60",
+      "Id": "250"
     },
     {
       "f": "252",
@@ -3442,7 +3605,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/252-molico-leche-en-polvo-balance-800-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$4.476,79"
+      "Precio_Costo": "$4.476,79",
+      "Id": "252"
     },
     {
       "f": "253",
@@ -3463,7 +3627,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/253-franz-dulce-de-leche-400-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.821,89"
+      "Precio_Costo": "$1.821,89",
+      "Id": "253"
     },
     {
       "f": "254",
@@ -3484,7 +3649,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/254-franz-untina-deleite-400-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.434,00"
+      "Precio_Costo": "$1.434,00",
+      "Id": "254"
     },
     {
       "f": "499",
@@ -3505,7 +3671,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/257-baggio-jugo-pronto-sin-azucar-1000-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.437,37"
+      "Precio_Costo": "$1.437,37",
+      "Id": "499"
     },
     {
       "f": "503",
@@ -3526,7 +3693,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/259-baggio-jugo-100-naranja-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.715,48"
+      "Precio_Costo": "$2.715,48",
+      "Id": "503"
     },
     {
       "f": "26",
@@ -3547,7 +3715,8 @@
       "Label_Tamaño": "1,5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/26-canuelas-aceite-girasol-1-5-l.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$5.522,46"
+      "Precio_Costo": "$5.522,46",
+      "Id": "26"
     },
     {
       "f": "504",
@@ -3568,7 +3737,8 @@
       "Label_Tamaño": "200 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/260-baggio-jugo-100-naranja-200-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$433,83"
+      "Precio_Costo": "$433,83",
+      "Id": "504"
     },
     {
       "f": "511",
@@ -3589,7 +3759,8 @@
       "Label_Tamaño": "1,5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/262-baggio-agua-saborizada-fresh-sin-azucar-1-5-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.053,22"
+      "Precio_Costo": "$1.053,22",
+      "Id": "511"
     },
     {
       "f": "265",
@@ -3610,7 +3781,8 @@
       "Label_Tamaño": "1,5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/265-baggio-agua-fresh-1-5-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$707,13"
+      "Precio_Costo": "$707,13",
+      "Id": "265"
     },
     {
       "f": "266",
@@ -3631,7 +3803,8 @@
       "Label_Tamaño": "600 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/266-baggio-agua-fresh-600-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$485,99"
+      "Precio_Costo": "$485,99",
+      "Id": "266"
     },
     {
       "f": "267",
@@ -3652,7 +3825,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/267-baggio-bidon-agua-fresh-6500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.709,88"
+      "Precio_Costo": "$1.709,88",
+      "Id": "267"
     },
     {
       "f": "268",
@@ -3673,7 +3847,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/268-baggio-soda-fresh-2250-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$730,15"
+      "Precio_Costo": "$730,15",
+      "Id": "268"
     },
     {
       "f": "269",
@@ -3694,7 +3869,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/269-baggio-chocolatada-latte-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.822,45"
+      "Precio_Costo": "$1.822,45",
+      "Id": "269"
     },
     {
       "f": "27",
@@ -3715,7 +3891,8 @@
       "Label_Tamaño": "5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/27-canuelas-aceite-girasol-5-l.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$18.904,96"
+      "Precio_Costo": "$18.904,96",
+      "Id": "27"
     },
     {
       "f": "270",
@@ -3736,7 +3913,8 @@
       "Label_Tamaño": "200 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/270-baggio-chocolatada-latte-200-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$551,77"
+      "Precio_Costo": "$551,77",
+      "Id": "270"
     },
     {
       "f": "275",
@@ -3757,7 +3935,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/275-uvita-vino-tinto-1000-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.137,14"
+      "Precio_Costo": "$1.137,14",
+      "Id": "275"
     },
     {
       "f": "276",
@@ -3778,7 +3957,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/276-uvita-vino-blanco-1000-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.137,14"
+      "Precio_Costo": "$1.137,14",
+      "Id": "276"
     },
     {
       "f": "278",
@@ -3799,7 +3979,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/278-de-la-huerta-mermeladas-vidrio-540-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.521,62"
+      "Precio_Costo": "$1.521,62",
+      "Id": "278"
     },
     {
       "f": "279",
@@ -3820,7 +4001,8 @@
       "Label_Tamaño": "530 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/279-de-la-huerta-pure-de-tomates-530-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$733,00"
+      "Precio_Costo": "$733,00",
+      "Id": "279"
     },
     {
       "f": "28",
@@ -3841,7 +4023,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/28-canuelas-aceite-oliva-500-ml.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$9.921,62"
+      "Precio_Costo": "$9.921,62",
+      "Id": "28"
     },
     {
       "f": "280",
@@ -3862,7 +4045,8 @@
       "Label_Tamaño": "210 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/280-de-la-huerta-pure-de-tomates-210-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$428,56"
+      "Precio_Costo": "$428,56",
+      "Id": "280"
     },
     {
       "f": "281",
@@ -3883,7 +4067,8 @@
       "Label_Tamaño": "1kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/281-de-la-huerta-pure-de-tomates-1kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.365,80"
+      "Precio_Costo": "$1.365,80",
+      "Id": "281"
     },
     {
       "f": "282",
@@ -3904,7 +4089,8 @@
       "Label_Tamaño": "133 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/282-de-la-huerta-pure-de-tomates-133-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$301,96"
+      "Precio_Costo": "$301,96",
+      "Id": "282"
     },
     {
       "f": "283",
@@ -3925,7 +4111,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/283-de-la-huerta-pulpa-de-tomates-520-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$533,25"
+      "Precio_Costo": "$533,25",
+      "Id": "283"
     },
     {
       "f": "284",
@@ -3946,7 +4133,8 @@
       "Label_Tamaño": "600 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/284-si-diet-edulcorante-tradicional-600-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.154,67"
+      "Precio_Costo": "$2.154,67",
+      "Id": "284"
     },
     {
       "f": "285",
@@ -3967,7 +4155,8 @@
       "Label_Tamaño": "500 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/285-si-diet-edulcorante-tradicional-500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.865,37"
+      "Precio_Costo": "$1.865,37",
+      "Id": "285"
     },
     {
       "f": "286",
@@ -3988,7 +4177,8 @@
       "Label_Tamaño": "200 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/286-si-diet-edulcorante-tradicional-200-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.001,18"
+      "Precio_Costo": "$1.001,18",
+      "Id": "286"
     },
     {
       "f": "287",
@@ -4009,7 +4199,8 @@
       "Label_Tamaño": "600 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/287-si-diet-edulcorante-stevia-600-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.443,36"
+      "Precio_Costo": "$2.443,36",
+      "Id": "287"
     },
     {
       "f": "288",
@@ -4030,7 +4221,8 @@
       "Label_Tamaño": "500 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/288-si-diet-edulcorante-stevia-500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.114,45"
+      "Precio_Costo": "$2.114,45",
+      "Id": "288"
     },
     {
       "f": "289",
@@ -4051,7 +4243,8 @@
       "Label_Tamaño": "200 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/289-si-diet-edulcorante-stevia-200-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.132,81"
+      "Precio_Costo": "$1.132,81",
+      "Id": "289"
     },
     {
       "f": "29",
@@ -4072,7 +4265,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/29-mama-cocina-premezcla-bizcochuelo-vainilla-450-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.926,20"
+      "Precio_Costo": "$1.926,20",
+      "Id": "29"
     },
     {
       "f": "290",
@@ -4093,7 +4287,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/290-baggio-gaseosa-fresh-2250-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.348,55"
+      "Precio_Costo": "$1.348,55",
+      "Id": "290"
     },
     {
       "f": "291",
@@ -4114,7 +4309,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/291-de-la-huerta-dulce-de-membrillo-2-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$11.505,69"
+      "Precio_Costo": "$11.505,69",
+      "Id": "291"
     },
     {
       "f": "292",
@@ -4135,7 +4331,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/292-7-dias-dulce-de-membrillo-5-kg.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.943,98"
+      "Precio_Costo": "$3.943,98",
+      "Id": "292"
     },
     {
       "f": "294",
@@ -4156,7 +4353,8 @@
       "Label_Tamaño": "250 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/294-la-posta-aceite-oliva-250-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$5.796,34"
+      "Precio_Costo": "$5.796,34",
+      "Id": "294"
     },
     {
       "f": "295",
@@ -4177,7 +4375,8 @@
       "Label_Tamaño": "500 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/295-la-posta-aceite-oliva-500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$9.992,30"
+      "Precio_Costo": "$9.992,30",
+      "Id": "295"
     },
     {
       "f": "296",
@@ -4198,7 +4397,8 @@
       "Label_Tamaño": "53 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/296-good-show-papas-fritas-jamon-serrano-53-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$969,62"
+      "Precio_Costo": "$969,62",
+      "Id": "296"
     },
     {
       "f": "297",
@@ -4219,7 +4419,8 @@
       "Label_Tamaño": "53 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/297-good-show-papas-fritas-crema-y-cebolla-53-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$969,62"
+      "Precio_Costo": "$969,62",
+      "Id": "297"
     },
     {
       "f": "298",
@@ -4240,7 +4441,8 @@
       "Label_Tamaño": "63 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/298-good-show-papas-fritas-pimienta-y-sal-marina-63-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$969,62"
+      "Precio_Costo": "$969,62",
+      "Id": "298"
     },
     {
       "f": "299",
@@ -4261,7 +4463,8 @@
       "Label_Tamaño": "53 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/299-good-show-papas-fritas-cheddar-53-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$969,62"
+      "Precio_Costo": "$969,62",
+      "Id": "299"
     },
     {
       "f": "3",
@@ -4282,7 +4485,8 @@
       "Label_Tamaño": "1,5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/3-natura-aceite-girasol-1-5-l.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$5.846,06"
+      "Precio_Costo": "$5.846,06",
+      "Id": "3"
     },
     {
       "f": "30",
@@ -4303,7 +4507,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/30-mama-cocina-premezcla-bizcochuelo-limon-450-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.926,20"
+      "Precio_Costo": "$1.926,20",
+      "Id": "30"
     },
     {
       "f": "300",
@@ -4324,7 +4529,8 @@
       "Label_Tamaño": "53 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/300-good-show-papas-fritas-picantes-53-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$969,62"
+      "Precio_Costo": "$969,62",
+      "Id": "300"
     },
     {
       "f": "301",
@@ -4345,7 +4551,8 @@
       "Label_Tamaño": "83 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/301-good-show-papas-fritas-jamon-serrano-83-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.339,35"
+      "Precio_Costo": "$1.339,35",
+      "Id": "301"
     },
     {
       "f": "302",
@@ -4366,7 +4573,8 @@
       "Label_Tamaño": "83 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/302-good-show-papas-fritas-cheddar-83-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.339,34"
+      "Precio_Costo": "$1.339,34",
+      "Id": "302"
     },
     {
       "f": "303",
@@ -4387,7 +4595,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/303-good-show-papas-pay-63-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$969,62"
+      "Precio_Costo": "$969,62",
+      "Id": "303"
     },
     {
       "f": "304",
@@ -4408,7 +4617,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/304-good-show-palitos-salados-clasicos-93-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$969,62"
+      "Precio_Costo": "$969,62",
+      "Id": "304"
     },
     {
       "f": "305",
@@ -4429,7 +4639,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/305-good-show-conos-queso-53-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$969,62"
+      "Precio_Costo": "$969,62",
+      "Id": "305"
     },
     {
       "f": "307",
@@ -4450,7 +4661,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/307-benevia-push-pop-tradicional-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$521,29"
+      "Precio_Costo": "$521,29",
+      "Id": "307"
     },
     {
       "f": "308",
@@ -4471,7 +4683,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/308-benevia-push-pop-duo-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$521,29"
+      "Precio_Costo": "$521,29",
+      "Id": "308"
     },
     {
       "f": "309",
@@ -4492,7 +4705,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/309-benevia-fun-dipperz-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$861,73"
+      "Precio_Costo": "$861,73",
+      "Id": "309"
     },
     {
       "f": "31",
@@ -4513,7 +4727,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/31-mama-cocina-premezcla-bizcochuelo-chocolate-450-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.357,21"
+      "Precio_Costo": "$2.357,21",
+      "Id": "31"
     },
     {
       "f": "310",
@@ -4534,7 +4749,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/310-benevia-ring-pop-tradicional-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$286,52"
+      "Precio_Costo": "$286,52",
+      "Id": "310"
     },
     {
       "f": "311",
@@ -4555,7 +4771,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/311-mentos-mentos-fruta-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$645,65"
+      "Precio_Costo": "$645,65",
+      "Id": "311"
     },
     {
       "f": "312",
@@ -4576,7 +4793,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/312-mentos-mentos-menta-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$645,65"
+      "Precio_Costo": "$645,65",
+      "Id": "312"
     },
     {
       "f": "313",
@@ -4597,7 +4815,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/313-mentos-mentos-magic-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$645,65"
+      "Precio_Costo": "$645,65",
+      "Id": "313"
     },
     {
       "f": "314",
@@ -4618,7 +4837,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/314-nosotras-toalla-clasica-cur-v-con-cale-16u-16-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.523,16"
+      "Precio_Costo": "$2.523,16",
+      "Id": "314"
     },
     {
       "f": "315",
@@ -4639,7 +4859,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/315-nosotras-toalla-clasica-cur-v-con-cale-30u-30-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$4.491,20"
+      "Precio_Costo": "$4.491,20",
+      "Id": "315"
     },
     {
       "f": "316",
@@ -4660,7 +4881,8 @@
       "Label_Tamaño": "8 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/316-nosotras-toalla-buenas-noches-tela-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.313,80"
+      "Precio_Costo": "$2.313,80",
+      "Id": "316"
     },
     {
       "f": "317",
@@ -4681,7 +4903,8 @@
       "Label_Tamaño": "16 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/317-nosotras-toalla-buenas-noches-tela-16u-16-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$4.110,04"
+      "Precio_Costo": "$4.110,04",
+      "Id": "317"
     },
     {
       "f": "318",
@@ -4702,7 +4925,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/318-nosotras-toalla-clasica-cur-v-con-cale-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.334,47"
+      "Precio_Costo": "$1.334,47",
+      "Id": "318"
     },
     {
       "f": "319",
@@ -4723,7 +4947,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/319-nosotras-toalla-dia-y-noche-tela-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.179,72"
+      "Precio_Costo": "$2.179,72",
+      "Id": "319"
     },
     {
       "f": "32",
@@ -4744,7 +4969,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/32-mama-cocina-premezcla-brownies-395-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.302,36"
+      "Precio_Costo": "$2.302,36",
+      "Id": "32"
     },
     {
       "f": "320",
@@ -4765,7 +4991,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/320-nosotras-toalla-normal-bob-con-cale-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.374,65"
+      "Precio_Costo": "$1.374,65",
+      "Id": "320"
     },
     {
       "f": "321",
@@ -4786,7 +5013,8 @@
       "Label_Tamaño": "8 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/321-nosotras-toalla-invisible-cur-v-con-cale-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.977,02"
+      "Precio_Costo": "$1.977,02",
+      "Id": "321"
     },
     {
       "f": "322",
@@ -4807,7 +5035,8 @@
       "Label_Tamaño": "16 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/322-nosotras-toalla-invisible-cur-v-con-cale-16u-16-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.513,16"
+      "Precio_Costo": "$3.513,16",
+      "Id": "322"
     },
     {
       "f": "323",
@@ -4828,7 +5057,8 @@
       "Label_Tamaño": "8 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/323-calipso-toalla-normal-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$695,87"
+      "Precio_Costo": "$695,87",
+      "Id": "323"
     },
     {
       "f": "324",
@@ -4849,7 +5079,8 @@
       "Label_Tamaño": "16 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/324-calipso-toalla-normal-16u-16-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.221,44"
+      "Precio_Costo": "$1.221,44",
+      "Id": "324"
     },
     {
       "f": "325",
@@ -4870,7 +5101,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/325-calipso-toalla-super-anatomica-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$648,47"
+      "Precio_Costo": "$648,47",
+      "Id": "325"
     },
     {
       "f": "326",
@@ -4891,7 +5123,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/326-calipso-toalla-nocturna-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.203,12"
+      "Precio_Costo": "$1.203,12",
+      "Id": "326"
     },
     {
       "f": "327",
@@ -4912,7 +5145,8 @@
       "Label_Tamaño": "20 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/327-nosotras-protector-normal-con-cale-20u-20-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.398,99"
+      "Precio_Costo": "$1.398,99",
+      "Id": "327"
     },
     {
       "f": "328",
@@ -4933,7 +5167,8 @@
       "Label_Tamaño": "80 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/328-nosotras-protector-diario-respirable-80u-80-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$6.108,00"
+      "Precio_Costo": "$6.108,00",
+      "Id": "328"
     },
     {
       "f": "329",
@@ -4954,7 +5189,8 @@
       "Label_Tamaño": "20 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/329-calipso-protector-normal-20u-20-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$726,20"
+      "Precio_Costo": "$726,20",
+      "Id": "329"
     },
     {
       "f": "33",
@@ -4975,7 +5211,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/33-mama-cocina-premezcla-bizcochuelo-naranja-500-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.926,20"
+      "Precio_Costo": "$1.926,20",
+      "Id": "33"
     },
     {
       "f": "330",
@@ -4996,7 +5233,8 @@
       "Label_Tamaño": "80 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/330-calipso-protector-normal-80u-80-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.156,21"
+      "Precio_Costo": "$2.156,21",
+      "Id": "330"
     },
     {
       "f": "331",
@@ -5017,7 +5255,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/331-calipso-protector-respirable-20u-20-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$800,11"
+      "Precio_Costo": "$800,11",
+      "Id": "331"
     },
     {
       "f": "332",
@@ -5038,7 +5277,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/332-nosotras-tampon-mini-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.462,38"
+      "Precio_Costo": "$2.462,38",
+      "Id": "332"
     },
     {
       "f": "333",
@@ -5059,7 +5299,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/333-nosotras-tampon-regular-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.462,38"
+      "Precio_Costo": "$2.462,38",
+      "Id": "333"
     },
     {
       "f": "337",
@@ -5080,7 +5321,8 @@
       "Label_Tamaño": "15 u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/337-tena-protector-discreet-largos-l-15u-15-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.448,29"
+      "Precio_Costo": "$2.448,29",
+      "Id": "337"
     },
     {
       "f": "338",
@@ -5101,7 +5343,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/338-tena-toalla-discreet-natural-care-8u-8-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.905,66"
+      "Precio_Costo": "$1.905,66",
+      "Id": "338"
     },
     {
       "f": "34",
@@ -5122,7 +5365,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/34-canuelas-avena-tradicional-400-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.408,74"
+      "Precio_Costo": "$1.408,74",
+      "Id": "34"
     },
     {
       "f": "343",
@@ -5143,7 +5387,8 @@
       "Label_Tamaño": "50u",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/343-tena-protector-discreet-largos-l-50u-50-u-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$7.962,81"
+      "Precio_Costo": "$7.962,81",
+      "Id": "343"
     },
     {
       "f": "35",
@@ -5164,7 +5409,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/35-canuelas-avena-instantanea-400-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.408,74"
+      "Precio_Costo": "$1.408,74",
+      "Id": "35"
     },
     {
       "f": "354",
@@ -5185,7 +5431,8 @@
       "Label_Tamaño": "4x30m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/354-felpita-papel-higienico-4x30m-simple-hoja-4x30m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.301,60"
+      "Precio_Costo": "$1.301,60",
+      "Id": "354"
     },
     {
       "f": "355",
@@ -5206,7 +5453,8 @@
       "Label_Tamaño": "1x200p",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/355-felpita-rollo-cocina-1x200p-1x200p.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.627,88"
+      "Precio_Costo": "$1.627,88",
+      "Id": "355"
     },
     {
       "f": "356",
@@ -5227,7 +5475,8 @@
       "Label_Tamaño": "24x30m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/356-felpita-papel-higienico-24x30m-simple-hoja-24x30m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$7.370,49"
+      "Precio_Costo": "$7.370,49",
+      "Id": "356"
     },
     {
       "f": "357",
@@ -5248,7 +5497,8 @@
       "Label_Tamaño": "12x30m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/357-felpita-papel-higienico-12x30m-simple-hoja-12x30m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.874,20"
+      "Precio_Costo": "$3.874,20",
+      "Id": "357"
     },
     {
       "f": "358",
@@ -5269,7 +5519,8 @@
       "Label_Tamaño": "4x80m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/358-felpita-papel-higienico-4x80m-simple-hoja-4x80m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.014,09"
+      "Precio_Costo": "$3.014,09",
+      "Id": "358"
     },
     {
       "f": "359",
@@ -5290,7 +5541,8 @@
       "Label_Tamaño": "4x30m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/359-felpita-papel-higienico-4x30m-doble-hoja-4x30m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.181,23"
+      "Precio_Costo": "$2.181,23",
+      "Id": "359"
     },
     {
       "f": "36",
@@ -5311,7 +5563,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/36-canuelas-harina-sin-tacc-con-levadura-para-pizza-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.632,35"
+      "Precio_Costo": "$2.632,35",
+      "Id": "36"
     },
     {
       "f": "360",
@@ -5332,7 +5585,8 @@
       "Label_Tamaño": "3x60p",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/360-felpita-rollo-cocina-3x60p-3x60p.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.374,70"
+      "Precio_Costo": "$1.374,70",
+      "Id": "360"
     },
     {
       "f": "361",
@@ -5353,7 +5607,8 @@
       "Label_Tamaño": "12x30m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/361-felpita-papel-higienico-12x30m-doble-hoja-12x30m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$6.449,01"
+      "Precio_Costo": "$6.449,01",
+      "Id": "361"
     },
     {
       "f": "362",
@@ -5374,7 +5629,8 @@
       "Label_Tamaño": "3x40p",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/362-felpita-rollo-cocina-3x40p-mas-fuerte-3x40p.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.270,10"
+      "Precio_Costo": "$1.270,10",
+      "Id": "362"
     },
     {
       "f": "363",
@@ -5395,7 +5651,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/363-felpita-panuelos-infinity-x6-6-u.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.254,48"
+      "Precio_Costo": "$1.254,48",
+      "Id": "363"
     },
     {
       "f": "364",
@@ -5416,7 +5673,8 @@
       "Label_Tamaño": "4x30m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/364-elegante-papel-higienico-4x30m-doble-hoja-4x30m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.155,28"
+      "Precio_Costo": "$2.155,28",
+      "Id": "364"
     },
     {
       "f": "365",
@@ -5437,7 +5695,8 @@
       "Label_Tamaño": "4x30m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/365-elegante-papel-higienico-4x30m-simple-hoja-4x30m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.229,18"
+      "Precio_Costo": "$1.229,18",
+      "Id": "365"
     },
     {
       "f": "366",
@@ -5458,7 +5717,8 @@
       "Label_Tamaño": "6x30m Aloe",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/366-elegante-papel-higienico-6x30m-aloe-vera-6x30m-aloe.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.920,98"
+      "Precio_Costo": "$1.920,98",
+      "Id": "366"
     },
     {
       "f": "367",
@@ -5479,7 +5739,8 @@
       "Label_Tamaño": "4x80m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/367-elegante-papel-higienico-4x80m-4x80m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.093,73"
+      "Precio_Costo": "$3.093,73",
+      "Id": "367"
     },
     {
       "f": "368",
@@ -5500,7 +5761,8 @@
       "Label_Tamaño": "24x50m",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/368-elegante-papel-higienico-24x50m-24x50m.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$10.288,08"
+      "Precio_Costo": "$10.288,08",
+      "Id": "368"
     },
     {
       "f": "369",
@@ -5521,7 +5783,8 @@
       "Label_Tamaño": "3x50p",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/369-elegante-rollo-cocina-3x50p-3x50p.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.360,92"
+      "Precio_Costo": "$1.360,92",
+      "Id": "369"
     },
     {
       "f": "37",
@@ -5542,7 +5805,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/37-mama-cocina-pure-de-papa-tradicional-doypack-125-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.259,98"
+      "Precio_Costo": "$1.259,98",
+      "Id": "37"
     },
     {
       "f": "370",
@@ -5563,7 +5827,8 @@
       "Label_Tamaño": "1x200p",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/370-elegante-rollo-cocina-1x200p-1x200p.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.717,38"
+      "Precio_Costo": "$1.717,38",
+      "Id": "370"
     },
     {
       "f": "371",
@@ -5584,7 +5849,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/371-elegante-bobina-higienica-8x300m-8-rol.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$20.426,18"
+      "Precio_Costo": "$20.426,18",
+      "Id": "371"
     },
     {
       "f": "373",
@@ -5605,7 +5871,8 @@
       "Label_Tamaño": "3x40p",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/373-sol-mayor-rollo-cocina-3x40p-3x40p.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.029,60"
+      "Precio_Costo": "$1.029,60",
+      "Id": "373"
     },
     {
       "f": "374",
@@ -5626,7 +5893,8 @@
       "Label_Tamaño": "1x200p",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/374-sol-mayor-rollo-cocina-1x200p-1x200p.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.281,74"
+      "Precio_Costo": "$1.281,74",
+      "Id": "374"
     },
     {
       "f": "375",
@@ -5647,7 +5915,8 @@
       "Label_Tamaño": "250 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/375-frau-alcohol-puro-90o-250-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$761,10"
+      "Precio_Costo": "$761,10",
+      "Id": "375"
     },
     {
       "f": "376",
@@ -5668,7 +5937,8 @@
       "Label_Tamaño": "500 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/376-frau-alcohol-puro-90o-500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.362,90"
+      "Precio_Costo": "$1.362,90",
+      "Id": "376"
     },
     {
       "f": "377",
@@ -5689,7 +5959,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/377-frau-alcohol-puro-90o-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.360,00"
+      "Precio_Costo": "$2.360,00",
+      "Id": "377"
     },
     {
       "f": "378",
@@ -5710,7 +5981,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/378-bettanin-novica-escoba-original-sin-cabo-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.094,40"
+      "Precio_Costo": "$3.094,40",
+      "Id": "378"
     },
     {
       "f": "379",
@@ -5731,7 +6003,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/379-bettanin-novica-escobillon-caribe-sin-cabo-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.938,16"
+      "Precio_Costo": "$1.938,16",
+      "Id": "379"
     },
     {
       "f": "38",
@@ -5752,7 +6025,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/38-mama-cocina-pure-de-papa-receta-completa-doypack-125-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.259,98"
+      "Precio_Costo": "$1.259,98",
+      "Id": "38"
     },
     {
       "f": "380",
@@ -5773,7 +6047,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/380-bettanin-brilhus-mopa-de-algodon-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.762,25"
+      "Precio_Costo": "$2.762,25",
+      "Id": "380"
     },
     {
       "f": "381",
@@ -5794,7 +6069,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/381-bettanin-mini-pala-con-cepillo-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.910,87"
+      "Precio_Costo": "$3.910,87",
+      "Id": "381"
     },
     {
       "f": "382",
@@ -5815,7 +6091,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/382-bettanin-balde-con-escurridor-14l-14-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$7.584,25"
+      "Precio_Costo": "$7.584,25",
+      "Id": "382"
     },
     {
       "f": "383",
@@ -5836,7 +6113,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/383-esfrebom-esponja-microfibra-multiuso-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.160,16"
+      "Precio_Costo": "$1.160,16",
+      "Id": "383"
     },
     {
       "f": "384",
@@ -5857,7 +6135,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/384-bettanin-novica-secador-ballena-30cm-30-cm.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.113,64"
+      "Precio_Costo": "$2.113,64",
+      "Id": "384"
     },
     {
       "f": "385",
@@ -5878,7 +6157,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/385-bettanin-novica-cabo-de-acero-gris-1-2-m.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.336,58"
+      "Precio_Costo": "$1.336,58",
+      "Id": "385"
     },
     {
       "f": "386",
@@ -5899,7 +6179,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/386-bettanin-novica-pala-de-mano-cupa-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.570,51"
+      "Precio_Costo": "$1.570,51",
+      "Id": "386"
     },
     {
       "f": "387",
@@ -5920,7 +6201,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/387-bettanin-novica-cepillo-sanitario-con-pote-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.399,35"
+      "Precio_Costo": "$2.399,35",
+      "Id": "387"
     },
     {
       "f": "388",
@@ -5941,7 +6223,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/388-esfrebom-guante-cocina-g-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.204,34"
+      "Precio_Costo": "$1.204,34",
+      "Id": "388"
     },
     {
       "f": "389",
@@ -5962,7 +6245,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/389-esfrebom-guante-cocina-m-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.204,34"
+      "Precio_Costo": "$1.204,34",
+      "Id": "389"
     },
     {
       "f": "39",
@@ -5983,7 +6267,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/39-canuelas-arroz-grano-largo-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$636,07"
+      "Precio_Costo": "$636,07",
+      "Id": "39"
     },
     {
       "f": "390",
@@ -6004,7 +6289,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/390-bettanin-esponja-multiuso-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$171,39"
+      "Precio_Costo": "$171,39",
+      "Id": "390"
     },
     {
       "f": "391",
@@ -6025,7 +6311,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/391-esfrebom-esponja-limpieza-pesada-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$507,30"
+      "Precio_Costo": "$507,30",
+      "Id": "391"
     },
     {
       "f": "392",
@@ -6046,7 +6333,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/392-esfrebom-esponja-teflon-no-raya-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$251,93"
+      "Precio_Costo": "$251,93",
+      "Id": "392"
     },
     {
       "f": "393",
@@ -6067,7 +6355,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/393-bettanin-novica-rollo-saca-pelusa-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.268,01"
+      "Precio_Costo": "$1.268,01",
+      "Id": "393"
     },
     {
       "f": "395",
@@ -6088,7 +6377,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/395-bettanin-esponja-bano-soft-slow-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$716,66"
+      "Precio_Costo": "$716,66",
+      "Id": "395"
     },
     {
       "f": "396",
@@ -6109,7 +6399,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/396-bettanin-esponja-bano-exfoliante-slow-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$666,71"
+      "Precio_Costo": "$666,71",
+      "Id": "396"
     },
     {
       "f": "397",
@@ -6130,7 +6421,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/397-bettanin-brilhus-broches-ropa-12u-12-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.069,75"
+      "Precio_Costo": "$1.069,75",
+      "Id": "397"
     },
     {
       "f": "4",
@@ -6151,7 +6443,8 @@
       "Label_Tamaño": "900 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/4-natura-aceite-girasol-900-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.692,32"
+      "Precio_Costo": "$3.692,32",
+      "Id": "4"
     },
     {
       "f": "40",
@@ -6172,7 +6465,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/40-9-de-oro-bizcochos-clasicos-200-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.084,91"
+      "Precio_Costo": "$1.084,91",
+      "Id": "40"
     },
     {
       "f": "401",
@@ -6193,7 +6487,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/401-sedile-lavandina-comun-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$717,90"
+      "Precio_Costo": "$717,90",
+      "Id": "401"
     },
     {
       "f": "402",
@@ -6214,7 +6509,8 @@
       "Label_Tamaño": "2 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/402-sedile-lavandina-comun-2-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.356,51"
+      "Precio_Costo": "$1.356,51",
+      "Id": "402"
     },
     {
       "f": "403",
@@ -6235,7 +6531,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/403-sedile-lavavajilla-limon-cristalino-750-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.019,32"
+      "Precio_Costo": "$1.019,32",
+      "Id": "403"
     },
     {
       "f": "404",
@@ -6256,7 +6553,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/404-sedile-liquido-desinfectante-pino-900-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$816,84"
+      "Precio_Costo": "$816,84",
+      "Id": "404"
     },
     {
       "f": "405",
@@ -6277,7 +6575,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/405-sedile-liquido-desinfectante-limon-900-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$816,84"
+      "Precio_Costo": "$816,84",
+      "Id": "405"
     },
     {
       "f": "406",
@@ -6298,7 +6597,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/406-sedile-liquido-desinfectante-lavanda-900-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$816,84"
+      "Precio_Costo": "$816,84",
+      "Id": "406"
     },
     {
       "f": "407",
@@ -6319,7 +6619,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/407-sedile-lavavajilla-aloe-vera-crema-750-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.019,32"
+      "Precio_Costo": "$1.019,32",
+      "Id": "407"
     },
     {
       "f": "408",
@@ -6340,7 +6641,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/408-sedile-jabon-blanco-pan-150-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$519,06"
+      "Precio_Costo": "$519,06",
+      "Id": "408"
     },
     {
       "f": "409",
@@ -6361,7 +6663,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/409-sedile-detergente-concentrado-limon-500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.443,55"
+      "Precio_Costo": "$1.443,55",
+      "Id": "409"
     },
     {
       "f": "41",
@@ -6382,7 +6685,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/41-9-de-oro-bizcochos-azucarados-210-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.084,91"
+      "Precio_Costo": "$1.084,91",
+      "Id": "41"
     },
     {
       "f": "410",
@@ -6403,7 +6707,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/410-sedile-liquido-para-lavar-ropa-800-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.615,58"
+      "Precio_Costo": "$1.615,58",
+      "Id": "410"
     },
     {
       "f": "411",
@@ -6424,7 +6729,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/411-sedile-suavizante-para-ropa-calidez-de-bosque-900-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.411,20"
+      "Precio_Costo": "$1.411,20",
+      "Id": "411"
     },
     {
       "f": "412",
@@ -6445,7 +6751,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/412-kenia-jabon-cremoso-mix-360-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.768,77"
+      "Precio_Costo": "$1.768,77",
+      "Id": "412"
     },
     {
       "f": "413",
@@ -6466,7 +6773,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/413-kenia-jabon-glicerina-mix-360-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.375,22"
+      "Precio_Costo": "$2.375,22",
+      "Id": "413"
     },
     {
       "f": "414",
@@ -6487,7 +6795,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/414-duc-jabon-relax-110-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$584,18"
+      "Precio_Costo": "$584,18",
+      "Id": "414"
     },
     {
       "f": "415",
@@ -6508,7 +6817,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/415-duc-jabon-hidrative-110-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$584,18"
+      "Precio_Costo": "$584,18",
+      "Id": "415"
     },
     {
       "f": "416",
@@ -6529,7 +6839,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/416-hadibell-shampoo-aloe-vera-950-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.691,02"
+      "Precio_Costo": "$1.691,02",
+      "Id": "416"
     },
     {
       "f": "417",
@@ -6550,7 +6861,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/417-hadibell-shampoo-ceramidas-950-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.691,02"
+      "Precio_Costo": "$1.691,02",
+      "Id": "417"
     },
     {
       "f": "42",
@@ -6571,7 +6883,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/42-9-de-oro-bizcochos-agridulces-200-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.084,91"
+      "Precio_Costo": "$1.084,91",
+      "Id": "42"
     },
     {
       "f": "420",
@@ -6592,7 +6905,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/420-hadibell-acondicionador-aloe-vera-950-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.698,68"
+      "Precio_Costo": "$1.698,68",
+      "Id": "420"
     },
     {
       "f": "421",
@@ -6613,7 +6927,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/421-hadibell-acondicionador-ceramidas-950-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.698,68"
+      "Precio_Costo": "$1.698,68",
+      "Id": "421"
     },
     {
       "f": "424",
@@ -6634,7 +6949,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/424-candela-encendedor-transparente-color-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$219,61"
+      "Precio_Costo": "$219,61",
+      "Id": "424"
     },
     {
       "f": "425",
@@ -6655,7 +6971,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/425-candela-encendedor-hogar-clasico-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.208,10"
+      "Precio_Costo": "$2.208,10",
+      "Id": "425"
     },
     {
       "f": "426",
@@ -6676,7 +6993,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/426-candela-encendedor-hogar-flameador-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.041,51"
+      "Precio_Costo": "$3.041,51",
+      "Id": "426"
     },
     {
       "f": "427",
@@ -6697,7 +7015,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/427-candela-panuelos-descartables-x6-6-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.140,26"
+      "Precio_Costo": "$1.140,26",
+      "Id": "427"
     },
     {
       "f": "428",
@@ -6718,7 +7037,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/428-candela-lampara-led-10w-fria-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$655,46"
+      "Precio_Costo": "$655,46",
+      "Id": "428"
     },
     {
       "f": "429",
@@ -6739,7 +7059,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/429-candela-lampara-led-10w-calida-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$655,46"
+      "Precio_Costo": "$655,46",
+      "Id": "429"
     },
     {
       "f": "43",
@@ -6760,7 +7081,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/43-paseo-galletas-crackers-300-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.244,16"
+      "Precio_Costo": "$1.244,16",
+      "Id": "43"
     },
     {
       "f": "430",
@@ -6781,7 +7103,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/430-candela-lampara-led-12w-fria-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$745,65"
+      "Precio_Costo": "$745,65",
+      "Id": "430"
     },
     {
       "f": "431",
@@ -6802,7 +7125,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/431-candela-lampara-led-12w-calida-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$745,65"
+      "Precio_Costo": "$745,65",
+      "Id": "431"
     },
     {
       "f": "432",
@@ -6823,7 +7147,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/432-candela-lampara-led-15w-fria-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$911,46"
+      "Precio_Costo": "$911,46",
+      "Id": "432"
     },
     {
       "f": "433",
@@ -6844,7 +7169,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/433-candela-lampara-led-15w-calida-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$911,46"
+      "Precio_Costo": "$911,46",
+      "Id": "433"
     },
     {
       "f": "434",
@@ -6865,7 +7191,8 @@
       "Label_Tamaño": "10 W",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/434-candela-proyector-10w-fria-10-w.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.718,18"
+      "Precio_Costo": "$2.718,18",
+      "Id": "434"
     },
     {
       "f": "435",
@@ -6886,7 +7213,8 @@
       "Label_Tamaño": "20 W",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/435-candela-proyector-20w-fria-20-w.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.175,18"
+      "Precio_Costo": "$3.175,18",
+      "Id": "435"
     },
     {
       "f": "436",
@@ -6907,7 +7235,8 @@
       "Label_Tamaño": "30 W",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/436-candela-proyector-30w-fria-30-w.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.408,66"
+      "Precio_Costo": "$3.408,66",
+      "Id": "436"
     },
     {
       "f": "437",
@@ -6928,7 +7257,8 @@
       "Label_Tamaño": "50 W",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/437-candela-proyector-50w-fria-50-w.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$4.362,84"
+      "Precio_Costo": "$4.362,84",
+      "Id": "437"
     },
     {
       "f": "438",
@@ -6949,7 +7279,8 @@
       "Label_Tamaño": "100 W",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/438-candela-proyector-100w-fria-100-w.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$8.550,79"
+      "Precio_Costo": "$8.550,79",
+      "Id": "438"
     },
     {
       "f": "439",
@@ -6970,7 +7301,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/439-candela-cinta-de-embalar-transparente-4-8cmx41m-41-m.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$817,28"
+      "Precio_Costo": "$817,28",
+      "Id": "439"
     },
     {
       "f": "44",
@@ -6991,7 +7323,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/44-paseo-galletas-salvado-300-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.544,72"
+      "Precio_Costo": "$1.544,72",
+      "Id": "44"
     },
     {
       "f": "440",
@@ -7012,7 +7345,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/440-candela-cinta-de-embalar-marron-4-8cmx41m-41-m.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$856,82"
+      "Precio_Costo": "$856,82",
+      "Id": "440"
     },
     {
       "f": "441",
@@ -7033,7 +7367,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/441-candela-adhesivo-instantaneo-gel-plus-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$582,11"
+      "Precio_Costo": "$582,11",
+      "Id": "441"
     },
     {
       "f": "442",
@@ -7054,7 +7389,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/442-candela-adhesivo-instantaneo-liquido-plus-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$330,80"
+      "Precio_Costo": "$330,80",
+      "Id": "442"
     },
     {
       "f": "443",
@@ -7075,7 +7411,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/443-candela-cinta-aisladora-negra-pvc-10-m.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$355,88"
+      "Precio_Costo": "$355,88",
+      "Id": "443"
     },
     {
       "f": "444",
@@ -7096,7 +7433,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/444-candela-cinta-de-papel-24mmx50m-50-m.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.458,17"
+      "Precio_Costo": "$1.458,17",
+      "Id": "444"
     },
     {
       "f": "445",
@@ -7117,7 +7455,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/445-candela-pila-alcalina-aa-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$344,27"
+      "Precio_Costo": "$344,27",
+      "Id": "445"
     },
     {
       "f": "446",
@@ -7138,7 +7477,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/446-candela-pila-alcalina-aaa-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$344,27"
+      "Precio_Costo": "$344,27",
+      "Id": "446"
     },
     {
       "f": "447",
@@ -7159,7 +7499,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/447-candela-pila-boton-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$241,95"
+      "Precio_Costo": "$241,95",
+      "Id": "447"
     },
     {
       "f": "45",
@@ -7180,7 +7521,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/45-9-de-oro-bizcochos-cara-sucia-200-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.084,91"
+      "Precio_Costo": "$1.084,91",
+      "Id": "45"
     },
     {
       "f": "451",
@@ -7201,7 +7543,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/451-rodeo-fosforo-220-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$600,46"
+      "Precio_Costo": "$600,46",
+      "Id": "451"
     },
     {
       "f": "46",
@@ -7222,7 +7565,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/46-9-de-oro-oblea-doble-vainilla-con-naranja-100-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$759,93"
+      "Precio_Costo": "$759,93",
+      "Id": "46"
     },
     {
       "f": "462",
@@ -7243,7 +7587,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/462-costero-trapo-blanco-edicion-especial-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$983,90"
+      "Precio_Costo": "$983,90",
+      "Id": "462"
     },
     {
       "f": "464",
@@ -7264,7 +7609,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/464-costero-repasador-estampado-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.060,64"
+      "Precio_Costo": "$2.060,64",
+      "Id": "464"
     },
     {
       "f": "465",
@@ -7285,7 +7631,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/465-9-de-oro-crujitas-clasicas-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.021,27"
+      "Precio_Costo": "$1.021,27",
+      "Id": "465"
     },
     {
       "f": "466",
@@ -7306,7 +7653,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/466-9-de-oro-crujitas-cebolla-y-crema-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.021,27"
+      "Precio_Costo": "$1.021,27",
+      "Id": "466"
     },
     {
       "f": "467",
@@ -7327,7 +7675,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/467-9-de-oro-crujitas-queso-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.021,27"
+      "Precio_Costo": "$1.021,27",
+      "Id": "467"
     },
     {
       "f": "468",
@@ -7348,7 +7697,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/468-9-de-oro-jamon-serrano-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.021,27"
+      "Precio_Costo": "$1.021,27",
+      "Id": "468"
     },
     {
       "f": "469",
@@ -7369,7 +7719,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/469-9-de-oro-mini-brownie-chocolate-45-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$629,39"
+      "Precio_Costo": "$629,39",
+      "Id": "469"
     },
     {
       "f": "47",
@@ -7390,7 +7741,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/47-9-de-oro-oblea-triple-chocolate-con-naranja-100-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$759,93"
+      "Precio_Costo": "$759,93",
+      "Id": "47"
     },
     {
       "f": "470",
@@ -7411,7 +7763,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/470-9-de-oro-alfajores-surtido-blister-6-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.043,79"
+      "Precio_Costo": "$3.043,79",
+      "Id": "470"
     },
     {
       "f": "471",
@@ -7432,7 +7785,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/471-9-de-oro-anillos-de-chocolate-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$603,92"
+      "Precio_Costo": "$603,92",
+      "Id": "471"
     },
     {
       "f": "472",
@@ -7453,7 +7807,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/472-9-de-oro-anillos-de-coco-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$603,92"
+      "Precio_Costo": "$603,92",
+      "Id": "472"
     },
     {
       "f": "473",
@@ -7474,7 +7829,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/473-9-de-oro-anillos-de-vainilla-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$603,92"
+      "Precio_Costo": "$603,92",
+      "Id": "473"
     },
     {
       "f": "474",
@@ -7495,7 +7851,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/474-9-de-oro-cookies-con-chips-120-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.000,13"
+      "Precio_Costo": "$1.000,13",
+      "Id": "474"
     },
     {
       "f": "475",
@@ -7516,7 +7873,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/475-menubox-sopa-ramen-vegetales-45-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.821,15"
+      "Precio_Costo": "$1.821,15",
+      "Id": "475"
     },
     {
       "f": "476",
@@ -7537,7 +7895,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/476-morixe-harina-000-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "717,15"
+      "Precio_Costo": "717,15",
+      "Id": "476"
     },
     {
       "f": "477",
@@ -7558,7 +7917,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/477-morixe-harina-para-pizza-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "1.277,82"
+      "Precio_Costo": "1.277,82",
+      "Id": "477"
     },
     {
       "f": "478",
@@ -7579,7 +7939,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/478-morixe-harina-leudante-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "1.303,90"
+      "Precio_Costo": "1.303,90",
+      "Id": "478"
     },
     {
       "f": "479",
@@ -7600,7 +7961,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/479-morixe-harina-0000-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "1.010,52"
+      "Precio_Costo": "1.010,52",
+      "Id": "479"
     },
     {
       "f": "48",
@@ -7621,7 +7983,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/48-9-de-oro-oblea-triple-vainilla-relleno-frutilla-100-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$759,93"
+      "Precio_Costo": "$759,93",
+      "Id": "48"
     },
     {
       "f": "480",
@@ -7642,7 +8005,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/480-buenas-y-santas-hierbas-yerba-mate-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.776,01"
+      "Precio_Costo": "$2.776,01",
+      "Id": "480"
     },
     {
       "f": "481",
@@ -7663,7 +8027,8 @@
       "Label_Tamaño": "170 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/481-pozo-pepas-con-membrillo-170-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "732,58"
+      "Precio_Costo": "732,58",
+      "Id": "481"
     },
     {
       "f": "482",
@@ -7684,7 +8049,8 @@
       "Label_Tamaño": "300 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/482-pozo-pepas-con-membrillo-300-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "1.212,15"
+      "Precio_Costo": "1.212,15",
+      "Id": "482"
     },
     {
       "f": "483",
@@ -7705,7 +8071,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/483-candela-mazo-de-cartas-1-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "775,4"
+      "Precio_Costo": "775,4",
+      "Id": "483"
     },
     {
       "f": "484",
@@ -7726,7 +8093,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/484-candela-mazos-de-cartas-12-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "5.986,30"
+      "Precio_Costo": "5.986,30",
+      "Id": "484"
     },
     {
       "f": "485",
@@ -7747,7 +8115,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/485-hersheys-chocolate-special-dark-73-75-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "3.623,42"
+      "Precio_Costo": "3.623,42",
+      "Id": "485"
     },
     {
       "f": "486",
@@ -7768,7 +8137,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/486-hersheys-chocolate-semi-amargo-40-75-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "2.677,72"
+      "Precio_Costo": "2.677,72",
+      "Id": "486"
     },
     {
       "f": "487",
@@ -7789,7 +8159,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/487-hersheys-chocolate-cookies-and-cream-75-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "2.220,81"
+      "Precio_Costo": "2.220,81",
+      "Id": "487"
     },
     {
       "f": "488",
@@ -7810,7 +8181,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/488-hersheys-chocolate-chocolate-aireado-con-leche-75-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "2.405,87"
+      "Precio_Costo": "2.405,87",
+      "Id": "488"
     },
     {
       "f": "489",
@@ -7831,7 +8203,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/489-hersheys-chocolate-chocolate-con-leche-75-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.220,81"
+      "Precio_Costo": "$2.220,81",
+      "Id": "489"
     },
     {
       "f": "49",
@@ -7852,7 +8225,8 @@
       "Label_Tamaño": "500 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/49-mama-cocina-pan-rallado-plus-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.332,57"
+      "Precio_Costo": "$1.332,57",
+      "Id": "49"
     },
     {
       "f": "5",
@@ -7873,7 +8247,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/5-natura-rocio-vegetal-120-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.715,22"
+      "Precio_Costo": "$2.715,22",
+      "Id": "5"
     },
     {
       "f": "50",
@@ -7894,7 +8269,8 @@
       "Label_Tamaño": "1 kg",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/50-mama-cocina-pan-rallado-c-bolson-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.563,06"
+      "Precio_Costo": "$2.563,06",
+      "Id": "50"
     },
     {
       "f": "57",
@@ -7915,7 +8291,8 @@
       "Label_Tamaño": "500 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/57-casalta-vinagre-de-alcohol-500-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$688,47"
+      "Precio_Costo": "$688,47",
+      "Id": "57"
     },
     {
       "f": "58",
@@ -7936,7 +8313,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/58-casalta-vinagre-de-alcohol-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$976,13"
+      "Precio_Costo": "$976,13",
+      "Id": "58"
     },
     {
       "f": "59",
@@ -7957,7 +8335,8 @@
       "Label_Tamaño": "500 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/59-casalta-vinagre-de-vino-500-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.096,31"
+      "Precio_Costo": "$1.096,31",
+      "Id": "59"
     },
     {
       "f": "6",
@@ -7978,7 +8357,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/6-mazola-rocio-vegetal-manteca-120-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.088,81"
+      "Precio_Costo": "$3.088,81",
+      "Id": "6"
     },
     {
       "f": "60",
@@ -7999,7 +8379,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/60-casalta-vinagre-de-vino-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.709,99"
+      "Precio_Costo": "$1.709,99",
+      "Id": "60"
     },
     {
       "f": "61",
@@ -8020,7 +8401,8 @@
       "Label_Tamaño": "500 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/61-casalta-vinagre-de-manzana-500-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.372,88"
+      "Precio_Costo": "$1.372,88",
+      "Id": "61"
     },
     {
       "f": "62",
@@ -8041,7 +8423,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/62-casalta-vinagre-de-manzana-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.209,93"
+      "Precio_Costo": "$2.209,93",
+      "Id": "62"
     },
     {
       "f": "63",
@@ -8062,7 +8445,8 @@
       "Label_Tamaño": "400 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/63-casalta-aceto-balsamico-clasico-vidrio-400-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.715,23"
+      "Precio_Costo": "$3.715,23",
+      "Id": "63"
     },
     {
       "f": "64",
@@ -8083,7 +8467,8 @@
       "Label_Tamaño": "250 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/64-casalta-aceto-balsamico-clasico-250-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.311,05"
+      "Precio_Costo": "$2.311,05",
+      "Id": "64"
     },
     {
       "f": "65",
@@ -8104,7 +8489,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/65-casalta-aceite-oliva-250-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$8.745,73"
+      "Precio_Costo": "$8.745,73",
+      "Id": "65"
     },
     {
       "f": "66",
@@ -8125,7 +8511,8 @@
       "Label_Tamaño": "500 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/66-favinco-jugo-de-limon-500-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.242,15"
+      "Precio_Costo": "$1.242,15",
+      "Id": "66"
     },
     {
       "f": "67",
@@ -8146,7 +8533,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/67-favinco-jugo-de-limon-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.770,82"
+      "Precio_Costo": "$1.770,82",
+      "Id": "67"
     },
     {
       "f": "68",
@@ -8167,7 +8555,8 @@
       "Label_Tamaño": "250 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/68-bialcohol-alcohol-alimenticio-96-250-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.046,56"
+      "Precio_Costo": "$1.046,56",
+      "Id": "68"
     },
     {
       "f": "69",
@@ -8188,7 +8577,8 @@
       "Label_Tamaño": "500 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/69-bialcohol-alcohol-alimenticio-96-500-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.710,40"
+      "Precio_Costo": "$1.710,40",
+      "Id": "69"
     },
     {
       "f": "7",
@@ -8209,7 +8599,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/7-cada-dia-mayonesa-liviana-250-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$712,67"
+      "Precio_Costo": "$712,67",
+      "Id": "7"
     },
     {
       "f": "70",
@@ -8230,7 +8621,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/70-bialcohol-alcohol-alimenticio-96-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$3.003,67"
+      "Precio_Costo": "$3.003,67",
+      "Id": "70"
     },
     {
       "f": "71",
@@ -8251,7 +8643,8 @@
       "Label_Tamaño": "250 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/71-bialcohol-alcohol-desinfeccion-70-250-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.010,07"
+      "Precio_Costo": "$1.010,07",
+      "Id": "71"
     },
     {
       "f": "72",
@@ -8272,7 +8665,8 @@
       "Label_Tamaño": "500 ml",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/72-bialcohol-alcohol-desinfeccion-70-500-ml.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.535,92"
+      "Precio_Costo": "$1.535,92",
+      "Id": "72"
     },
     {
       "f": "73",
@@ -8293,7 +8687,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/73-bialcohol-alcohol-desinfeccion-70-1-l.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$2.630,96"
+      "Precio_Costo": "$2.630,96",
+      "Id": "73"
     },
     {
       "f": "74",
@@ -8314,7 +8709,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/74-florencia-harina-000-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$753,25"
+      "Precio_Costo": "$753,25",
+      "Id": "74"
     },
     {
       "f": "75",
@@ -8335,7 +8731,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/75-florencia-harina-0000-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.032,47"
+      "Precio_Costo": "$1.032,47",
+      "Id": "75"
     },
     {
       "f": "76",
@@ -8356,7 +8753,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/76-florencia-harina-leudante-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.111,85"
+      "Precio_Costo": "$1.111,85",
+      "Id": "76"
     },
     {
       "f": "77",
@@ -8377,7 +8775,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/77-florencia-harina-000-5-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$3.716,29"
+      "Precio_Costo": "$3.716,29",
+      "Id": "77"
     },
     {
       "f": "78",
@@ -8398,7 +8797,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/78-florencia-harina-0000-5-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$5.036,30"
+      "Precio_Costo": "$5.036,30",
+      "Id": "78"
     },
     {
       "f": "79",
@@ -8419,7 +8819,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/79-florencia-harina-leudante-5-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$5.448,72"
+      "Precio_Costo": "$5.448,72",
+      "Id": "79"
     },
     {
       "f": "8",
@@ -8440,7 +8841,8 @@
       "Label_Tamaño": "250 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/8-natura-ketchup-250-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.457,35"
+      "Precio_Costo": "$1.457,35",
+      "Id": "8"
     },
     {
       "f": "80",
@@ -8461,7 +8863,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/80-florencia-harina-con-levadura-para-pizza-1-kg.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.008,42"
+      "Precio_Costo": "$1.008,42",
+      "Id": "80"
     },
     {
       "f": "81",
@@ -8482,7 +8885,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/81-providencia-pasta-corta-tirabuzon-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$716,28"
+      "Precio_Costo": "$716,28",
+      "Id": "81"
     },
     {
       "f": "82",
@@ -8503,7 +8907,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/82-providencia-pasta-corta-mostachol-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$716,28"
+      "Precio_Costo": "$716,28",
+      "Id": "82"
     },
     {
       "f": "83",
@@ -8524,7 +8929,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/83-providencia-pasta-larga-spaguetti-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$716,28"
+      "Precio_Costo": "$716,28",
+      "Id": "83"
     },
     {
       "f": "84",
@@ -8545,7 +8951,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/84-providencia-pasta-larga-tallarin-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$716,28"
+      "Precio_Costo": "$716,28",
+      "Id": "84"
     },
     {
       "f": "85",
@@ -8566,7 +8973,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/85-providencia-pasta-corta-codo-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$716,28"
+      "Precio_Costo": "$716,28",
+      "Id": "85"
     },
     {
       "f": "86",
@@ -8587,7 +8995,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/86-providencia-pasta-larga-tagliatelle-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$716,28"
+      "Precio_Costo": "$716,28",
+      "Id": "86"
     },
     {
       "f": "87",
@@ -8608,7 +9017,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/87-providencia-pasta-corta-mono-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.014,65"
+      "Precio_Costo": "$1.014,65",
+      "Id": "87"
     },
     {
       "f": "88",
@@ -8629,7 +9039,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/88-providencia-pasta-nido-cabello-de-angel-500-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.014,65"
+      "Precio_Costo": "$1.014,65",
+      "Id": "88"
     },
     {
       "f": "89",
@@ -8650,7 +9061,8 @@
       "Label_Tamaño": "505 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/89-providencia-galleta-crackers-x5-505-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.738,86"
+      "Precio_Costo": "$1.738,86",
+      "Id": "89"
     },
     {
       "f": "9",
@@ -8671,7 +9083,8 @@
       "Label_Tamaño": "500 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/9-natura-ketchup-500-cc.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$2.866,51"
+      "Precio_Costo": "$2.866,51",
+      "Id": "9"
     },
     {
       "f": "90",
@@ -8692,7 +9105,8 @@
       "Label_Tamaño": "303 g",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/90-providencia-galleta-crackers-x3-303-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.097,80"
+      "Precio_Costo": "$1.097,80",
+      "Id": "90"
     },
     {
       "f": "91",
@@ -8713,7 +9127,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/91-providencia-galleta-dulce-cacao-rellena-220-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.443,15"
+      "Precio_Costo": "$1.443,15",
+      "Id": "91"
     },
     {
       "f": "92",
@@ -8734,7 +9149,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/92-paseo-tostadas-clasicas-200-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.493,70"
+      "Precio_Costo": "$1.493,70",
+      "Id": "92"
     },
     {
       "f": "93",
@@ -8755,7 +9171,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/93-paseo-tostadas-salvado-200-g.webp",
       "Tipo": "Ancla",
-      "Precio_Costo": "$1.493,70"
+      "Precio_Costo": "$1.493,70",
+      "Id": "93"
     },
     {
       "f": "490",
@@ -8776,7 +9193,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/490-pipas-pipas-rojas-18-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$227,28"
+      "Precio_Costo": "$227,28",
+      "Id": "490"
     },
     {
       "f": "491",
@@ -8797,7 +9215,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/491-pipas-pipas-gigantes-50-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.719,71"
+      "Precio_Costo": "$1.719,71",
+      "Id": "491"
     },
     {
       "f": "492",
@@ -8818,7 +9237,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/492-pipas-pipas-peladas-25-g.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$334,22"
+      "Precio_Costo": "$334,22",
+      "Id": "492"
     },
     {
       "f": "493",
@@ -8839,7 +9259,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/493-baggio-jugo-fresh-naranja-1000-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$924,19"
+      "Precio_Costo": "$924,19",
+      "Id": "493"
     },
     {
       "f": "494",
@@ -8860,7 +9281,8 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/494-baggio-jugo-fresh-manzana-1000-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$924,19"
+      "Precio_Costo": "$924,19",
+      "Id": "494"
     },
     {
       "f": "496",
@@ -8881,7 +9303,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/496-baggio-jugo-pronto-naranja-1000-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.462,36"
+      "Precio_Costo": "$1.462,36",
+      "Id": "496"
     },
     {
       "f": "497",
@@ -8902,7 +9325,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/497-baggio-jugo-pronto-manzana-1000-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.462,36"
+      "Precio_Costo": "$1.462,36",
+      "Id": "497"
     },
     {
       "f": "498",
@@ -8923,7 +9347,8 @@
       "Label_Tamaño": "1 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/498-baggio-jugo-pronto-durazno-1000-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.462,36"
+      "Precio_Costo": "$1.462,36",
+      "Id": "498"
     },
     {
       "f": "500",
@@ -8944,7 +9369,8 @@
       "Label_Tamaño": "200 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/500-baggio-jugo-pronto-naranja-200-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$431,83"
+      "Precio_Costo": "$431,83",
+      "Id": "500"
     },
     {
       "f": "501",
@@ -8965,7 +9391,8 @@
       "Label_Tamaño": "200 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/501-baggio-jugo-pronto-manzana-200-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$431,83"
+      "Precio_Costo": "$431,83",
+      "Id": "501"
     },
     {
       "f": "502",
@@ -8986,7 +9413,8 @@
       "Label_Tamaño": "200 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/502-baggio-jugo-pronto-durazno-200-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$431,83"
+      "Precio_Costo": "$431,83",
+      "Id": "502"
     },
     {
       "f": "505",
@@ -9007,7 +9435,8 @@
       "Label_Tamaño": "1,5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/505-baggio-agua-saborizada-fresh-naranja-1500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.071,55"
+      "Precio_Costo": "$1.071,55",
+      "Id": "505"
     },
     {
       "f": "506",
@@ -9028,7 +9457,8 @@
       "Label_Tamaño": "1,5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/506-baggio-agua-saborizada-fresh-manzana-1500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.071,55"
+      "Precio_Costo": "$1.071,55",
+      "Id": "506"
     },
     {
       "f": "507",
@@ -9049,7 +9479,8 @@
       "Label_Tamaño": "1,5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/507-baggio-agua-saborizada-fresh-pomelo-1500-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$1.071,55"
+      "Precio_Costo": "$1.071,55",
+      "Id": "507"
     },
     {
       "f": "508",
@@ -9070,7 +9501,8 @@
       "Label_Tamaño": "600 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/508-baggio-agua-saborizada-fresh-naranja-600-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$767,98"
+      "Precio_Costo": "$767,98",
+      "Id": "508"
     },
     {
       "f": "509",
@@ -9091,7 +9523,8 @@
       "Label_Tamaño": "600 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/509-baggio-agua-saborizada-fresh-manzana-600-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$767,98"
+      "Precio_Costo": "$767,98",
+      "Id": "509"
     },
     {
       "f": "510",
@@ -9112,7 +9545,8 @@
       "Label_Tamaño": "600 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/510-baggio-agua-saborizada-fresh-pomelo-600-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$767,98"
+      "Precio_Costo": "$767,98",
+      "Id": "510"
     },
     {
       "f": "",
@@ -19733,147 +20167,147 @@
       "Nombre_Grupo": "Arvejas",
       "Marca": "INALPA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "15",
       "Nombre_Grupo": "Porotos Colorados",
       "Marca": "INALPA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "16",
       "Nombre_Grupo": "Lentejas",
       "Marca": "INALPA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "17",
       "Nombre_Grupo": "Garbanzos",
       "Marca": "INALPA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "18",
       "Nombre_Grupo": "Jardineras",
       "Marca": "INALPA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "19",
       "Nombre_Grupo": "Choclo Grano Amarillo",
       "Marca": "INALPA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "20",
       "Nombre_Grupo": "Porotos Blancos",
       "Marca": "INALPA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "21",
       "Nombre_Grupo": "Porotos Negros",
       "Marca": "INALPA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "23",
       "Nombre_Grupo": "Pate de Foie",
       "Marca": "SWIFT",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "24",
       "Nombre_Grupo": "Picadillo de Carne",
       "Marca": "SWIFT",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "25",
       "Nombre_Grupo": "Picadillo de Carne",
       "Marca": "LA BLANCA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "26",
       "Nombre_Grupo": "Pate de Foie",
       "Marca": "LA BLANCA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "27",
       "Nombre_Grupo": "Atún Desmenuzado Aceite",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "28",
       "Nombre_Grupo": "Lomo Atún Natural",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "29",
       "Nombre_Grupo": "Sardinas en Aceite",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "30",
       "Nombre_Grupo": "Palmitos en Trozos",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "31",
       "Nombre_Grupo": "Morrón",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "32",
       "Nombre_Grupo": "Champiñones Laminados",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "33",
       "Nombre_Grupo": "Tomate Perita",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "34",
       "Nombre_Grupo": "Choclo Amarillo",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "35",
       "Nombre_Grupo": "Ananá en Trozos",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "36",
@@ -28865,7 +29299,7 @@
       "Id_proveedor": "INA150",
       "Producto": "Arveja INALPA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$528,14",
       "Precio_Venta": "$750,00",
@@ -28879,7 +29313,7 @@
       "Id_proveedor": "INA114",
       "Producto": "Porotos Colorados INALPA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$866,90",
       "Precio_Venta": "$1.200,00",
@@ -28893,7 +29327,7 @@
       "Id_proveedor": "INA108",
       "Producto": "Lentejas INALPA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$799,46",
       "Precio_Venta": "$1.150,00",
@@ -28907,7 +29341,7 @@
       "Id_proveedor": "INA126",
       "Producto": "Garbanzo INALPA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$669,06",
       "Precio_Venta": "$950,00",
@@ -28921,7 +29355,7 @@
       "Id_proveedor": "INA135",
       "Producto": "Jardinera INALPA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$816,13",
       "Precio_Venta": "$1.150,00",
@@ -28935,7 +29369,7 @@
       "Id_proveedor": "INA105",
       "Producto": "Choclo Grano Amarillo INALPA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.193,87",
       "Precio_Venta": "$1.700,00",
@@ -28949,7 +29383,7 @@
       "Id_proveedor": "INA110",
       "Producto": "Porotos Blancos INALPA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$818,83",
       "Precio_Venta": "$1.150,00",
@@ -28963,7 +29397,7 @@
       "Id_proveedor": "INA113",
       "Producto": "Porotos Negros INALPA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$819,64",
       "Precio_Venta": "$1.150,00",
@@ -28977,7 +29411,7 @@
       "Id_proveedor": "SW100021000",
       "Producto": "Pate de Foie SWIFT 90 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$858,53",
       "Precio_Venta": "$1.000,00",
@@ -28991,7 +29425,7 @@
       "Id_proveedor": "SW100021001",
       "Producto": "Picadillo de Carne SWIFT 90 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$858,53",
       "Precio_Venta": "$1.000,00",
@@ -29005,7 +29439,7 @@
       "Id_proveedor": "SW100021008",
       "Producto": "Picadillo de Carne LA BLANCA 90 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$734,56",
       "Precio_Venta": "$900,00",
@@ -29019,7 +29453,7 @@
       "Id_proveedor": "SW100021009",
       "Producto": "Pate de Foie LA BLANCA 90 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$734,56",
       "Precio_Venta": "$900,00",
@@ -29033,7 +29467,7 @@
       "Id_proveedor": "CUM30616",
       "Producto": "Atún Desmenuzado Aceite CUMANA 170 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.056,17",
       "Precio_Venta": "$1.250,00",
@@ -29047,7 +29481,7 @@
       "Id_proveedor": "CUM30644",
       "Producto": "Lomo Atún Natural CUMANA 170 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$2.170,64",
       "Precio_Venta": "$2.600,00",
@@ -29061,7 +29495,7 @@
       "Id_proveedor": "CUM31712",
       "Producto": "Sardinas en Aceite CUMANA 125 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.608,98",
       "Precio_Venta": "$0,00",
@@ -29075,7 +29509,7 @@
       "Id_proveedor": "CUM30217",
       "Producto": "Palmitos en Trozos CUMANA 396 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.452,30",
       "Precio_Venta": "$1.700,00",
@@ -29089,7 +29523,7 @@
       "Id_proveedor": "CUM30526",
       "Producto": "Morrón CUMANA 185 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.415,63",
       "Precio_Venta": "$1.700,00",
@@ -29103,7 +29537,7 @@
       "Id_proveedor": "CUM30731",
       "Producto": "Champiñones Laminados CUMANA 400 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$2.054,35",
       "Precio_Venta": "$2.450,00",
@@ -29117,7 +29551,7 @@
       "Id_proveedor": "CUM30844",
       "Producto": "Tomate Perita CUMANA 400 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.014,33",
       "Precio_Venta": "$1.200,00",
@@ -29131,7 +29565,7 @@
       "Id_proveedor": "CUM32033",
       "Producto": "Choclo Amarillo CUMANA 300 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.009,84",
       "Precio_Venta": "$0,00",
@@ -29173,7 +29607,7 @@
       "Id_proveedor": "CUM30130",
       "Producto": "Ananá en Trozos CUMANA 836 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$4.113,47",
       "Precio_Venta": "$4.850,00",

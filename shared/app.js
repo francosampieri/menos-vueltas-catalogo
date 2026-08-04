@@ -52,6 +52,21 @@ async function cargarDatos() {
     // en producción catalogo.json queda junto a este script — ruta plana.
     const data = await fetch('catalogo.json').then(r => r.json());
 
+    // Blindaje ante cambios de nombre en la primera columna de la hoja
+    // "Productos": si el encabezado del Sheets deja de llamarse "Id" (pasó
+    // con una columna llamada "f"), el cruce con la tabla de precios se
+    // rompía y TODOS los productos quedaban sin precio. Acá se normaliza.
+    const ALIAS_ID = ['Id', 'f', 'ID', 'id'];
+    const normalizarId = fila => {
+      if (fila['Id'] !== undefined && fila['Id'] !== '') return fila;
+      const alias = ALIAS_ID.find(k => fila[k] !== undefined && fila[k] !== '');
+      if (alias) fila['Id'] = fila[alias];
+      return fila;
+    };
+    (data.productos   || []).forEach(normalizarId);
+    (data.precios_b2c || []).forEach(normalizarId);
+    (data.precios_b2b || []).forEach(normalizarId);
+
     data.grupos.forEach(g => {
       grupos[g['Id_Grupo']] = {
         nombre:      g['Nombre_Grupo'],
@@ -71,13 +86,22 @@ async function cargarDatos() {
     );
 
     // Mergear precio/descuento en cada producto antes de usarlo en el resto de la app
+    let sinPrecio = 0;
     productos.forEach(p => {
       const precio = preciosPorId[p['Id']];
+      if (!precio) sinPrecio++;
       p['Precio_Venta'] = precio ? precio['Precio_Venta'] : '';
       p['Uni Dto']      = precio ? precio['Uni Dto']      : '';
       p['Dto']          = precio ? precio['Dto']          : '';
       p['Precio_Dto']   = precio ? precio['Precio_Dto']   : '';
     });
+
+    // Si prácticamente ningún producto encontró precio, casi seguro cambió
+    // un encabezado en el Sheets: se avisa en consola para detectarlo rápido.
+    if (productos.length && sinPrecio / productos.length > 0.5) {
+      console.warn(`[Menos Vueltas] ${sinPrecio}/${productos.length} productos sin precio. ` +
+        'Revisá que las hojas "Productos" y "Precios" tengan la columna Id con el mismo nombre.');
+    }
 
     productos.forEach(p => {
       const gid = p['Id_Grupo'];
