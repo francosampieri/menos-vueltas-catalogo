@@ -1860,7 +1860,7 @@ cargarDatos();
 //  paso activo. Avanza solo cada 7 s y también se puede elegir a mano.
 //  Se pausa mientras la sección no está en pantalla para no gastar batería.
 // ══════════════════════════════════════════════════════
-const PASO_DURACION = 7000;
+const PASO_DURACION = 9000;
 let pasoActual = 1;
 let pasoTimer = null;
 let pasoEnPantalla = false;

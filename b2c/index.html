@@ -171,126 +171,167 @@
       <h2 class="seccion-h2-center">Como hacer un pedido</h2>
       <p class="seccion-sub-center">Tres pasos, sin apps ni registros.</p>
 
-      <!-- Demo: mockup animado + lista de pasos.
-           El mockup cambia según el dispositivo — notebook con la interfaz de
-           escritorio (sidebar + grilla) o teléfono con la de mobile (rieles) —
-           así lo que ve cada visitante es exactamente lo que se va a encontrar. -->
+      <!-- Demo animada: el mockup cambia según el dispositivo (notebook con la
+           interfaz de escritorio, teléfono con la de mobile) y reproduce el
+           paso activo con productos reales del catálogo. Los precios van
+           difuminados a propósito: la animación no debe quedar desactualizada
+           cada vez que cambia una lista de precios. -->
       <div class="demo-pasos">
 
-        <!-- ══ MOCKUP NOTEBOOK (escritorio) ══ -->
+        <!-- ══════════ MOCKUP NOTEBOOK (escritorio) ══════════ -->
         <div class="mk-note" aria-hidden="true">
-          <div class="mk-note-pantalla">
+          <div class="mk-note-tapa">
             <div class="mk-note-screen">
 
-              <!-- Paso 1 · catálogo de escritorio: sidebar + grilla -->
+              <!-- ── Paso 1 · catálogo de escritorio + modal de producto ── -->
               <div class="mk-pant activa" data-paso="1">
                 <div class="mkd-top">
-                  <span class="mkd-logo">Menos Vueltas</span>
+                  <img src="logo.svg" alt="" class="mkd-logo">
                   <span class="mkd-search"></span>
                   <span class="mkd-sp"></span>
                   <span class="mkd-cart">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                    <b class="mkd-cart-num">1</b>
                   </span>
                 </div>
                 <div class="mkd-cuerpo">
                   <div class="mkd-side">
                     <span class="mkd-side-tit">Categorías</span>
                     <span class="mkd-side-item on">Almacén</span>
-                    <span class="mkd-side-item">Limpieza</span>
                     <span class="mkd-side-item">Desayuno</span>
+                    <span class="mkd-side-item">Limpieza</span>
                     <span class="mkd-side-item">Higiene</span>
                     <span class="mkd-side-item">Snacks</span>
                   </div>
                   <div class="mkd-main">
                     <span class="mkd-h1">Almacén</span>
                     <div class="mkd-grid">
-                      <span class="mkd-card foco"><i>🫒</i><u>Aceite Girasol</u><s>1,5 L</s><b>$6.950</b></span>
-                      <span class="mkd-card"><i>🥫</i><u>Arvejas</u><s>300 g</s><b>$850</b></span>
-                      <span class="mkd-card"><i>🍝</i><u>Fideos</u><s>500 g</s><b>$1.200</b></span>
-                      <span class="mkd-card"><i>🧽</i><u>Detergente</u><s>750 ml</s><b>$2.400</b></span>
-                      <span class="mkd-card"><i>🍚</i><u>Arroz</u><s>1 kg</s><b>$1.900</b></span>
-                      <span class="mkd-card"><i>☕</i><u>Café</u><s>250 g</s><b>$5.100</b></span>
-                      <span class="mkd-card"><i>🧴</i><u>Shampoo</u><s>400 ml</s><b>$3.700</b></span>
-                      <span class="mkd-card"><i>🧻</i><u>Papel</u><s>4 un.</s><b>$2.850</b></span>
+                      <span class="mkd-card destino"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol</u><s>NATURA · 3 L</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/196-taragui-yerba-mate-con-palo-roja-500-g.webp" alt="" loading="lazy"></i><u>Yerba Mate</u><s>TARAGUI · 500 g</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/177-la-virginia-cafe-molido-torrado-equilibrado-250-g.webp" alt="" loading="lazy"></i><u>Café Molido</u><s>LA VIRGINIA · 250 g</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000</u><s>CAÑUELAS · 1 kg</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/279-de-la-huerta-pure-de-tomates-530-g.webp" alt="" loading="lazy"></i><u>Puré de Tomate</u><s>DE LA HUERTA · 530 g</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/121-cumana-atun-desmenuzado-aceite-170-g.webp" alt="" loading="lazy"></i><u>Atún Desmenuzado</u><s>CUMANA · 170 g</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/354-felpita-papel-higienico-4x30m-simple-hoja-4x30m.webp" alt="" loading="lazy"></i><u>Papel Higiénico</u><s>FELPITA · 4x30m</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/409-sedile-detergente-concentrado-limon-500-cc.webp" alt="" loading="lazy"></i><u>Detergente</u><s>SEDILE · 500 cc</s><b class="precio-off">$0.000</b></span>
                     </div>
                   </div>
                 </div>
-                <span class="mk-cursor"></span>
-                <span class="mk-aviso">Agregado al pedido</span>
+
+                <!-- Modal de producto, igual que el real: foto a la izquierda, datos a la derecha -->
+                <div class="mkd-modal-fondo"></div>
+                <div class="mkd-modal">
+                  <span class="mkd-modal-foto"><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></span>
+                  <span class="mkd-modal-col">
+                    <span class="mkd-modal-marca">NATURA</span>
+                    <span class="mkd-modal-nom">Aceite Girasol</span>
+                    <span class="mkd-modal-var">3 L</span>
+                    <span class="mkd-modal-precio precio-off">$0.000</span>
+                    <span class="mkd-modal-tit">Tamaño</span>
+                    <span class="mkd-modal-chips"><i class="on">3 L</i><i>1,5 L</i><i>900 cc</i></span>
+                    <span class="mkd-modal-fila">
+                      <span class="mkd-qty"><em>−</em><u class="mkd-qty-n"><b class="q1">1</b><b class="q2">2</b></u><em class="mkd-qty-mas">+</em></span>
+                      <span class="mkd-add"><b class="add1">+ Agregar al pedido</b><b class="add2">✓ Agregado</b></span>
+                    </span>
+                  </span>
+                </div>
+
+                <span class="mk-puntero">
+                  <svg viewBox="0 0 24 24"><path d="M5.5 3.2l12.4 8.1-5.2.6-.4.1-2.9 4.9-1.4-.9 2.9-4.9.2-.4z" fill="#fff" stroke="#2F3430" stroke-width="1.1" stroke-linejoin="round"/></svg>
+                </span>
               </div>
 
-              <!-- Paso 2 · carrito lateral → WhatsApp Web -->
+              <!-- ── Paso 2 · botón flotante → carrito → WhatsApp Web ── -->
               <div class="mk-pant" data-paso="2">
                 <div class="mkd-top">
-                  <span class="mkd-logo">Menos Vueltas</span>
+                  <img src="logo.svg" alt="" class="mkd-logo">
                   <span class="mkd-search"></span>
                   <span class="mkd-sp"></span>
                   <span class="mkd-cart">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                    <b class="mkd-cart-num">3</b>
                   </span>
                 </div>
                 <div class="mkd-cuerpo">
-                  <div class="mkd-side"><span class="mkd-side-tit">Categorías</span>
-                    <span class="mkd-side-item">Almacén</span><span class="mkd-side-item">Limpieza</span>
-                    <span class="mkd-side-item">Desayuno</span></div>
-                  <div class="mkd-main atenuado">
+                  <div class="mkd-side">
+                    <span class="mkd-side-tit">Categorías</span>
+                    <span class="mkd-side-item on">Almacén</span>
+                    <span class="mkd-side-item">Desayuno</span>
+                    <span class="mkd-side-item">Limpieza</span>
+                    <span class="mkd-side-item">Higiene</span>
+                  </div>
+                  <div class="mkd-main">
                     <span class="mkd-h1">Almacén</span>
-                    <div class="mkd-grid">
-                      <span class="mkd-card"><i>🫒</i><u>Aceite Girasol</u><s>1,5 L</s><b>$6.950</b></span>
-                      <span class="mkd-card"><i>🥫</i><u>Arvejas</u><s>300 g</s><b>$850</b></span>
-                      <span class="mkd-card"><i>🍝</i><u>Fideos</u><s>500 g</s><b>$1.200</b></span>
-                      <span class="mkd-card"><i>🧽</i><u>Detergente</u><s>750 ml</s><b>$2.400</b></span>
-                      <span class="mkd-card"><i>🍚</i><u>Arroz</u><s>1 kg</s><b>$1.900</b></span>
-                      <span class="mkd-card"><i>☕</i><u>Café</u><s>250 g</s><b>$5.100</b></span>
-                      <span class="mkd-card"><i>🧴</i><u>Shampoo</u><s>400 ml</s><b>$3.700</b></span>
-                      <span class="mkd-card"><i>🧻</i><u>Papel</u><s>4 un.</s><b>$2.850</b></span>
+                    <div class="mkd-grid mkd-grid-4">
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol</u><s>NATURA · 3 L</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/196-taragui-yerba-mate-con-palo-roja-500-g.webp" alt="" loading="lazy"></i><u>Yerba Mate</u><s>TARAGUI · 500 g</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/177-la-virginia-cafe-molido-torrado-equilibrado-250-g.webp" alt="" loading="lazy"></i><u>Café Molido</u><s>LA VIRGINIA · 250 g</s><b class="precio-off">$0.000</b></span>
+                      <span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000</u><s>CAÑUELAS · 1 kg</s><b class="precio-off">$0.000</b></span>
                     </div>
                   </div>
                 </div>
-                <!-- Drawer del carrito, como en la web real -->
+
+                <!-- Botón flotante del carrito (abajo a la derecha, como en la web) -->
+                <span class="mkd-flotante">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                  <b>3</b>
+                </span>
+
+                <!-- Drawer del carrito -->
                 <div class="mkd-drawer">
                   <span class="mkd-drawer-tit">Tu pedido</span>
-                  <span class="mkd-linea"><i>🫒</i><u>Aceite Girasol <em>1,5 L · 2 un.</em></u><b>$13.300</b></span>
-                  <span class="mkd-linea"><i>🥫</i><u>Arvejas <em>300 g · 4 un.</em></u><b>$3.000</b></span>
-                  <span class="mkd-linea"><i>🍝</i><u>Fideos <em>500 g · 3 un.</em></u><b>$3.600</b></span>
+                  <span class="mkd-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol <em>3 L · 2 un.</em></u><b class="precio-off">$0.000</b></span>
+                  <span class="mkd-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/196-taragui-yerba-mate-con-palo-roja-500-g.webp" alt="" loading="lazy"></i><u>Yerba Mate <em>500 g · 1 un.</em></u><b class="precio-off">$0.000</b></span>
+                  <span class="mkd-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000 <em>1 kg · 3 un.</em></u><b class="precio-off">$0.000</b></span>
                   <span class="mkd-drawer-pie">
-                    <span class="mkd-total"><u>Total estimado</u><b>$19.900</b></span>
+                    <span class="mkd-total"><u>Total estimado</u><b class="precio-off">$00.000</b></span>
                     <span class="mkd-wa-btn">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.1.55 4.06 1.6 5.83L2 22l4.4-1.68a9.9 9.9 0 004.64 1.18h.01c5.46 0 9.91-4.45 9.91-9.91C20.96 6.45 16.5 2 12.04 2m5.8 14.1c-.24.68-1.4 1.3-1.96 1.38-.5.08-1.14.11-1.83-.11-.42-.14-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36l.56.01c.18 0 .42-.7.66.5.24.58.82 2 .89 2.15.7.14.12.31.02.5-.9.19-.14.31-.28.48l-.42.49c-.14.14-.28.29-.12.57.16.29.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.15.43.12.59-.07.16-.19.68-.79.86-1.07.18-.28.36-.23.61-.14.24.1 1.55.73 1.82.86.27.14.44.21.51.32.07.12.07.68-.17 1.36"/></svg>
                       Enviar pedido
                     </span>
                   </span>
                 </div>
-                <!-- Ventana de WhatsApp Web que aparece encima -->
+
+                <!-- WhatsApp Web ocupando toda la pantalla de la notebook -->
                 <div class="mkd-wa">
                   <span class="mkd-wa-barra"><i></i><i></i><i></i><u>web.whatsapp.com</u></span>
-                  <span class="mkd-wa-chat">
-                    <span class="mkd-wa-header"><i>MV</i>Menos Vueltas</span>
-                    <span class="mkd-wa-burbuja">🛒 <b>PEDIDO</b>
-━━━━━━━━━━━━━
-1. Aceite Girasol 1,5 L
-    Cantidad: 2
-2. Arvejas 300 g
-    Cantidad: 4
-3. Fideos 500 g
-    Cantidad: 3
-━━━━━━━━━━━━━
-<b>TOTAL: $19.900</b><em>✓✓</em></span>
+                  <span class="mkd-wa-cuerpo">
+                    <span class="mkd-wa-lista">
+                      <span class="mkd-wa-buscar"></span>
+                      <span class="mkd-wa-contacto activo"><em>MV</em><span><u>Menos Vueltas</u><s>Pedido enviado</s></span></span>
+                      <span class="mkd-wa-contacto"><em></em><span><u></u><s></s></span></span>
+                      <span class="mkd-wa-contacto"><em></em><span><u></u><s></s></span></span>
+                    </span>
+                    <span class="mkd-wa-chat">
+                      <span class="mkd-wa-header"><em>MV</em>Menos Vueltas</span>
+                      <span class="mkd-wa-scroll">
+                        <span class="mkd-wa-burbuja">🛒 <b>PEDIDO</b>
+━━━━━━━━━━━━━━
+1. NATURA Aceite Girasol
+    Variante: 3 L
+    Cantidad: 2 unidades
+2. TARAGUI Yerba Mate
+    Variante: 500 g
+    Cantidad: 1 unidad
+3. CAÑUELAS Harina 000
+    Variante: 1 kg
+    Cantidad: 3 unidades
+━━━━━━━━━━━━━━
+<b>TOTAL: $00.000</b><em>✓✓</em></span>
+                      </span>
+                      <span class="mkd-wa-input"><u></u><i>➤</i></span>
+                    </span>
                   </span>
                 </div>
+
+                <span class="mk-puntero">
+                  <svg viewBox="0 0 24 24"><path d="M5.5 3.2l12.4 8.1-5.2.6-.4.1-2.9 4.9-1.4-.9 2.9-4.9.2-.4z" fill="#fff" stroke="#2F3430" stroke-width="1.1" stroke-linejoin="round"/></svg>
+                </span>
               </div>
 
-              <!-- Paso 3 · entrega y pago -->
+              <!-- ── Paso 3 · entrega (acá va la foto de la entrega en la puerta) ── -->
               <div class="mk-pant" data-paso="3">
                 <div class="mk-entrega">
-                  <div class="mk-mapa">
-                    <span class="mk-calle-h"></span>
-                    <span class="mk-calle-v"></span>
-                    <span class="mk-ruta"></span>
-                    <span class="mk-movil">🛵</span>
-                    <span class="mk-casa">🏠</span>
+                  <div class="mk-entrega-foto">
+                    <span class="mk-foto-pendiente">Foto de la entrega</span>
                   </div>
                   <div class="mk-entrega-info">
                     <span class="mk-et">Pedido confirmado</span>
@@ -306,80 +347,121 @@
           <span class="mk-note-base"></span>
         </div>
 
-        <!-- ══ MOCKUP TELÉFONO (mobile) ══ -->
+        <!-- ══════════ MOCKUP TELÉFONO (mobile) ══════════ -->
         <div class="mk-tel" aria-hidden="true">
           <span class="mk-tel-notch"></span>
           <div class="mk-tel-screen">
 
-            <!-- Paso 1 · catálogo mobile: chips + riel horizontal -->
+            <!-- ── Paso 1 · catálogo mobile + modal de producto ── -->
             <div class="mk-pant activa" data-paso="1">
               <span class="mkm-status"><u>9:41</u><i>▮▮▮</i></span>
               <div class="mkm-top">
-                <span class="mkm-logo">Menos Vueltas</span>
+                <img src="logo.svg" alt="" class="mkm-logo">
                 <span class="mkm-search"></span>
                 <span class="mkm-cart">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                  <b>1</b>
                 </span>
               </div>
-              <span class="mkm-chips"><i class="on">Todos</i><i>Almacén</i><i>Limpieza</i><i>Desa…</i></span>
+              <span class="mkm-chips"><i class="on">Todos</i><i>Almacén</i><i>Limpieza</i></span>
               <span class="mkm-sec"><u>Almacén</u><em>Aceites</em></span>
               <div class="mkm-riel">
-                <span class="mkm-card foco"><i>🫒</i><u>Aceite Girasol</u><s>1,5 L</s><b>$6.950</b></span>
-                <span class="mkm-card"><i>🫒</i><u>Aceite Oliva</u><s>250 ml</s><b>$11.600</b></span>
-                <span class="mkm-card"><i>🥫</i><u>Arvejas</u><s>300 g</s><b>$850</b></span>
+                <span class="mkm-card destino"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol</u><s>3 L</s><b class="precio-off">$0.000</b></span>
+                <span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/279-de-la-huerta-pure-de-tomates-530-g.webp" alt="" loading="lazy"></i><u>Puré Tomate</u><s>530 g</s><b class="precio-off">$0.000</b></span>
+                <span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/121-cumana-atun-desmenuzado-aceite-170-g.webp" alt="" loading="lazy"></i><u>Atún</u><s>170 g</s><b class="precio-off">$0.000</b></span>
               </div>
-              <span class="mkm-sec"><u>Almacén</u><em>Fideos</em></span>
+              <span class="mkm-sec"><u>Desayuno</u><em>Infusiones</em></span>
               <div class="mkm-riel">
-                <span class="mkm-card"><i>🍝</i><u>Fideos</u><s>500 g</s><b>$1.200</b></span>
-                <span class="mkm-card"><i>🍜</i><u>Tirabuzón</u><s>500 g</s><b>$1.300</b></span>
-                <span class="mkm-card"><i>🍚</i><u>Arroz</u><s>1 kg</s><b>$1.900</b></span>
+                <span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/196-taragui-yerba-mate-con-palo-roja-500-g.webp" alt="" loading="lazy"></i><u>Yerba Mate</u><s>500 g</s><b class="precio-off">$0.000</b></span>
+                <span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/177-la-virginia-cafe-molido-torrado-equilibrado-250-g.webp" alt="" loading="lazy"></i><u>Café Molido</u><s>250 g</s><b class="precio-off">$0.000</b></span>
+                <span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000</u><s>1 kg</s><b class="precio-off">$0.000</b></span>
               </div>
-              <span class="mk-cursor"></span>
-              <span class="mk-aviso">Agregado al pedido</span>
+
+              <!-- Modal de producto (mobile: columnas apiladas) -->
+              <div class="mkm-modal-fondo"></div>
+              <div class="mkm-modal">
+                <span class="mkm-modal-foto"><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></span>
+                <span class="mkm-modal-info">
+                  <span class="mkm-modal-marca">NATURA</span>
+                  <span class="mkm-modal-nom">Aceite Girasol</span>
+                  <span class="mkm-modal-precio precio-off">$0.000</span>
+                </span>
+                <span class="mkm-modal-det">
+                  <span class="mkm-modal-tit">Tamaño</span>
+                  <span class="mkm-modal-chips"><i class="on">3 L</i><i>1,5 L</i><i>900 cc</i></span>
+                  <span class="mkm-modal-fila">
+                    <span class="mkm-qty"><em>−</em><u><b class="q1">1</b><b class="q2">2</b></u><em class="mkm-qty-mas">+</em></span>
+                    <span class="mkm-add"><b class="add1">+ Agregar</b><b class="add2">✓ Agregado</b></span>
+                  </span>
+                </span>
+              </div>
+
+              <span class="mk-dedo"></span>
             </div>
 
-            <!-- Paso 2 · carrito mobile → app de WhatsApp -->
+            <!-- ── Paso 2 · botón flotante → carrito → app de WhatsApp ── -->
             <div class="mk-pant" data-paso="2">
               <span class="mkm-status"><u>9:42</u><i>▮▮▮</i></span>
-              <span class="mkm-carrito-tit">Tu pedido</span>
-              <span class="mkm-linea"><i>🫒</i><u>Aceite Girasol<em>1,5 L · 2 un.</em></u><b>$13.300</b></span>
-              <span class="mkm-linea"><i>🥫</i><u>Arvejas<em>300 g · 4 un.</em></u><b>$3.000</b></span>
-              <span class="mkm-linea"><i>🍝</i><u>Fideos<em>500 g · 3 un.</em></u><b>$3.600</b></span>
-              <span class="mkm-pie">
-                <span class="mkm-total"><u>Total estimado</u><b>$19.900</b></span>
-                <span class="mkm-wa-btn">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.1.55 4.06 1.6 5.83L2 22l4.4-1.68a9.9 9.9 0 004.64 1.18h.01c5.46 0 9.91-4.45 9.91-9.91C20.96 6.45 16.5 2 12.04 2m5.8 14.1c-.24.68-1.4 1.3-1.96 1.38-.5.08-1.14.11-1.83-.11-.42-.14-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36l.56.01c.18 0 .42-.7.66.5.24.58.82 2 .89 2.15.7.14.12.31.02.5-.9.19-.14.31-.28.48l-.42.49c-.14.14-.28.29-.12.57.16.29.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.15.43.12.59-.07.16-.19.68-.79.86-1.07.18-.28.36-.23.61-.14.24.1 1.55.73 1.82.86.27.14.44.21.51.32.07.12.07.68-.17 1.36"/></svg>
-                  Enviar pedido
+              <div class="mkm-top">
+                <img src="logo.svg" alt="" class="mkm-logo">
+                <span class="mkm-search"></span>
+                <span class="mkm-cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                 </span>
+              </div>
+              <span class="mkm-sec"><u>Almacén</u><em>Aceites</em></span>
+              <div class="mkm-riel">
+                <span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol</u><s>3 L</s><b class="precio-off">$0.000</b></span>
+                <span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/279-de-la-huerta-pure-de-tomates-530-g.webp" alt="" loading="lazy"></i><u>Puré Tomate</u><s>530 g</s><b class="precio-off">$0.000</b></span>
+                <span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/121-cumana-atun-desmenuzado-aceite-170-g.webp" alt="" loading="lazy"></i><u>Atún</u><s>170 g</s><b class="precio-off">$0.000</b></span>
+              </div>
+
+              <!-- Botón flotante del carrito -->
+              <span class="mkm-flotante">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <b>3</b>
               </span>
-              <!-- La app de WhatsApp entra desde abajo, como en el celular real -->
+
+              <!-- Carrito (drawer que sube) -->
+              <div class="mkm-carrito">
+                <span class="mkm-carrito-tit">Tu pedido</span>
+                <span class="mkm-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol<em>3 L · 2 un.</em></u><b class="precio-off">$0.000</b></span>
+                <span class="mkm-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/196-taragui-yerba-mate-con-palo-roja-500-g.webp" alt="" loading="lazy"></i><u>Yerba Mate<em>500 g · 1 un.</em></u><b class="precio-off">$0.000</b></span>
+                <span class="mkm-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000<em>1 kg · 3 un.</em></u><b class="precio-off">$0.000</b></span>
+                <span class="mkm-pie">
+                  <span class="mkm-total"><u>Total estimado</u><b class="precio-off">$00.000</b></span>
+                  <span class="mkm-wa-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.1.55 4.06 1.6 5.83L2 22l4.4-1.68a9.9 9.9 0 004.64 1.18h.01c5.46 0 9.91-4.45 9.91-9.91C20.96 6.45 16.5 2 12.04 2m5.8 14.1c-.24.68-1.4 1.3-1.96 1.38-.5.08-1.14.11-1.83-.11-.42-.14-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36l.56.01c.18 0 .42-.7.66.5.24.58.82 2 .89 2.15.7.14.12.31.02.5-.9.19-.14.31-.28.48l-.42.49c-.14.14-.28.29-.12.57.16.29.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.15.43.12.59-.07.16-.19.68-.79.86-1.07.18-.28.36-.23.61-.14.24.1 1.55.73 1.82.86.27.14.44.21.51.32.07.12.07.68-.17 1.36"/></svg>
+                    Enviar pedido
+                  </span>
+                </span>
+              </div>
+
+              <!-- App de WhatsApp -->
               <div class="mkm-wa">
-                <span class="mkm-wa-header"><i>MV</i>Menos Vueltas</span>
+                <span class="mkm-wa-header"><em>MV</em>Menos Vueltas</span>
                 <span class="mkm-wa-burbuja">🛒 <b>PEDIDO</b>
 ━━━━━━━━━━
-1. Aceite Girasol 1,5 L
+1. NATURA Aceite Girasol
+    Variante: 3 L
     Cantidad: 2
-2. Arvejas 300 g
-    Cantidad: 4
-3. Fideos 500 g
+2. TARAGUI Yerba Mate
+    Cantidad: 1
+3. CAÑUELAS Harina 000
     Cantidad: 3
 ━━━━━━━━━━
-<b>TOTAL: $19.900</b><em>9:42 ✓✓</em></span>
+<b>TOTAL: $00.000</b><em>9:42 ✓✓</em></span>
                 <span class="mkm-wa-input"><u></u><i>➤</i></span>
               </div>
+
+              <span class="mk-dedo"></span>
             </div>
 
-            <!-- Paso 3 · entrega y pago -->
+            <!-- ── Paso 3 · entrega ── -->
             <div class="mk-pant" data-paso="3">
               <span class="mkm-status"><u>9:44</u><i>▮▮▮</i></span>
               <div class="mk-entrega">
-                <div class="mk-mapa">
-                  <span class="mk-calle-h"></span>
-                  <span class="mk-calle-v"></span>
-                  <span class="mk-ruta"></span>
-                  <span class="mk-movil">🛵</span>
-                  <span class="mk-casa">🏠</span>
+                <div class="mk-entrega-foto">
+                  <span class="mk-foto-pendiente">Foto de la entrega</span>
                 </div>
                 <div class="mk-entrega-info">
                   <span class="mk-et">Pedido confirmado</span>
@@ -393,13 +475,13 @@
           </div>
         </div>
 
-        <!-- ══ LISTA DE PASOS ══ -->
+        <!-- ══════════ LISTA DE PASOS ══════════ -->
         <div class="pasos-lista" id="pasosLista">
           <button class="paso-item activo" data-paso="1" onclick="irAPaso(1)">
             <span class="paso-item-num">1</span>
             <span class="paso-item-txt">
               <span class="paso-item-h3">Armá tu pedido</span>
-              <span class="paso-item-p">Entrá al catálogo, elegí la marca y el tamaño que necesitás, y tocá agregar. Sin registrarte ni descargar nada.</span>
+              <span class="paso-item-p">Entrá al catálogo, tocá el producto, elegí el tamaño y la cantidad, y agregalo. Sin registrarte ni descargar nada.</span>
             </span>
             <span class="paso-item-barra"></span>
           </button>
@@ -408,7 +490,7 @@
             <span class="paso-item-num">2</span>
             <span class="paso-item-txt">
               <span class="paso-item-h3">Enviálo por WhatsApp</span>
-              <span class="paso-item-p">Con un clic se abre WhatsApp con el detalle del pedido y el total ya escritos. Vos solo apretás enviar.</span>
+              <span class="paso-item-p">Abrís el carrito y con un clic se abre WhatsApp con el detalle del pedido y el total ya escritos. Vos solo apretás enviar.</span>
             </span>
             <span class="paso-item-barra"></span>
           </button>
@@ -871,6 +953,6 @@
 
 <script>window.CANAL = 'B2C';</script>
 <script src="app.js"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2600e2c9ab735c2',t:'MTc4NTg3MjY1Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2604b75ee4d1ea4',t:'MTc4NTg3NTE2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+</body>
 </html>
