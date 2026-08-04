@@ -1709,24 +1709,6 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .riel-wrap.hay-mas   .riel-flecha-der,
 .riel-wrap.hay-antes .riel-flecha-izq { opacity: .85; }
 
-/* ── Barra de progreso del riel ── */
-.riel-barra {
-  height: 3px;
-  margin: 4px var(--space-4) 0;
-  border-radius: var(--rf);
-  background: var(--surface-3);
-  overflow: hidden;
-}
-.riel-barra span {
-  display: block;
-  height: 100%;
-  width: 30%;
-  border-radius: var(--rf);
-  background: var(--accent);
-  transition: transform 120ms linear;
-}
-
-
 /* ══════════════════════════════════════════════════════
    CARD
 ══════════════════════════════════════════════════════ */
@@ -2271,7 +2253,10 @@ body.modal-abierto {
   display: flex;
   gap: 5px;
 }
-.pm-dots .variante-dot { width: 5px; height: 5px; background: rgba(0,0,0,.2); }
+.pm-dots .variante-dot { width: 5px; height: 5px; background: rgba(0,0,0,.18); }
+/* Sin esta regla, la de arriba (misma especificidad pero posterior en el
+   archivo) dejaba también en gris el punto de la variante seleccionada. */
+.pm-dots .variante-dot.active { background: var(--accent); }
 
 /* ── Columna de datos ── */
 .pm-col {
@@ -2372,7 +2357,7 @@ body.modal-abierto {
   .pm-overlay { padding: var(--space-4); align-items: center; }
   .pm-panel {
     flex-direction: column;
-    max-width: 420px;
+    max-width: 340px;
     max-height: 88dvh;
   }
   /* La foto arranca con un alto cómodo pero puede encogerse: cuando el
@@ -2381,10 +2366,12 @@ body.modal-abierto {
   .pm-media {
     /* La foto absorbe casi toda la compresión antes que los datos: si el
        producto tiene dos grupos de opciones, se achica ella y el modal
-       sigue entrando entero. */
-    flex: 1000 1 auto;
+       sigue entrando entero. El shrink alto es lo que hace que ceda
+       primero la imagen y no la ficha. */
+    flex: 0 1000 auto;
     width: 100%;
-    height: min(26dvh, 190px);
+    /* Con el panel angosto (340px) este alto deja la foto casi cuadrada. */
+    height: min(34dvh, 260px);
     min-height: 96px;
   }
   .pm-img img { padding: var(--space-3); }
@@ -2408,11 +2395,11 @@ body.modal-abierto {
   .pm-nav { width: 32px; height: 32px; }
 }
 
-/* Pantallas mobile bajas (iPhone SE y similares): con dos grupos de
+/* Pantallas mobile muy bajas (iPhone SE y similares): con dos grupos de
    opciones no alcanza con encoger la foto, así que se comprime también la
    ficha de datos. */
-@media (max-width: 700px) and (max-height: 700px) {
-  .pm-media { height: min(22dvh, 150px); min-height: 84px; }
+@media (max-width: 700px) and (max-height: 620px) {
+  .pm-media { height: min(26dvh, 180px); min-height: 84px; }
   .pm-info { padding: var(--space-3) var(--space-4) var(--space-2); }
   .pm-nombre { font-size: 1.02rem; }
   .pm-variante { font-size: 0.76rem; margin-top: 2px; }

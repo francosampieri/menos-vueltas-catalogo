@@ -343,16 +343,11 @@ function renderGrupos() {
       const flechaIzq = mkFlecha(-1);
       const flecha = mkFlecha(1);
 
-      // Barra de progreso: muestra cuánto del riel se recorrió y cuánto falta.
-      const barra = document.createElement('div');
-      barra.className = 'riel-barra';
-      barra.innerHTML = '<span></span>';
-
       wrap.append(riel, flechaIzq, flecha);
-      sec.append(wrap, barra);
+      sec.appendChild(wrap);
       cont.appendChild(sec);
 
-      conectarIndicadoresRiel(wrap, riel, barra);
+      conectarIndicadoresRiel(wrap, riel);
       return;
     }
 
@@ -373,25 +368,17 @@ function usarRieles() {
 
 // Mantiene sincronizados los indicadores de un riel: sombra/flecha a la
 // derecha mientras queden productos por ver, sombra a la izquierda cuando
-// ya se desplazó, y barra de progreso proporcional al recorrido.
-function conectarIndicadoresRiel(wrap, riel, barra) {
-  const fill = barra.querySelector('span');
-
+// ya se desplazó.
+function conectarIndicadoresRiel(wrap, riel) {
   const actualizar = () => {
     const max = riel.scrollWidth - riel.clientWidth;
     if (max <= 4) {
       wrap.classList.remove('hay-mas', 'hay-antes');
-      barra.style.display = 'none';
       return;
     }
-    barra.style.display = '';
     const x = riel.scrollLeft;
     wrap.classList.toggle('hay-mas', x < max - 4);
     wrap.classList.toggle('hay-antes', x > 4);
-    // El ancho del "pulgar" representa qué proporción del riel se ve.
-    const visible = Math.max(0.12, riel.clientWidth / riel.scrollWidth);
-    fill.style.width = (visible * 100) + '%';
-    fill.style.transform = `translateX(${(x / max) * (100 / visible - 100)}%)`;
   };
 
   riel.addEventListener('scroll', () => {
