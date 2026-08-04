@@ -66,6 +66,8 @@
   --s4: 0 20px 60px rgba(0,0,0,.10), 0 4px 16px rgba(0,0,0,.05);
 
   --ease: cubic-bezier(.16,1,.3,1);
+  /* Desplazamiento del puntero en la demo: acelera y frena parejo */
+  --ease-mouse: cubic-bezier(.45,.05,.3,1);
   --t: 180ms;
 }
 
@@ -963,28 +965,6 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   transform: scale(.35);
 }
 
-/* Toque (mobile): igual criterio, el span mide 0 y el círculo se centra */
-.mk-dedo {
-  position: absolute;
-  z-index: 20;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-.mk-dedo::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 15px;
-  height: 15px;
-  margin: -7.5px 0 0 -7.5px;
-  border-radius: 50%;
-  background: rgba(110,139,91,.22);
-  border: 1.5px solid var(--accent);
-  opacity: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .mk-pant *, .paso-item-barra { animation: none !important; }
 }
@@ -1151,55 +1131,54 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    El puntero baja a la card (32.8%, 30%), la abre; después va al "+" de
    cantidad (53%, 66.4%) y por último a "Agregar" (68.1%, 66.4%).
    Las coordenadas están medidas sobre la pantalla real del mockup. */
-.mk-pant[data-paso="1"].activa .mk-puntero { animation: pd1-puntero 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mk-puntero { animation: pd1-puntero 11s var(--ease-mouse) infinite; }
 @keyframes pd1-puntero {
-  0%       { left: 58%;   top: 58%;   opacity: 0; }
-  4%       { left: 55%;   top: 54%;   opacity: 1; }
-  13%, 17% { left: 32.8%; top: 30%;   opacity: 1; }
-  36%      { left: 32.8%; top: 30%;   opacity: 1; }
-  43%, 46% { left: 53%;   top: 66.4%; opacity: 1; }
-  57%      { left: 53%;   top: 66.4%; opacity: 1; }
-  63%, 66% { left: 68.1%; top: 66.4%; opacity: 1; }
-  94%      { left: 68.1%; top: 66.4%; opacity: 1; }
+  0%       { left: 56%;   top: 55%;   opacity: 0; }
+  3%       { left: 55%;   top: 54%;   opacity: 1; }
+  18%, 21% { left: 32.8%; top: 30%;   opacity: 1; }
+  34%      { left: 32.8%; top: 30%;   opacity: 1; }
+  53%, 55% { left: 53%;   top: 66.4%; opacity: 1; }
+  64%      { left: 53%;   top: 66.4%; opacity: 1; }
+  74%, 76% { left: 68.1%; top: 66.4%; opacity: 1; }
+  96%      { left: 68.1%; top: 66.4%; opacity: 1; }
   100%     { left: 68.1%; top: 66.4%; opacity: 0; }
 }
 /* Tres clics: card, "+" y "Agregar" */
 .mk-pant[data-paso="1"].activa .mk-click { animation: pd1-click 11s linear infinite; }
 @keyframes pd1-click {
-  0%, 16%  { opacity: 0; transform: scale(.35); }
-  17%      { opacity: .9; transform: scale(.35); }
-  22%      { opacity: 0; transform: scale(1.15); }
-  45%      { opacity: 0; transform: scale(.35); }
-  46%      { opacity: .9; transform: scale(.35); }
-  51%      { opacity: 0; transform: scale(1.15); }
-  65%      { opacity: 0; transform: scale(.35); }
-  66%      { opacity: .9; transform: scale(.35); }
-  71%,100% { opacity: 0; transform: scale(1.15); }
+  0%, 20%  { opacity: 0; transform: scale(.35); }
+  21%      { opacity: .9; transform: scale(.35); }
+  26%      { opacity: 0; transform: scale(1.15); }
+  54%      { opacity: 0; transform: scale(.35); }
+  55%      { opacity: .9; transform: scale(.35); }
+  60%      { opacity: 0; transform: scale(1.15); }
+  75%      { opacity: 0; transform: scale(.35); }
+  76%      { opacity: .9; transform: scale(.35); }
+  81%,100% { opacity: 0; transform: scale(1.15); }
 }
-.mk-pant[data-paso="1"].activa .mkd-card.destino,
-.mk-pant[data-paso="1"].activa .mkm-card.destino { animation: pd1-card 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-card.destino { animation: pd1-card 11s var(--ease) infinite; }
 @keyframes pd1-card {
-  0%, 17%  { transform: scale(1); box-shadow: none; }
-  19%      { transform: scale(.95); box-shadow: 0 0 0 2px var(--accent-line); }
-  23%, 100%{ transform: scale(1); box-shadow: none; }
+  0%, 21%  { transform: scale(1); box-shadow: none; }
+  23%      { transform: scale(.95); box-shadow: 0 0 0 2px var(--accent-line); }
+  27%, 100%{ transform: scale(1); box-shadow: none; }
 }
 
 /* El badge del carrito recién aparece cuando se agregó el producto */
 .con-badge-tardio b { opacity: 0; }
 .mk-pant[data-paso="1"].activa .con-badge-tardio b { animation: pd1-badge 11s var(--ease) infinite; }
 @keyframes pd1-badge {
-  0%, 68%  { opacity: 0; transform: scale(.4); }
-  72%      { opacity: 1; transform: scale(1.3); }
-  76%, 100%{ opacity: 1; transform: scale(1); }
+  0%, 78%  { opacity: 0; transform: scale(.4); }
+  82%      { opacity: 1; transform: scale(1.3); }
+  86%, 100%{ opacity: 1; transform: scale(1); }
 }
 
 /* Modal de producto */
 .mk-pant[data-paso="1"].activa .mkd-modal-fondo,
 .mk-pant[data-paso="1"].activa .mkm-modal-fondo { animation: pd1-fondo 11s var(--ease) infinite; }
 @keyframes pd1-fondo {
-  0%, 19%  { opacity: 0; }
-  24%, 90% { opacity: 1; }
-  96%, 100%{ opacity: 0; }
+  0%, 22%  { opacity: 0; }
+  27%, 92% { opacity: 1; }
+  98%, 100%{ opacity: 0; }
 }
 
 .mkd-modal {
@@ -1219,9 +1198,9 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .mk-pant[data-paso="1"].activa .mkd-modal,
 .mk-pant[data-paso="1"].activa .mkm-modal { animation: pd1-modal 11s var(--ease) infinite; }
 @keyframes pd1-modal {
-  0%, 19%   { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
-  25%, 90%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  96%, 100% { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
+  0%, 22%   { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
+  28%, 92%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  98%, 100% { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
 }
 .mkd-modal-foto {
   width: 42%;
@@ -1285,14 +1264,13 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .mk-pant[data-paso="1"].activa .mkm-qty u .q1 { animation: pd1-q1 11s steps(1) infinite; }
 .mk-pant[data-paso="1"].activa .mkd-qty u .q2,
 .mk-pant[data-paso="1"].activa .mkm-qty u .q2 { animation: pd1-q2 11s steps(1) infinite; }
-@keyframes pd1-q1 { 0%, 46% { opacity: 1; } 47%, 100% { opacity: 0; } }
-@keyframes pd1-q2 { 0%, 46% { opacity: 0; } 47%, 100% { opacity: 1; } }
-.mk-pant[data-paso="1"].activa .mkd-qty-mas,
-.mk-pant[data-paso="1"].activa .mkm-qty-mas { animation: pd1-boton 11s var(--ease) infinite; }
+@keyframes pd1-q1 { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+@keyframes pd1-q2 { 0%, 55% { opacity: 0; } 56%, 100% { opacity: 1; } }
+.mk-pant[data-paso="1"].activa .mkd-qty-mas { animation: pd1-boton 11s var(--ease) infinite; }
 @keyframes pd1-boton {
-  0%, 45%  { color: var(--t2); transform: scale(1); }
-  47%      { color: var(--accent); transform: scale(1.25); }
-  51%, 100%{ color: var(--t2); transform: scale(1); }
+  0%, 54%  { color: var(--t2); transform: scale(1); }
+  56%      { color: var(--accent); transform: scale(1.25); }
+  60%, 100%{ color: var(--t2); transform: scale(1); }
 }
 .mkd-add {
   flex: 1;
@@ -1313,19 +1291,18 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 700;
 }
 .mkd-add .add2, .mkm-add .add2 { opacity: 0; }
-.mk-pant[data-paso="1"].activa .mkd-add,
-.mk-pant[data-paso="1"].activa .mkm-add { animation: pd1-add 11s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-add { animation: pd1-add 11s var(--ease) infinite; }
 @keyframes pd1-add {
-  0%, 66%  { transform: scale(1); }
-  68%      { transform: scale(.95); }
-  72%, 100%{ transform: scale(1); }
+  0%, 76%  { transform: scale(1); }
+  78%      { transform: scale(.95); }
+  82%, 100%{ transform: scale(1); }
 }
 .mk-pant[data-paso="1"].activa .mkd-add .add1,
 .mk-pant[data-paso="1"].activa .mkm-add .add1 { animation: pd1-a1 11s steps(1) infinite; }
 .mk-pant[data-paso="1"].activa .mkd-add .add2,
 .mk-pant[data-paso="1"].activa .mkm-add .add2 { animation: pd1-a2 11s steps(1) infinite; }
-@keyframes pd1-a1 { 0%, 67% { opacity: 1; } 68%, 100% { opacity: 0; } }
-@keyframes pd1-a2 { 0%, 67% { opacity: 0; } 68%, 100% { opacity: 1; } }
+@keyframes pd1-a1 { 0%, 77% { opacity: 1; } 78%, 100% { opacity: 0; } }
+@keyframes pd1-a2 { 0%, 77% { opacity: 0; } 78%, 100% { opacity: 1; } }
 
 /* ══ PASO 2 (escritorio) ══
    Puntero al botón flotante (95.6%, 93%) → se abre el drawer → puntero al
@@ -1359,33 +1336,32 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   align-items: center;
   justify-content: center;
 }
-.mk-pant[data-paso="2"].activa .mkd-flotante,
-.mk-pant[data-paso="2"].activa .mkm-flotante { animation: pd2-flotante 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-flotante { animation: pd2-flotante 11s var(--ease) infinite; }
 @keyframes pd2-flotante {
-  0%, 17%  { transform: scale(1); opacity: 1; }
-  20%      { transform: scale(.86); opacity: 1; }
-  24%      { transform: scale(1); opacity: 1; }
-  28%, 100%{ transform: scale(1); opacity: 0; }
+  0%, 22%  { transform: scale(1); opacity: 1; }
+  25%      { transform: scale(.86); opacity: 1; }
+  29%      { transform: scale(1); opacity: 1; }
+  33%, 100%{ transform: scale(1); opacity: 0; }
 }
 
-.mk-pant[data-paso="2"].activa .mk-puntero { animation: pd2-puntero 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mk-puntero { animation: pd2-puntero 11s var(--ease-mouse) infinite; }
 @keyframes pd2-puntero {
-  0%       { left: 48%;   top: 48%;   opacity: 0; }
-  4%       { left: 55%;   top: 55%;   opacity: 1; }
-  14%, 18% { left: 95.6%; top: 93%;   opacity: 1; }
+  0%       { left: 70%;   top: 62%;   opacity: 0; }
+  3%       { left: 71%;   top: 64%;   opacity: 1; }
+  20%, 23% { left: 95.6%; top: 93%;   opacity: 1; }
   45%      { left: 95.6%; top: 93%;   opacity: 1; }
-  52%, 55% { left: 80.1%; top: 94.1%; opacity: 1; }
-  58%      { left: 80.1%; top: 94.1%; opacity: 1; }
-  62%, 100%{ left: 80.1%; top: 94.1%; opacity: 0; }
+  57%, 59% { left: 80.1%; top: 94.1%; opacity: 1; }
+  64%      { left: 80.1%; top: 94.1%; opacity: 1; }
+  69%, 100%{ left: 80.1%; top: 94.1%; opacity: 0; }
 }
 .mk-pant[data-paso="2"].activa .mk-click { animation: pd2-click 11s linear infinite; }
 @keyframes pd2-click {
-  0%, 17%  { opacity: 0; transform: scale(.35); }
-  18%      { opacity: .9; transform: scale(.35); }
-  23%      { opacity: 0; transform: scale(1.15); }
-  54%      { opacity: 0; transform: scale(.35); }
-  55%      { opacity: .9; transform: scale(.35); }
-  60%,100% { opacity: 0; transform: scale(1.15); }
+  0%, 22%  { opacity: 0; transform: scale(.35); }
+  23%      { opacity: .9; transform: scale(.35); }
+  28%      { opacity: 0; transform: scale(1.15); }
+  58%      { opacity: 0; transform: scale(.35); }
+  59%      { opacity: .9; transform: scale(.35); }
+  64%,100% { opacity: 0; transform: scale(1.15); }
 }
 
 .mkd-drawer {
@@ -1403,9 +1379,9 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .mk-pant[data-paso="2"].activa .mkd-drawer { animation: pd2-drawer 11s var(--ease) infinite; }
 @keyframes pd2-drawer {
-  0%, 19%   { transform: translateX(100%); }
-  27%, 58%  { transform: translateX(0); }
-  65%, 100% { transform: translateX(100%); }
+  0%, 24%   { transform: translateX(100%); }
+  32%, 64%  { transform: translateX(0); }
+  71%, 100% { transform: translateX(100%); }
 }
 .mkd-drawer-tit { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
 .mkd-linea { display: flex; align-items: center; gap: 7px; padding: 4px 0; }
@@ -1438,12 +1414,11 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 700;
 }
 .mkd-wa-btn svg { width: 9px; height: 9px; }
-.mk-pant[data-paso="2"].activa .mkd-wa-btn,
-.mk-pant[data-paso="2"].activa .mkm-wa-btn { animation: pd2-btn 11s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-wa-btn { animation: pd2-btn 11s var(--ease) infinite; }
 @keyframes pd2-btn {
-  0%, 55%  { transform: scale(1); }
-  57%      { transform: scale(.94); }
-  61%, 100%{ transform: scale(1); }
+  0%, 59%  { transform: scale(1); }
+  61%      { transform: scale(.94); }
+  65%, 100%{ transform: scale(1); }
 }
 
 /* WhatsApp Web: ocupa toda la pantalla de la notebook */
@@ -1458,8 +1433,8 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .mk-pant[data-paso="2"].activa .mkd-wa { animation: pd2-wa 11s var(--ease) infinite; }
 @keyframes pd2-wa {
-  0%, 58%   { opacity: 0; }
-  64%, 95%  { opacity: 1; }
+  0%, 64%   { opacity: 0; }
+  70%, 96%  { opacity: 1; }
   99%, 100% { opacity: 0; }
 }
 .mkd-wa-barra {
@@ -1883,46 +1858,49 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 
 /* ══ PASO 1 (mobile) ══
-   Toques medidos: card (19%, 36.1%), "+" (33.2%, 71.9%), agregar (64.1%, 71.9%) */
-.mk-pant[data-paso="1"].activa .mk-dedo { animation: pm1-dedo 11s steps(1) infinite; }
-/* En una pantalla táctil el dedo no se desliza entre botones: se levanta y
-   vuelve a apoyar. Por eso la posición salta (steps) mientras el círculo
-   está invisible, y solo se muestra en el momento del toque. */
-@keyframes pm1-dedo {
-  0%,  35% { left: 19%;   top: 36.1%; }
-  36%, 64% { left: 33.2%; top: 71.9%; }
-  65%,100% { left: 64.1%; top: 71.9%; }
+   Sin puntero: en una pantalla táctil no hay cursor visible. Lo que marca
+   dónde se tocó es la reacción del propio elemento — se hunde y se ilumina,
+   exagerado respecto de la web real para que el gesto se lea claro. */
+.mk-pant[data-paso="1"].activa .mkm-card.destino { animation: pm1-tap-card 11s var(--ease) infinite; }
+@keyframes pm1-tap-card {
+  0%, 20%  { transform: scale(1);    box-shadow: none; }
+  23%      { transform: scale(.93);  box-shadow: 0 0 0 2.5px var(--accent); }
+  27%      { transform: scale(1.01); box-shadow: 0 0 0 2px var(--accent-line); }
+  31%,100% { transform: scale(1);    box-shadow: none; }
 }
-.mk-pant[data-paso="1"].activa .mk-dedo::before { animation: pm-toque 11s linear infinite; }
-@keyframes pm-toque {
-  0%, 15%  { opacity: 0; transform: scale(.4); }
-  18%      { opacity: 1; transform: scale(1); }
-  24%      { opacity: 0; transform: scale(1.5); }
-  44%      { opacity: 0; transform: scale(.4); }
-  47%      { opacity: 1; transform: scale(1); }
-  53%      { opacity: 0; transform: scale(1.5); }
-  64%      { opacity: 0; transform: scale(.4); }
-  67%      { opacity: 1; transform: scale(1); }
-  73%,100% { opacity: 0; transform: scale(1.5); }
+/* Botón "+" de cantidad */
+.mk-pant[data-paso="1"].activa .mkm-qty-mas { animation: pm1-tap-mas 11s var(--ease) infinite; }
+@keyframes pm1-tap-mas {
+  0%, 53%  { transform: scale(1);   color: var(--t2);     background: transparent; }
+  56%      { transform: scale(.8);  color: white;         background: var(--accent); }
+  60%      { transform: scale(1.3); color: var(--accent); background: var(--accent-bg); }
+  65%,100% { transform: scale(1);   color: var(--t2);     background: transparent; }
 }
-
-
-/* Toques medidos: flotante (87.9%, 94.1%), botón verde (50%, 94.9%) */
-.mk-pant[data-paso="2"].activa .mk-dedo { animation: pm2-dedo 11s steps(1) infinite; }
-@keyframes pm2-dedo {
-  0%,  50% { left: 87.9%; top: 94.1%; }
-  51%,100% { left: 50%;   top: 94.9%; }
-}
-.mk-pant[data-paso="2"].activa .mk-dedo::before { animation: pm2-toque 11s linear infinite; }
-@keyframes pm2-toque {
-  0%, 16%  { opacity: 0; transform: scale(.4); }
-  19%      { opacity: 1; transform: scale(1); }
-  25%      { opacity: 0; transform: scale(1.5); }
-  53%      { opacity: 0; transform: scale(.4); }
-  56%      { opacity: 1; transform: scale(1); }
-  62%,100% { opacity: 0; transform: scale(1.5); }
+/* Botón "Agregar" */
+.mk-pant[data-paso="1"].activa .mkm-add { animation: pm1-tap-add 11s var(--ease) infinite; }
+@keyframes pm1-tap-add {
+  0%, 75%  { transform: scale(1);   filter: brightness(1); }
+  78%      { transform: scale(.94); filter: brightness(.82); }
+  83%      { transform: scale(1.03);filter: brightness(1.08); }
+  88%,100% { transform: scale(1);   filter: brightness(1); }
 }
 
+/* ══ PASO 2 (mobile) ══ */
+.mk-pant[data-paso="2"].activa .mkm-flotante { animation: pm2-tap-flot 11s var(--ease) infinite; }
+@keyframes pm2-tap-flot {
+  0%, 21%  { transform: scale(1);   filter: brightness(1);   opacity: 1; }
+  24%      { transform: scale(.84); filter: brightness(.8);  opacity: 1; }
+  28%      { transform: scale(1.08);filter: brightness(1.1); opacity: 1; }
+  32%      { transform: scale(1);   filter: brightness(1);   opacity: 1; }
+  36%,100% { transform: scale(1);   filter: brightness(1);   opacity: 0; }
+}
+.mk-pant[data-paso="2"].activa .mkm-wa-btn { animation: pm2-tap-wa 11s var(--ease) infinite; }
+@keyframes pm2-tap-wa {
+  0%, 58%  { transform: scale(1);   filter: brightness(1); }
+  61%      { transform: scale(.94); filter: brightness(.82); }
+  66%      { transform: scale(1.03);filter: brightness(1.1); }
+  71%,100% { transform: scale(1);   filter: brightness(1); }
+}
 
 .mkm-carrito {
   position: absolute;
@@ -1936,9 +1914,9 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .mk-pant[data-paso="2"].activa .mkm-carrito { animation: pd2-carrito 11s var(--ease) infinite; }
 @keyframes pd2-carrito {
-  0%, 19%   { transform: translateY(100%); }
-  27%, 58%  { transform: translateY(0); }
-  65%, 100% { transform: translateY(100%); }
+  0%, 24%   { transform: translateY(100%); }
+  32%, 64%  { transform: translateY(0); }
+  71%, 100% { transform: translateY(100%); }
 }
 .mkm-carrito-tit { display: block; padding: 7px 9px 5px; font-size: 0.58rem; font-weight: 700; letter-spacing: -0.02em; }
 .mkm-linea { display: flex; align-items: center; gap: 6px; padding: 4px 9px; }
@@ -1989,8 +1967,8 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .mk-pant[data-paso="2"].activa .mkm-wa { animation: pd2-wa-mobile 11s var(--ease) infinite; }
 @keyframes pd2-wa-mobile {
-  0%, 58%   { transform: translateY(100%); }
-  65%, 95%  { transform: translateY(0); }
+  0%, 64%   { transform: translateY(100%); }
+  71%, 96%  { transform: translateY(0); }
   100%      { transform: translateY(100%); }
 }
 .mkm-wa-header {
