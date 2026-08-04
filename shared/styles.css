@@ -828,7 +828,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-size: 0.95rem;
   color: var(--t2);
   max-width: 520px;
-  margin: calc(var(--space-5) * -1 + 4px) auto var(--space-7);
+  margin: calc(var(--space-3) * -1) auto var(--space-7);
 }
 
 .demo-pasos {
@@ -855,18 +855,23 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   flex-direction: column;
   gap: var(--space-2);
 }
-/* Línea que une los tres anillos */
-.pasos-lista::before {
+/* Tramos de línea entre anillo y anillo. Se dibujan por paso (y no como
+   una sola línea de punta a punta) para que corten justo en el borde del
+   círculo en vez de pasarle por encima. */
+.paso-item:not(:last-child)::before {
   content: '';
   position: absolute;
   left: 47px;
-  top: 46px;
-  bottom: 46px;
+  /* arranca al pie del anillo y termina donde empieza el siguiente */
+  top: calc(var(--space-4) + 46px + 5px);
+  bottom: calc(var(--space-4) * -1 - var(--space-2) + 5px);
   width: 2px;
-  background: linear-gradient(180deg, var(--accent-line), var(--line-soft));
+  margin-left: -1px;
+  background: var(--line-soft);
   border-radius: var(--rf);
-  z-index: 0;
+  z-index: -1;
 }
+.paso-item.activo:not(:last-child)::before { background: var(--accent-line); }
 
 .paso-item {
   position: relative;
@@ -895,7 +900,12 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   width: 46px;
   height: 46px;
   flex-shrink: 0;
+  /* Fondo propio para que la línea de conexión no se vea por detrás */
+  background: var(--bg);
+  border-radius: 50%;
 }
+.paso-item.activo .paso-anillo,
+.paso-item:hover .paso-anillo { background: var(--surface); }
 .paso-anillo svg {
   position: absolute;
   inset: 0;
@@ -940,6 +950,8 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   transition: opacity var(--t);
 }
 .paso-anillo-play svg { position: static; width: 15px; height: 15px; transform: none; }
+/* El botón de play con aro solo se usa en mobile (ver media query) */
+.paso-play { display: none; }
 .paso-item:not(.activo):hover .paso-anillo b { opacity: 0; }
 .paso-item:not(.activo):hover .paso-anillo-play { opacity: 1; }
 
@@ -967,25 +979,6 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .paso-item.activo .paso-item-p { max-height: 140px; opacity: 1; }
 
-.paso-item-datos {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height .35s var(--ease), opacity .3s var(--ease), margin-top .3s var(--ease);
-}
-.paso-item.activo .paso-item-datos { max-height: 60px; opacity: 1; margin-top: 9px; }
-.paso-item-datos span {
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: var(--t2);
-  background: var(--surface-2);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--rf);
-  padding: 3px 10px;
-}
 
 /* ── Pantallas del mockup ── */
 .mk-pant {
@@ -1039,7 +1032,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mk-pant *, .paso-anillo-fill { animation: none !important; }
+  .mk-pant *, .paso-anillo-fill, .aro-fill { animation: none !important; }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1589,17 +1582,17 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .mkd-wa-scroll { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 10px 6px; min-height: 0; }
 .mkd-wa-burbuja {
   margin-left: auto;
-  max-width: 62%;
+  max-width: 74%;
   background: #DCF8C6;
-  border-radius: 8px 8px 2px 8px;
-  padding: 7px 9px;
-  font-size: 0.4rem;
-  line-height: 1.5;
+  border-radius: 9px 9px 3px 9px;
+  padding: 10px 13px;
+  font-size: 0.5rem;
+  line-height: 1.6;
   color: #111;
   white-space: pre-line;
   box-shadow: 0 1px 1px rgba(0,0,0,.08);
 }
-.mkd-wa-burbuja em { display: block; text-align: right; font-style: normal; font-size: 0.34rem; color: #4a9c5e; margin-top: 3px; }
+.mkd-wa-burbuja em { display: block; text-align: right; font-style: normal; font-size: 0.42rem; color: #4a9c5e; margin-top: 3px; }
 .mkd-wa-input { display: flex; align-items: center; gap: 6px; padding: 7px 10px; background: #F0F0F0; flex-shrink: 0; }
 .mkd-wa-input u { flex: 1; height: 15px; background: white; border-radius: var(--rf); }
 .mkd-wa-input i {
@@ -1630,7 +1623,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 42%;
+  object-position: center 46%;
   display: block;
 }
 .mk-entrega-foto::after {
@@ -2081,18 +2074,18 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-style: normal;
 }
 .mkm-wa-burbuja {
-  margin: 9px 8px 0 auto;
-  max-width: 84%;
+  margin: 10px 8px 0 auto;
+  max-width: 90%;
   background: #DCF8C6;
-  border-radius: 8px 8px 2px 8px;
-  padding: 7px 9px;
-  font-size: 0.36rem;
-  line-height: 1.5;
+  border-radius: 9px 9px 3px 9px;
+  padding: 9px 11px;
+  font-size: 0.44rem;
+  line-height: 1.6;
   color: #111;
   white-space: pre-line;
   box-shadow: 0 1px 1px rgba(0,0,0,.08);
 }
-.mkm-wa-burbuja em { display: block; text-align: right; font-style: normal; font-size: 0.31rem; color: #4a9c5e; margin-top: 3px; }
+.mkm-wa-burbuja em { display: block; text-align: right; font-style: normal; font-size: 0.37rem; color: #4a9c5e; margin-top: 3px; }
 .mkm-wa-input { display: flex; align-items: center; gap: 5px; margin-top: auto; padding: 8px; }
 .mkm-wa-input u { flex: 1; height: 18px; background: white; border-radius: var(--rf); }
 .mkm-wa-input i {
@@ -2128,9 +2121,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   /* Sin puntero que se traslade, la secuencia se resuelve más rápido */
   .demo-pasos { --demo-dur: 6.3s; max-width: 400px; gap: var(--space-5); }
 
-  /* Pasos arriba del teléfono */
+  /* Pasos arriba del teléfono, como filas de acordeón. La línea vertical
+     que conecta los anillos es solo del layout de escritorio. */
   .pasos-lista { order: -1; gap: 0; }
-  .pasos-lista::before { display: none; }
+  .paso-item:not(:last-child)::before { display: none; }
 
   .paso-item {
     align-items: center;
@@ -2144,40 +2138,60 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   }
   .paso-item:last-child { border-bottom: none; }
 
-  /* Anillo más chico */
-  .paso-anillo { width: 34px; height: 34px; }
-  .paso-anillo svg { width: 34px; height: 34px; }
-  .paso-anillo circle { stroke-width: 2.5; r: 15.5; }
-  .paso-anillo-fill { stroke-dasharray: 97.4; stroke-dashoffset: 97.4; }
-  .paso-anillo b { font-size: 0.8rem; }
-  .paso-anillo-play svg { width: 12px; height: 12px; }
+  /* El número queda como una pastilla quieta: el progreso se muestra en el
+     botón de play de la derecha, que es lo que se toca. */
+  .paso-anillo { width: 26px; height: 26px; background: var(--surface-2); }
+  .paso-anillo svg,
+  .paso-anillo-play { display: none; }
+  .paso-anillo b { font-size: 0.76rem; color: var(--t2); }
+  .paso-item.activo .paso-anillo { background: var(--accent); }
+  .paso-item.activo .paso-anillo b { color: white; }
 
   .paso-item-h3 { font-size: 0.92rem; margin-bottom: 0; }
   .paso-item.activo .paso-item-h3 { color: var(--accent-2); }
   .paso-item-p { font-size: 0.82rem; }
   .paso-item.activo .paso-item-p { max-height: 160px; margin-top: 3px; }
-  .paso-item.activo .paso-item-datos { max-height: 60px; margin-top: 7px; }
-  .paso-item-datos span { font-size: 0.66rem; padding: 2px 8px; }
 
-  /* Chevron que indica que el paso se despliega */
-  .paso-item::after {
-    content: '';
-    width: 7px;
-    height: 7px;
+  /* Botón de play con el anillo de progreso alrededor: deja claro que el
+     paso se reproduce, y marca cuánto falta para el siguiente. */
+  .paso-play {
+    display: grid;
+    place-items: center;
+    position: relative;
+    width: 30px;
+    height: 30px;
     flex-shrink: 0;
-    border-right: 1.6px solid var(--t3);
-    border-bottom: 1.6px solid var(--t3);
-    transform: rotate(45deg) translate(-2px, -2px);
-    transition: transform var(--t) var(--ease), border-color var(--t);
+    color: var(--t3);
+    transition: color var(--t);
   }
-  .paso-item.activo::after {
-    transform: rotate(-135deg) translate(-2px, -2px);
-    border-color: var(--accent);
+  .paso-play svg.icono { width: 11px; height: 11px; }
+  .paso-play svg.aro {
+    position: absolute;
+    inset: 0;
+    width: 30px;
+    height: 30px;
+    transform: rotate(-90deg);
   }
+  .paso-play svg.aro circle { fill: none; stroke-width: 2; }
+  .paso-play .aro-pista { stroke: var(--surface-3); }
+  .paso-play .aro-fill {
+    stroke: var(--accent);
+    stroke-linecap: round;
+    stroke-dasharray: 81.7;
+    stroke-dashoffset: 81.7;
+  }
+  .paso-item.activo .paso-play { color: var(--accent); }
+  .paso-item.activo .paso-play .aro-fill {
+    animation: paso-anillo-avance var(--demo-dur) linear forwards;
+  }
+  /* El paso activo ya se está reproduciendo: se muestra pausa en vez de play */
+  .paso-item.activo .paso-play .icono-play { display: none; }
+  .paso-item:not(.activo) .paso-play .icono-pausa { display: none; }
 
   /* Paso 3: en el teléfono se usa la versión vertical de la foto (ver el
-     <picture> del HTML), donde entran las dos manos y la bolsa completas. */
-  .mk-entrega-foto img { object-position: center 40%; }
+     <picture> del HTML). Se encuadra alto para que las manos y la bolsa
+     queden arriba del bloque de texto, y no tapadas por él. */
+  .mk-entrega-foto img { object-position: center 22%; }
   .mk-pant[data-paso="3"].activa .mk-entrega-foto img { animation: p3-zoom-mobile var(--demo-dur) linear both; }
   @keyframes p3-zoom-mobile { from { transform: scale(1); } to { transform: scale(1.05); } }
   .mk-entrega-info { padding: var(--space-5) var(--space-4) var(--space-4); }
