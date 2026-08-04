@@ -1856,16 +1856,18 @@ cargarDatos();
 
 // ══════════════════════════════════════════════════════
 //  DEMO "CÓMO HACER UN PEDIDO"
-//  Un mockup (notebook en escritorio, teléfono en mobile) va mostrando el
-//  paso activo. Avanza solo cada 7 s y también se puede elegir a mano.
-//  Se pausa mientras la sección no está en pantalla para no gastar batería.
+//  Un mockup (notebook en escritorio, teléfono en mobile) reproduce el paso
+//  activo. Avanza solo cada 11 s y también se puede elegir a mano.
+//  La secuencia arranca recién cuando la sección entra en pantalla, para que
+//  nadie se pierda el principio, y se pausa al salir.
 // ══════════════════════════════════════════════════════
-const PASO_DURACION = 9000;
+const PASO_DURACION = 11000;
 let pasoActual = 1;
 let pasoTimer = null;
 let pasoEnPantalla = false;
+let demoArrancada = false;
 
-function irAPaso(n, manual = false) {
+function irAPaso(n) {
   const items = document.querySelectorAll('.paso-item');
   if (!items.length) return;
 
@@ -1883,15 +1885,30 @@ function irAPaso(n, manual = false) {
     p.classList.toggle('activa', Number(p.dataset.paso) === n);
   });
 
-  // Reiniciar la barra de avance del paso recién activado
-  const barra = document.querySelector('.paso-item.activo .paso-item-barra');
-  if (barra) {
-    barra.style.animation = 'none';
-    void barra.offsetWidth;
-    barra.style.animation = '';
-  }
+  // Si el usuario elige un paso a mano antes de que la demo arranque sola,
+  // se destraban las animaciones igual.
+  if (!demoArrancada) arrancarDemo();
+  reiniciarAnimaciones();
+  programarPasoSiguiente();
+}
 
-  programarPasoSiguiente(manual);
+// Fuerza a que todas las animaciones del paso activo empiecen desde cero.
+// Sin esto, al cambiar de paso el nuevo mockup entra "a mitad de camino",
+// porque las animaciones CSS comparten el reloj del documento.
+function reiniciarAnimaciones() {
+  const zona = document.querySelector('.demo-pasos');
+  if (!zona) return;
+  const objetivos = zona.querySelectorAll('.mk-pant.activa *, .paso-item.activo .paso-item-barra');
+  objetivos.forEach(el => {
+    el.style.animation = 'none';
+  });
+  void zona.offsetWidth;                       // fuerza un reflow
+  objetivos.forEach(el => { el.style.animation = ''; });
+}
+
+function arrancarDemo() {
+  demoArrancada = true;
+  document.querySelector('.demo-pasos')?.classList.add('demo-lista');
 }
 
 function programarPasoSiguiente() {
@@ -1904,20 +1921,31 @@ function initDemoPasos() {
   const seccion = document.getElementById('como-comprar');
   if (!seccion || !document.querySelector('.paso-item')) return;
 
+  // Estado inicial sin animar: el paso 1 queda "congelado" en su primer
+  // fotograma hasta que la sección se ve.
+  document.querySelectorAll('.mk-pant').forEach(p => {
+    p.classList.toggle('activa', Number(p.dataset.paso) === 1);
+  });
+
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(entradas => {
       entradas.forEach(e => {
         pasoEnPantalla = e.isIntersecting;
-        if (pasoEnPantalla) programarPasoSiguiente();
-        else clearTimeout(pasoTimer);
+        if (!pasoEnPantalla) { clearTimeout(pasoTimer); return; }
+        // Primera vez que se ve: recién ahí empieza todo, desde el paso 1.
+        if (!demoArrancada) {
+          arrancarDemo();
+          irAPaso(1);
+        } else {
+          programarPasoSiguiente();
+        }
       });
-    }, { threshold: 0.25 }).observe(seccion);
+    }, { threshold: 0.35 }).observe(seccion);
   } else {
     pasoEnPantalla = true;
-    programarPasoSiguiente();
+    arrancarDemo();
+    irAPaso(1);
   }
-
-  irAPaso(1);
 }
 
 document.addEventListener('DOMContentLoaded', initDemoPasos);
