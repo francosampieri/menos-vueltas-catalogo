@@ -832,6 +832,9 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 
 .demo-pasos {
+  /* Duración de cada paso. En mobile es menor: sin puntero que se traslade,
+     los huecos entre toques serían tiempo muerto. */
+  --demo-dur: 9s;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
   gap: var(--space-8);
@@ -903,7 +906,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   background: var(--accent);
   border-radius: var(--rf);
 }
-.paso-item.activo .paso-item-barra { animation: paso-avance 9s linear forwards; }
+.paso-item.activo .paso-item-barra { animation: paso-avance var(--demo-dur) linear forwards; }
 @keyframes paso-avance { to { width: 100%; } }
 
 /* Las animaciones arrancan recién cuando la sección entra en pantalla
@@ -1131,7 +1134,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    El puntero baja a la card (32.8%, 30%), la abre; después va al "+" de
    cantidad (53%, 66.4%) y por último a "Agregar" (68.1%, 66.4%).
    Las coordenadas están medidas sobre la pantalla real del mockup. */
-.mk-pant[data-paso="1"].activa .mk-puntero { animation: pd1-puntero 9s var(--ease-mouse) infinite; }
+.mk-pant[data-paso="1"].activa .mk-puntero { animation: pd1-puntero var(--demo-dur) var(--ease-mouse) infinite; }
 @keyframes pd1-puntero {
   0%       { left: 56%;   top: 55%;   opacity: 0; }
   4%       { left: 55%;   top: 54%;   opacity: 1; }
@@ -1145,7 +1148,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   100%     { left: 68.1%; top: 66.4%; opacity: 1; }
 }
 /* Tres clics: card, "+" y "Agregar" */
-.mk-pant[data-paso="1"].activa .mk-click { animation: pd1-click 9s linear infinite; }
+.mk-pant[data-paso="1"].activa .mk-click { animation: pd1-click var(--demo-dur) linear infinite; }
 @keyframes pd1-click {
   0%, 20%  { opacity: 0; transform: scale(.35); }
   21%      { opacity: .9; transform: scale(.35); }
@@ -1157,7 +1160,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   71%      { opacity: .9; transform: scale(.35); }
   77%,100% { opacity: 0; transform: scale(1.15); }
 }
-.mk-pant[data-paso="1"].activa .mkd-card.destino { animation: pd1-card 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-card.destino { animation: pd1-card var(--demo-dur) var(--ease) infinite; }
 @keyframes pd1-card {
   0%, 21%  { transform: scale(1); box-shadow: none; }
   24%      { transform: scale(.95); box-shadow: 0 0 0 2px var(--accent-line); }
@@ -1166,7 +1169,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 /* El badge del carrito recién aparece cuando se agregó el producto */
 .con-badge-tardio b { opacity: 0; }
-.mk-pant[data-paso="1"].activa .con-badge-tardio b { animation: pd1-badge 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .con-badge-tardio b { animation: pd1-badge var(--demo-dur) var(--ease) infinite; }
 @keyframes pd1-badge {
   0%, 73%  { opacity: 0; transform: scale(.4); }
   78%      { opacity: 1; transform: scale(1.3); }
@@ -1175,7 +1178,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 /* Modal de producto */
 .mk-pant[data-paso="1"].activa .mkd-modal-fondo,
-.mk-pant[data-paso="1"].activa .mkm-modal-fondo { animation: pd1-fondo 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-modal-fondo { animation: pd1-fondo var(--demo-dur) var(--ease) infinite; }
 @keyframes pd1-fondo {
   0%, 22%  { opacity: 0; }
   28%, 94% { opacity: 1; }
@@ -1197,7 +1200,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   opacity: 0;
 }
 .mk-pant[data-paso="1"].activa .mkd-modal,
-.mk-pant[data-paso="1"].activa .mkm-modal { animation: pd1-modal 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-modal { animation: pd1-modal var(--demo-dur) var(--ease) infinite; }
 @keyframes pd1-modal {
   0%, 22%   { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
   29%, 94%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -1262,12 +1265,12 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 /* El número pasa de 1 a 2 justo cuando el puntero toca "+" (33%) */
 .mkd-qty u .q2, .mkm-qty u .q2 { opacity: 0; }
 .mk-pant[data-paso="1"].activa .mkd-qty u .q1,
-.mk-pant[data-paso="1"].activa .mkm-qty u .q1 { animation: pd1-q1 9s steps(1) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-qty u .q1 { animation: pd1-q1 var(--demo-dur) steps(1) infinite; }
 .mk-pant[data-paso="1"].activa .mkd-qty u .q2,
-.mk-pant[data-paso="1"].activa .mkm-qty u .q2 { animation: pd1-q2 9s steps(1) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-qty u .q2 { animation: pd1-q2 var(--demo-dur) steps(1) infinite; }
 @keyframes pd1-q1 { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 @keyframes pd1-q2 { 0%, 49% { opacity: 0; } 50%, 100% { opacity: 1; } }
-.mk-pant[data-paso="1"].activa .mkd-qty-mas { animation: pd1-boton 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-qty-mas { animation: pd1-boton var(--demo-dur) var(--ease) infinite; }
 @keyframes pd1-boton {
   0%, 48%  { color: var(--t2); transform: scale(1); }
   50%      { color: var(--accent); transform: scale(1.25); }
@@ -1292,16 +1295,16 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 700;
 }
 .mkd-add .add2, .mkm-add .add2 { opacity: 0; }
-.mk-pant[data-paso="1"].activa .mkd-add { animation: pd1-add 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-add { animation: pd1-add var(--demo-dur) var(--ease) infinite; }
 @keyframes pd1-add {
   0%, 71%  { transform: scale(1); }
   73%      { transform: scale(.95); }
   78%, 100%{ transform: scale(1); }
 }
 .mk-pant[data-paso="1"].activa .mkd-add .add1,
-.mk-pant[data-paso="1"].activa .mkm-add .add1 { animation: pd1-a1 9s steps(1) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-add .add1 { animation: pd1-a1 var(--demo-dur) steps(1) infinite; }
 .mk-pant[data-paso="1"].activa .mkd-add .add2,
-.mk-pant[data-paso="1"].activa .mkm-add .add2 { animation: pd1-a2 9s steps(1) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-add .add2 { animation: pd1-a2 var(--demo-dur) steps(1) infinite; }
 @keyframes pd1-a1 { 0%, 72% { opacity: 1; } 73%, 100% { opacity: 0; } }
 @keyframes pd1-a2 { 0%, 72% { opacity: 0; } 73%, 100% { opacity: 1; } }
 
@@ -1337,7 +1340,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   align-items: center;
   justify-content: center;
 }
-.mk-pant[data-paso="2"].activa .mkd-flotante { animation: pd2-flotante 9s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-flotante { animation: pd2-flotante var(--demo-dur) var(--ease) infinite; }
 @keyframes pd2-flotante {
   0%, 23%  { transform: scale(1); opacity: 1; }
   26%      { transform: scale(.86); opacity: 1; }
@@ -1345,7 +1348,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   36%, 100%{ transform: scale(1); opacity: 0; }
 }
 
-.mk-pant[data-paso="2"].activa .mk-puntero { animation: pd2-puntero 9s var(--ease-mouse) infinite; }
+.mk-pant[data-paso="2"].activa .mk-puntero { animation: pd2-puntero var(--demo-dur) var(--ease-mouse) infinite; }
 @keyframes pd2-puntero {
   0%, 4%   { left: 68.1%; top: 66.4%; opacity: 1; }
   20%, 23% { left: 95.6%; top: 93%;   opacity: 1; }
@@ -1354,7 +1357,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   62%      { left: 80.1%; top: 94.1%; opacity: 1; }
   67%, 100%{ left: 80.1%; top: 94.1%; opacity: 0; }
 }
-.mk-pant[data-paso="2"].activa .mk-click { animation: pd2-click 9s linear infinite; }
+.mk-pant[data-paso="2"].activa .mk-click { animation: pd2-click var(--demo-dur) linear infinite; }
 @keyframes pd2-click {
   0%, 22%  { opacity: 0; transform: scale(.35); }
   23%      { opacity: .9; transform: scale(.35); }
@@ -1377,11 +1380,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   flex-direction: column;
   transform: translateX(100%);
 }
-.mk-pant[data-paso="2"].activa .mkd-drawer { animation: pd2-drawer 9s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-drawer { animation: pd2-drawer var(--demo-dur) var(--ease) infinite; }
 @keyframes pd2-drawer {
   0%, 25%   { transform: translateX(100%); }
-  34%, 62%  { transform: translateX(0); }
-  69%, 100% { transform: translateX(100%); }
+  34%, 100% { transform: translateX(0); }
 }
 .mkd-drawer-tit { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
 .mkd-linea { display: flex; align-items: center; gap: 7px; padding: 4px 0; }
@@ -1414,7 +1416,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 700;
 }
 .mkd-wa-btn svg { width: 9px; height: 9px; }
-.mk-pant[data-paso="2"].activa .mkd-wa-btn { animation: pd2-btn 9s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-wa-btn { animation: pd2-btn var(--demo-dur) var(--ease) infinite; }
 @keyframes pd2-btn {
   0%, 57%  { transform: scale(1); }
   59%      { transform: scale(.94); }
@@ -1431,11 +1433,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   flex-direction: column;
   opacity: 0;
 }
-.mk-pant[data-paso="2"].activa .mkd-wa { animation: pd2-wa 9s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkd-wa { animation: pd2-wa var(--demo-dur) var(--ease) infinite; }
 @keyframes pd2-wa {
-  0%, 62%   { opacity: 0; }
-  69%, 96%  { opacity: 1; }
-  99%, 100% { opacity: 0; }
+  0%, 62%  { opacity: 0; }
+  69%,100% { opacity: 1; }
 }
 .mkd-wa-barra {
   display: flex;
@@ -1557,17 +1558,12 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   justify-content: center;
   position: relative;
 }
-/* Placeholder mientras no está la foto definitiva */
-.mk-foto-pendiente {
-  font-size: 0.5rem;
-  color: var(--t3);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  font-weight: 700;
-  border: 1px dashed var(--line);
-  border-radius: var(--rf);
-  padding: 5px 12px;
-  background: rgba(255,255,255,.6);
+.mk-entrega-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  display: block;
 }
 .mk-entrega-info {
   background: var(--surface);
@@ -1832,25 +1828,25 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   right: 9px;
   bottom: 11px;
   z-index: 8;
-  width: 48px;
-  height: 48px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: var(--accent);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 16px rgba(88,117,71,.45);
+  box-shadow: 0 5px 14px rgba(88,117,71,.45);
 }
-.mkm-flotante svg { width: 24px; height: 24px; }
+.mkm-flotante svg { width: 19px; height: 19px; }
 .mkm-flotante b {
   position: absolute;
-  top: -4px; right: -4px;
-  width: 19px; height: 19px;
+  top: -3px; right: -3px;
+  width: 16px; height: 16px;
   border-radius: 50%;
   background: var(--t1);
   color: white;
-  font-size: 0.6rem;
+  font-size: 0.52rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -1861,7 +1857,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    Sin puntero: en una pantalla táctil no hay cursor visible. Lo que marca
    dónde se tocó es la reacción del propio elemento — se hunde y se ilumina,
    exagerado respecto de la web real para que el gesto se lea claro. */
-.mk-pant[data-paso="1"].activa .mkm-card.destino { animation: pm1-tap-card 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-card.destino { animation: pm1-tap-card var(--demo-dur) var(--ease) infinite; }
 @keyframes pm1-tap-card {
   0%, 20%  { transform: scale(1);    box-shadow: none; }
   24%      { transform: scale(.93);  box-shadow: 0 0 0 2.5px var(--accent); }
@@ -1869,7 +1865,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   33%,100% { transform: scale(1);    box-shadow: none; }
 }
 /* Botón "+" de cantidad */
-.mk-pant[data-paso="1"].activa .mkm-qty-mas { animation: pm1-tap-mas 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-qty-mas { animation: pm1-tap-mas var(--demo-dur) var(--ease) infinite; }
 @keyframes pm1-tap-mas {
   0%, 47%  { transform: scale(1);   color: var(--t2);     background: transparent; }
   51%      { transform: scale(.8);  color: white;         background: var(--accent); }
@@ -1877,7 +1873,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   61%,100% { transform: scale(1);   color: var(--t2);     background: transparent; }
 }
 /* Botón "Agregar" */
-.mk-pant[data-paso="1"].activa .mkm-add { animation: pm1-tap-add 9s var(--ease) infinite; }
+.mk-pant[data-paso="1"].activa .mkm-add { animation: pm1-tap-add var(--demo-dur) var(--ease) infinite; }
 @keyframes pm1-tap-add {
   0%, 70%  { transform: scale(1);   filter: brightness(1); }
   74%      { transform: scale(.94); filter: brightness(.82); }
@@ -1886,7 +1882,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 
 /* ══ PASO 2 (mobile) ══ */
-.mk-pant[data-paso="2"].activa .mkm-flotante { animation: pm2-tap-flot 9s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkm-flotante { animation: pm2-tap-flot var(--demo-dur) var(--ease) infinite; }
 @keyframes pm2-tap-flot {
   0%, 22%  { transform: scale(1);   filter: brightness(1);   opacity: 1; }
   26%      { transform: scale(.84); filter: brightness(.8);  opacity: 1; }
@@ -1894,7 +1890,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   35%      { transform: scale(1);   filter: brightness(1);   opacity: 1; }
   39%,100% { transform: scale(1);   filter: brightness(1);   opacity: 0; }
 }
-.mk-pant[data-paso="2"].activa .mkm-wa-btn { animation: pm2-tap-wa 9s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkm-wa-btn { animation: pm2-tap-wa var(--demo-dur) var(--ease) infinite; }
 @keyframes pm2-tap-wa {
   0%, 56%  { transform: scale(1);   filter: brightness(1); }
   60%      { transform: scale(.94); filter: brightness(.82); }
@@ -1912,11 +1908,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   padding-top: 22px;
   transform: translateY(100%);
 }
-.mk-pant[data-paso="2"].activa .mkm-carrito { animation: pd2-carrito 9s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkm-carrito { animation: pd2-carrito var(--demo-dur) var(--ease) infinite; }
 @keyframes pd2-carrito {
   0%, 25%   { transform: translateY(100%); }
-  34%, 62%  { transform: translateY(0); }
-  69%, 100% { transform: translateY(100%); }
+  34%, 100% { transform: translateY(0); }
 }
 .mkm-carrito-tit { display: block; padding: 7px 9px 5px; font-size: 0.58rem; font-weight: 700; letter-spacing: -0.02em; }
 .mkm-linea { display: flex; align-items: center; gap: 6px; padding: 4px 9px; }
@@ -1965,11 +1960,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   flex-direction: column;
   transform: translateY(100%);
 }
-.mk-pant[data-paso="2"].activa .mkm-wa { animation: pd2-wa-mobile 9s var(--ease) infinite; }
+.mk-pant[data-paso="2"].activa .mkm-wa { animation: pd2-wa-mobile var(--demo-dur) var(--ease) infinite; }
 @keyframes pd2-wa-mobile {
-  0%, 62%   { transform: translateY(100%); }
-  70%, 96%  { transform: translateY(0); }
-  100%      { transform: translateY(100%); }
+  0%, 62%  { transform: translateY(100%); }
+  70%,100% { transform: translateY(0); }
 }
 .mkm-wa-header {
   display: flex;
@@ -2035,11 +2029,16 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 @media (max-width: 700px) {
   .mk-note { display: none; }
   .mk-tel { display: block; }
+  /* Sin puntero que se traslade, la secuencia se resuelve más rápido */
+  .demo-pasos { --demo-dur: 6.3s; }
   .demo-pasos { max-width: 380px; gap: var(--space-5); }
   .paso-item { padding: var(--space-3); gap: var(--space-3); }
   .paso-item-h3 { font-size: 0.92rem; }
   .paso-item-p { font-size: 0.81rem; }
   .paso-item-num { width: 26px; height: 26px; font-size: 0.76rem; }
+  /* El marco del teléfono es mucho más angosto: se recorta hacia la derecha
+     de la foto, que es donde está el intercambio de la bolsa. */
+  .mk-entrega-foto img { object-position: 72% 38%; }
   .mk-entrega-info { padding: var(--space-3) var(--space-3) var(--space-4); }
   .mk-entrega-h { font-size: 0.78rem; margin-bottom: var(--space-2); }
   .mk-chip { font-size: 0.56rem; padding: 5px 8px; margin-bottom: 4px; }

@@ -1861,7 +1861,17 @@ cargarDatos();
 //  La secuencia arranca recién cuando la sección entra en pantalla, para que
 //  nadie se pierda el principio, y se pausa al salir.
 // ══════════════════════════════════════════════════════
-const PASO_DURACION = 9000;
+// La duración la define el CSS (--demo-dur), que cambia según el
+// dispositivo: en mobile la secuencia es más corta porque no hay puntero
+// que se traslade entre un toque y otro.
+function duracionPaso() {
+  const zona = document.querySelector('.demo-pasos');
+  if (!zona) return 9000;
+  const v = getComputedStyle(zona).getPropertyValue('--demo-dur').trim();
+  const n = parseFloat(v);
+  if (!n) return 9000;
+  return v.endsWith('ms') ? n : n * 1000;
+}
 let pasoActual = 1;
 let pasoTimer = null;
 let pasoEnPantalla = false;
@@ -1914,7 +1924,7 @@ function arrancarDemo() {
 function programarPasoSiguiente() {
   clearTimeout(pasoTimer);
   if (!pasoEnPantalla) return;
-  pasoTimer = setTimeout(() => irAPaso(pasoActual % 3 + 1), PASO_DURACION);
+  pasoTimer = setTimeout(() => irAPaso(pasoActual % 3 + 1), duracionPaso());
 }
 
 function initDemoPasos() {
