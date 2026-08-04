@@ -1644,7 +1644,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   margin-top: auto;
   background: none;
   border-top: none;
-  padding: var(--space-6) var(--space-5) var(--space-5);
+  padding: var(--space-6) var(--space-5) var(--space-4);
   flex-shrink: 0;
 }
 .mk-et {
@@ -2189,9 +2189,9 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   .paso-item:not(.activo) .paso-play .icono-pausa { display: none; }
 
   /* Paso 3: en el teléfono se usa la versión vertical de la foto (ver el
-     <picture> del HTML). Se encuadra alto para que las manos y la bolsa
-     queden arriba del bloque de texto, y no tapadas por él. */
-  .mk-entrega-foto img { object-position: center 22%; }
+     <picture> del HTML), compuesta con las manos y la bolsa en la mitad
+     superior y el piso libre abajo, que es donde va el texto. */
+  .mk-entrega-foto img { object-position: center top; }
   .mk-pant[data-paso="3"].activa .mk-entrega-foto img { animation: p3-zoom-mobile var(--demo-dur) linear both; }
   @keyframes p3-zoom-mobile { from { transform: scale(1); } to { transform: scale(1.05); } }
   .mk-entrega-info { padding: var(--space-5) var(--space-4) var(--space-4); }
