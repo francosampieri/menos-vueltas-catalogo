@@ -95,9 +95,6 @@ async function cargarDatos() {
 
 const MQ_MOBILE = window.matchMedia('(max-width: 600px)');
 
-// Estado de la vista de escritorio (sidebar + grilla)
-let ordenActivo = 'nombre';   // 'nombre' | 'precio-asc' | 'precio-desc'
-let soloConDescuento = false;
 // Categorías desplegadas en el sidebar (se abren solas al elegirlas)
 const catsAbiertas = new Set();
 
@@ -257,19 +254,14 @@ function renderGrupos() {
   const cont = document.getElementById('catalogo');
   cont.innerHTML = '';
 
-  let filtrados = getGruposFiltrados();
-
-  // Filtro "con descuento" (solo escritorio, se activa desde las tools)
-  if (soloConDescuento) filtrados = filtrados.filter(([, vars]) => grupoTieneDescuento(vars));
+  const filtrados = getGruposFiltrados();
 
   // El sidebar refleja qué categoría/subcategoría está activa
   construirSidebar();
   actualizarEncabezadoCatalogo(filtrados.length);
 
   if (!filtrados.length) {
-    cont.innerHTML = soloConDescuento
-      ? '<div class="empty-msg">No hay productos con descuento por cantidad en esta selección.</div>'
-      : '<div class="empty-msg">No se encontraron productos 🔍</div>';
+    cont.innerHTML = '<div class="empty-msg">No se encontraron productos 🔍</div>';
     return;
   }
 
@@ -290,11 +282,6 @@ function renderGrupos() {
     // "Obleas Bauducco") quedan agrupados uno al lado del otro, en vez de
     // depender del Id_Grupo (que no tiene relación con el orden visual).
     items.sort(([gidA, varsA], [gidB, varsB]) => {
-      if (ordenActivo === 'precio-asc' || ordenActivo === 'precio-desc') {
-        const pa = precioMinimoGrupo(varsA);
-        const pb = precioMinimoGrupo(varsB);
-        if (pa !== pb) return ordenActivo === 'precio-asc' ? pa - pb : pb - pa;
-      }
       const nombreA = (grupos[gidA]?.nombre || varsA[0]['Producto'] || '');
       const nombreB = (grupos[gidB]?.nombre || varsB[0]['Producto'] || '');
       const cmpNombre = nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
@@ -435,6 +422,30 @@ MQ_MOBILE.addEventListener('change', () => {
 //  una columna fija: categorías + subcategorías siempre visibles, con el
 //  conteo de productos de cada una. En mobile el sidebar se oculta por CSS.
 // ══════════════════════════════════════════════════════
+// Iconos de categoría: los mismos que usa la sección "Categorías
+// principales" de la landing, para que la navegación hable un solo idioma
+// visual. Se guardan solo los <path> internos; el <svg> lo arma getIconoCat.
+const ICONOS_CAT = {
+  'Almacen': '<path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v10a1 1 0 01-1 1H5a1 1 0 01-1-1V9z"/><line x1="9" y1="13" x2="15" y2="13"/>',
+  'Desayuno y Mediatarde': '<g transform="translate(1,2)"><path d="M3 8h14v6a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><path d="M17 9h2a2 2 0 012 2v1a2 2 0 01-2 2h-2"/><line x1="6" y1="2" x2="6" y2="5"/><line x1="10" y1="2" x2="10" y2="5"/><line x1="14" y1="2" x2="14" y2="5"/></g>',
+  'Higiene Personal': '<path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/><path d="M4 21l1-1.5"/><path d="M20 21l-1-1.5"/>',
+  'Hogar y Ferreteria': '<path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/><path d="M9 21v-6h6v6"/>',
+  'Limpieza': '<path d="M4 12a2 2 0 012-2h4a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7"/><path d="M6 10V6a1 1 0 011-1h2a1 1 0 011 1v4"/><path d="M15 7h.01"/><path d="M18 9h.01"/><path d="M18 5h.01"/><path d="M21 3h.01"/><path d="M21 7h.01"/><path d="M21 11h.01"/><path d="M10 7h1"/>',
+  'Snacks y Golosinas': '<path d="M7.05 11.293l4.243-4.243a2 2 0 012.828 0l2.829 2.83a2 2 0 010 2.828l-4.243 4.243a2 2 0 01-2.828 0l-2.829-2.831a2 2 0 010-2.828"/><path d="M16.243 9.172l3.086-.772a1.5 1.5 0 00.697-2.516l-2.216-2.217a1.5 1.5 0 00-2.44.47l-1.248 2.913"/><path d="M9.172 16.243l-.772 3.086a1.5 1.5 0 01-2.516.697l-2.217-2.216a1.5 1.5 0 01.47-2.44l2.913-1.248"/>',
+  // Genérico (bolsa) para "Todo el catálogo" y cualquier categoría nueva
+  '_default': '<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>'
+};
+
+// Normaliza acentos para que "Almacén" encuentre la clave "Almacen".
+function getIconoCat(cat) {
+  const sinAcentos = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const clave = Object.keys(ICONOS_CAT).find(k =>
+    sinAcentos(k).toLowerCase() === sinAcentos(cat || '').toLowerCase());
+  const paths = ICONOS_CAT[clave] || ICONOS_CAT['_default'];
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+    stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+}
+
 function contarPorCategoria() {
   const porCat = {}, porSub = {};
   Object.entries(catalogo).forEach(([gid, vars]) => {
@@ -459,7 +470,7 @@ function construirSidebar() {
   // "Todo el catálogo"
   const btnTodos = document.createElement('button');
   btnTodos.className = 'cat-nav-btn' + (filtroActivo === 'Todos' && !busquedaActiva ? ' active' : '');
-  btnTodos.innerHTML = `<span class="cat-nav-emoji">🗂️</span>
+  btnTodos.innerHTML = `<span class="cat-nav-icono">${getIconoCat('_default')}</span>
     <span class="cat-nav-txt">Todo el catálogo</span>
     <span class="cat-nav-num">${total}</span>`;
   btnTodos.onclick = () => {
@@ -474,7 +485,7 @@ function construirSidebar() {
     const btn = document.createElement('button');
     btn.className = 'cat-nav-btn' + (filtroActivo === cat && !filtroSubcat ? ' active' : '')
                                   + (filtroActivo === cat ? ' en-rama' : '');
-    btn.innerHTML = `<span class="cat-nav-emoji">${getEmoji(cat)}</span>
+    btn.innerHTML = `<span class="cat-nav-icono">${getIconoCat(cat)}</span>
       <span class="cat-nav-txt">${cat}</span>
       <span class="cat-nav-num">${porCat[cat]}</span>
       <span class="cat-nav-chevron${abierta ? ' abierto' : ''}">
@@ -570,37 +581,6 @@ function actualizarEncabezadoCatalogo(cantidad) {
     }
     crumb.appendChild(el);
   });
-}
-
-// ── Herramientas de la grilla ──
-const ORDENES = [
-  { id: 'nombre',      label: 'Nombre A–Z' },
-  { id: 'precio-asc',  label: 'Precio: menor a mayor' },
-  { id: 'precio-desc', label: 'Precio: mayor a menor' }
-];
-
-function cambiarOrden() {
-  const i = ORDENES.findIndex(o => o.id === ordenActivo);
-  ordenActivo = ORDENES[(i + 1) % ORDENES.length].id;
-  document.getElementById('toolOrdenLabel').textContent = ORDENES.find(o => o.id === ordenActivo).label;
-  renderGrupos();
-}
-
-function toggleSoloDto() {
-  soloConDescuento = !soloConDescuento;
-  document.getElementById('toolDto').classList.toggle('activo', soloConDescuento);
-  renderGrupos();
-}
-
-// Precio de referencia de un grupo: el más bajo entre sus variantes, que es
-// el que el usuario percibe como "desde".
-function precioMinimoGrupo(vars) {
-  const precios = vars.map(v => parsePrecio(v['Precio_Venta'])).filter(p => p !== null);
-  return precios.length ? Math.min(...precios) : Infinity;
-}
-
-function grupoTieneDescuento(vars) {
-  return vars.some(v => (parseInt(v['Uni Dto']) || 0) > 0 && parsePrecio(v['Precio_Dto']) !== null);
 }
 
 // ══ CARD ══

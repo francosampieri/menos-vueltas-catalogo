@@ -80,7 +80,9 @@
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+/* overflow-x: clip (y no hidden) — hidden convierte al elemento en un
+   contenedor de scroll y anula el position:sticky del sidebar del catálogo. */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 body {
   font-family: var(--font);
   background-color: var(--bg);
@@ -89,7 +91,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Textos largos y párrafos usan Cabin */
@@ -1559,7 +1561,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   position: sticky;
   /* topbar (72) + barra del catálogo (48) */
   top: 120px;
-  max-height: calc(100vh - 120px);
+  /* Alto exacto de la ventana descontando lo que queda arriba: el sidebar
+     nunca se va con el scroll de la página y, si la lista es más larga que
+     la pantalla, scrollea por dentro. */
+  height: calc(100vh - 120px);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -1601,7 +1606,15 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 /* Categoría desplegada pero con una subcategoría elegida: se marca suave */
 .cat-nav-btn.en-rama:not(.active) { color: var(--accent-2); }
 
-.cat-nav-emoji { font-size: 1rem; line-height: 1; flex-shrink: 0; }
+/* Icono de categoría: mismo set de la sección "Categorías principales" */
+.cat-nav-icono {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--accent);
+  transition: color var(--t);
+}
+.cat-nav-icono svg { width: 18px; height: 18px; }
+.cat-nav-btn.active .cat-nav-icono { color: white; }
 .cat-nav-txt {
   flex: 1;
   min-width: 0;
@@ -1699,32 +1712,6 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   font-size: 0.8rem;
   color: var(--t3);
   margin-top: 4px;
-}
-
-.catalogo-tools { display: flex; gap: var(--space-2); flex-shrink: 0; }
-.catalogo-tool {
-  height: 34px;
-  padding: 0 var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--rf);
-  font-family: var(--font);
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--t2);
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  white-space: nowrap;
-  transition: all var(--t);
-}
-.catalogo-tool svg { width: 14px; height: 14px; }
-.catalogo-tool:hover { border-color: var(--accent-line); color: var(--accent); background: var(--accent-bg); }
-.catalogo-tool.activo {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-  font-weight: 600;
 }
 
 /* Grid */
