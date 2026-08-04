@@ -1985,16 +1985,6 @@ function addRevealClasses() {
     el.classList.add('reveal', `reveal-delay-${i + 1}`);
   });
 
-  // Pilares de beneficios
-  document.querySelectorAll('.beneficio').forEach((el, i) => {
-    el.classList.add('reveal', `reveal-delay-${i + 1}`);
-  });
-
-  // Categorías
-  document.querySelectorAll('.categoria-card').forEach((el, i) => {
-    el.classList.add('reveal', `reveal-delay-${i + 1}`);
-  });
-
   // FAQ items
   document.querySelectorAll('.faq-item').forEach((el, i) => {
     el.classList.add('reveal', `reveal-delay-${Math.min(i + 1, 3)}`);

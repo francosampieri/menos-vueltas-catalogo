@@ -2272,88 +2272,6 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .vueltas-mobile { display: none; }
 
 
-/* ══════════════════════════════════════════════════════
-   BENEFICIOS
-══════════════════════════════════════════════════════ */
-.beneficios {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line-soft);
-}
-.beneficios-inner {
-  max-width: var(--content-wide);
-  margin: 0 auto;
-  padding: var(--space-9) var(--space-5);
-}
-
-.beneficios-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: var(--space-5);
-}
-
-.beneficio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-3);
-  border-radius: var(--r4);
-  border: 1px solid transparent;
-  background: transparent;
-  transition: background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
-  cursor: default;
-}
-.beneficio:hover {
-  background: var(--surface);
-  border-color: var(--line);
-  transform: translateY(-4px);
-  box-shadow: var(--s2);
-}
-.beneficio-icon-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--accent-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.25s var(--ease), transform 0.3s cubic-bezier(.34,1.56,.64,1);
-}
-.beneficio:hover .beneficio-icon-wrap {
-  background: var(--accent);
-  transform: scale(1.1);
-}
-.beneficio svg {
-  width: 24px;
-  height: 24px;
-  color: var(--accent);
-  transition: color 0.25s var(--ease);
-}
-.beneficio:hover svg { color: white; }
-.beneficio p {
-  font-size: 0.8rem;
-  color: var(--t2);
-  line-height: 1.4;
-  font-family: var(--font-body);
-  transition: color 0.25s var(--ease);
-}
-.beneficio:hover p { color: var(--t1); }
-
-
-/* ══════════════════════════════════════════════════════
-   CATEGORÍAS PRINCIPALES
-══════════════════════════════════════════════════════ */
-.categorias-home {
-  background: var(--bg);
-  border-bottom: 1px solid var(--line-soft);
-}
-.categorias-home-inner {
-  max-width: var(--content-wide);
-  margin: 0 auto;
-  padding: var(--space-9) var(--space-5);
-}
-
 /* Destacados: franjita angosta con scroll horizontal (no una sección más) */
 .destacados-strip {
   background: var(--accent-bg);
@@ -2435,95 +2353,6 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .destacados-arrow--prev { left: -14px; }
 .destacados-arrow--next { right: -14px; }
 .destacados-arrow[disabled] { opacity: 0; pointer-events: none; }
-
-.categorias-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: var(--space-4);
-}
-
-.categoria-card {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r4);
-  padding: var(--space-5) var(--space-3) var(--space-4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
-  cursor: pointer;
-  overflow: hidden;
-  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
-}
-.categoria-card::before {
-  content: '';
-  position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 1.5px dashed var(--accent-line);
-  opacity: 0;
-  transform: scale(0.8) rotate(-20deg);
-  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
-  pointer-events: none;
-}
-.categoria-card:hover {
-  border-color: var(--accent-line);
-  box-shadow: var(--s2);
-}
-.categoria-card:hover::before {
-  opacity: 1;
-  transform: scale(1) rotate(0deg);
-}
-
-.categoria-img-wrap {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--accent-bg);
-  border: 1px solid var(--accent-line);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  transition: background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.3s cubic-bezier(.34,1.56,.64,1);
-}
-.categoria-card:hover .categoria-img-wrap {
-  background: var(--accent);
-  border-color: var(--accent);
-  transform: scale(1.08);
-}
-.categoria-img-wrap svg { width: 25px; height: 25px; transition: color 0.25s var(--ease); }
-.categoria-card:hover .categoria-img-wrap svg { color: white; }
-
-.categoria-card span {
-  font-size: 0.825rem;
-  font-weight: 500;
-  color: var(--t1);
-  text-align: center;
-}
-
-.categoria-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
-  color: var(--accent);
-  margin-top: -4px;
-}
-.categoria-arrow svg { width: 14px; height: 14px; }
-.categoria-card:hover .categoria-arrow {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 
 /* ══════════════════════════════════════════════════════
    CTA FINAL
@@ -4271,8 +4100,6 @@ body.modal-abierto {
   .faq-inner { grid-template-columns: 1fr; gap: var(--space-5); }
   .faq-header { position: static; }
 
-  .beneficios-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6) var(--space-4); }
-  .categorias-grid { grid-template-columns: repeat(3, 1fr); }
 
   /* Destacados: en pantallas medianas ya no hace falta el botón de flecha,
      el swipe táctil alcanza */
@@ -4363,19 +4190,8 @@ body.modal-abierto {
   .hero-actions .btn-ghost-dark { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .75); color: white; backdrop-filter: blur(4px); }
   .faq-inner { padding: var(--space-8) var(--space-4); }
   /* Beneficios: una lista de atajos, más fácil de recorrer que seis mini tarjetas. */
-  .como-comprar-inner, .vueltas-inner, .beneficios-inner,
-  .categorias-home-inner, .cta-final-inner { padding: var(--space-7) var(--space-4); }
-  .beneficios-grid { display: flex; flex-direction: column; gap: var(--space-2); }
-  .beneficio { flex-direction: row; align-items: center; text-align: left; gap: var(--space-3); padding: var(--space-3); background: var(--surface); border-color: var(--line-soft); border-radius: var(--r3); }
-  .beneficio-icon-wrap { width: 42px; height: 42px; flex: 0 0 42px; }
-  .beneficio svg { width: 20px; height: 20px; }
-  .beneficio p { font-family: var(--font); font-size: .86rem; font-weight: 500; line-height: 1.3; color: var(--t1); }
-  .categorias-grid { grid-template-columns: 1fr; gap: var(--space-2); }
-  .categoria-card { flex-direction: row; justify-content: flex-start; gap: var(--space-3); padding: var(--space-3); text-align: left; }
-  .categoria-img-wrap { width: 42px; height: 42px; flex: 0 0 42px; }
-  .categoria-img-wrap svg { width: 20px; height: 20px; }
-  .categoria-card span { text-align: left; font-size: .86rem; }
-  .categoria-arrow { opacity: 1; transform: none; margin: 0 0 0 auto; }
+  .como-comprar-inner, .vueltas-inner,
+  .cta-final-inner { padding: var(--space-7) var(--space-4); }
   .vueltas-svg-wrap { display: none; }
   .vueltas-mobile {
     display: flex;
@@ -4551,13 +4367,6 @@ body.modal-abierto {
     border-color var(--t) var(--ease),
     box-shadow 0.25s var(--ease),
     transform 0.25s var(--ease);
-}
-
-/* ── Categorías — transición base (hover visual definido arriba) ── */
-.categoria-card {
-  transition:
-    border-color var(--t) var(--ease),
-    box-shadow 0.25s var(--ease);
 }
 
 /* ── Botones — press feedback ── */
