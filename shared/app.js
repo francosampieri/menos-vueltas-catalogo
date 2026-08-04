@@ -95,10 +95,17 @@ async function cargarDatos() {
 
 const MQ_MOBILE = window.matchMedia('(max-width: 600px)');
 
+// Estado de la vista de escritorio (sidebar + grilla)
+let ordenActivo = 'nombre';   // 'nombre' | 'precio-asc' | 'precio-desc'
+let soloConDescuento = false;
+// Categorías desplegadas en el sidebar (se abren solas al elegirlas)
+const catsAbiertas = new Set();
+
 // ══ RENDER CATÁLOGO ══
 function renderCatalogo() {
   document.getElementById('loading').style.display = 'none';
   construirFiltrosCategorias();
+  construirSidebar();
   llenarMegamenu();
   renderGrupos();
   renderDestacados();
@@ -250,9 +257,19 @@ function renderGrupos() {
   const cont = document.getElementById('catalogo');
   cont.innerHTML = '';
 
-  const filtrados = getGruposFiltrados();
+  let filtrados = getGruposFiltrados();
+
+  // Filtro "con descuento" (solo escritorio, se activa desde las tools)
+  if (soloConDescuento) filtrados = filtrados.filter(([, vars]) => grupoTieneDescuento(vars));
+
+  // El sidebar refleja qué categoría/subcategoría está activa
+  construirSidebar();
+  actualizarEncabezadoCatalogo(filtrados.length);
+
   if (!filtrados.length) {
-    cont.innerHTML = '<div class="empty-msg">No se encontraron productos 🔍</div>';
+    cont.innerHTML = soloConDescuento
+      ? '<div class="empty-msg">No hay productos con descuento por cantidad en esta selección.</div>'
+      : '<div class="empty-msg">No se encontraron productos 🔍</div>';
     return;
   }
 
@@ -273,6 +290,11 @@ function renderGrupos() {
     // "Obleas Bauducco") quedan agrupados uno al lado del otro, en vez de
     // depender del Id_Grupo (que no tiene relación con el orden visual).
     items.sort(([gidA, varsA], [gidB, varsB]) => {
+      if (ordenActivo === 'precio-asc' || ordenActivo === 'precio-desc') {
+        const pa = precioMinimoGrupo(varsA);
+        const pb = precioMinimoGrupo(varsB);
+        if (pa !== pb) return ordenActivo === 'precio-asc' ? pa - pb : pb - pa;
+      }
       const nombreA = (grupos[gidA]?.nombre || varsA[0]['Producto'] || '');
       const nombreB = (grupos[gidB]?.nombre || varsB[0]['Producto'] || '');
       const cmpNombre = nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
@@ -285,8 +307,11 @@ function renderGrupos() {
     });
 
     // El título "clásico" (línea gris con la subcategoría) solo se usa en la
-    // grilla; los rieles de mobile tienen su propio encabezado.
-    if (!usarRieles()) {
+    // grilla; los rieles de mobile tienen su propio encabezado. Y si el
+    // usuario ya está dentro de esa subcategoría, el título repetiría lo
+    // que dice el encabezado grande: se omite.
+    const tituloRedundante = filtroSubcat && !busquedaActiva;
+    if (!usarRieles() && !tituloRedundante) {
       const titulo = document.createElement('div');
       titulo.className = 'seccion-titulo';
       titulo.textContent = sub || cat;
@@ -404,12 +429,186 @@ MQ_MOBILE.addEventListener('change', () => {
   if (document.getElementById('catalogo')?.childElementCount) renderGrupos();
 });
 
+// ══════════════════════════════════════════════════════
+//  SIDEBAR DE CATEGORÍAS (escritorio)
+//  En pantalla ancha la navegación deja de ser una fila de chips y pasa a
+//  una columna fija: categorías + subcategorías siempre visibles, con el
+//  conteo de productos de cada una. En mobile el sidebar se oculta por CSS.
+// ══════════════════════════════════════════════════════
+function contarPorCategoria() {
+  const porCat = {}, porSub = {};
+  Object.entries(catalogo).forEach(([gid, vars]) => {
+    const g = grupos[gid] || {};
+    const cat = g.categoria    || vars[0]['Categoria']    || 'Otros';
+    const sub = g.subcategoria || vars[0]['Subcategoria'] || '';
+    porCat[cat] = (porCat[cat] || 0) + 1;
+    const k = cat + '|||' + sub;
+    porSub[k] = (porSub[k] || 0) + 1;
+  });
+  return { porCat, porSub };
+}
+
+function construirSidebar() {
+  const nav = document.getElementById('catNav');
+  if (!nav) return;
+  nav.innerHTML = '';
+
+  const { porCat, porSub } = contarPorCategoria();
+  const total = Object.keys(catalogo).length;
+
+  // "Todo el catálogo"
+  const btnTodos = document.createElement('button');
+  btnTodos.className = 'cat-nav-btn' + (filtroActivo === 'Todos' && !busquedaActiva ? ' active' : '');
+  btnTodos.innerHTML = `<span class="cat-nav-emoji">🗂️</span>
+    <span class="cat-nav-txt">Todo el catálogo</span>
+    <span class="cat-nav-num">${total}</span>`;
+  btnTodos.onclick = () => {
+    catsAbiertas.clear();
+    setFiltroCategoria('Todos', document.querySelector('.filtro-btn[data-cat="Todos"]'));
+  };
+  nav.appendChild(btnTodos);
+
+  Object.keys(porCat).forEach(cat => {
+    const abierta = catsAbiertas.has(cat);
+
+    const btn = document.createElement('button');
+    btn.className = 'cat-nav-btn' + (filtroActivo === cat && !filtroSubcat ? ' active' : '')
+                                  + (filtroActivo === cat ? ' en-rama' : '');
+    btn.innerHTML = `<span class="cat-nav-emoji">${getEmoji(cat)}</span>
+      <span class="cat-nav-txt">${cat}</span>
+      <span class="cat-nav-num">${porCat[cat]}</span>
+      <span class="cat-nav-chevron${abierta ? ' abierto' : ''}">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>`;
+    btn.onclick = () => {
+      // Elegir la categoría siempre la despliega; volver a tocarla la pliega.
+      if (filtroActivo === cat && !filtroSubcat && abierta) {
+        catsAbiertas.delete(cat);
+        construirSidebar();
+        return;
+      }
+      catsAbiertas.clear();
+      catsAbiertas.add(cat);
+      setFiltroCategoria(cat, document.querySelector(`.filtro-btn[data-cat="${CSS.escape(cat)}"]`));
+    };
+    nav.appendChild(btn);
+
+    const subs = Object.keys(porSub)
+      .filter(k => k.startsWith(cat + '|||'))
+      .map(k => k.split('|||')[1])
+      .filter(Boolean);
+
+    if (!subs.length) return;
+
+    const grupo = document.createElement('div');
+    grupo.className = 'cat-nav-subs' + (abierta ? ' abierto' : '');
+    subs.forEach(sub => {
+      const s = document.createElement('button');
+      s.className = 'cat-nav-sub' + (filtroActivo === cat && filtroSubcat === sub ? ' active' : '');
+      s.innerHTML = `<span class="cat-nav-txt">${sub}</span>
+        <span class="cat-nav-num">${porSub[cat + '|||' + sub]}</span>`;
+      s.onclick = () => {
+        catsAbiertas.clear();
+        catsAbiertas.add(cat);
+        filtroActivo = cat;
+        busquedaActiva = '';
+        const input = document.getElementById('buscador');
+        if (input) input.value = '';
+        document.querySelectorAll('.filtro-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+        setFiltroSubcat(filtroSubcat === sub ? null : sub);
+      };
+      grupo.appendChild(s);
+    });
+    nav.appendChild(grupo);
+  });
+}
+
+// Encabezado de la grilla: breadcrumb, título y cantidad de resultados.
+function actualizarEncabezadoCatalogo(cantidad) {
+  const crumb  = document.getElementById('catalogoCrumb');
+  const h1     = document.getElementById('catalogoH1');
+  const cuenta = document.getElementById('catalogoCuenta');
+  if (!h1) return;
+
+  let titulo, ruta;
+  if (busquedaActiva) {
+    titulo = `Resultados para “${busquedaActiva}”`;
+    ruta = ['Catálogo', 'Búsqueda'];
+  } else if (filtroSubcat) {
+    titulo = filtroSubcat;
+    ruta = ['Catálogo', filtroActivo, filtroSubcat];
+  } else if (filtroActivo && filtroActivo !== 'Todos') {
+    titulo = filtroActivo;
+    ruta = ['Catálogo', filtroActivo];
+  } else {
+    titulo = 'Catálogo completo';
+    ruta = ['Catálogo'];
+  }
+
+  h1.textContent = titulo;
+  cuenta.textContent = cantidad === 1 ? '1 producto' : `${cantidad} productos`;
+
+  crumb.innerHTML = '';
+  ruta.forEach((paso, i) => {
+    if (i > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'catalogo-crumb-sep';
+      sep.textContent = '›';
+      crumb.appendChild(sep);
+    }
+    const esUltimo = i === ruta.length - 1;
+    const el = document.createElement(esUltimo ? 'span' : 'button');
+    el.className = 'catalogo-crumb-paso' + (esUltimo ? ' actual' : '');
+    el.textContent = paso;
+    if (!esUltimo) {
+      const destino = i === 0 ? 'Todos' : paso;
+      el.onclick = () => {
+        catsAbiertas.clear();
+        if (destino !== 'Todos') catsAbiertas.add(destino);
+        setFiltroCategoria(destino, document.querySelector(`.filtro-btn[data-cat="${CSS.escape(destino)}"]`));
+      };
+    }
+    crumb.appendChild(el);
+  });
+}
+
+// ── Herramientas de la grilla ──
+const ORDENES = [
+  { id: 'nombre',      label: 'Nombre A–Z' },
+  { id: 'precio-asc',  label: 'Precio: menor a mayor' },
+  { id: 'precio-desc', label: 'Precio: mayor a menor' }
+];
+
+function cambiarOrden() {
+  const i = ORDENES.findIndex(o => o.id === ordenActivo);
+  ordenActivo = ORDENES[(i + 1) % ORDENES.length].id;
+  document.getElementById('toolOrdenLabel').textContent = ORDENES.find(o => o.id === ordenActivo).label;
+  renderGrupos();
+}
+
+function toggleSoloDto() {
+  soloConDescuento = !soloConDescuento;
+  document.getElementById('toolDto').classList.toggle('activo', soloConDescuento);
+  renderGrupos();
+}
+
+// Precio de referencia de un grupo: el más bajo entre sus variantes, que es
+// el que el usuario percibe como "desde".
+function precioMinimoGrupo(vars) {
+  const precios = vars.map(v => parsePrecio(v['Precio_Venta'])).filter(p => p !== null);
+  return precios.length ? Math.min(...precios) : Infinity;
+}
+
+function grupoTieneDescuento(vars) {
+  return vars.some(v => (parseInt(v['Uni Dto']) || 0) > 0 && parsePrecio(v['Precio_Dto']) !== null);
+}
+
 // ══ CARD ══
 function getEmoji(cat) {
   const map = {
-    'Almacen': '🛒', 'Limpieza': '🧹', 'Higiene Personal': '🧴',
+    'Almacen': '🥫', 'Almacén': '🥫', 'Limpieza': '🧽', 'Higiene Personal': '🧴',
     'Snacks y Golosinas': '🍬', 'Desayuno y Mediatarde': '☕',
-    'Hogar y Ferreteria': '🔧'
+    'Hogar y Ferreteria': '🔧', 'Hogar y Ferretería': '🔧'
   };
   return map[cat] || '📦';
 }
@@ -1514,6 +1713,8 @@ function mostrarCatalogo(cat, sub) {
 
   const label = sub || (cat && cat !== 'Todos' ? cat : 'Catálogo completo');
   document.getElementById('catalogo-titulo-label').textContent = label;
+  if (cat) { catsAbiertas.clear(); if (cat !== 'Todos') catsAbiertas.add(cat); }
+  construirSidebar();
 
   mostrarOnboardingToast();
 }

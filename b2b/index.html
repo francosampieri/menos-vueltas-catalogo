@@ -581,6 +581,7 @@
     </div>
   </div>
 
+  <!-- Chips de categoría: solo mobile (en escritorio se usa el sidebar) -->
   <div class="filtros-wrap">
     <div class="filtros" id="filtros"></div>
   </div>
@@ -589,13 +590,43 @@
     <div class="subfiltros" id="subfiltros"></div>
   </div>
 
-  <main class="catalogo-main">
-    <div class="loading" id="loading">
-      <div class="loading-spinner"></div>
-      <p>Cargando productos…</p>
-    </div>
-    <div id="catalogo"></div>
-  </main>
+  <!-- Escritorio: sidebar de categorías + grilla. En mobile el sidebar se
+       oculta por CSS y manda la navegación por chips + rieles. -->
+  <div class="catalogo-layout">
+    <aside class="cat-sidebar" id="catSidebar">
+      <div class="cat-sidebar-inner">
+        <h4 class="cat-sidebar-titulo">Categorías</h4>
+        <nav id="catNav"></nav>
+      </div>
+    </aside>
+
+    <main class="catalogo-main">
+      <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p>Cargando productos…</p>
+      </div>
+
+      <header class="catalogo-head" id="catalogoHead">
+        <div class="catalogo-head-txt">
+          <div class="catalogo-crumb" id="catalogoCrumb"></div>
+          <h1 class="catalogo-h1" id="catalogoH1">Catálogo completo</h1>
+          <div class="catalogo-cuenta" id="catalogoCuenta"></div>
+        </div>
+        <div class="catalogo-tools">
+          <button class="catalogo-tool" id="toolOrden" onclick="cambiarOrden()">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M6 4v12M6 16l-2.5-2.5M6 4l2.5 2.5M14 16V4M14 4l2.5 2.5M14 16l-2.5-2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="toolOrdenLabel">Nombre A–Z</span>
+          </button>
+          <button class="catalogo-tool" id="toolDto" onclick="toggleSoloDto()">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 11l5 5 7-11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Con descuento
+          </button>
+        </div>
+      </header>
+
+      <div id="catalogo"></div>
+    </main>
+  </div>
 
 </div><!-- /vista-catalogo -->
 
@@ -645,6 +676,6 @@
 
 <script>window.CANAL = 'B2B';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a22ed4433a7386a4',t:'MTc4NTM1NjQ3Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a25f0a592cb71e96',t:'MTc4NTg2MjAwOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
