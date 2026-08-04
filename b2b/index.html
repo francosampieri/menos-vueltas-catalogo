@@ -249,7 +249,7 @@
               </div>
 
               <!-- Paso 3 · entrega -->
-              <div class="mk-pant" data-paso="3"><div class="mk-entrega"><div class="mk-entrega-foto"><img src="entrega.jpg" alt="" loading="lazy"></div><div class="mk-entrega-info"><span class="mk-et">Pedido confirmado</span><span class="mk-entrega-h">Llega entre 24 y 48 hs</span><span class="mk-chip"><i>🏪</i>Entregamos en tu local</span><span class="mk-chip"><i>💳</i>Efectivo o transferencia</span></div></div></div>
+              <div class="mk-pant" data-paso="3"><div class="mk-entrega"><div class="mk-entrega-foto"><picture><source media="(max-width: 700px)" srcset="entrega-vertical.jpg"><img src="entrega.jpg" alt="" loading="lazy"></picture></div><div class="mk-entrega-info"><span class="mk-et">Pedido confirmado</span><span class="mk-entrega-h">Llega entre 24 y 48 hs</span><span class="mk-chip"><i>🏪</i>Entregamos en tu local</span><span class="mk-chip"><i>💳</i>Efectivo o transferencia</span></div></div></div>
 
             </div>
           </div>
@@ -318,7 +318,7 @@
             <!-- Paso 3 -->
             <div class="mk-pant" data-paso="3">
               <span class="mkm-status"><u>9:44</u><i>▮▮▮</i></span>
-              <div class="mk-entrega"><div class="mk-entrega-foto"><img src="entrega.jpg" alt="" loading="lazy"></div><div class="mk-entrega-info"><span class="mk-et">Pedido confirmado</span><span class="mk-entrega-h">Llega entre 24 y 48 hs</span><span class="mk-chip"><i>🏪</i>Entregamos en tu local</span><span class="mk-chip"><i>💳</i>Efectivo o transferencia</span></div></div>
+              <div class="mk-entrega"><div class="mk-entrega-foto"><picture><source media="(max-width: 700px)" srcset="entrega-vertical.jpg"><img src="entrega.jpg" alt="" loading="lazy"></picture></div><div class="mk-entrega-info"><span class="mk-et">Pedido confirmado</span><span class="mk-entrega-h">Llega entre 24 y 48 hs</span><span class="mk-chip"><i>🏪</i>Entregamos en tu local</span><span class="mk-chip"><i>💳</i>Efectivo o transferencia</span></div></div>
             </div>
 
           </div>
@@ -326,31 +326,56 @@
 
         <!-- ══════════ LISTA DE PASOS ══════════ -->
         <div class="pasos-lista" id="pasosLista">
-          <button class="paso-item activo" data-paso="1" onclick="irAPaso(1)">
-            <span class="paso-item-num">1</span>
+          <button class="paso-item activo" data-paso="1" onclick="irAPaso(1)" aria-current="step">
+            <span class="paso-anillo">
+              <svg viewBox="0 0 46 46" aria-hidden="true">
+                <circle class="paso-anillo-pista" cx="23" cy="23" r="21"/>
+                <circle class="paso-anillo-fill" cx="23" cy="23" r="21"/>
+              </svg>
+              <b>1</b>
+              <span class="paso-anillo-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            </span>
             <span class="paso-item-txt">
               <span class="paso-item-h3">Armá tu pedido</span>
               <span class="paso-item-p">Entrá al catálogo mayorista, tocá el producto y elegí tamaño y cantidad. Los descuentos por volumen se aplican solos.</span>
+              <span class="paso-item-datos"><span>2 min</span><span>Sin registro</span></span>
             </span>
-            <span class="paso-item-barra"></span>
           </button>
-
-          <button class="paso-item" data-paso="2" onclick="irAPaso(2)">
-            <span class="paso-item-num">2</span>
+          <button class="paso-item" data-paso="2" onclick="irAPaso(2)" aria-current="false">
+            <span class="paso-anillo">
+              <svg viewBox="0 0 46 46" aria-hidden="true">
+                <circle class="paso-anillo-pista" cx="23" cy="23" r="21"/>
+                <circle class="paso-anillo-fill" cx="23" cy="23" r="21"/>
+              </svg>
+              <b>2</b>
+              <span class="paso-anillo-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            </span>
             <span class="paso-item-txt">
               <span class="paso-item-h3">Enviálo por WhatsApp</span>
               <span class="paso-item-p">Abrís el carrito y con un clic se abre WhatsApp con el detalle del pedido y el total ya escritos. Vos solo apretás enviar.</span>
+              <span class="paso-item-datos"><span>1 clic</span><span>No escribís nada</span></span>
             </span>
-            <span class="paso-item-barra"></span>
           </button>
-
-          <button class="paso-item" data-paso="3" onclick="irAPaso(3)">
-            <span class="paso-item-num">3</span>
+          <button class="paso-item" data-paso="3" onclick="irAPaso(3)" aria-current="false">
+            <span class="paso-anillo">
+              <svg viewBox="0 0 46 46" aria-hidden="true">
+                <circle class="paso-anillo-pista" cx="23" cy="23" r="21"/>
+                <circle class="paso-anillo-fill" cx="23" cy="23" r="21"/>
+              </svg>
+              <b>3</b>
+              <span class="paso-anillo-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            </span>
             <span class="paso-item-txt">
               <span class="paso-item-h3">Lo recibís en tu negocio</span>
               <span class="paso-item-p">Coordinamos día y horario por WhatsApp, y entregamos entre 24 y 48 hs directo en tu local.</span>
+              <span class="paso-item-datos"><span>24-48 hs</span><span>En tu local</span></span>
             </span>
-            <span class="paso-item-barra"></span>
           </button>
         </div>
 
@@ -811,6 +836,5 @@
 
 <script>window.CANAL = 'B2B';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a260ef600a3f3cb5',t:'MTc4NTg4MTg3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a261193c59e53012',t:'MTc4NTg4MzU5MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

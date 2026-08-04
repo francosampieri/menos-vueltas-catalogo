@@ -1908,7 +1908,7 @@ function irAPaso(n) {
 function reiniciarAnimaciones() {
   const zona = document.querySelector('.demo-pasos');
   if (!zona) return;
-  const objetivos = zona.querySelectorAll('.mk-pant.activa *, .paso-item.activo .paso-item-barra');
+  const objetivos = zona.querySelectorAll('.mk-pant.activa *, .paso-item.activo .paso-anillo-fill');
   objetivos.forEach(el => {
     el.style.animation = 'none';
   });
