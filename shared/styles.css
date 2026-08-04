@@ -66,6 +66,8 @@
   --s4: 0 20px 60px rgba(0,0,0,.10), 0 4px 16px rgba(0,0,0,.05);
 
   --ease: cubic-bezier(.16,1,.3,1);
+  /* Desplazamiento del puntero en la demo: acelera y frena parejo */
+  --ease-mouse: cubic-bezier(.45,.05,.3,1);
   --t: 180ms;
 }
 
@@ -80,7 +82,9 @@
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+/* overflow-x: clip (y no hidden) — hidden convierte al elemento en un
+   contenedor de scroll y anula el position:sticky del sidebar del catálogo. */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 body {
   font-family: var(--font);
   background-color: var(--bg);
@@ -89,7 +93,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Textos largos y párrafos usan Cabin */
@@ -801,7 +805,13 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 
 /* ══════════════════════════════════════════════════════
-   CÓMO COMPRAR
+   CÓMO COMPRAR — demo animada
+   Un mockup que reproduce cada paso junto a la lista de pasos. El mockup y
+   la interfaz cambian según el dispositivo: notebook con la vista de
+   escritorio (sidebar + grilla + modal + drawer) o teléfono con la de
+   mobile (chips + rieles + modal apilado + app de WhatsApp).
+   Los precios van difuminados a propósito para que la animación no quede
+   desactualizada cada vez que cambia la lista de precios.
 ══════════════════════════════════════════════════════ */
 .como-comprar {
   background: var(--bg);
@@ -812,82 +822,1382 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
 }
-
-.pasos-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: var(--space-5);
+.seccion-sub-center {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--t2);
+  max-width: 520px;
+  margin: calc(var(--space-3) * -1) auto var(--space-7);
 }
 
-.paso {
-  flex: 1;
-  max-width: 220px;
+.demo-pasos {
+  /* Duración de cada paso. En mobile es menor: sin puntero que se traslade,
+     los huecos entre toques serían tiempo muerto. */
+  --demo-dur: 9s;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+  gap: var(--space-8);
+  align-items: center;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+/* ── Lista de pasos ──
+   Los tres pasos van conectados por una línea vertical, como un recorrido.
+   Cada número vive dentro de un anillo que se completa mientras corre la
+   animación; al pasar el mouse por un paso inactivo el número se convierte
+   en un ▶ para dejar claro que se puede tocar. Solo el paso activo despliega
+   su descripción y sus datos, así la lista guía la lectura. */
+.pasos-lista {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  gap: var(--space-2);
 }
-
-.paso-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-4);
-  color: var(--accent);
-  position: relative;
-}
-.paso-icon svg { width: 26px; height: 26px; }
-
-.paso-num {
+/* Tramos de línea entre anillo y anillo. Se dibujan por paso (y no como
+   una sola línea de punta a punta) para que corten justo en el borde del
+   círculo en vez de pasarle por encima. */
+.paso-item:not(:last-child)::before {
+  content: '';
   position: absolute;
-  top: -8px;
-  right: -8px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid var(--surface);
-  width: 22px;
-  height: 22px;
+  left: 47px;
+  /* arranca al pie del anillo y termina donde empieza el siguiente */
+  top: calc(var(--space-4) + 46px + 5px);
+  bottom: calc(var(--space-4) * -1 - var(--space-2) + 5px);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--line-soft);
+  border-radius: var(--rf);
+  z-index: -1;
+}
+.paso-item.activo:not(:last-child)::before { background: var(--accent-line); }
+
+.paso-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--r4);
+  text-align: left;
+  transition: background var(--t) var(--ease), border-color var(--t) var(--ease),
+              box-shadow var(--t) var(--ease);
+}
+.paso-item:hover { background: var(--surface); }
+.paso-item.activo {
+  background: var(--surface);
+  border-color: var(--accent-line);
+  box-shadow: var(--s2);
+}
+
+/* ── Anillo con número, progreso y play ── */
+.paso-anillo {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  /* Fondo propio para que la línea de conexión no se vea por detrás */
+  background: var(--bg);
   border-radius: 50%;
+}
+.paso-item.activo .paso-anillo,
+.paso-item:hover .paso-anillo { background: var(--surface); }
+.paso-anillo svg {
+  position: absolute;
+  inset: 0;
+  width: 46px;
+  height: 46px;
+  transform: rotate(-90deg);
+}
+.paso-anillo circle { fill: none; stroke-width: 2.5; }
+.paso-anillo-pista { stroke: var(--surface-3); }
+.paso-anillo-fill {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-dasharray: 132;
+  stroke-dashoffset: 132;
+}
+.paso-item.activo .paso-anillo-fill {
+  animation: paso-anillo-avance var(--demo-dur) linear forwards;
+}
+@keyframes paso-anillo-avance { to { stroke-dashoffset: 0; } }
+
+.paso-anillo b {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.paso h3 {
   font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--t1);
-  margin-bottom: var(--space-2);
+  font-weight: 700;
+  color: var(--t2);
+  transition: color var(--t), opacity var(--t);
 }
-.paso p {
-  font-size: 0.825rem;
+.paso-item.activo .paso-anillo b { color: var(--accent-2); }
+
+.paso-anillo-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  color: var(--accent);
+  transition: opacity var(--t);
+}
+.paso-anillo-play svg { position: static; width: 15px; height: 15px; transform: none; }
+/* El botón de play con aro solo se usa en mobile (ver media query) */
+.paso-play { display: none; }
+.paso-item:not(.activo):hover .paso-anillo b { opacity: 0; }
+.paso-item:not(.activo):hover .paso-anillo-play { opacity: 1; }
+
+/* ── Texto ── */
+.paso-item-txt { display: block; flex: 1; min-width: 0; }
+.paso-item-h3 {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--t1);
+  margin-bottom: 2px;
+}
+/* La descripción y los datos solo se muestran en el paso activo */
+.paso-item-p {
+  display: block;
+  font-size: 0.86rem;
   color: var(--t2);
   font-family: var(--font-body);
   line-height: 1.55;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height .35s var(--ease), opacity .3s var(--ease);
+}
+.paso-item.activo .paso-item-p { max-height: 140px; opacity: 1; }
+
+
+/* ── Pantallas del mockup ── */
+.mk-pant {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .32s var(--ease);
+  overflow: hidden;
+}
+.mk-pant.activa { opacity: 1; }
+
+/* Precios reales del catálogo, con el verde de marca como en las cards */
+.mkd-card b, .mkm-card b,
+.mkd-linea b, .mkm-linea b,
+.mkd-modal-precio, .mkm-modal-precio { color: var(--accent); }
+
+/* ── Puntero de mouse (escritorio) ──
+   El span mide 0×0: así left/top indican exactamente el punto al que apunta
+   la flecha, y el SVG cuelga desde ahí hacia abajo y a la derecha. */
+.mk-puntero {
+  position: absolute;
+  z-index: 20;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.mk-puntero svg {
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  width: 13px;
+  height: 20px;
+  display: block;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+}
+/* Anillo que marca el clic, centrado en la punta */
+.mk-click {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  opacity: 0;
+  transform: scale(.35);
 }
 
-/* Centrado exacto respecto a los 64px del paso-icon */
-.paso-arrow-wrap {
+@media (prefers-reduced-motion: reduce) {
+  .mk-pant *, .paso-anillo-fill, .aro-fill { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════
+   MOCKUP NOTEBOOK (escritorio)
+══════════════════════════════════════════════════════ */
+.mk-note { width: 100%; max-width: 620px; margin: 0 auto; }
+.mk-note-tapa {
+  position: relative;
+  background: #1c211c;
+  border-radius: 14px 14px 4px 4px;
+  padding: 13px 13px 15px;
+  box-shadow: var(--s4);
+}
+.mk-note-tapa::after {
+  content: '';
+  position: absolute;
+  top: 5px; left: 50%;
+  transform: translateX(-50%);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.22);
+}
+.mk-note-screen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.mk-note-base {
+  display: block;
+  height: 12px;
+  background: linear-gradient(180deg, #2c322c, #1c211c);
+  border-radius: 0 0 12px 12px;
+  width: 116%;
+  position: relative;
+  left: -8%;
+  box-shadow: 0 8px 18px rgba(0,0,0,.18);
+}
+.mk-note-base::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 15%; height: 4px;
+  background: rgba(255,255,255,.14);
+  border-radius: 0 0 5px 5px;
+}
+
+/* ── Topbar de escritorio ── */
+.mkd-top {
+  height: 9.5%;
   display: flex;
   align-items: center;
-  height: 64px;
+  gap: 8px;
+  padding: 0 12px;
+  background: white;
+  border-bottom: 1px solid var(--line-soft);
+  flex-shrink: 0;
+}
+.mkd-logo { height: 11px; width: auto; flex-shrink: 0; }
+.mkd-search {
+  width: 30%;
+  height: 12px;
+  border-radius: var(--rf);
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+}
+.mkd-sp { flex: 1; }
+.mkd-cart {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--t2);
+  flex-shrink: 0;
+}
+.mkd-cart svg { width: 9px; height: 9px; }
+
+.mkd-cuerpo { flex: 1; display: flex; min-height: 0; }
+
+.mkd-side {
+  width: 22%;
+  padding: 10px 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-right: 1px solid var(--line-soft);
+  flex-shrink: 0;
+}
+.mkd-side-tit {
+  font-size: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: .11em;
+  color: var(--t3);
+  font-weight: 700;
+  margin-bottom: 3px;
+  padding-left: 5px;
+}
+.mkd-side-item {
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: var(--t1);
+  padding: 4px 6px;
+  border-radius: 5px;
+}
+.mkd-side-item.on { background: var(--accent); color: white; }
+
+.mkd-main { flex: 1; padding: 10px 12px; min-width: 0; }
+.mkd-h1 {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.mkd-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; align-content: start; }
+.mkd-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.mkd-card {
+  background: white;
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  display: block;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.mkd-card i {
+  display: block;
+  height: 34px;
+  background: var(--surface-2);
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 2px;
+}
+.mkd-card i img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.mkd-card u {
+  display: block;
+  font-size: 0.4rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 3px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mkd-card s {
+  display: block;
+  font-size: 0.33rem;
+  color: var(--t3);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mkd-card b { display: block; font-size: 0.48rem; margin-top: 2px; }
+
+/* ══ PASO 1 (escritorio) ══
+   El puntero baja a la card (32.8%, 30%), la abre; después va al "+" de
+   cantidad (53%, 66.4%) y por último a "Agregar" (68.1%, 66.4%).
+   Las coordenadas están medidas sobre la pantalla real del mockup. */
+.mk-pant[data-paso="1"].activa .mk-puntero { animation: pd1-puntero var(--demo-dur) var(--ease-mouse) infinite; }
+@keyframes pd1-puntero {
+  0%       { left: 56%;   top: 55%;   opacity: 0; }
+  4%       { left: 55%;   top: 54%;   opacity: 1; }
+  18%, 21% { left: 32.8%; top: 30%;   opacity: 1; }
+  30%      { left: 32.8%; top: 30%;   opacity: 1; }
+  46%, 49% { left: 53%;   top: 66.4%; opacity: 1; }
+  55%      { left: 53%;   top: 66.4%; opacity: 1; }
+  68%, 71% { left: 68.1%; top: 66.4%; opacity: 1; }
+  /* Termina visible y en el mismo punto donde arranca el paso 2, para que
+     los dos pasos se lean como una sola toma continua. */
+  100%     { left: 68.1%; top: 66.4%; opacity: 1; }
+}
+/* Tres clics: card, "+" y "Agregar" */
+.mk-pant[data-paso="1"].activa .mk-click { animation: pd1-click var(--demo-dur) linear infinite; }
+@keyframes pd1-click {
+  0%, 20%  { opacity: 0; transform: scale(.35); }
+  21%      { opacity: .9; transform: scale(.35); }
+  27%      { opacity: 0; transform: scale(1.15); }
+  48%      { opacity: 0; transform: scale(.35); }
+  49%      { opacity: .9; transform: scale(.35); }
+  55%      { opacity: 0; transform: scale(1.15); }
+  70%      { opacity: 0; transform: scale(.35); }
+  71%      { opacity: .9; transform: scale(.35); }
+  77%,100% { opacity: 0; transform: scale(1.15); }
+}
+.mk-pant[data-paso="1"].activa .mkd-card.destino { animation: pd1-card var(--demo-dur) var(--ease) infinite; }
+@keyframes pd1-card {
+  0%, 21%  { transform: scale(1); box-shadow: none; }
+  24%      { transform: scale(.95); box-shadow: 0 0 0 2px var(--accent-line); }
+  28%, 100%{ transform: scale(1); box-shadow: none; }
+}
+
+/* El badge del carrito recién aparece cuando se agregó el producto */
+.con-badge-tardio b { opacity: 0; }
+.mk-pant[data-paso="1"].activa .con-badge-tardio b { animation: pd1-badge var(--demo-dur) var(--ease) infinite; }
+@keyframes pd1-badge {
+  0%, 73%  { opacity: 0; transform: scale(.4); }
+  78%      { opacity: 1; transform: scale(1.3); }
+  83%, 100%{ opacity: 1; transform: scale(1); }
+}
+
+/* Modal de producto */
+.mk-pant[data-paso="1"].activa .mkd-modal-fondo,
+.mk-pant[data-paso="1"].activa .mkm-modal-fondo { animation: pd1-fondo var(--demo-dur) var(--ease) infinite; }
+@keyframes pd1-fondo {
+  0%, 22%  { opacity: 0; }
+  28%, 94% { opacity: 1; }
+  99%, 100%{ opacity: 0; }
+}
+
+.mkd-modal {
+  position: absolute;
+  z-index: 11;
+  left: 50%;
+  top: 50%;
+  width: 66%;
+  transform: translate(-50%, -46%) scale(.96);
+  display: flex;
+  background: var(--surface);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 18px 44px rgba(0,0,0,.26);
+  opacity: 0;
+}
+.mk-pant[data-paso="1"].activa .mkd-modal,
+.mk-pant[data-paso="1"].activa .mkm-modal { animation: pd1-modal var(--demo-dur) var(--ease) infinite; }
+@keyframes pd1-modal {
+  0%, 22%   { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
+  29%, 94%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  99%, 100% { opacity: 0; transform: translate(-50%, -47%) scale(.96); }
+}
+.mkd-modal-foto {
+  width: 42%;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  flex-shrink: 0;
+}
+.mkd-modal-foto img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.mkd-modal-col { flex: 1; padding: 11px 12px 12px; display: flex; flex-direction: column; min-width: 0; }
+.mkd-modal-marca { font-size: 0.36rem; text-transform: uppercase; letter-spacing: .09em; color: var(--t3); font-weight: 700; }
+.mkd-modal-nom { font-size: 0.72rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-top: 1px; }
+.mkd-modal-var { font-size: 0.4rem; color: var(--t2); margin-top: 1px; }
+.mkd-modal-precio { display: block; font-size: 0.92rem; font-weight: 700; margin-top: 6px; }
+.mkd-modal-tit {
+  display: block;
+  font-size: 0.34rem;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--t3);
+  font-weight: 700;
+  margin-top: 9px;
+}
+.mkd-modal-chips { display: flex; gap: 4px; margin-top: 4px; }
+.mkd-modal-chips i {
+  font-style: normal;
+  font-size: 0.38rem;
+  font-weight: 600;
+  color: var(--t2);
+  border: 1px solid var(--line);
+  border-radius: var(--rf);
+  padding: 3px 7px;
+  background: white;
+}
+.mkd-modal-chips i.on { background: var(--accent); border-color: var(--accent); color: white; }
+.mkd-modal-fila { display: flex; gap: 5px; margin-top: auto; padding-top: 9px; }
+.mkd-qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--rf);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.mkd-qty em { font-style: normal; font-size: 0.5rem; color: var(--t2); padding: 0 5px; line-height: 17px; }
+.mkd-qty u { position: relative; width: 15px; height: 17px; text-decoration: none; }
+.mkd-qty u b {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.45rem;
+  font-weight: 700;
+}
+/* El número pasa de 1 a 2 justo cuando el puntero toca "+" (33%) */
+.mkd-qty u .q2, .mkm-qty u .q2 { opacity: 0; }
+.mk-pant[data-paso="1"].activa .mkd-qty u .q1,
+.mk-pant[data-paso="1"].activa .mkm-qty u .q1 { animation: pd1-q1 var(--demo-dur) steps(1) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-qty u .q2,
+.mk-pant[data-paso="1"].activa .mkm-qty u .q2 { animation: pd1-q2 var(--demo-dur) steps(1) infinite; }
+@keyframes pd1-q1 { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes pd1-q2 { 0%, 49% { opacity: 0; } 50%, 100% { opacity: 1; } }
+.mk-pant[data-paso="1"].activa .mkd-qty-mas { animation: pd1-boton var(--demo-dur) var(--ease) infinite; }
+@keyframes pd1-boton {
+  0%, 48%  { color: var(--t2); transform: scale(1); }
+  50%      { color: var(--accent); transform: scale(1.25); }
+  55%, 100%{ color: var(--t2); transform: scale(1); }
+}
+.mkd-add {
+  flex: 1;
+  position: relative;
+  height: 19px;
+  border-radius: var(--rf);
+  background: var(--accent);
+  overflow: hidden;
+}
+.mkd-add b {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.42rem;
+  font-weight: 700;
+}
+.mkd-add .add2, .mkm-add .add2 { opacity: 0; }
+.mk-pant[data-paso="1"].activa .mkd-add { animation: pd1-add var(--demo-dur) var(--ease) infinite; }
+@keyframes pd1-add {
+  0%, 71%  { transform: scale(1); }
+  73%      { transform: scale(.95); }
+  78%, 100%{ transform: scale(1); }
+}
+.mk-pant[data-paso="1"].activa .mkd-add .add1,
+.mk-pant[data-paso="1"].activa .mkm-add .add1 { animation: pd1-a1 var(--demo-dur) steps(1) infinite; }
+.mk-pant[data-paso="1"].activa .mkd-add .add2,
+.mk-pant[data-paso="1"].activa .mkm-add .add2 { animation: pd1-a2 var(--demo-dur) steps(1) infinite; }
+@keyframes pd1-a1 { 0%, 72% { opacity: 1; } 73%, 100% { opacity: 0; } }
+@keyframes pd1-a2 { 0%, 72% { opacity: 0; } 73%, 100% { opacity: 1; } }
+
+/* ══ PASO 2 (escritorio) ══
+   Puntero al botón flotante (95.6%, 93%) → se abre el drawer → puntero al
+   botón verde (80.1%, 94.1%) → WhatsApp Web a pantalla completa. */
+.mkd-flotante {
+  position: absolute;
+  right: 13px;
+  bottom: 13px;
+  z-index: 8;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(88,117,71,.45);
+}
+.mkd-flotante svg { width: 26px; height: 26px; }
+.mkd-flotante b {
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--t1);
+  color: white;
+  font-size: 0.62rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mk-pant[data-paso="2"].activa .mkd-flotante { animation: pd2-flotante var(--demo-dur) var(--ease) infinite; }
+@keyframes pd2-flotante {
+  0%, 23%  { transform: scale(1); opacity: 1; }
+  26%      { transform: scale(.86); opacity: 1; }
+  31%      { transform: scale(1); opacity: 1; }
+  36%, 100%{ transform: scale(1); opacity: 0; }
+}
+
+.mk-pant[data-paso="2"].activa .mk-puntero { animation: pd2-puntero var(--demo-dur) var(--ease-mouse) infinite; }
+@keyframes pd2-puntero {
+  0%, 4%   { left: 68.1%; top: 66.4%; opacity: 1; }
+  20%, 23% { left: 95.6%; top: 93%;   opacity: 1; }
+  38%      { left: 95.6%; top: 93%;   opacity: 1; }
+  54%, 57% { left: 80.1%; top: 94.1%; opacity: 1; }
+  62%      { left: 80.1%; top: 94.1%; opacity: 1; }
+  67%, 100%{ left: 80.1%; top: 94.1%; opacity: 0; }
+}
+.mk-pant[data-paso="2"].activa .mk-click { animation: pd2-click var(--demo-dur) linear infinite; }
+@keyframes pd2-click {
+  0%, 22%  { opacity: 0; transform: scale(.35); }
+  23%      { opacity: .9; transform: scale(.35); }
+  29%      { opacity: 0; transform: scale(1.15); }
+  56%      { opacity: 0; transform: scale(.35); }
+  57%      { opacity: .9; transform: scale(.35); }
+  63%,100% { opacity: 0; transform: scale(1.15); }
+}
+
+.mkd-drawer {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 40%;
+  z-index: 9;
+  background: white;
+  border-left: 1px solid var(--line-soft);
+  box-shadow: -8px 0 26px rgba(0,0,0,.12);
+  padding: 12px 12px 0;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+}
+.mk-pant[data-paso="2"].activa .mkd-drawer { animation: pd2-drawer var(--demo-dur) var(--ease) infinite; }
+@keyframes pd2-drawer {
+  0%, 25%   { transform: translateX(100%); }
+  34%, 100% { transform: translateX(0); }
+}
+.mkd-drawer-tit { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+.mkd-linea { display: flex; align-items: center; gap: 7px; padding: 4px 0; }
+.mkd-linea i {
+  width: 22px; height: 22px;
+  background: var(--surface-2);
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 2px;
+  flex-shrink: 0;
+}
+.mkd-linea i img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.mkd-linea u { flex: 1; min-width: 0; font-size: 0.44rem; font-weight: 600; text-decoration: none; line-height: 1.3; }
+.mkd-linea u em { display: block; font-style: normal; font-weight: 400; color: var(--t3); font-size: 0.38rem; }
+.mkd-linea b { font-size: 0.46rem; }
+.mkd-drawer-pie { margin-top: auto; padding: 9px 0 12px; border-top: 1px solid var(--line-soft); }
+.mkd-total { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+.mkd-total u { font-size: 0.44rem; color: var(--t2); text-decoration: none; }
+.mkd-total b { font-size: 0.6rem; font-weight: 700; }
+.mkd-wa-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 20px;
+  border-radius: var(--rf);
+  background: var(--wa);
+  color: white;
+  font-size: 0.46rem;
+  font-weight: 700;
+}
+.mkd-wa-btn svg { width: 9px; height: 9px; }
+.mk-pant[data-paso="2"].activa .mkd-wa-btn { animation: pd2-btn var(--demo-dur) var(--ease) infinite; }
+@keyframes pd2-btn {
+  0%, 57%  { transform: scale(1); }
+  59%      { transform: scale(.94); }
+  64%, 100%{ transform: scale(1); }
+}
+
+/* WhatsApp Web: ocupa toda la pantalla de la notebook */
+.mkd-wa {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  background: #ECE5DD;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+}
+.mk-pant[data-paso="2"].activa .mkd-wa { animation: pd2-wa var(--demo-dur) var(--ease) infinite; }
+@keyframes pd2-wa {
+  0%, 62%  { opacity: 0; }
+  69%,100% { opacity: 1; }
+}
+.mkd-wa-barra {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 9px;
+  background: #E4E4E0;
+  border-bottom: 1px solid rgba(0,0,0,.07);
+  flex-shrink: 0;
+}
+.mkd-wa-barra i { width: 6px; height: 6px; border-radius: 50%; }
+.mkd-wa-barra i:nth-child(1) { background: #ff5f57; }
+.mkd-wa-barra i:nth-child(2) { background: #febc2e; }
+.mkd-wa-barra i:nth-child(3) { background: #28c840; }
+.mkd-wa-barra u {
+  margin-left: 8px;
+  font-size: 0.38rem;
+  color: var(--t3);
+  text-decoration: none;
+  background: white;
+  border-radius: var(--rf);
+  padding: 2px 10px;
+}
+.mkd-wa-cuerpo { flex: 1; display: flex; min-height: 0; }
+.mkd-wa-lista {
+  width: 30%;
+  background: white;
+  border-right: 1px solid rgba(0,0,0,.08);
+  padding: 7px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.mkd-wa-buscar { height: 12px; border-radius: var(--rf); background: var(--surface-2); margin-bottom: 3px; }
+.mkd-wa-contacto { display: flex; align-items: center; gap: 5px; padding: 4px 5px; border-radius: 5px; }
+.mkd-wa-contacto.activo { background: var(--surface-2); }
+.mkd-wa-contacto em {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-style: normal;
+  font-size: 0.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mkd-wa-contacto:not(.activo) em { background: var(--surface-3); }
+.mkd-wa-contacto span { flex: 1; min-width: 0; }
+.mkd-wa-contacto u { display: block; font-size: 0.38rem; font-weight: 600; text-decoration: none; }
+.mkd-wa-contacto s { display: block; font-size: 0.32rem; color: var(--t3); text-decoration: none; }
+.mkd-wa-contacto:not(.activo) u,
+.mkd-wa-contacto:not(.activo) s { background: var(--surface-2); border-radius: 3px; height: 4px; margin-top: 2px; }
+
+.mkd-wa-chat { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.mkd-wa-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #075E54;
+  color: white;
+  font-size: 0.48rem;
+  font-weight: 600;
+  padding: 7px 10px;
+  flex-shrink: 0;
+}
+.mkd-wa-header em {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.32rem;
+  font-style: normal;
+}
+.mkd-wa-scroll { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 10px 6px; min-height: 0; }
+.mkd-wa-burbuja {
+  margin-left: auto;
+  max-width: 74%;
+  background: #DCF8C6;
+  border-radius: 9px 9px 3px 9px;
+  padding: 10px 13px;
+  font-size: 0.5rem;
+  line-height: 1.6;
+  color: #111;
+  white-space: pre-line;
+  box-shadow: 0 1px 1px rgba(0,0,0,.08);
+}
+.mkd-wa-burbuja em { display: block; text-align: right; font-style: normal; font-size: 0.42rem; color: #4a9c5e; margin-top: 3px; }
+.mkd-wa-input { display: flex; align-items: center; gap: 6px; padding: 7px 10px; background: #F0F0F0; flex-shrink: 0; }
+.mkd-wa-input u { flex: 1; height: 15px; background: white; border-radius: var(--rf); }
+.mkd-wa-input i {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  background: var(--wa);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.4rem;
+  font-style: normal;
   flex-shrink: 0;
 }
 
-.paso-arrow {
-  width: 32px;
-  height: 14px;
-  color: var(--line);
+/* ══ PASO 3: la foto ocupa toda la pantalla del dispositivo ══
+   Los datos van encima, sobre un degradé, con un zoom lento de fondo. Así
+   el cierre se siente una escena y no una ficha con una foto arriba. */
+.mk-entrega { flex: 1; display: flex; flex-direction: column; min-height: 0; position: relative; }
+.mk-entrega-foto {
+  position: absolute;
+  inset: 0;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.mk-entrega-foto picture { display: contents; }
+.mk-entrega-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 46%;
+  display: block;
+}
+.mk-entrega-foto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20,28,18,0) 34%, rgba(20,28,18,.55) 62%, rgba(20,28,18,.88) 100%);
+}
+/* Zoom lento: le da sensación de video */
+.mk-pant[data-paso="3"].activa .mk-entrega-foto img {
+  animation: p3-zoom var(--demo-dur) linear both;
+}
+@keyframes p3-zoom { from { transform: scale(1.04); } to { transform: scale(1.12); } }
+
+.mk-entrega-info {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  background: none;
+  border-top: none;
+  padding: var(--space-6) var(--space-5) var(--space-4);
   flex-shrink: 0;
+}
+.mk-et {
+  display: block;
+  font-size: 0.52rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: rgba(255,255,255,.75);
+  font-weight: 700;
+}
+.mk-entrega-h {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: white;
+  text-shadow: 0 2px 12px rgba(0,0,0,.35);
+  margin: 3px 0 var(--space-3);
+}
+.mk-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: 9px;
+  padding: 6px 10px;
+  margin-bottom: 5px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: white;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.mk-chip i { font-style: normal; font-size: 0.78rem; }
+/* Entradas escalonadas: la escena arma el mensaje de a poco */
+.mk-pant[data-paso="3"].activa .mk-et,
+.mk-pant[data-paso="3"].activa .mk-entrega-h,
+.mk-pant[data-paso="3"].activa .mk-chip { animation: p3-sube .6s var(--ease) both; }
+.mk-pant[data-paso="3"].activa .mk-entrega-h { animation-delay: .1s; }
+.mk-pant[data-paso="3"].activa .mk-chip:nth-of-type(1) { animation-delay: .26s; }
+.mk-pant[data-paso="3"].activa .mk-chip:nth-of-type(2) { animation-delay: .38s; }
+@keyframes p3-sube { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* ══════════════════════════════════════════════════════
+   MOCKUP TELÉFONO (mobile)
+   Proporción 9:19.5, como un celular moderno.
+══════════════════════════════════════════════════════ */
+.mk-tel {
+  display: none;
+  position: relative;
+  width: 186px;
+  aspect-ratio: 9 / 19.5;
+  background: #1c211c;
+  border-radius: 26px;
+  padding: 6px;
+  margin: 0 auto;
+  box-shadow: var(--s4);
+}
+.mk-tel-notch {
+  position: absolute;
+  top: 11px; left: 50%;
+  transform: translateX(-50%);
+  width: 52px; height: 13px;
+  background: #1c211c;
+  border-radius: var(--rf);
+  z-index: 30;
+}
+.mk-tel-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  border-radius: 21px;
+  overflow: hidden;
+}
+
+.mkm-status {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 22px;
+  padding: 0 11px 2px;
+  font-size: 0.42rem;
+  font-weight: 600;
+  color: var(--t2);
+  flex-shrink: 0;
+}
+.mkm-status u, .mkm-status i { text-decoration: none; font-style: normal; }
+
+.mkm-top {
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  background: white;
+  border-bottom: 1px solid var(--line-soft);
+  flex-shrink: 0;
+}
+.mkm-logo { height: 9px; width: auto; flex-shrink: 0; }
+.mkm-search { flex: 1; height: 13px; border-radius: var(--rf); background: var(--surface-2); border: 1px solid var(--line-soft); }
+.mkm-cart {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--t2);
+  flex-shrink: 0;
+}
+.mkm-cart svg { width: 8px; height: 8px; }
+
+.mkm-chips { display: flex; gap: 3px; padding: 6px 7px 3px; overflow: hidden; flex-shrink: 0; }
+.mkm-chips i {
+  font-style: normal;
+  font-size: 0.36rem;
+  font-weight: 600;
+  color: var(--t2);
+  border: 1px solid var(--line);
+  border-radius: var(--rf);
+  padding: 3px 7px;
+  white-space: nowrap;
+  background: white;
+}
+.mkm-chips i.on { background: var(--accent); border-color: var(--accent); color: white; }
+
+.mkm-sec { display: block; padding: 7px 7px 4px; }
+.mkm-sec u {
+  display: block;
+  font-size: 0.33rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--t3);
+  font-weight: 700;
+  text-decoration: none;
+}
+.mkm-sec em { display: block; font-style: normal; font-size: 0.55rem; font-weight: 700; letter-spacing: -0.02em; }
+
+.mkm-riel { display: flex; gap: 5px; padding: 0 7px; overflow: hidden; flex-shrink: 0; }
+.mkm-card {
+  width: 52px;
+  flex-shrink: 0;
+  background: white;
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
+  padding: 4px;
+  text-align: center;
+  display: block;
+  transition: transform .2s var(--ease);
+}
+.mkm-card i {
+  display: block;
+  height: 30px;
+  background: var(--surface-2);
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 2px;
+}
+.mkm-card i img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.mkm-card u {
+  display: block;
+  font-size: 0.33rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 2px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mkm-card s { display: block; font-size: 0.3rem; color: var(--t3); text-decoration: none; }
+.mkm-card b { display: block; font-size: 0.38rem; margin-top: 1px; }
+
+/* ══ PASO 1 (mobile): tap en la card → modal → cantidad → agregar ══ */
+.mkm-modal {
+  position: absolute;
+  z-index: 11;
+  left: 50%;
+  top: 50%;
+  width: 86%;
+  transform: translate(-50%, -46%) scale(.96);
+  background: var(--surface);
+  border-radius: 13px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0,0,0,.28);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+}
+.mkm-modal-foto {
+  height: 78px;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  flex-shrink: 0;
+}
+.mkm-modal-foto img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.mkm-modal-info { padding: 8px 10px 7px; border-bottom: 1px solid var(--line-soft); }
+.mkm-modal-marca { display: block; font-size: 0.32rem; text-transform: uppercase; letter-spacing: .09em; color: var(--t3); font-weight: 700; }
+.mkm-modal-nom { display: block; font-size: 0.62rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+.mkm-modal-precio { display: block; font-size: 0.78rem; font-weight: 700; margin-top: 4px; }
+.mkm-modal-det { padding: 7px 10px 10px; }
+.mkm-modal-tit {
+  display: block;
+  font-size: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--t3);
+  font-weight: 700;
+}
+.mkm-modal-chips { display: flex; gap: 3px; margin-top: 4px; }
+.mkm-modal-chips i {
+  font-style: normal;
+  font-size: 0.34rem;
+  font-weight: 600;
+  color: var(--t2);
+  border: 1px solid var(--line);
+  border-radius: var(--rf);
+  padding: 3px 6px;
+  background: white;
+}
+.mkm-modal-chips i.on { background: var(--accent); border-color: var(--accent); color: white; }
+.mkm-modal-fila { display: flex; gap: 5px; margin-top: 8px; }
+.mkm-qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--rf);
+  flex-shrink: 0;
+}
+.mkm-qty em { font-style: normal; font-size: 0.45rem; color: var(--t2); padding: 0 5px; line-height: 16px; }
+.mkm-qty u { position: relative; width: 13px; height: 16px; text-decoration: none; }
+.mkm-qty u b {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.4rem;
+  font-weight: 700;
+}
+.mkm-add {
+  flex: 1;
+  position: relative;
+  height: 18px;
+  border-radius: var(--rf);
+  background: var(--accent);
+  overflow: hidden;
+}
+.mkm-add b {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.38rem;
+  font-weight: 700;
+}
+
+/* ══ PASO 2 (mobile): botón flotante → carrito → WhatsApp ══ */
+.mkm-flotante {
+  position: absolute;
+  right: 9px;
+  bottom: 11px;
+  z-index: 8;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 14px rgba(88,117,71,.45);
+}
+.mkm-flotante svg { width: 19px; height: 19px; }
+.mkm-flotante b {
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--t1);
+  color: white;
+  font-size: 0.52rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ══ PASO 1 (mobile) ══
+   Sin puntero: en una pantalla táctil no hay cursor visible. Lo que marca
+   dónde se tocó es la reacción del propio elemento — se hunde y se ilumina,
+   exagerado respecto de la web real para que el gesto se lea claro. */
+.mk-pant[data-paso="1"].activa .mkm-card.destino { animation: pm1-tap-card var(--demo-dur) var(--ease) infinite; }
+@keyframes pm1-tap-card {
+  0%, 20%  { transform: scale(1);    box-shadow: none; }
+  24%      { transform: scale(.93);  box-shadow: 0 0 0 2.5px var(--accent); }
+  28%      { transform: scale(1.01); box-shadow: 0 0 0 2px var(--accent-line); }
+  33%,100% { transform: scale(1);    box-shadow: none; }
+}
+/* Botón "+" de cantidad */
+.mk-pant[data-paso="1"].activa .mkm-qty-mas { animation: pm1-tap-mas var(--demo-dur) var(--ease) infinite; }
+@keyframes pm1-tap-mas {
+  0%, 47%  { transform: scale(1);   color: var(--t2);     background: transparent; }
+  51%      { transform: scale(.8);  color: white;         background: var(--accent); }
+  56%      { transform: scale(1.3); color: var(--accent); background: var(--accent-bg); }
+  61%,100% { transform: scale(1);   color: var(--t2);     background: transparent; }
+}
+/* Botón "Agregar" */
+.mk-pant[data-paso="1"].activa .mkm-add { animation: pm1-tap-add var(--demo-dur) var(--ease) infinite; }
+@keyframes pm1-tap-add {
+  0%, 70%  { transform: scale(1);   filter: brightness(1); }
+  74%      { transform: scale(.94); filter: brightness(.82); }
+  79%      { transform: scale(1.03);filter: brightness(1.08); }
+  85%,100% { transform: scale(1);   filter: brightness(1); }
+}
+
+/* ══ PASO 2 (mobile) ══ */
+.mk-pant[data-paso="2"].activa .mkm-flotante { animation: pm2-tap-flot var(--demo-dur) var(--ease) infinite; }
+@keyframes pm2-tap-flot {
+  0%, 22%  { transform: scale(1);   filter: brightness(1);   opacity: 1; }
+  26%      { transform: scale(.84); filter: brightness(.8);  opacity: 1; }
+  31%      { transform: scale(1.08);filter: brightness(1.1); opacity: 1; }
+  35%      { transform: scale(1);   filter: brightness(1);   opacity: 1; }
+  39%,100% { transform: scale(1);   filter: brightness(1);   opacity: 0; }
+}
+.mk-pant[data-paso="2"].activa .mkm-wa-btn { animation: pm2-tap-wa var(--demo-dur) var(--ease) infinite; }
+@keyframes pm2-tap-wa {
+  0%, 56%  { transform: scale(1);   filter: brightness(1); }
+  60%      { transform: scale(.94); filter: brightness(.82); }
+  65%      { transform: scale(1.03);filter: brightness(1.1); }
+  70%,100% { transform: scale(1);   filter: brightness(1); }
+}
+
+.mkm-carrito {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  padding-top: 22px;
+  transform: translateY(100%);
+}
+.mk-pant[data-paso="2"].activa .mkm-carrito { animation: pd2-carrito var(--demo-dur) var(--ease) infinite; }
+@keyframes pd2-carrito {
+  0%, 25%   { transform: translateY(100%); }
+  34%, 100% { transform: translateY(0); }
+}
+.mkm-carrito-tit { display: block; padding: 7px 9px 5px; font-size: 0.58rem; font-weight: 700; letter-spacing: -0.02em; }
+.mkm-linea { display: flex; align-items: center; gap: 6px; padding: 4px 9px; }
+.mkm-linea i {
+  width: 20px; height: 20px;
+  background: var(--surface-2);
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 2px;
+  flex-shrink: 0;
+}
+.mkm-linea i img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.mkm-linea u { flex: 1; min-width: 0; font-size: 0.38rem; font-weight: 600; text-decoration: none; line-height: 1.3; }
+.mkm-linea u em { display: block; font-style: normal; font-weight: 400; color: var(--t3); font-size: 0.33rem; }
+.mkm-linea b { font-size: 0.4rem; }
+.mkm-pie {
+  display: block;
+  margin-top: auto;
+  padding: 8px 9px 10px;
+  border-top: 1px solid var(--line-soft);
+  background: white;
+}
+.mkm-total { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.mkm-total u { font-size: 0.38rem; color: var(--t2); text-decoration: none; }
+.mkm-total b { font-size: 0.55rem; font-weight: 700; }
+.mkm-wa-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 20px;
+  border-radius: var(--rf);
+  background: var(--wa);
+  color: white;
+  font-size: 0.42rem;
+  font-weight: 700;
+}
+.mkm-wa-btn svg { width: 9px; height: 9px; }
+
+.mkm-wa {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  background: #ECE5DD;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+}
+.mk-pant[data-paso="2"].activa .mkm-wa { animation: pd2-wa-mobile var(--demo-dur) var(--ease) infinite; }
+@keyframes pd2-wa-mobile {
+  0%, 62%  { transform: translateY(100%); }
+  70%,100% { transform: translateY(0); }
+}
+.mkm-wa-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #075E54;
+  color: white;
+  font-size: 0.46rem;
+  font-weight: 600;
+  padding: 22px 9px 7px;
+  flex-shrink: 0;
+}
+.mkm-wa-header em {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.32rem;
+  font-style: normal;
+}
+.mkm-wa-burbuja {
+  margin: 10px 8px 0 auto;
+  max-width: 90%;
+  background: #DCF8C6;
+  border-radius: 9px 9px 3px 9px;
+  padding: 9px 11px;
+  font-size: 0.44rem;
+  line-height: 1.6;
+  color: #111;
+  white-space: pre-line;
+  box-shadow: 0 1px 1px rgba(0,0,0,.08);
+}
+.mkm-wa-burbuja em { display: block; text-align: right; font-style: normal; font-size: 0.37rem; color: #4a9c5e; margin-top: 3px; }
+.mkm-wa-input { display: flex; align-items: center; gap: 5px; margin-top: auto; padding: 8px; }
+.mkm-wa-input u { flex: 1; height: 18px; background: white; border-radius: var(--rf); }
+.mkm-wa-input i {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--wa);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.45rem;
+  font-style: normal;
+  flex-shrink: 0;
+}
+
+/* ══ Tablet: mockup arriba, pasos abajo ══ */
+@media (max-width: 1000px) {
+  .demo-pasos {
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+    max-width: 620px;
+  }
+  .pasos-lista { gap: var(--space-1); }
+  .paso-item { padding: var(--space-3) var(--space-4); }
+}
+
+/* ══ Mobile: fuera la notebook, entra el teléfono ══
+   Los pasos suben arriba del dispositivo y se comportan como un acordeón:
+   solo el activo muestra su texto. Así la sección no se estira de largo. */
+@media (max-width: 700px) {
+  .mk-note { display: none; }
+  .mk-tel { display: block; }
+  /* Sin puntero que se traslade, la secuencia se resuelve más rápido */
+  .demo-pasos { --demo-dur: 6.3s; max-width: 400px; gap: var(--space-5); }
+
+  /* Pasos arriba del teléfono, como filas de acordeón. La línea vertical
+     que conecta los anillos es solo del layout de escritorio. */
+  .pasos-lista { order: -1; gap: 0; }
+  .paso-item:not(:last-child)::before { display: none; }
+
+  .paso-item {
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-3) var(--space-3) 0;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--line-soft);
+    background: none !important;
+    box-shadow: none !important;
+  }
+  .paso-item:last-child { border-bottom: none; }
+
+  /* El número queda como una pastilla quieta: el progreso se muestra en el
+     botón de play de la derecha, que es lo que se toca. */
+  .paso-anillo { width: 26px; height: 26px; background: var(--surface-2); }
+  .paso-anillo svg,
+  .paso-anillo-play { display: none; }
+  .paso-anillo b { font-size: 0.76rem; color: var(--t2); }
+  .paso-item.activo .paso-anillo { background: var(--accent); }
+  .paso-item.activo .paso-anillo b { color: white; }
+
+  .paso-item-h3 { font-size: 0.92rem; margin-bottom: 0; }
+  .paso-item.activo .paso-item-h3 { color: var(--accent-2); }
+  .paso-item-p { font-size: 0.82rem; }
+  .paso-item.activo .paso-item-p { max-height: 160px; margin-top: 3px; }
+
+  /* Botón de play con el anillo de progreso alrededor: deja claro que el
+     paso se reproduce, y marca cuánto falta para el siguiente. */
+  .paso-play {
+    display: grid;
+    place-items: center;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    color: var(--t3);
+    transition: color var(--t);
+  }
+  .paso-play svg.icono { width: 11px; height: 11px; }
+  .paso-play svg.aro {
+    position: absolute;
+    inset: 0;
+    width: 30px;
+    height: 30px;
+    transform: rotate(-90deg);
+  }
+  .paso-play svg.aro circle { fill: none; stroke-width: 2; }
+  .paso-play .aro-pista { stroke: var(--surface-3); }
+  .paso-play .aro-fill {
+    stroke: var(--accent);
+    stroke-linecap: round;
+    stroke-dasharray: 81.7;
+    stroke-dashoffset: 81.7;
+  }
+  .paso-item.activo .paso-play { color: var(--accent); }
+  .paso-item.activo .paso-play .aro-fill {
+    animation: paso-anillo-avance var(--demo-dur) linear forwards;
+  }
+  /* El paso activo ya se está reproduciendo: se muestra pausa en vez de play */
+  .paso-item.activo .paso-play .icono-play { display: none; }
+  .paso-item:not(.activo) .paso-play .icono-pausa { display: none; }
+
+  /* Paso 3: en el teléfono se usa la versión vertical de la foto (ver el
+     <picture> del HTML), compuesta con las manos y la bolsa en la mitad
+     superior y el piso libre abajo, que es donde va el texto. */
+  .mk-entrega-foto img { object-position: center top; }
+  .mk-pant[data-paso="3"].activa .mk-entrega-foto img { animation: p3-zoom-mobile var(--demo-dur) linear both; }
+  @keyframes p3-zoom-mobile { from { transform: scale(1); } to { transform: scale(1.05); } }
+  .mk-entrega-info { padding: var(--space-5) var(--space-4) var(--space-4); }
+  .mk-entrega-h { font-size: 0.92rem; margin-bottom: var(--space-2); }
+  .mk-chip { font-size: 0.56rem; padding: 5px 8px; margin-bottom: 4px; }
+  .mk-chip i { font-size: 0.68rem; }
 }
 
 
@@ -1469,7 +2779,8 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-weight: 400;
 }
 
-/* Filtros */
+/* Filtros (chips). Solo se usan en mobile: en escritorio la navegación la
+   resuelve el sidebar, así que se ocultan más abajo con una media query. */
 .filtros-wrap {
   background: var(--surface);
   border-bottom: 1px solid var(--line-soft);
@@ -1539,11 +2850,198 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .subfiltro-btn:hover { border-color: var(--accent-line); color: var(--accent); }
 .subfiltro-btn.active { background: var(--accent-bg); border-color: var(--accent-line); color: var(--accent); font-weight: 600; }
 
-/* Grid */
-.catalogo-main {
+/* ══════════════════════════════════════════════════════
+   LAYOUT DE ESCRITORIO: SIDEBAR + GRILLA
+   En pantalla ancha la navegación pasa de una fila de chips a una columna
+   fija con categorías y subcategorías siempre visibles. En mobile el
+   sidebar se oculta y siguen mandando los chips + los rieles.
+══════════════════════════════════════════════════════ */
+.catalogo-layout {
+  display: grid;
+  grid-template-columns: 244px minmax(0, 1fr);
+  gap: var(--space-7);
   max-width: var(--content-wide);
   margin: 0 auto;
-  padding: var(--space-6) var(--space-5) 120px;
+  align-items: start;
+}
+
+.cat-sidebar {
+  position: sticky;
+  /* topbar (72) + barra del catálogo (48) */
+  top: 120px;
+  /* Alto exacto de la ventana descontando lo que queda arriba: el sidebar
+     nunca se va con el scroll de la página y, si la lista es más larga que
+     la pantalla, scrollea por dentro. */
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.cat-sidebar::-webkit-scrollbar { width: 6px; }
+.cat-sidebar::-webkit-scrollbar-thumb { background: var(--line); border-radius: var(--rf); }
+.cat-sidebar-inner { padding: var(--space-6) 0 var(--space-7); }
+
+.cat-sidebar-titulo {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin: 0 0 var(--space-3) var(--space-3);
+}
+
+.cat-nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px var(--space-3);
+  border: none;
+  border-radius: 10px;
+  background: none;
+  text-align: left;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--t1);
+  transition: background var(--t), color var(--t);
+}
+.cat-nav-btn:hover { background: var(--surface-2); }
+.cat-nav-btn.active { background: var(--accent); color: white; }
+.cat-nav-btn.active .cat-nav-num { color: rgba(255,255,255,.78); }
+/* Categoría desplegada pero con una subcategoría elegida: se marca suave */
+.cat-nav-btn.en-rama:not(.active) { color: var(--accent-2); }
+
+/* Icono de categoría: mismo set de la sección "Categorías principales" */
+.cat-nav-icono {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--accent);
+  transition: color var(--t);
+}
+.cat-nav-icono svg { width: 18px; height: 18px; }
+.cat-nav-btn.active .cat-nav-icono { color: white; }
+.cat-nav-txt {
+  flex: 1;
+  min-width: 0;
+  /* Los nombres largos ("Desayuno y Mediatarde") se parten en dos líneas
+     en vez de cortarse con puntos suspensivos. */
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.cat-nav-num {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--t3);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.cat-nav-chevron {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--t3);
+  transition: transform var(--t) var(--ease);
+}
+.cat-nav-chevron svg { width: 14px; height: 14px; }
+.cat-nav-chevron.abierto { transform: rotate(180deg); }
+.cat-nav-btn.active .cat-nav-chevron { color: rgba(255,255,255,.8); }
+
+.cat-nav-subs {
+  display: none;
+  margin: 2px 0 var(--space-3) var(--space-4);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--line-soft);
+}
+.cat-nav-subs.abierto { display: block; }
+
+.cat-nav-sub {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 9px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 0.815rem;
+  color: var(--t2);
+  transition: background var(--t), color var(--t);
+}
+.cat-nav-sub:hover { background: var(--accent-bg); color: var(--accent); }
+.cat-nav-sub.active {
+  background: var(--accent-bg);
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+/* ── Encabezado de la grilla ── */
+.catalogo-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--line-soft);
+}
+.catalogo-crumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--t3);
+  margin-bottom: 5px;
+}
+.catalogo-crumb-paso {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font);
+  font-size: inherit;
+  color: var(--t2);
+  transition: color var(--t);
+}
+button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underline; }
+.catalogo-crumb-paso.actual { color: var(--t3); }
+.catalogo-crumb-sep { color: var(--line); }
+
+.catalogo-h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--t1);
+  line-height: 1.1;
+}
+.catalogo-cuenta {
+  font-size: 0.8rem;
+  color: var(--t3);
+  margin-top: 4px;
+}
+
+/* Grid */
+.catalogo-main {
+  min-width: 0;
+  padding: var(--space-6) var(--space-5) 120px 0;
+}
+
+/* Escritorio: la navegación es el sidebar, no los chips */
+@media (min-width: 901px) {
+  .filtros-wrap,
+  .subfiltros-wrap { display: none !important; }
+}
+
+/* Tablet / mobile: sin sidebar, vuelven los chips y el layout es de una
+   sola columna. El encabezado grande tampoco aporta en pantalla angosta:
+   ya está la barra del catálogo con el nombre de la sección. */
+@media (max-width: 900px) {
+  .catalogo-layout { display: block; }
+  .cat-sidebar { display: none; }
+  .catalogo-head { display: none; }
+  .catalogo-main { padding: var(--space-6) var(--space-5) 120px; }
 }
 
 .seccion-titulo {
@@ -1558,6 +3056,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   gap: var(--space-3);
 }
 .seccion-titulo::after { content: ''; flex: 1; height: 1px; background: var(--line-soft); }
+.seccion-titulo:first-child { margin-top: 0; }
 
 .grid {
   display: grid;
@@ -2772,11 +4271,6 @@ body.modal-abierto {
   .faq-inner { grid-template-columns: 1fr; gap: var(--space-5); }
   .faq-header { position: static; }
 
-  .pasos-row { flex-direction: column; align-items: center; gap: var(--space-6); }
-  .paso-arrow-wrap { height: auto; }
-  .paso-arrow { transform: rotate(90deg); margin-top: 0; }
-  .paso { max-width: 280px; }
-
   .beneficios-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6) var(--space-4); }
   .categorias-grid { grid-template-columns: repeat(3, 1fr); }
 
@@ -2867,9 +4361,6 @@ body.modal-abierto {
   .hero-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); margin-top: auto; }
   .hero-actions .btn-primary, .hero-actions .btn-ghost-dark { width: 100%; }
   .hero-actions .btn-ghost-dark { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .75); color: white; backdrop-filter: blur(4px); }
-  .pasos-row { gap: var(--space-3); }
-  .paso-arrow-wrap { height: 20px; }
-  .paso-icon { margin-bottom: var(--space-3); }
   .faq-inner { padding: var(--space-8) var(--space-4); }
   /* Beneficios: una lista de atajos, más fácil de recorrer que seis mini tarjetas. */
   .como-comprar-inner, .vueltas-inner, .beneficios-inner,
@@ -3079,16 +4570,6 @@ body.modal-abierto {
 }
 .btn-primary:active,
 .btn-ghost-dark:active { transform: scale(0.97); }
-
-/* ── Pasos — hover en ícono ── */
-.paso-icon {
-  transition: background var(--t), border-color var(--t), transform 0.2s cubic-bezier(.34,1.56,.64,1);
-}
-.paso:hover .paso-icon {
-  background: var(--accent-bg);
-  border-color: var(--accent-line);
-  transform: scale(1.08);
-}
 
 /* ── FAQ — transición de respuesta ── */
 .faq-respuesta {

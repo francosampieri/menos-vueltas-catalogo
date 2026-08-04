@@ -156,57 +156,250 @@
       <span class="bg-circle bg-circle--fill" style="width:24px;height:24px;top:48%;right:6%;border-color:var(--t3);opacity:.3;"></span>
     </div>
     <div class="como-comprar-inner">
-      <h2 class="seccion-h2-center">Como hacer un pedido</h2>
-      <div class="pasos-row">
+      <h2 class="seccion-h2-center">Cómo hacer un pedido</h2>
+      <p class="seccion-sub-center">Tres simples pasos, sin registrarte ni descargar nada.</p>
 
-        <div class="paso">
-          <div class="paso-icon">
-            <span class="paso-num">1</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="9" cy="21" r="1.5"/>
-              <circle cx="19" cy="21" r="1.5"/>
-              <path d="M2.5 3h2.5l2.6 12.4a2 2 0 002 1.6h9a2 2 0 002-1.8L22 8H6"/>
-            </svg>
+      <!-- Demo animada. El mockup cambia según el dispositivo (notebook con la
+           vista de escritorio, teléfono con la de mobile) y la escena de fondo
+           es la MISMA entre el paso 1 y el 2: cambia lo que hace el usuario,
+           no el decorado. Todos los productos son de Almacén, la categoría
+           que aparece seleccionada. -->
+      <div class="demo-pasos">
+
+        <!-- ══════════ NOTEBOOK (escritorio) ══════════ -->
+        <div class="mk-note" aria-hidden="true">
+          <div class="mk-note-tapa">
+            <div class="mk-note-screen">
+
+              <!-- Paso 1 · catálogo → modal → cantidad → agregar -->
+              <div class="mk-pant activa" data-paso="1">
+                <div class="mkd-top"><img src="logo.svg" alt="" class="mkd-logo"><span class="mkd-search"></span><span class="mkd-sp"></span><span class="mkd-cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></span></div>
+                <div class="mkd-cuerpo"><div class="mkd-side"><span class="mkd-side-tit">Categorías</span><span class="mkd-side-item on">Almacén</span><span class="mkd-side-item">Desayuno</span><span class="mkd-side-item">Limpieza</span><span class="mkd-side-item">Higiene</span><span class="mkd-side-item">Snacks</span></div>
+                  <div class="mkd-main"><span class="mkd-h1">Almacén</span>
+                    <div class="mkd-grid"><span class="mkd-card destino"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol</u><s>NATURA · 3 L</s><b>$13.200</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000</u><s>CAÑUELAS · 1 kg</s><b>$900</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/39-canuelas-arroz-grano-largo-500-g.webp" alt="" loading="lazy"></i><u>Arroz Grano Largo</u><s>CAÑUELAS · 500 g</s><b>$750</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/108-inalpa-arveja-300-g.webp" alt="" loading="lazy"></i><u>Arvejas</u><s>INALPA · 300 g</s><b>$750</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/133-marvavic-aceitunas-verdes-frasco-330-g.webp" alt="" loading="lazy"></i><u>Aceitunas Verdes</u><s>MARVAVIC · 330 g</s><b>$2.700</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/132-cumana-caballa-aceite-380-g.webp" alt="" loading="lazy"></i><u>Caballa en Aceite</u><s>CUMANA · 380 g</s><b>$4.500</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/10-natura-salsa-golf-250-cc.webp" alt="" loading="lazy"></i><u>Salsa Golf</u><s>NATURA · 250 cc</s><b>$1.700</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/265-baggio-agua-fresh-1-5-l.webp" alt="" loading="lazy"></i><u>Agua Fresh</u><s>BAGGIO · 1,5 L</s><b>$900</b></span></div>
+                  </div>
+                </div>
+                <span class="mkd-flotante con-badge-tardio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><b>1</b></span>
+                <div class="mkd-modal-fondo"></div>
+                <div class="mkd-modal">
+                  <span class="mkd-modal-foto"><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></span>
+                  <span class="mkd-modal-col">
+                    <span class="mkd-modal-marca">NATURA</span>
+                    <span class="mkd-modal-nom">Aceite Girasol</span>
+                    <span class="mkd-modal-var">3 L</span>
+                    <span class="mkd-modal-precio">$13.200</span>
+                    <span class="mkd-modal-tit">Tamaño</span>
+                    <span class="mkd-modal-chips"><i class="on">3 L</i><i>1,5 L</i><i>900 cc</i></span>
+                    <span class="mkd-modal-fila">
+                      <span class="mkd-qty"><em>−</em><u><b class="q1">1</b><b class="q2">2</b></u><em class="mkd-qty-mas">+</em></span>
+                      <span class="mkd-add"><b class="add1">+ Agregar al pedido</b><b class="add2">✓ Agregado</b></span>
+                    </span>
+                  </span>
+                </div>
+                <span class="mk-puntero"><svg viewBox="0 0 12 19" fill="none"><path d="M1.2 1.1 L1.2 15.2 L4.8 11.9 L7.1 17.2 L9.4 16.2 L7.1 11 L11.2 11 Z" fill="#fff" stroke="#1c211c" stroke-width="1.1" stroke-linejoin="round"/></svg><i class="mk-click"></i></span>
+              </div>
+
+              <!-- Paso 2 · misma pantalla → carrito flotante → drawer → WhatsApp Web -->
+              <div class="mk-pant" data-paso="2">
+                <div class="mkd-top"><img src="logo.svg" alt="" class="mkd-logo"><span class="mkd-search"></span><span class="mkd-sp"></span><span class="mkd-cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></span></div>
+                <div class="mkd-cuerpo"><div class="mkd-side"><span class="mkd-side-tit">Categorías</span><span class="mkd-side-item on">Almacén</span><span class="mkd-side-item">Desayuno</span><span class="mkd-side-item">Limpieza</span><span class="mkd-side-item">Higiene</span><span class="mkd-side-item">Snacks</span></div>
+                  <div class="mkd-main"><span class="mkd-h1">Almacén</span>
+                    <div class="mkd-grid"><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol</u><s>NATURA · 3 L</s><b>$13.200</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000</u><s>CAÑUELAS · 1 kg</s><b>$900</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/39-canuelas-arroz-grano-largo-500-g.webp" alt="" loading="lazy"></i><u>Arroz Grano Largo</u><s>CAÑUELAS · 500 g</s><b>$750</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/108-inalpa-arveja-300-g.webp" alt="" loading="lazy"></i><u>Arvejas</u><s>INALPA · 300 g</s><b>$750</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/133-marvavic-aceitunas-verdes-frasco-330-g.webp" alt="" loading="lazy"></i><u>Aceitunas Verdes</u><s>MARVAVIC · 330 g</s><b>$2.700</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/132-cumana-caballa-aceite-380-g.webp" alt="" loading="lazy"></i><u>Caballa en Aceite</u><s>CUMANA · 380 g</s><b>$4.500</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/10-natura-salsa-golf-250-cc.webp" alt="" loading="lazy"></i><u>Salsa Golf</u><s>NATURA · 250 cc</s><b>$1.700</b></span><span class="mkd-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/265-baggio-agua-fresh-1-5-l.webp" alt="" loading="lazy"></i><u>Agua Fresh</u><s>BAGGIO · 1,5 L</s><b>$900</b></span></div>
+                  </div>
+                </div>
+                <span class="mkd-flotante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><b>3</b></span>
+                <div class="mkd-drawer">
+                  <span class="mkd-drawer-tit">Tu pedido</span>
+                  <span class="mkd-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol <em>3 L · 2 un.</em></u><b>$26.400</b></span><span class="mkd-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/39-canuelas-arroz-grano-largo-500-g.webp" alt="" loading="lazy"></i><u>Arroz Grano Largo <em>500 g · 1 un.</em></u><b>$750</b></span><span class="mkd-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000 <em>1 kg · 3 un.</em></u><b>$2.700</b></span>
+                  <span class="mkd-drawer-pie">
+                    <span class="mkd-total"><u>Total estimado</u><b>$29.850</b></span>
+                    <span class="mkd-wa-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.1.55 4.06 1.6 5.83L2 22l4.4-1.68a9.9 9.9 0 004.64 1.18h.01c5.46 0 9.91-4.45 9.91-9.91C20.96 6.45 16.5 2 12.04 2m5.8 14.1c-.24.68-1.4 1.3-1.96 1.38-.5.08-1.14.11-1.83-.11-.42-.14-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36l.56.01c.18 0 .42-.7.66.5.24.58.82 2 .89 2.15.7.14.12.31.02.5-.9.19-.14.31-.28.48l-.42.49c-.14.14-.28.29-.12.57.16.29.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.15.43.12.59-.07.16-.19.68-.79.86-1.07.18-.28.36-.23.61-.14.24.1 1.55.73 1.82.86.27.14.44.21.51.32.07.12.07.68-.17 1.36"/></svg> Enviar pedido</span>
+                  </span>
+                </div>
+                <div class="mkd-wa">
+                  <span class="mkd-wa-barra"><i></i><i></i><i></i><u>web.whatsapp.com</u></span>
+                  <span class="mkd-wa-cuerpo">
+                    <span class="mkd-wa-lista">
+                      <span class="mkd-wa-buscar"></span>
+                      <span class="mkd-wa-contacto activo"><em>MV</em><span><u>Menos Vueltas</u><s>Pedido enviado</s></span></span>
+                      <span class="mkd-wa-contacto"><em></em><span><u></u><s></s></span></span>
+                      <span class="mkd-wa-contacto"><em></em><span><u></u><s></s></span></span>
+                    </span>
+                    <span class="mkd-wa-chat">
+                      <span class="mkd-wa-header"><em>MV</em>Menos Vueltas</span>
+                      <span class="mkd-wa-scroll">
+                        <span class="mkd-wa-burbuja">🛒 <b>PEDIDO</b>
+━━━━━━━━━━━━━━
+1. NATURA Aceite Girasol
+    Variante: 3 L
+    Cantidad: 2 unidades
+2. CAÑUELAS Arroz Grano Largo
+    Variante: 500 g
+    Cantidad: 1 unidad
+3. CAÑUELAS Harina 000
+    Variante: 1 kg
+    Cantidad: 3 unidades
+━━━━━━━━━━━━━━
+<b>TOTAL: $29.850</b><em>✓✓</em></span>
+                      </span>
+                      <span class="mkd-wa-input"><u></u><i>➤</i></span>
+                    </span>
+                  </span>
+                </div>
+                <span class="mk-puntero"><svg viewBox="0 0 12 19" fill="none"><path d="M1.2 1.1 L1.2 15.2 L4.8 11.9 L7.1 17.2 L9.4 16.2 L7.1 11 L11.2 11 Z" fill="#fff" stroke="#1c211c" stroke-width="1.1" stroke-linejoin="round"/></svg><i class="mk-click"></i></span>
+              </div>
+
+              <!-- Paso 3 · entrega -->
+              <div class="mk-pant" data-paso="3"><div class="mk-entrega"><div class="mk-entrega-foto"><picture><source media="(max-width: 700px)" srcset="entrega-vertical.jpg"><img src="entrega.jpg" alt="" loading="lazy"></picture></div><div class="mk-entrega-info"><span class="mk-et">Pedido confirmado</span><span class="mk-entrega-h">Llega a la puerta de tu negocio</span></div></div></div>
+
+            </div>
           </div>
-          <h3>Armá tu pedido</h3>
-          <p>Elegí lo que tu negocio necesita.</p>
+          <span class="mk-note-base"></span>
         </div>
 
-        <div class="paso-arrow-wrap">
-          <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M2 8h34M28 2l8 6-8 6"/>
-          </svg>
-        </div>
+        <!-- ══════════ TELÉFONO (mobile) ══════════ -->
+        <div class="mk-tel" aria-hidden="true">
+          <span class="mk-tel-notch"></span>
+          <div class="mk-tel-screen">
 
-        <div class="paso">
-          <div class="paso-icon">
-            <span class="paso-num">2</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 2L11 13"/>
-              <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
-            </svg>
+            <!-- Paso 1 -->
+            <div class="mk-pant activa" data-paso="1">
+              <span class="mkm-status"><u>9:41</u><i>▮▮▮</i></span>
+              <div class="mkm-top"><img src="logo.svg" alt="" class="mkm-logo"><span class="mkm-search"></span><span class="mkm-cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></span></div><span class="mkm-chips"><i class="on">Todos</i><i>Almacén</i><i>Limpieza</i></span><span class="mkm-sec"><u>Almacén</u><em>Aceites</em></span><div class="mkm-riel"><span class="mkm-card destino"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol</u><s>3 L</s><b>$13.200</b></span><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/10-natura-salsa-golf-250-cc.webp" alt="" loading="lazy"></i><u>Salsa Golf</u><s>250 cc</s><b>$1.700</b></span><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/133-marvavic-aceitunas-verdes-frasco-330-g.webp" alt="" loading="lazy"></i><u>Aceitunas Verdes</u><s>330 g</s><b>$2.700</b></span></div><span class="mkm-sec"><u>Almacén</u><em>Harinas y Arroz</em></span><div class="mkm-riel"><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000</u><s>1 kg</s><b>$900</b></span><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/39-canuelas-arroz-grano-largo-500-g.webp" alt="" loading="lazy"></i><u>Arroz Grano Largo</u><s>500 g</s><b>$750</b></span><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/108-inalpa-arveja-300-g.webp" alt="" loading="lazy"></i><u>Arvejas</u><s>300 g</s><b>$750</b></span></div>
+              <span class="mkm-flotante con-badge-tardio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><b>1</b></span>
+              <div class="mkm-modal-fondo"></div>
+              <div class="mkm-modal">
+                <span class="mkm-modal-foto"><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></span>
+                <span class="mkm-modal-info">
+                  <span class="mkm-modal-marca">NATURA</span>
+                  <span class="mkm-modal-nom">Aceite Girasol</span>
+                  <span class="mkm-modal-precio">$13.200</span>
+                </span>
+                <span class="mkm-modal-det">
+                  <span class="mkm-modal-tit">Tamaño</span>
+                  <span class="mkm-modal-chips"><i class="on">3 L</i><i>1,5 L</i><i>900 cc</i></span>
+                  <span class="mkm-modal-fila">
+                    <span class="mkm-qty"><em>−</em><u><b class="q1">1</b><b class="q2">2</b></u><em class="mkm-qty-mas">+</em></span>
+                    <span class="mkm-add"><b class="add1">+ Agregar</b><b class="add2">✓ Agregado</b></span>
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Paso 2 -->
+            <div class="mk-pant" data-paso="2">
+              <span class="mkm-status"><u>9:42</u><i>▮▮▮</i></span>
+              <div class="mkm-top"><img src="logo.svg" alt="" class="mkm-logo"><span class="mkm-search"></span><span class="mkm-cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></span></div><span class="mkm-chips"><i class="on">Todos</i><i>Almacén</i><i>Limpieza</i></span><span class="mkm-sec"><u>Almacén</u><em>Aceites</em></span><div class="mkm-riel"><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol</u><s>3 L</s><b>$13.200</b></span><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/10-natura-salsa-golf-250-cc.webp" alt="" loading="lazy"></i><u>Salsa Golf</u><s>250 cc</s><b>$1.700</b></span><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/133-marvavic-aceitunas-verdes-frasco-330-g.webp" alt="" loading="lazy"></i><u>Aceitunas Verdes</u><s>330 g</s><b>$2.700</b></span></div><span class="mkm-sec"><u>Almacén</u><em>Harinas y Arroz</em></span><div class="mkm-riel"><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000</u><s>1 kg</s><b>$900</b></span><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/39-canuelas-arroz-grano-largo-500-g.webp" alt="" loading="lazy"></i><u>Arroz Grano Largo</u><s>500 g</s><b>$750</b></span><span class="mkm-card"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/108-inalpa-arveja-300-g.webp" alt="" loading="lazy"></i><u>Arvejas</u><s>300 g</s><b>$750</b></span></div>
+              <span class="mkm-flotante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><b>3</b></span>
+              <div class="mkm-carrito">
+                <span class="mkm-carrito-tit">Tu pedido</span>
+                <span class="mkm-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/2-natura-aceite-girasol-3-l.webp" alt="" loading="lazy"></i><u>Aceite Girasol<em>3 L · 2 un.</em></u><b>$26.400</b></span><span class="mkm-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/39-canuelas-arroz-grano-largo-500-g.webp" alt="" loading="lazy"></i><u>Arroz Grano Largo<em>500 g · 1 un.</em></u><b>$750</b></span><span class="mkm-linea"><i><img src="https://res.cloudinary.com/dgkh64tcm/image/upload/productos/18-canuelas-harina-000-1-kg.webp" alt="" loading="lazy"></i><u>Harina 000<em>1 kg · 3 un.</em></u><b>$2.700</b></span>
+                <span class="mkm-pie">
+                  <span class="mkm-total"><u>Total estimado</u><b>$29.850</b></span>
+                  <span class="mkm-wa-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.1.55 4.06 1.6 5.83L2 22l4.4-1.68a9.9 9.9 0 004.64 1.18h.01c5.46 0 9.91-4.45 9.91-9.91C20.96 6.45 16.5 2 12.04 2m5.8 14.1c-.24.68-1.4 1.3-1.96 1.38-.5.08-1.14.11-1.83-.11-.42-.14-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.27-.29.58-.36.78-.36l.56.01c.18 0 .42-.7.66.5.24.58.82 2 .89 2.15.7.14.12.31.02.5-.9.19-.14.31-.28.48l-.42.49c-.14.14-.28.29-.12.57.16.29.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.15.43.12.59-.07.16-.19.68-.79.86-1.07.18-.28.36-.23.61-.14.24.1 1.55.73 1.82.86.27.14.44.21.51.32.07.12.07.68-.17 1.36"/></svg> Enviar pedido</span>
+                </span>
+              </div>
+              <div class="mkm-wa">
+                <span class="mkm-wa-header"><em>MV</em>Menos Vueltas</span>
+                <span class="mkm-wa-burbuja">🛒 <b>PEDIDO</b>
+━━━━━━━━━━
+1. NATURA Aceite Girasol
+    Cantidad: 2
+2. CAÑUELAS Arroz Grano Largo
+    Cantidad: 1
+3. CAÑUELAS Harina 000
+    Cantidad: 3
+━━━━━━━━━━
+<b>TOTAL: $29.850</b><em>9:42 ✓✓</em></span>
+                <span class="mkm-wa-input"><u></u><i>➤</i></span>
+              </div>
+            </div>
+
+            <!-- Paso 3 -->
+            <div class="mk-pant" data-paso="3">
+              <span class="mkm-status"><u>9:44</u><i>▮▮▮</i></span>
+              <div class="mk-entrega"><div class="mk-entrega-foto"><picture><source media="(max-width: 700px)" srcset="entrega-vertical.jpg"><img src="entrega.jpg" alt="" loading="lazy"></picture></div><div class="mk-entrega-info"><span class="mk-et">Pedido confirmado</span><span class="mk-entrega-h">Llega a la puerta de tu negocio</span></div></div>
+            </div>
+
           </div>
-          <h3>Nos enviás tu pedido</h3>
-          <p>Con un solo clic desde el carrito.</p>
         </div>
 
-        <div class="paso-arrow-wrap">
-          <svg class="paso-arrow" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M2 8h34M28 2l8 6-8 6"/>
-          </svg>
-        </div>
+        <!-- ══════════ LISTA DE PASOS ══════════ -->
+        <div class="pasos-lista" id="pasosLista">
+          <button class="paso-item activo" data-paso="1" onclick="irAPaso(1)" aria-current="step">
+            <span class="paso-anillo">
+              <svg viewBox="0 0 46 46" aria-hidden="true">
+                <circle class="paso-anillo-pista" cx="23" cy="23" r="21"/>
+                <circle class="paso-anillo-fill" cx="23" cy="23" r="21"/>
+              </svg>
+              <b>1</b>
+              <span class="paso-anillo-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            </span>
+            <span class="paso-item-txt">
+              <span class="paso-item-h3">Armá tu pedido</span>
+              <span class="paso-item-p">Entrá al catálogo mayorista y elegí los productos que quieras y sus cantidades.</span>
+            </span>
+            <span class="paso-play" aria-hidden="true">
+              <svg class="aro" viewBox="0 0 30 30">
+                <circle class="aro-pista" cx="15" cy="15" r="13"/>
+                <circle class="aro-fill" cx="15" cy="15" r="13"/>
+              </svg>
+              <svg class="icono icono-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icono icono-pausa" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            </span>
+          </button>
 
-        <div class="paso">
-          <div class="paso-icon">
-            <span class="paso-num">3</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-          </div>
-          <h3>Lo recibís en tu negocio</h3>
-          <p>En el día y horario acordado (24 a 48 horas).</p>
+          <button class="paso-item" data-paso="2" onclick="irAPaso(2)" aria-current="false">
+            <span class="paso-anillo">
+              <svg viewBox="0 0 46 46" aria-hidden="true">
+                <circle class="paso-anillo-pista" cx="23" cy="23" r="21"/>
+                <circle class="paso-anillo-fill" cx="23" cy="23" r="21"/>
+              </svg>
+              <b>2</b>
+              <span class="paso-anillo-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            </span>
+            <span class="paso-item-txt">
+              <span class="paso-item-h3">Enviálo por WhatsApp</span>
+              <span class="paso-item-p">Abrí el carrito y con un solo clic ya estás en WhatsApp con el pedido escrito, solo pulsá enviar.</span>
+            </span>
+            <span class="paso-play" aria-hidden="true">
+              <svg class="aro" viewBox="0 0 30 30">
+                <circle class="aro-pista" cx="15" cy="15" r="13"/>
+                <circle class="aro-fill" cx="15" cy="15" r="13"/>
+              </svg>
+              <svg class="icono icono-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icono icono-pausa" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            </span>
+          </button>
+
+          <button class="paso-item" data-paso="3" onclick="irAPaso(3)" aria-current="false">
+            <span class="paso-anillo">
+              <svg viewBox="0 0 46 46" aria-hidden="true">
+                <circle class="paso-anillo-pista" cx="23" cy="23" r="21"/>
+                <circle class="paso-anillo-fill" cx="23" cy="23" r="21"/>
+              </svg>
+              <b>3</b>
+              <span class="paso-anillo-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            </span>
+            <span class="paso-item-txt">
+              <span class="paso-item-h3">Lo recibís en tu negocio</span>
+              <span class="paso-item-p">Coordinamos día y horario por WhatsApp y te lo enviamos directo a tu local.</span>
+            </span>
+            <span class="paso-play" aria-hidden="true">
+              <svg class="aro" viewBox="0 0 30 30">
+                <circle class="aro-pista" cx="15" cy="15" r="13"/>
+                <circle class="aro-fill" cx="15" cy="15" r="13"/>
+              </svg>
+              <svg class="icono icono-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icono icono-pausa" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            </span>
+          </button>
         </div>
 
       </div>
@@ -581,6 +774,7 @@
     </div>
   </div>
 
+  <!-- Chips de categoría: solo mobile (en escritorio se usa el sidebar) -->
   <div class="filtros-wrap">
     <div class="filtros" id="filtros"></div>
   </div>
@@ -589,13 +783,33 @@
     <div class="subfiltros" id="subfiltros"></div>
   </div>
 
-  <main class="catalogo-main">
-    <div class="loading" id="loading">
-      <div class="loading-spinner"></div>
-      <p>Cargando productos…</p>
-    </div>
-    <div id="catalogo"></div>
-  </main>
+  <!-- Escritorio: sidebar de categorías + grilla. En mobile el sidebar se
+       oculta por CSS y manda la navegación por chips + rieles. -->
+  <div class="catalogo-layout">
+    <aside class="cat-sidebar" id="catSidebar">
+      <div class="cat-sidebar-inner">
+        <h4 class="cat-sidebar-titulo">Categorías</h4>
+        <nav id="catNav"></nav>
+      </div>
+    </aside>
+
+    <main class="catalogo-main">
+      <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p>Cargando productos…</p>
+      </div>
+
+      <header class="catalogo-head" id="catalogoHead">
+        <div class="catalogo-head-txt">
+          <div class="catalogo-crumb" id="catalogoCrumb"></div>
+          <h1 class="catalogo-h1" id="catalogoH1">Catálogo completo</h1>
+          <div class="catalogo-cuenta" id="catalogoCuenta"></div>
+        </div>
+      </header>
+
+      <div id="catalogo"></div>
+    </main>
+  </div>
 
 </div><!-- /vista-catalogo -->
 
@@ -645,6 +859,6 @@
 
 <script>window.CANAL = 'B2B';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a22ed4433a7386a4',t:'MTc4NTM1NjQ3Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a261413e5a8e7842',t:'MTc4NTg4NTIyOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

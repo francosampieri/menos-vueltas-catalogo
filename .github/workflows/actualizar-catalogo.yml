@@ -28,10 +28,24 @@ jobs:
               with urllib.request.urlopen(url) as r:
                   return r.read().decode('utf-8')
 
+          # La primera columna de las hojas es el Id, pero su encabezado a
+          # veces viene con otro nombre (por ejemplo "f"). Si no se normaliza,
+          # el cruce productos ↔ precios falla y la web queda sin precios.
+          ALIAS_ID = ("Id", "f", "ID", "id")
+
+          def normalizar_id(fila):
+              if fila.get("Id"):
+                  return fila
+              for alias in ALIAS_ID:
+                  if fila.get(alias):
+                      fila["Id"] = fila[alias]
+                      break
+              return fila
+
           def leer_csv(url):
               content = leer_texto(url)
               reader = csv.DictReader(io.StringIO(content))
-              return [row for row in reader]
+              return [normalizar_id(row) for row in reader]
 
           def leer_precios(url):
               """
@@ -54,9 +68,9 @@ jobs:
                   izq = fila[0:12]
                   der = fila[13:25]
                   if izq[0]:  # tiene Id
-                      precios_b2c.append(dict(zip(cols_b2c, izq)))
+                      precios_b2c.append(normalizar_id(dict(zip(cols_b2c, izq))))
                   if der[0]:
-                      precios_b2b.append(dict(zip(cols_b2b, der)))
+                      precios_b2b.append(normalizar_id(dict(zip(cols_b2b, der))))
               return precios_b2c, precios_b2b
 
           productos = leer_csv(URL_PRODUCTOS)
@@ -75,7 +89,20 @@ jobs:
           with open("shared/catalogo.json", "w", encoding="utf-8") as f:
               json.dump(resultado, f, ensure_ascii=False, indent=2)
 
-          print(f"OK — {len(productos)} productos, {len(grupos)} grupos, {len(precios_b2c)} precios B2C, {len(precios_b2b)} precios B2B")
+          # Chequeo de integridad: si el cruce productos ↔ precios se rompe,
+          # el build tiene que fallar en vez de publicar un catálogo sin precios.
+          ids_precio = {p.get("Id") for p in precios_b2c}
+          activos = [p for p in productos if p.get("Activo") == "ON" and p.get("Cat B2C") == "ON"]
+          sin_precio = [p for p in activos if p.get("Id") not in ids_precio]
+          if activos and len(sin_precio) > len(activos) * 0.5:
+              raise SystemExit(
+                  f"ERROR: {len(sin_precio)}/{len(activos)} productos activos sin precio. "
+                  "Revisá los encabezados de las hojas Productos y Precios."
+              )
+
+          print(f"OK — {len(productos)} productos, {len(grupos)} grupos, "
+                f"{len(precios_b2c)} precios B2C, {len(precios_b2b)} precios B2B, "
+                f"{len(sin_precio)} activos sin precio")
           EOF
 
       - name: Commitear JSON actualizado

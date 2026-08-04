@@ -52,6 +52,21 @@ async function cargarDatos() {
     // en producción catalogo.json queda junto a este script — ruta plana.
     const data = await fetch('catalogo.json').then(r => r.json());
 
+    // Blindaje ante cambios de nombre en la primera columna de la hoja
+    // "Productos": si el encabezado del Sheets deja de llamarse "Id" (pasó
+    // con una columna llamada "f"), el cruce con la tabla de precios se
+    // rompía y TODOS los productos quedaban sin precio. Acá se normaliza.
+    const ALIAS_ID = ['Id', 'f', 'ID', 'id'];
+    const normalizarId = fila => {
+      if (fila['Id'] !== undefined && fila['Id'] !== '') return fila;
+      const alias = ALIAS_ID.find(k => fila[k] !== undefined && fila[k] !== '');
+      if (alias) fila['Id'] = fila[alias];
+      return fila;
+    };
+    (data.productos   || []).forEach(normalizarId);
+    (data.precios_b2c || []).forEach(normalizarId);
+    (data.precios_b2b || []).forEach(normalizarId);
+
     data.grupos.forEach(g => {
       grupos[g['Id_Grupo']] = {
         nombre:      g['Nombre_Grupo'],
@@ -71,13 +86,22 @@ async function cargarDatos() {
     );
 
     // Mergear precio/descuento en cada producto antes de usarlo en el resto de la app
+    let sinPrecio = 0;
     productos.forEach(p => {
       const precio = preciosPorId[p['Id']];
+      if (!precio) sinPrecio++;
       p['Precio_Venta'] = precio ? precio['Precio_Venta'] : '';
       p['Uni Dto']      = precio ? precio['Uni Dto']      : '';
       p['Dto']          = precio ? precio['Dto']          : '';
       p['Precio_Dto']   = precio ? precio['Precio_Dto']   : '';
     });
+
+    // Si prácticamente ningún producto encontró precio, casi seguro cambió
+    // un encabezado en el Sheets: se avisa en consola para detectarlo rápido.
+    if (productos.length && sinPrecio / productos.length > 0.5) {
+      console.warn(`[Menos Vueltas] ${sinPrecio}/${productos.length} productos sin precio. ` +
+        'Revisá que las hojas "Productos" y "Precios" tengan la columna Id con el mismo nombre.');
+    }
 
     productos.forEach(p => {
       const gid = p['Id_Grupo'];
@@ -95,10 +119,14 @@ async function cargarDatos() {
 
 const MQ_MOBILE = window.matchMedia('(max-width: 600px)');
 
+// Categorías desplegadas en el sidebar (se abren solas al elegirlas)
+const catsAbiertas = new Set();
+
 // ══ RENDER CATÁLOGO ══
 function renderCatalogo() {
   document.getElementById('loading').style.display = 'none';
   construirFiltrosCategorias();
+  construirSidebar();
   llenarMegamenu();
   renderGrupos();
   renderDestacados();
@@ -251,6 +279,11 @@ function renderGrupos() {
   cont.innerHTML = '';
 
   const filtrados = getGruposFiltrados();
+
+  // El sidebar refleja qué categoría/subcategoría está activa
+  construirSidebar();
+  actualizarEncabezadoCatalogo(filtrados.length);
+
   if (!filtrados.length) {
     cont.innerHTML = '<div class="empty-msg">No se encontraron productos 🔍</div>';
     return;
@@ -285,8 +318,11 @@ function renderGrupos() {
     });
 
     // El título "clásico" (línea gris con la subcategoría) solo se usa en la
-    // grilla; los rieles de mobile tienen su propio encabezado.
-    if (!usarRieles()) {
+    // grilla; los rieles de mobile tienen su propio encabezado. Y si el
+    // usuario ya está dentro de esa subcategoría, el título repetiría lo
+    // que dice el encabezado grande: se omite.
+    const tituloRedundante = filtroSubcat && !busquedaActiva;
+    if (!usarRieles() && !tituloRedundante) {
       const titulo = document.createElement('div');
       titulo.className = 'seccion-titulo';
       titulo.textContent = sub || cat;
@@ -404,12 +440,179 @@ MQ_MOBILE.addEventListener('change', () => {
   if (document.getElementById('catalogo')?.childElementCount) renderGrupos();
 });
 
+// ══════════════════════════════════════════════════════
+//  SIDEBAR DE CATEGORÍAS (escritorio)
+//  En pantalla ancha la navegación deja de ser una fila de chips y pasa a
+//  una columna fija: categorías + subcategorías siempre visibles, con el
+//  conteo de productos de cada una. En mobile el sidebar se oculta por CSS.
+// ══════════════════════════════════════════════════════
+// Iconos de categoría: los mismos que usa la sección "Categorías
+// principales" de la landing, para que la navegación hable un solo idioma
+// visual. Se guardan solo los <path> internos; el <svg> lo arma getIconoCat.
+const ICONOS_CAT = {
+  'Almacen': '<path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v10a1 1 0 01-1 1H5a1 1 0 01-1-1V9z"/><line x1="9" y1="13" x2="15" y2="13"/>',
+  'Desayuno y Mediatarde': '<g transform="translate(1,2)"><path d="M3 8h14v6a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><path d="M17 9h2a2 2 0 012 2v1a2 2 0 01-2 2h-2"/><line x1="6" y1="2" x2="6" y2="5"/><line x1="10" y1="2" x2="10" y2="5"/><line x1="14" y1="2" x2="14" y2="5"/></g>',
+  'Higiene Personal': '<path d="M4 12h16a1 1 0 011 1v3a4 4 0 01-4 4H7a4 4 0 01-4-4v-3a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3v2.25"/><path d="M4 21l1-1.5"/><path d="M20 21l-1-1.5"/>',
+  'Hogar y Ferreteria': '<path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/><path d="M9 21v-6h6v6"/>',
+  'Limpieza': '<path d="M4 12a2 2 0 012-2h4a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7"/><path d="M6 10V6a1 1 0 011-1h2a1 1 0 011 1v4"/><path d="M15 7h.01"/><path d="M18 9h.01"/><path d="M18 5h.01"/><path d="M21 3h.01"/><path d="M21 7h.01"/><path d="M21 11h.01"/><path d="M10 7h1"/>',
+  'Snacks y Golosinas': '<path d="M7.05 11.293l4.243-4.243a2 2 0 012.828 0l2.829 2.83a2 2 0 010 2.828l-4.243 4.243a2 2 0 01-2.828 0l-2.829-2.831a2 2 0 010-2.828"/><path d="M16.243 9.172l3.086-.772a1.5 1.5 0 00.697-2.516l-2.216-2.217a1.5 1.5 0 00-2.44.47l-1.248 2.913"/><path d="M9.172 16.243l-.772 3.086a1.5 1.5 0 01-2.516.697l-2.217-2.216a1.5 1.5 0 01.47-2.44l2.913-1.248"/>',
+  // Genérico (bolsa) para "Todo el catálogo" y cualquier categoría nueva
+  '_default': '<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>'
+};
+
+// Normaliza acentos para que "Almacén" encuentre la clave "Almacen".
+function getIconoCat(cat) {
+  const sinAcentos = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const clave = Object.keys(ICONOS_CAT).find(k =>
+    sinAcentos(k).toLowerCase() === sinAcentos(cat || '').toLowerCase());
+  const paths = ICONOS_CAT[clave] || ICONOS_CAT['_default'];
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+    stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+}
+
+function contarPorCategoria() {
+  const porCat = {}, porSub = {};
+  Object.entries(catalogo).forEach(([gid, vars]) => {
+    const g = grupos[gid] || {};
+    const cat = g.categoria    || vars[0]['Categoria']    || 'Otros';
+    const sub = g.subcategoria || vars[0]['Subcategoria'] || '';
+    porCat[cat] = (porCat[cat] || 0) + 1;
+    const k = cat + '|||' + sub;
+    porSub[k] = (porSub[k] || 0) + 1;
+  });
+  return { porCat, porSub };
+}
+
+function construirSidebar() {
+  const nav = document.getElementById('catNav');
+  if (!nav) return;
+  nav.innerHTML = '';
+
+  const { porCat, porSub } = contarPorCategoria();
+  const total = Object.keys(catalogo).length;
+
+  // "Todo el catálogo"
+  const btnTodos = document.createElement('button');
+  btnTodos.className = 'cat-nav-btn' + (filtroActivo === 'Todos' && !busquedaActiva ? ' active' : '');
+  btnTodos.innerHTML = `<span class="cat-nav-icono">${getIconoCat('_default')}</span>
+    <span class="cat-nav-txt">Todo el catálogo</span>
+    <span class="cat-nav-num">${total}</span>`;
+  btnTodos.onclick = () => {
+    catsAbiertas.clear();
+    setFiltroCategoria('Todos', document.querySelector('.filtro-btn[data-cat="Todos"]'));
+  };
+  nav.appendChild(btnTodos);
+
+  Object.keys(porCat).forEach(cat => {
+    const abierta = catsAbiertas.has(cat);
+
+    const btn = document.createElement('button');
+    btn.className = 'cat-nav-btn' + (filtroActivo === cat && !filtroSubcat ? ' active' : '')
+                                  + (filtroActivo === cat ? ' en-rama' : '');
+    btn.innerHTML = `<span class="cat-nav-icono">${getIconoCat(cat)}</span>
+      <span class="cat-nav-txt">${cat}</span>
+      <span class="cat-nav-num">${porCat[cat]}</span>
+      <span class="cat-nav-chevron${abierta ? ' abierto' : ''}">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M6 8l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>`;
+    btn.onclick = () => {
+      // Elegir la categoría siempre la despliega; volver a tocarla la pliega.
+      if (filtroActivo === cat && !filtroSubcat && abierta) {
+        catsAbiertas.delete(cat);
+        construirSidebar();
+        return;
+      }
+      catsAbiertas.clear();
+      catsAbiertas.add(cat);
+      setFiltroCategoria(cat, document.querySelector(`.filtro-btn[data-cat="${CSS.escape(cat)}"]`));
+    };
+    nav.appendChild(btn);
+
+    const subs = Object.keys(porSub)
+      .filter(k => k.startsWith(cat + '|||'))
+      .map(k => k.split('|||')[1])
+      .filter(Boolean);
+
+    if (!subs.length) return;
+
+    const grupo = document.createElement('div');
+    grupo.className = 'cat-nav-subs' + (abierta ? ' abierto' : '');
+    subs.forEach(sub => {
+      const s = document.createElement('button');
+      s.className = 'cat-nav-sub' + (filtroActivo === cat && filtroSubcat === sub ? ' active' : '');
+      s.innerHTML = `<span class="cat-nav-txt">${sub}</span>
+        <span class="cat-nav-num">${porSub[cat + '|||' + sub]}</span>`;
+      s.onclick = () => {
+        catsAbiertas.clear();
+        catsAbiertas.add(cat);
+        filtroActivo = cat;
+        busquedaActiva = '';
+        const input = document.getElementById('buscador');
+        if (input) input.value = '';
+        document.querySelectorAll('.filtro-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+        setFiltroSubcat(filtroSubcat === sub ? null : sub);
+      };
+      grupo.appendChild(s);
+    });
+    nav.appendChild(grupo);
+  });
+}
+
+// Encabezado de la grilla: breadcrumb, título y cantidad de resultados.
+function actualizarEncabezadoCatalogo(cantidad) {
+  const crumb  = document.getElementById('catalogoCrumb');
+  const h1     = document.getElementById('catalogoH1');
+  const cuenta = document.getElementById('catalogoCuenta');
+  if (!h1) return;
+
+  let titulo, ruta;
+  if (busquedaActiva) {
+    titulo = `Resultados para “${busquedaActiva}”`;
+    ruta = ['Catálogo', 'Búsqueda'];
+  } else if (filtroSubcat) {
+    titulo = filtroSubcat;
+    ruta = ['Catálogo', filtroActivo, filtroSubcat];
+  } else if (filtroActivo && filtroActivo !== 'Todos') {
+    titulo = filtroActivo;
+    ruta = ['Catálogo', filtroActivo];
+  } else {
+    titulo = 'Catálogo completo';
+    ruta = ['Catálogo'];
+  }
+
+  h1.textContent = titulo;
+  cuenta.textContent = cantidad === 1 ? '1 producto' : `${cantidad} productos`;
+
+  crumb.innerHTML = '';
+  ruta.forEach((paso, i) => {
+    if (i > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'catalogo-crumb-sep';
+      sep.textContent = '›';
+      crumb.appendChild(sep);
+    }
+    const esUltimo = i === ruta.length - 1;
+    const el = document.createElement(esUltimo ? 'span' : 'button');
+    el.className = 'catalogo-crumb-paso' + (esUltimo ? ' actual' : '');
+    el.textContent = paso;
+    if (!esUltimo) {
+      const destino = i === 0 ? 'Todos' : paso;
+      el.onclick = () => {
+        catsAbiertas.clear();
+        if (destino !== 'Todos') catsAbiertas.add(destino);
+        setFiltroCategoria(destino, document.querySelector(`.filtro-btn[data-cat="${CSS.escape(destino)}"]`));
+      };
+    }
+    crumb.appendChild(el);
+  });
+}
+
 // ══ CARD ══
 function getEmoji(cat) {
   const map = {
-    'Almacen': '🛒', 'Limpieza': '🧹', 'Higiene Personal': '🧴',
+    'Almacen': '🥫', 'Almacén': '🥫', 'Limpieza': '🧽', 'Higiene Personal': '🧴',
     'Snacks y Golosinas': '🍬', 'Desayuno y Mediatarde': '☕',
-    'Hogar y Ferreteria': '🔧'
+    'Hogar y Ferreteria': '🔧', 'Hogar y Ferretería': '🔧'
   };
   return map[cat] || '📦';
 }
@@ -1514,6 +1717,8 @@ function mostrarCatalogo(cat, sub) {
 
   const label = sub || (cat && cat !== 'Todos' ? cat : 'Catálogo completo');
   document.getElementById('catalogo-titulo-label').textContent = label;
+  if (cat) { catsAbiertas.clear(); if (cat !== 'Todos') catsAbiertas.add(cat); }
+  construirSidebar();
 
   mostrarOnboardingToast();
 }
@@ -1649,6 +1854,112 @@ document.getElementById('buscador').addEventListener('input', function() {
 // ══ INIT ══
 cargarDatos();
 
+// ══════════════════════════════════════════════════════
+//  DEMO "CÓMO HACER UN PEDIDO"
+//  Un mockup (notebook en escritorio, teléfono en mobile) reproduce el paso
+//  activo. Avanza solo cada 11 s y también se puede elegir a mano.
+//  La secuencia arranca recién cuando la sección entra en pantalla, para que
+//  nadie se pierda el principio, y se pausa al salir.
+// ══════════════════════════════════════════════════════
+// La duración la define el CSS (--demo-dur), que cambia según el
+// dispositivo: en mobile la secuencia es más corta porque no hay puntero
+// que se traslade entre un toque y otro.
+function duracionPaso() {
+  const zona = document.querySelector('.demo-pasos');
+  if (!zona) return 9000;
+  const v = getComputedStyle(zona).getPropertyValue('--demo-dur').trim();
+  const n = parseFloat(v);
+  if (!n) return 9000;
+  return v.endsWith('ms') ? n : n * 1000;
+}
+let pasoActual = 1;
+let pasoTimer = null;
+let pasoEnPantalla = false;
+let demoArrancada = false;
+
+function irAPaso(n) {
+  const items = document.querySelectorAll('.paso-item');
+  if (!items.length) return;
+
+  pasoActual = n;
+
+  items.forEach(b => {
+    const activo = Number(b.dataset.paso) === n;
+    b.classList.toggle('activo', activo);
+    b.setAttribute('aria-current', activo ? 'step' : 'false');
+  });
+
+  // Las dos maquetas (notebook y teléfono) se sincronizan a la vez: solo
+  // una está visible según el ancho, pero así no hay que preguntar cuál.
+  document.querySelectorAll('.mk-pant').forEach(p => {
+    p.classList.toggle('activa', Number(p.dataset.paso) === n);
+  });
+
+  // Si el usuario elige un paso a mano antes de que la demo arranque sola,
+  // se destraban las animaciones igual.
+  if (!demoArrancada) arrancarDemo();
+  reiniciarAnimaciones();
+  programarPasoSiguiente();
+}
+
+// Fuerza a que todas las animaciones del paso activo empiecen desde cero.
+// Sin esto, al cambiar de paso el nuevo mockup entra "a mitad de camino",
+// porque las animaciones CSS comparten el reloj del documento.
+function reiniciarAnimaciones() {
+  const zona = document.querySelector('.demo-pasos');
+  if (!zona) return;
+  const objetivos = zona.querySelectorAll('.mk-pant.activa *, .paso-item.activo .paso-anillo-fill, .paso-item.activo .aro-fill');
+  objetivos.forEach(el => {
+    el.style.animation = 'none';
+  });
+  void zona.offsetWidth;                       // fuerza un reflow
+  objetivos.forEach(el => { el.style.animation = ''; });
+}
+
+function arrancarDemo() {
+  demoArrancada = true;
+  document.querySelector('.demo-pasos')?.classList.add('demo-lista');
+}
+
+function programarPasoSiguiente() {
+  clearTimeout(pasoTimer);
+  if (!pasoEnPantalla) return;
+  pasoTimer = setTimeout(() => irAPaso(pasoActual % 3 + 1), duracionPaso());
+}
+
+function initDemoPasos() {
+  const seccion = document.getElementById('como-comprar');
+  if (!seccion || !document.querySelector('.paso-item')) return;
+
+  // Estado inicial sin animar: el paso 1 queda "congelado" en su primer
+  // fotograma hasta que la sección se ve.
+  document.querySelectorAll('.mk-pant').forEach(p => {
+    p.classList.toggle('activa', Number(p.dataset.paso) === 1);
+  });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entradas => {
+      entradas.forEach(e => {
+        pasoEnPantalla = e.isIntersecting;
+        if (!pasoEnPantalla) { clearTimeout(pasoTimer); return; }
+        // Primera vez que se ve: recién ahí empieza todo, desde el paso 1.
+        if (!demoArrancada) {
+          arrancarDemo();
+          irAPaso(1);
+        } else {
+          programarPasoSiguiente();
+        }
+      });
+    }, { threshold: 0.35 }).observe(seccion);
+  } else {
+    pasoEnPantalla = true;
+    arrancarDemo();
+    irAPaso(1);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initDemoPasos);
+
 // ══ SCROLL REVEAL ══
 function initReveal() {
   const observer = new IntersectionObserver((entries) => {
@@ -1669,8 +1980,8 @@ function addRevealClasses() {
     el.classList.add('reveal');
   });
 
-  // Pasos
-  document.querySelectorAll('.paso').forEach((el, i) => {
+  // Pasos (lista de la demo animada)
+  document.querySelectorAll('.paso-item').forEach((el, i) => {
     el.classList.add('reveal', `reveal-delay-${i + 1}`);
   });
 
