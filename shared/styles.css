@@ -805,6 +805,103 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 
 /* ══════════════════════════════════════════════════════
+   DESTACADOS (franja horizontal, solo B2B)
+   Una fila de scroll horizontal con las cards del catálogo, achicadas.
+══════════════════════════════════════════════════════ */
+.destacados-strip {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line-soft);
+}
+.destacados-strip-inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+.destacados-strip-label {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-right: 1px solid var(--line-soft);
+  padding-right: var(--space-5);
+}
+.destacados-strip-title {
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--t1);
+  white-space: nowrap;
+}
+.destacados-scroller {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.destacados-arrow {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--rf);
+  background: var(--surface);
+  color: var(--t2);
+  cursor: pointer;
+  transition: color var(--t), border-color var(--t), opacity var(--t);
+}
+.destacados-arrow svg { width: 15px; height: 15px; }
+.destacados-arrow:hover:not(:disabled) { color: var(--accent); border-color: var(--accent-line); }
+.destacados-arrow:disabled { opacity: .3; cursor: default; }
+
+.destacados-track {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 2px 0;
+}
+.destacados-track::-webkit-scrollbar { display: none; }
+
+/* Las cards heredan el estilo del catálogo pero acá van en fila y con un
+   ancho fijo chico: sin esto crecen a todo el ancho disponible. */
+.destacados-track .card {
+  flex: 0 0 132px;
+  width: 132px;
+  max-width: 132px;
+  scroll-snap-align: start;
+  border-radius: var(--r3);
+}
+.destacados-track .card .card-img-wrap { aspect-ratio: 1; }
+.destacados-track .card .card-img-wrap img { padding: var(--space-2); }
+.destacados-track .card .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+.destacados-track .card .card-marca { font-size: .62rem; }
+.destacados-track .card .card-nombre {
+  font-size: .74rem;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.destacados-track .card .card-variante-label { font-size: .66rem; }
+.destacados-track .card .card-precio { font-size: .86rem; }
+.destacados-track .card .card-precio-dto { font-size: .62rem; }
+
+
+/* ══════════════════════════════════════════════════════
    CÓMO COMPRAR — demo animada
    Un mockup que reproduce cada paso junto a la lista de pasos. El mockup y
    la interfaz cambian según el dispositivo: notebook con la vista de
@@ -2309,20 +2406,23 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   text-align: center;
   margin-bottom: var(--space-5);
 }
-.ns-col h4 {
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  color: var(--t3);
-  margin-bottom: var(--space-3);
+/* Dos columnas dentro de la tarjeta: las vueltas a la izquierda, la
+   solución a la derecha, con la flecha en el medio. Se mantiene así también
+   en mobile (achicando tipografía) porque el contraste izquierda/derecha es
+   lo que cuenta la historia. */
+.ns-esquema-cols {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
 }
 .ns-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .ns-col li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
+  gap: 9px;
+  font-size: 0.88rem;
+  line-height: 1.25;
   opacity: 0;
   transform: translateY(7px);
 }
@@ -2335,33 +2435,35 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .vueltas.visible .ns-col li:nth-child(6) { animation-delay: .70s; }
 @keyframes ns-sube { to { opacity: 1; transform: none; } }
 .ns-col i {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-style: normal;
   flex-shrink: 0;
 }
-/* Lo que dejás de hacer: tachado y en gris */
+/* Las vueltas: tachadas y en gris */
 .ns-col--no li {
   color: var(--t3);
   text-decoration: line-through;
   text-decoration-color: var(--line);
 }
 .ns-col--no i { background: var(--surface-2); color: var(--t3); }
-/* Lo que hacés en su lugar: destacado */
+/* La solución: destacada */
 .ns-col--si li { color: var(--t1); font-weight: 500; }
 .ns-col--si i { background: var(--accent); color: white; }
 
+/* La flecha ahora apunta hacia la derecha y vive en la columna del medio */
 .ns-flecha {
   display: flex;
+  align-items: center;
   justify-content: center;
   color: var(--accent-line);
-  margin: var(--space-4) 0;
+  margin: 0;
 }
-.ns-flecha svg { width: 26px; height: 26px; }
+.ns-flecha svg { width: 24px; height: 24px; }
 
 /* ── Tablet y mobile: una sola columna ── */
 @media (max-width: 900px) {
@@ -2372,7 +2474,16 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   }
   .ns-frase { max-width: none; }
   .ns-bajada { max-width: none; }
-  .ns-esquema { padding: var(--space-5) var(--space-5) var(--space-4); }
+  .ns-esquema { padding: var(--space-5) var(--space-4) var(--space-4); }
+}
+
+/* En pantallas angostas la tarjeta sigue en dos columnas: se achica la
+   tipografía y los espacios en vez de apilar. */
+@media (max-width: 560px) {
+  .ns-esquema-cols { gap: var(--space-2); }
+  .ns-col li { font-size: 0.76rem; gap: 7px; }
+  .ns-col i { width: 16px; height: 16px; font-size: 0.54rem; }
+  .ns-flecha svg { width: 18px; height: 18px; }
 }
 
 
@@ -2454,6 +2565,40 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   color: var(--t2);
 }
 .faq-item.open .faq-respuesta { display: block; }
+
+
+/* ══════════════════════════════════════════════════════
+   CTA FINAL
+══════════════════════════════════════════════════════ */
+.cta-final {
+  background: var(--surface);
+}
+.cta-final-inner {
+  position: relative;
+  overflow: hidden;
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-9) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  text-align: center;
+}
+.cta-final h2 {
+  font-family: var(--font);
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  color: var(--t1);
+  margin: 0;
+}
+.cta-final h2 strong {
+  font-weight: 700;
+  color: var(--accent-2);
+}
+.cta-final .btn-primary { position: relative; z-index: 2; }
 
 
 /* ══════════════════════════════════════════════════════
