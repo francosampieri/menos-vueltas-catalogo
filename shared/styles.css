@@ -787,23 +787,30 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     text-shadow: 0 1px 5px rgba(0,0,0,.45);
   }
   /* El contador se apila: "Termina en" pasa a ser un renglón propio arriba
-     de las cajas (en fila no entra), y las cuatro cajas se reparten el
-     ancho. Sin el rótulo los números no se entienden. */
+     de las cajas (en fila no entra). Sin el rótulo los números no se
+     entienden. Las cajas NO se estiran a todo el ancho: quedan compactas
+     contra la izquierda, ocupando poco más de la mitad de la pantalla. */
   .promo-cd {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
     gap: 6px;
-    width: 100%;
     margin-bottom: 0;
   }
   .promo-cd-label {
     font-size: 0.62rem;
     text-shadow: 0 1px 4px rgba(0,0,0,.5);
   }
-  .promo-cd-nums { width: 100%; gap: 6px; }
-  .promo-cd-u { flex: 1; min-width: 0; padding: 6px 4px 4px; }
-  .promo-cd-u b { font-size: 1.1rem; }
-  .promo-cd-u i { font-size: 0.5rem; }
+  .promo-cd-nums { gap: 5px; }
+  .promo-cd-u {
+    /* Ancho fijo y angosto: dos dígitos más el rótulo, nada de aire al
+       pedo. Sin flex para que no se repartan el ancho disponible. */
+    flex: 0 0 auto;
+    width: 42px;
+    min-width: 0;
+    padding: 5px 2px 4px;
+  }
+  .promo-cd-u b { font-size: 1.05rem; }
+  .promo-cd-u i { font-size: 0.48rem; letter-spacing: .06em; }
   .hero-promo-nota {
     align-self: stretch;
     max-width: none;
