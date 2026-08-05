@@ -464,64 +464,79 @@
       <span class="bg-circle bg-circle--dash" style="width:120px;height:120px;bottom:-50px;left:-35px;border-color:var(--t3);"></span>
     </div>
     <div class="faq-inner">
+
+      <!-- Columna izquierda: encabezado + salida a WhatsApp para lo que no esté en la lista -->
       <div class="faq-header">
-        <div class="sobre-label">Preguntas frecuentes</div>
-        <h2 class="sobre-title">Todo lo que necesitás saber.</h2>
+        <p class="faq-label">Preguntas frecuentes</p>
+        <h2 class="faq-title">Todo lo que necesitás saber</h2>
+        <p class="faq-ayuda">¿Te quedó alguna duda? Escribinos por
+          <a href="https://wa.me/5492617716916" target="_blank" rel="noopener">WhatsApp</a> y te respondemos.</p>
       </div>
+
       <div class="faq-list">
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
             <span>Cómo hago un pedido</span>
-            <span class="faq-icono">+</span>
+            <svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          <div class="faq-respuesta">
-            Elegís los productos desde el catálogo, los agregás al carrito y al finalizar te redirige a WhatsApp
-            con el pedido ya armado y los precios calculados. Nosotros lo confirmamos y coordinamos la entrega.
+          <div class="faq-resp-wrap">
+            <div class="faq-respuesta">
+              <p>Elegís los productos desde el catálogo, los agregás al carrito y al finalizar te redirige a WhatsApp con el pedido ya armado y los precios calculados. Nosotros lo confirmamos y coordinamos la entrega.</p>
+            </div>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
             <span>Hay monto o cantidades mínimas</span>
-            <span class="faq-icono">+</span>
+            <svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          <div class="faq-respuesta">
-            No. No manejamos mínimos ni máximos — pedís lo que tu negocio necesita, sin restricciones innecesarias.
+          <div class="faq-resp-wrap">
+            <div class="faq-respuesta">
+              <p>No. No manejamos mínimos ni máximos — pedís lo que tu negocio necesita, sin restricciones innecesarias.</p>
+            </div>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
             <span>Cuándo llega mi pedido</span>
-            <span class="faq-icono">+</span>
+            <svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          <div class="faq-respuesta">
-            Coordinamos la entrega lo más rápido posible. Normalmente entre 24 y 48 horas.
+          <div class="faq-resp-wrap">
+            <div class="faq-respuesta">
+              <p>Coordinamos la entrega lo más rápido posible. Normalmente entre 24 y 48 horas.</p>
+            </div>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
             <span>Cuándo pago</span>
-            <span class="faq-icono">+</span>
+            <svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          <div class="faq-respuesta">
-            Pagás el total de tu pedido cuando llega a tu negocio.
+          <div class="faq-resp-wrap">
+            <div class="faq-respuesta">
+              <p>Pagás el total de tu pedido cuando llega a tu negocio.</p>
+            </div>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
             <span>En qué zonas entregan</span>
-            <span class="faq-icono">+</span>
+            <svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          <div class="faq-respuesta">
-            Entregamos en Carrodilla y alrededores. Consultanos por WhatsApp por tu dirección.
+          <div class="faq-resp-wrap">
+            <div class="faq-respuesta">
+              <p>Entregamos en Carrodilla y alrededores. Consultanos por WhatsApp por tu dirección.</p>
+            </div>
           </div>
         </div>
 
       </div>
+
     </div>
   </section>
 
@@ -663,6 +678,6 @@
 
 <script>window.CANAL = 'B2B';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a26191aefeee4e64',t:'MTc4NTg4ODUyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a26224463a4bc6eb',t:'MTc4NTg5NDUyOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
 </body>
 </html>

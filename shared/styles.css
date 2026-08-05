@@ -2487,84 +2487,111 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 
 
-/* ══════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════
    FAQ
-══════════════════════════════════════════════════════ */
+   Sección deliberadamente callada: encabezado a la izquierda con la salida a
+   WhatsApp, acordeón de líneas finas a la derecha. Sin barras de color ni
+   sombras — lo único que se mueve es el chevron y la altura de la respuesta.
+════════════════════════════════════════════════════ */
 .faq-section {
   background: var(--bg);
   border-bottom: 1px solid var(--line-soft);
 }
 .faq-inner {
-  max-width: 680px;
+  max-width: 900px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
+  grid-template-columns: 0.8fr 1.2fr;
   gap: var(--space-8);
   align-items: start;
 }
-.faq-header { position: static; }
 
+/* ── Columna izquierda ── */
+.faq-header { position: static; }
+.faq-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 8px;
+}
+.faq-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -.03em;
+  line-height: 1.2;
+  color: var(--t1);
+  margin-bottom: var(--space-4);
+}
+.faq-ayuda {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--t2);
+}
+.faq-ayuda a {
+  color: var(--accent-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-line);
+  transition: border-color var(--t);
+}
+.faq-ayuda a:hover { border-bottom-color: var(--accent-2); }
+
+/* ── Acordeón ── */
 .faq-list { display: flex; flex-direction: column; }
 
-.faq-item {
-  position: relative;
-  border-top: 1px solid var(--line-soft);
-  padding-left: var(--space-4);
-  transition: padding-left 0.25s var(--ease);
-}
-.faq-item:last-child { border-bottom: 1px solid var(--line-soft); }
-.faq-item::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--accent);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 0.3s var(--ease);
-}
-.faq-item.open::after { transform: scaleY(1); }
+.faq-item { border-bottom: 1px solid var(--line-soft); }
+.faq-item:first-child { border-top: 1px solid var(--line-soft); }
 
 .faq-pregunta {
   width: 100%;
   background: none;
   border: none;
-  padding: var(--space-4) 0;
+  padding: 14px 0;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-4);
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 0.855rem;
   font-weight: 500;
   color: var(--t1);
   transition: color var(--t);
 }
-.faq-pregunta:hover { color: var(--accent); }
-.faq-item.open .faq-pregunta { color: var(--accent); }
+.faq-pregunta:hover { color: var(--accent-2); }
+.faq-item.open .faq-pregunta { color: var(--accent-2); }
 
-.faq-icono {
-  font-size: 1.1rem;
-  font-style: normal;
-  font-weight: 300;
-  color: var(--t3);
+.faq-chev {
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
-  line-height: 1.4;
-  transition: transform var(--t) var(--ease), color var(--t);
+  color: var(--t3);
+  transition: transform 0.3s var(--ease), color var(--t);
 }
-.faq-item.open .faq-icono { transform: rotate(45deg); color: var(--accent); }
+.faq-item.open .faq-chev { transform: rotate(180deg); color: var(--accent-2); }
 
-.faq-respuesta {
-  display: none;
-  padding-bottom: var(--space-4);
-  font-size: 0.875rem;
-  line-height: 1.75;
+/* La respuesta se despliega con grid-template-rows 0fr→1fr: así transiciona
+   el alto sin tener que medirlo en JS. */
+.faq-resp-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s var(--ease);
+}
+.faq-item.open .faq-resp-wrap { grid-template-rows: 1fr; }
+.faq-respuesta { overflow: hidden; }
+.faq-respuesta p {
+  padding: 0 var(--space-5) 14px 0;
+  font-family: var(--font-body);
+  font-size: 0.83rem;
+  line-height: 1.7;
   color: var(--t2);
 }
-.faq-item.open .faq-respuesta { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-resp-wrap, .faq-chev { transition: none; }
+}
 
 
 /* ══════════════════════════════════════════════════════
@@ -4206,7 +4233,7 @@ body.modal-abierto {
     mask-image: none;
   }
   .faq-inner { grid-template-columns: 1fr; gap: var(--space-5); }
-  .faq-header { position: static; }
+  .faq-title { font-size: 1.25rem; }
 
 
   /* Destacados: en pantallas medianas ya no hace falta el botón de flecha,
