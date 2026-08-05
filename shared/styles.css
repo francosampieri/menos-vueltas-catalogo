@@ -800,17 +800,17 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     font-size: 0.62rem;
     text-shadow: 0 1px 4px rgba(0,0,0,.5);
   }
-  .promo-cd-nums { gap: 5px; }
+  .promo-cd-nums { gap: 6px; }
   .promo-cd-u {
-    /* Ancho fijo y angosto: dos dígitos más el rótulo, nada de aire al
-       pedo. Sin flex para que no se repartan el ancho disponible. */
+    /* Ancho fijo (sin flex, para que no se repartan todo el ancho): las
+       cuatro cajas ocupan cerca del 60% de la pantalla. */
     flex: 0 0 auto;
-    width: 42px;
+    width: 54px;
     min-width: 0;
-    padding: 5px 2px 4px;
+    padding: 7px 3px 5px;
   }
-  .promo-cd-u b { font-size: 1.05rem; }
-  .promo-cd-u i { font-size: 0.48rem; letter-spacing: .06em; }
+  .promo-cd-u b { font-size: 1.3rem; }
+  .promo-cd-u i { font-size: 0.54rem; letter-spacing: .08em; }
   .hero-promo-nota {
     align-self: stretch;
     max-width: none;
