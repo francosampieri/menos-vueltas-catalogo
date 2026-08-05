@@ -647,7 +647,9 @@ function crearCardDestacada(gid, vars) {
 
   const card = document.createElement('div');
   card.className = 'card card-destacada';
-  card.addEventListener('click', () => irAProducto(nombre));
+  // Igual que en el catálogo: abre el detalle del producto con sus
+  // variantes, en vez de mandar al catálogo con la búsqueda cargada.
+  card.addEventListener('click', () => abrirModalProducto(gid, vars));
 
   const imgWrap = document.createElement('div');
   imgWrap.className = 'card-img-wrap';
@@ -701,18 +703,6 @@ function crearCardDestacada(gid, vars) {
 
   card.append(imgWrap, body);
   return card;
-}
-
-// Lleva al catálogo con el producto ya buscado, para que el kiosquero vea
-// la card real (con todas sus variantes) y pueda agregarla al pedido.
-function irAProducto(nombre) {
-  mostrarCatalogo();
-  const input = document.getElementById('buscador');
-  if (input) input.value = nombre;
-  busquedaActiva = nombre;
-  const label = document.getElementById('catalogo-titulo-label');
-  if (label) label.textContent = `Resultados para "${nombre}"`;
-  renderGrupos();
 }
 
 function crearCard(gid, vars) {
@@ -1960,6 +1950,31 @@ function initDemoPasos() {
 
 document.addEventListener('DOMContentLoaded', initDemoPasos);
 
+// ══════════════════════════════════════════════════════
+//  SECCIÓN NOSOTROS
+//  Al entrar en pantalla se traza el subrayado del titular y las vueltas
+//  aparecen de a una. Se dispara una sola vez.
+// ══════════════════════════════════════════════════════
+function initNosotros() {
+  const seccion = document.querySelector('.vueltas');
+  if (!seccion) return;
+
+  if (!('IntersectionObserver' in window)) {
+    seccion.classList.add('visible');
+    return;
+  }
+  const obs = new IntersectionObserver(entradas => {
+    entradas.forEach(e => {
+      if (!e.isIntersecting) return;
+      seccion.classList.add('visible');
+      obs.disconnect();
+    });
+  }, { threshold: 0.25 });
+  obs.observe(seccion);
+}
+
+document.addEventListener('DOMContentLoaded', initNosotros);
+
 // ══ SCROLL REVEAL ══
 function initReveal() {
   const observer = new IntersectionObserver((entries) => {
@@ -1985,24 +2000,10 @@ function addRevealClasses() {
     el.classList.add('reveal', `reveal-delay-${i + 1}`);
   });
 
-  // Pilares de beneficios
-  document.querySelectorAll('.beneficio').forEach((el, i) => {
-    el.classList.add('reveal', `reveal-delay-${i + 1}`);
-  });
-
-  // Categorías
-  document.querySelectorAll('.categoria-card').forEach((el, i) => {
-    el.classList.add('reveal', `reveal-delay-${i + 1}`);
-  });
-
   // FAQ items
   document.querySelectorAll('.faq-item').forEach((el, i) => {
     el.classList.add('reveal', `reveal-delay-${Math.min(i + 1, 3)}`);
   });
-
-  // Sección vueltas SVG
-  const vueltas = document.querySelector('.vueltas-svg-wrap');
-  if (vueltas) vueltas.classList.add('reveal');
 
   // CTA final
   const cta = document.querySelector('.cta-final-inner');
@@ -2014,7 +2015,10 @@ function addRevealClasses() {
 // Iniciar reveal al cargar la página
 document.addEventListener('DOMContentLoaded', addRevealClasses);
 
-// ══ DESTACADOS: flechas del scroll horizontal ══
+
+// ══ DESTACADOS: flechas del riel (solo desktop) ══
+// Se desactivan al llegar a cada extremo. El observer recalcula cuando las
+// cards se cargan, que ocurre después de traer el catálogo.
 document.addEventListener('DOMContentLoaded', () => {
   const track = document.getElementById('destacados-grid');
   const prev  = document.getElementById('destacadosPrev');
@@ -2023,17 +2027,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const paso = () => Math.round(track.clientWidth * 0.8);
   prev.addEventListener('click', () => track.scrollBy({ left: -paso(), behavior: 'smooth' }));
-  next.addEventListener('click', () => track.scrollBy({ left: paso(), behavior: 'smooth' }));
+  next.addEventListener('click', () => track.scrollBy({ left:  paso(), behavior: 'smooth' }));
 
   const actualizarFlechas = () => {
     const maxScroll = track.scrollWidth - track.clientWidth;
     prev.disabled = track.scrollLeft <= 4;
     next.disabled = track.scrollLeft >= maxScroll - 4;
   };
-  track.addEventListener('scroll', actualizarFlechas);
-  // Recalcular cuando cambian las cards (ej. al cargar el catálogo)
+  track.addEventListener('scroll', actualizarFlechas, { passive: true });
   new MutationObserver(actualizarFlechas).observe(track, { childList: true });
   window.addEventListener('resize', actualizarFlechas);
   actualizarFlechas();
 });
-

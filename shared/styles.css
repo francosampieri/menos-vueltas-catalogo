@@ -800,8 +800,145 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   letter-spacing: -0.03em;
   color: var(--t1);
   text-align: center;
-  margin-bottom: var(--space-7);
+  /* Ajustado: la bajada tiene que leerse pegada al título, como una sola
+     unidad. El aire grande va después del par, no en el medio. */
+  margin-bottom: var(--space-2);
 }
+
+
+/* ════════════════════════════════════════════════════
+   DESTACADOS (franja verde, solo B2B)
+   Fondo verde claro que separa la franja del hero y de la sección que sigue.
+   Las cards pierden el borde y flotan con sombra. Tocar una abre el modal
+   del producto, igual que en el catálogo.
+════════════════════════════════════════════════════ */
+.destacados-strip {
+  position: relative;
+  overflow: hidden;
+  background: var(--accent-bg);
+  border-top: 1px solid var(--accent-line);
+  border-bottom: 1px solid var(--accent-line);
+}
+/* Círculo punteado de fondo, del mismo lenguaje que el resto de la landing */
+.destacados-strip::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  top: -140px;
+  right: 6%;
+  border: 1px dashed var(--accent-line);
+  border-radius: 50%;
+  opacity: .7;
+  pointer-events: none;
+}
+.destacados-strip-inner {
+  position: relative;
+  z-index: 2;
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+}
+.destacados-strip-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+}
+.destacados-icono {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: grid;
+  place-items: center;
+}
+.destacados-icono svg { width: 14px; height: 14px; }
+.destacados-strip-title {
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--t1);
+}
+
+/* El riel y sus flechas. Las flechas van a los costados, centradas sobre la
+   altura de la foto de las cards (no del alto total, que incluye el texto),
+   que es donde el ojo espera encontrarlas. Solo en desktop. */
+.destacados-scroller {
+  position: relative;
+  display: flex;
+  /* Alineadas arriba y bajadas a mano hasta el centro de la foto: centrarlas
+     sobre el alto total las dejaría a la altura del precio, no de la imagen. */
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.destacados-arrow {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  /* padding-top del riel (4px) + media altura de la foto (148/2) − medio botón */
+  margin-top: calc(4px + 74px - 16px);
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--rf);
+  background: var(--surface);
+  color: var(--t2);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(47, 52, 48, .07);
+  transition: color var(--t), border-color var(--t), opacity var(--t);
+}
+.destacados-arrow svg { width: 15px; height: 15px; }
+.destacados-arrow:hover:not(:disabled) { color: var(--accent-2); border-color: var(--accent); }
+.destacados-arrow:disabled { opacity: .3; cursor: default; }
+
+.destacados-track {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* Aire para que la sombra de las cards no se recorte al scrollear */
+  padding: 4px 0 6px;
+}
+.destacados-track::-webkit-scrollbar { display: none; }
+
+/* Las cards heredan el estilo del catálogo pero acá van en fila, con ancho
+   fijo y sin borde: sobre el fondo verde flotan con sombra. */
+.destacados-track .card {
+  flex: 0 0 148px;
+  width: 148px;
+  max-width: 148px;
+  scroll-snap-align: start;
+  border-radius: var(--r3);
+  border-color: transparent;
+  box-shadow: 0 1px 2px rgba(47, 52, 48, .05), 0 6px 18px rgba(47, 52, 48, .07);
+}
+.destacados-track .card:hover {
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(47, 52, 48, .07), 0 12px 28px rgba(47, 52, 48, .11);
+}
+.destacados-track .card .card-img-wrap { aspect-ratio: 1; }
+.destacados-track .card .card-img-wrap img { padding: var(--space-2); }
+.destacados-track .card .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+.destacados-track .card .card-marca { font-size: .62rem; }
+.destacados-track .card .card-nombre {
+  font-size: .74rem;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.destacados-track .card .card-variante-label { font-size: .66rem; }
+.destacados-track .card .card-precio { font-size: .86rem; }
+.destacados-track .card .card-precio-dto { font-size: .62rem; }
 
 
 /* ══════════════════════════════════════════════════════
@@ -828,7 +965,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-size: 0.95rem;
   color: var(--t2);
   max-width: 520px;
-  margin: calc(var(--space-3) * -1) auto var(--space-7);
+  margin: 0 auto var(--space-7);
 }
 
 .demo-pasos {
@@ -2202,466 +2339,393 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 
 
 /* ══════════════════════════════════════════════════════
-   LAS VUELTAS QUE TE AHORRAMOS
+   NOSOTROS + LAS VUELTAS QUE TE AHORRAMOS
+   Dos columnas en escritorio: el manifiesto a la izquierda y el esquema de
+   vueltas a la derecha, para que la sección no se estire de largo. En
+   mobile se apila y el esquema queda como lista debajo del texto.
 ══════════════════════════════════════════════════════ */
 .vueltas {
   background: var(--surface-2);
   border-bottom: 1px solid var(--line-soft);
 }
 .vueltas-inner {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: var(--space-9) var(--space-5);
-}
-
-.nosotros-intro {
-  text-align: center;
-  padding-top: var(--space-2);
-}
-.nosotros-eyebrow {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  margin-bottom: var(--space-3);
-}
-.nosotros-title {
-  font-size: clamp(1.3rem, 2.6vw, 1.6rem);
-  font-weight: 600;
-  color: var(--t1);
-  letter-spacing: -0.02em;
-  margin: 0 auto var(--space-3);
-  max-width: 460px;
-}
-.nosotros-text {
-  font-size: 0.9rem;
-  color: var(--t2);
-  line-height: 1.75;
-  font-family: var(--font-body);
-  margin: 0 auto var(--space-3);
-  max-width: 460px;
-}
-.nosotros-text:last-child { margin-bottom: 0; }
-
-/* Conector visual entre la intro y el diagrama de vueltas */
-.nosotros-conector {
-  display: flex;
-  justify-content: center;
-  margin: var(--space-6) auto;
-}
-.nosotros-conector svg {
-  width: 24px;
-  height: 64px;
-  color: var(--accent);
-}
-
-.vueltas-svg-wrap {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.vueltas-svg {
-  width: 100%;
-  min-width: 600px;
-  display: block;
-}
-
-/* Alternativa compacta al diagrama para pantallas angostas. */
-.vueltas-mobile { display: none; }
-
-
-/* ══════════════════════════════════════════════════════
-   BENEFICIOS
-══════════════════════════════════════════════════════ */
-.beneficios {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line-soft);
-}
-.beneficios-inner {
   max-width: var(--content-wide);
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
-}
-
-.beneficios-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: var(--space-5);
+  grid-template-columns: 1.02fr 0.98fr;
+  gap: var(--space-9);
+  align-items: center;
 }
 
-.beneficio {
+/* ── Izquierda: manifiesto ── */
+.ns-eyebrow {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-3);
-  border-radius: var(--r4);
-  border: 1px solid transparent;
-  background: transparent;
-  transition: background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
-  cursor: default;
+  gap: 10px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-4);
 }
-.beneficio:hover {
+.ns-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--accent-line);
+  max-width: 70px;
+}
+.ns-frase {
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -.04em;
+  line-height: 1.1;
+  color: var(--t1);
+  margin-bottom: var(--space-5);
+  max-width: 14ch;
+}
+/* La palabra clave en verde, con un subrayado dibujado a mano que se traza
+   solo cuando la sección entra en pantalla. */
+.ns-frase em {
+  font-style: normal;
+  position: relative;
+  color: var(--accent-2);
+  white-space: nowrap;
+}
+.ns-frase em svg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -.14em;
+  width: 100%;
+  height: .3em;
+  overflow: visible;
+}
+.ns-frase em path {
+  fill: none;
+  stroke: var(--accent-line);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
+}
+.vueltas.visible .ns-frase em path { animation: ns-trazo 1.1s var(--ease) .3s forwards; }
+@keyframes ns-trazo { to { stroke-dashoffset: 0; } }
+
+.ns-bajada {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--t2);
+  line-height: 1.7;
+  margin-bottom: var(--space-3);
+  max-width: 44ch;
+}
+.ns-bajada:last-child { margin-bottom: 0; }
+.ns-bajada strong {
+  font-family: var(--font);
+  font-weight: 600;
+  color: var(--t1);
+}
+
+/* ── Derecha: esquema de vueltas ── */
+.ns-esquema {
   background: var(--surface);
-  border-color: var(--line);
-  transform: translateY(-4px);
-  box-shadow: var(--s2);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r5);
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  box-shadow: var(--s1);
 }
-.beneficio-icon-wrap {
-  width: 52px;
-  height: 52px;
+.ns-esquema-tit {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+/* Dos columnas dentro de la tarjeta: las vueltas a la izquierda, la
+   solución a la derecha, con la flecha en el medio. Se mantiene así también
+   en mobile (achicando tipografía) porque el contraste izquierda/derecha es
+   lo que cuenta la historia. */
+.ns-esquema-cols {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+}
+.ns-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ns-col li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.88rem;
+  line-height: 1.25;
+  opacity: 0;
+  transform: translateY(7px);
+}
+.vueltas.visible .ns-col li { animation: ns-sube .45s var(--ease) forwards; }
+.vueltas.visible .ns-col li:nth-child(1) { animation-delay: .30s; }
+.vueltas.visible .ns-col li:nth-child(2) { animation-delay: .38s; }
+.vueltas.visible .ns-col li:nth-child(3) { animation-delay: .46s; }
+.vueltas.visible .ns-col li:nth-child(4) { animation-delay: .54s; }
+.vueltas.visible .ns-col li:nth-child(5) { animation-delay: .62s; }
+.vueltas.visible .ns-col li:nth-child(6) { animation-delay: .70s; }
+@keyframes ns-sube { to { opacity: 1; transform: none; } }
+.ns-col i {
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: var(--accent-bg);
+  display: grid;
+  place-items: center;
+  font-size: 0.6rem;
+  font-style: normal;
+  flex-shrink: 0;
+}
+/* Las vueltas: tachadas y en gris */
+.ns-col--no li {
+  color: var(--t3);
+  text-decoration: line-through;
+  text-decoration-color: var(--line);
+}
+.ns-col--no i { background: var(--surface-2); color: var(--t3); }
+/* La solución: destacada */
+.ns-col--si li { color: var(--t1); font-weight: 500; }
+.ns-col--si i { background: var(--accent); color: white; }
+
+/* La flecha ahora apunta hacia la derecha y vive en la columna del medio */
+.ns-flecha {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.25s var(--ease), transform 0.3s cubic-bezier(.34,1.56,.64,1);
+  color: var(--accent-line);
+  margin: 0;
 }
-.beneficio:hover .beneficio-icon-wrap {
-  background: var(--accent);
-  transform: scale(1.1);
+.ns-flecha svg { width: 24px; height: 24px; }
+
+/* ── Tablet y mobile: una sola columna ──
+   Al apilarse, el manifiesto queda centrado: alineado a la izquierda se ve
+   como una columna suelta arriba de la tarjeta. La línea del eyebrow pasa a
+   los dos lados para que el centrado se lea intencional. */
+@media (max-width: 900px) {
+  .vueltas-inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    max-width: 560px;
+  }
+  .ns-txt { text-align: center; }
+  .ns-eyebrow { justify-content: center; }
+  .ns-eyebrow::before {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--accent-line);
+    max-width: 70px;
+  }
+  /* "Comprar debería ser más simple" tiene que entrar en un solo renglón:
+     el tamaño se ata al ancho de pantalla y no se permite el corte. */
+  .ns-frase {
+    max-width: none;
+    font-size: min(1.45rem, 5.45vw);
+    letter-spacing: -.035em;
+    white-space: nowrap;
+  }
+  .ns-frase em svg { height: .26em; bottom: -.1em; }
+  .ns-bajada { max-width: 42ch; margin-left: auto; margin-right: auto; }
+  .ns-esquema { padding: var(--space-5) var(--space-4) var(--space-4); }
 }
-.beneficio svg {
-  width: 24px;
-  height: 24px;
-  color: var(--accent);
-  transition: color 0.25s var(--ease);
+
+/* En pantallas angostas la tarjeta sigue en dos columnas: se achica la
+   tipografía y los espacios en vez de apilar. */
+@media (max-width: 560px) {
+  .ns-esquema-cols { gap: var(--space-2); }
+  .ns-col li { font-size: 0.76rem; gap: 7px; }
+  .ns-col i { width: 16px; height: 16px; font-size: 0.54rem; }
+  .ns-flecha svg { width: 18px; height: 18px; }
 }
-.beneficio:hover svg { color: white; }
-.beneficio p {
-  font-size: 0.8rem;
-  color: var(--t2);
-  line-height: 1.4;
-  font-family: var(--font-body);
-  transition: color 0.25s var(--ease);
-}
-.beneficio:hover p { color: var(--t1); }
 
 
-/* ══════════════════════════════════════════════════════
-   CATEGORÍAS PRINCIPALES
-══════════════════════════════════════════════════════ */
-.categorias-home {
+/* ════════════════════════════════════════════════════
+   FAQ
+   Sección deliberadamente callada: encabezado a la izquierda con la salida a
+   WhatsApp, acordeón de líneas finas a la derecha. Sin barras de color ni
+   sombras — lo único que se mueve es el chevron y la altura de la respuesta.
+════════════════════════════════════════════════════ */
+.faq-section {
   background: var(--bg);
   border-bottom: 1px solid var(--line-soft);
 }
-.categorias-home-inner {
-  max-width: var(--content-wide);
+.faq-inner {
+  max-width: 900px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
-}
-
-/* Destacados: franjita angosta con scroll horizontal (no una sección más) */
-.destacados-strip {
-  background: var(--accent-bg);
-  border-bottom: 1px solid var(--line-soft);
-}
-.destacados-strip-inner {
-  max-width: var(--content-wide);
-  margin: 0 auto;
-  padding: var(--space-4) var(--space-5);
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
-}
-.destacados-strip-label {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  padding-right: var(--space-4);
-  border-right: 1px solid var(--accent-line);
-}
-.destacados-strip-title {
-  font-family: var(--font);
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--t1);
-  white-space: nowrap;
-}
-
-.destacados-scroller {
-  position: relative;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.destacados-track {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  padding: 2px 2px 6px;
-  scrollbar-width: none;
-}
-.destacados-track::-webkit-scrollbar { display: none; }
-
-.destacados-track .card {
-  flex: 0 0 132px;
-  scroll-snap-align: start;
-}
-.destacados-track .card-img-wrap { aspect-ratio: 1.15; }
-.destacados-track .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
-.destacados-track .card-marca { font-size: 0.62rem; }
-.destacados-track .card-nombre { font-size: 0.78rem; -webkit-line-clamp: 2; }
-.destacados-track .card-variante-label { display: none; }
-.destacados-track .card-precio { font-size: 0.86rem; }
-.destacados-track .card-precio-dto { font-size: 0.68rem; }
-
-.destacados-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  box-shadow: var(--s2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--t1);
-  cursor: pointer;
-  z-index: 2;
-  transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
-}
-.destacados-arrow:hover { border-color: var(--accent-line); }
-.destacados-arrow svg { width: 16px; height: 16px; }
-.destacados-arrow--prev { left: -14px; }
-.destacados-arrow--next { right: -14px; }
-.destacados-arrow[disabled] { opacity: 0; pointer-events: none; }
-
-.categorias-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+/* ── Columna izquierda ── */
+.faq-header { position: static; }
+.faq-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--t3);
+  margin-bottom: 8px;
+}
+.faq-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -.03em;
+  line-height: 1.2;
+  color: var(--t1);
+  margin-bottom: var(--space-4);
+}
+.faq-ayuda {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--t2);
+}
+.faq-ayuda a {
+  color: var(--accent-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-line);
+  transition: border-color var(--t);
+}
+.faq-ayuda a:hover { border-bottom-color: var(--accent-2); }
+
+/* ── Acordeón ── */
+.faq-list { display: flex; flex-direction: column; }
+
+.faq-item { border-bottom: 1px solid var(--line-soft); }
+.faq-item:first-child { border-top: 1px solid var(--line-soft); }
+
+.faq-pregunta {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 14px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: var(--space-4);
-}
-
-.categoria-card {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r4);
-  padding: var(--space-5) var(--space-3) var(--space-4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
-  cursor: pointer;
-  overflow: hidden;
-  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
-}
-.categoria-card::before {
-  content: '';
-  position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 1.5px dashed var(--accent-line);
-  opacity: 0;
-  transform: scale(0.8) rotate(-20deg);
-  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
-  pointer-events: none;
-}
-.categoria-card:hover {
-  border-color: var(--accent-line);
-  box-shadow: var(--s2);
-}
-.categoria-card:hover::before {
-  opacity: 1;
-  transform: scale(1) rotate(0deg);
-}
-
-.categoria-img-wrap {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--accent-bg);
-  border: 1px solid var(--accent-line);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  transition: background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.3s cubic-bezier(.34,1.56,.64,1);
-}
-.categoria-card:hover .categoria-img-wrap {
-  background: var(--accent);
-  border-color: var(--accent);
-  transform: scale(1.08);
-}
-.categoria-img-wrap svg { width: 25px; height: 25px; transition: color 0.25s var(--ease); }
-.categoria-card:hover .categoria-img-wrap svg { color: white; }
-
-.categoria-card span {
-  font-size: 0.825rem;
+  text-align: left;
+  font-size: 0.855rem;
   font-weight: 500;
   color: var(--t1);
-  text-align: center;
+  transition: color var(--t);
+}
+.faq-pregunta:hover { color: var(--accent-2); }
+.faq-item.open .faq-pregunta { color: var(--accent-2); }
+
+.faq-chev {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--t3);
+  transition: transform 0.3s var(--ease), color var(--t);
+}
+.faq-item.open .faq-chev { transform: rotate(180deg); color: var(--accent-2); }
+
+/* La respuesta se despliega con grid-template-rows 0fr→1fr: así transiciona
+   el alto sin tener que medirlo en JS. */
+.faq-resp-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s var(--ease);
+}
+.faq-item.open .faq-resp-wrap { grid-template-rows: 1fr; }
+.faq-respuesta { overflow: hidden; }
+.faq-respuesta p {
+  padding: 0 var(--space-5) 14px 0;
+  font-family: var(--font-body);
+  font-size: 0.83rem;
+  line-height: 1.7;
+  color: var(--t2);
 }
 
-.categoria-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
-  color: var(--accent);
-  margin-top: -4px;
-}
-.categoria-arrow svg { width: 14px; height: 14px; }
-.categoria-card:hover .categoria-arrow {
-  opacity: 1;
-  transform: translateY(0);
+@media (prefers-reduced-motion: reduce) {
+  .faq-resp-wrap, .faq-chev { transition: none; }
 }
 
 
 /* ══════════════════════════════════════════════════════
    CTA FINAL
 ══════════════════════════════════════════════════════ */
+/* La sección va en gris y el mensaje en una tarjeta blanca elevada, con un
+   patrón de puntitos verdes en dos esquinas opuestas. */
 .cta-final {
-  background: var(--bg);
-  padding: 0 var(--space-5) var(--space-9);
+  background: var(--surface-2);
 }
 .cta-final-inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5);
+  display: flex;
+  justify-content: center;
+}
+.cta-card {
   position: relative;
   overflow: hidden;
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: var(--space-9) var(--space-5);
-  text-align: center;
+  max-width: 680px;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r5);
+  padding: var(--space-8) var(--space-7);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-6);
-  background: var(--accent-bg);
-  border: 1px solid var(--accent-line);
-  border-radius: var(--r5);
+  gap: var(--space-5);
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(47, 52, 48, .05), 0 16px 40px rgba(47, 52, 48, .07);
 }
-.cta-final-inner > * { position: relative; z-index: 1; }
-.cta-final h2 {
-  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--t1);
-}
-/* Frase clave destacada, igual concepto que en móvil pero en línea,
-   sin apilar, ya que en escritorio/tablet hay ancho de sobra. */
-.cta-final h2 strong {
-  font: inherit;
-  color: var(--accent);
-  font-weight: 700;
-}
-
-
-/* ══════════════════════════════════════════════════════
-   ETIQUETA Y TÍTULO COMPARTIDOS (usados por FAQ)
-══════════════════════════════════════════════════════ */
-.sobre-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  margin-bottom: var(--space-4);
-}
-.sobre-title {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-  color: var(--t1);
-  margin-bottom: var(--space-5);
-}
-
-
-/* ══════════════════════════════════════════════════════
-   FAQ
-══════════════════════════════════════════════════════ */
-.faq-section {
-  background: var(--bg);
-  border-bottom: 1px solid var(--line-soft);
-}
-.faq-inner {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: var(--space-9) var(--space-5);
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: var(--space-8);
-  align-items: start;
-}
-.faq-header { position: static; }
-
-.faq-list { display: flex; flex-direction: column; }
-
-.faq-item {
-  position: relative;
-  border-top: 1px solid var(--line-soft);
-  padding-left: var(--space-4);
-  transition: padding-left 0.25s var(--ease);
-}
-.faq-item:last-child { border-bottom: 1px solid var(--line-soft); }
-.faq-item::after {
+/* Los puntitos se recortan con una máscara radial para que se desvanezcan
+   hacia el centro en vez de cortarse con un borde duro. */
+.cta-card::before,
+.cta-card::after {
   content: '';
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--accent);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 0.3s var(--ease);
+  width: 150px;
+  height: 150px;
+  background-image: radial-gradient(var(--accent-line) 1.2px, transparent 1.2px);
+  background-size: 13px 13px;
+  opacity: .5;
+  pointer-events: none;
 }
-.faq-item.open::after { transform: scaleY(1); }
-
-.faq-pregunta {
-  width: 100%;
-  background: none;
-  border: none;
-  padding: var(--space-4) 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--space-4);
-  text-align: left;
-  font-size: 0.9rem;
-  font-weight: 500;
+.cta-card::before {
+  top: -20px;
+  right: -20px;
+  -webkit-mask-image: radial-gradient(circle at 100% 0, #000, transparent 72%);
+  mask-image: radial-gradient(circle at 100% 0, #000, transparent 72%);
+}
+.cta-card::after {
+  bottom: -20px;
+  left: -20px;
+  -webkit-mask-image: radial-gradient(circle at 0 100%, #000, transparent 72%);
+  mask-image: radial-gradient(circle at 0 100%, #000, transparent 72%);
+}
+.cta-final h2 {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font);
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
   color: var(--t1);
-  transition: color var(--t);
+  margin: 0;
 }
-.faq-pregunta:hover { color: var(--accent); }
-.faq-item.open .faq-pregunta { color: var(--accent); }
-
-.faq-icono {
-  font-size: 1.1rem;
-  font-style: normal;
-  font-weight: 300;
-  color: var(--t3);
-  flex-shrink: 0;
-  line-height: 1.4;
-  transition: transform var(--t) var(--ease), color var(--t);
+.cta-final h2 strong {
+  font-weight: 700;
+  color: var(--accent-2);
 }
-.faq-item.open .faq-icono { transform: rotate(45deg); color: var(--accent); }
-
-.faq-respuesta {
-  display: none;
-  padding-bottom: var(--space-4);
-  font-size: 0.875rem;
-  line-height: 1.75;
-  color: var(--t2);
-}
-.faq-item.open .faq-respuesta { display: block; }
+.cta-final .btn-primary { position: relative; z-index: 2; }
 
 
 /* ══════════════════════════════════════════════════════
@@ -3058,11 +3122,34 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
 .seccion-titulo::after { content: ''; flex: 1; height: 1px; background: var(--line-soft); }
 .seccion-titulo:first-child { margin-top: 0; }
 
+/* Con el sidebar (244px + gap) la zona de grilla ronda los 988px en la
+   máxima: con un mínimo de 148px entran 6 columnas en vez de 4. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
   gap: 10px;
 }
+
+/* Al achicar la columna, la tipografía y los espacios de la card bajan en
+   proporción; si no, el texto queda desbordado y la foto se pierde. El
+   nombre se recorta a dos renglones para que todas midan lo mismo. */
+.grid > .card { border-radius: var(--r3); }
+.grid > .card .card-img-wrap img { padding: var(--space-2); }
+.grid > .card .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+.grid > .card .card-marca { font-size: 0.6rem; letter-spacing: .06em; margin-bottom: 2px; }
+.grid > .card .card-nombre {
+  font-size: 0.78rem;
+  line-height: 1.28;
+  min-height: calc(0.78rem * 1.28 * 2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.grid > .card .card-variante-label { font-size: 0.68rem; margin-bottom: 5px; min-height: 12px; }
+.grid > .card .card-precio { font-size: 0.92rem; }
+.grid > .card .card-precio.sin-precio { font-size: 0.68rem; }
+.grid > .card .card-precio-dto { font-size: 0.68rem; }
 
 
 /* ══════════════════════════════════════════════════════
@@ -4268,16 +4355,15 @@ body.modal-abierto {
     -webkit-mask-image: none;
     mask-image: none;
   }
+  /* Apilado: el encabezado se centra sobre el acordeón. Las preguntas
+     siguen alineadas a la izquierda — es una lista, no un título. */
   .faq-inner { grid-template-columns: 1fr; gap: var(--space-5); }
-  .faq-header { position: static; }
+  .faq-header { text-align: center; }
+  .faq-title { font-size: 1.25rem; }
+  .faq-ayuda { max-width: 34ch; margin: 0 auto; }
 
-  .beneficios-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6) var(--space-4); }
-  .categorias-grid { grid-template-columns: repeat(3, 1fr); }
 
-  /* Destacados: en pantallas medianas ya no hace falta el botón de flecha,
-     el swipe táctil alcanza */
-  .destacados-arrow { display: none; }
-  .destacados-strip-inner { gap: var(--space-3); }
+
 }
 
 /* Zona intermedia (tablet / ventana achicada): el buscador ya se encogió
@@ -4310,11 +4396,13 @@ body.modal-abierto {
   .cart-trigger { padding: 0 8px; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
 
-  /* Destacados en mobile: label arriba (angosto), franja de scroll abajo,
-     cards un poco más chicas para que entren 2 y pico por pantalla */
-  .destacados-strip-inner { flex-direction: column; align-items: stretch; gap: var(--space-2); padding: var(--space-3) var(--space-4); }
-  .destacados-strip-label { flex-direction: row; align-items: baseline; gap: 6px; border-right: none; padding-right: 0; }
-  .destacados-track .card { flex-basis: 116px; }
+  /* Destacados en mobile: el riel sangra hasta el borde derecho para que se
+     vea que hay más cards al costado. */
+  .destacados-strip-inner { padding: var(--space-5) 0 var(--space-5) var(--space-4); }
+  .destacados-strip-label { padding-right: var(--space-4); margin-bottom: var(--space-3); }
+  .destacados-arrow { display: none; }
+  .destacados-track { padding-right: var(--space-4); }
+  .destacados-track .card { flex-basis: 132px; width: 132px; max-width: 132px; }
 
   .catalogo-main { padding: var(--space-4) var(--space-4) 100px; }
   .catalogo-topbar-inner { padding: 0 var(--space-4); }
@@ -4363,113 +4451,20 @@ body.modal-abierto {
   .hero-actions .btn-ghost-dark { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .75); color: white; backdrop-filter: blur(4px); }
   .faq-inner { padding: var(--space-8) var(--space-4); }
   /* Beneficios: una lista de atajos, más fácil de recorrer que seis mini tarjetas. */
-  .como-comprar-inner, .vueltas-inner, .beneficios-inner,
-  .categorias-home-inner, .cta-final-inner { padding: var(--space-7) var(--space-4); }
-  .beneficios-grid { display: flex; flex-direction: column; gap: var(--space-2); }
-  .beneficio { flex-direction: row; align-items: center; text-align: left; gap: var(--space-3); padding: var(--space-3); background: var(--surface); border-color: var(--line-soft); border-radius: var(--r3); }
-  .beneficio-icon-wrap { width: 42px; height: 42px; flex: 0 0 42px; }
-  .beneficio svg { width: 20px; height: 20px; }
-  .beneficio p { font-family: var(--font); font-size: .86rem; font-weight: 500; line-height: 1.3; color: var(--t1); }
-  .categorias-grid { grid-template-columns: 1fr; gap: var(--space-2); }
-  .categoria-card { flex-direction: row; justify-content: flex-start; gap: var(--space-3); padding: var(--space-3); text-align: left; }
-  .categoria-img-wrap { width: 42px; height: 42px; flex: 0 0 42px; }
-  .categoria-img-wrap svg { width: 20px; height: 20px; }
-  .categoria-card span { text-align: left; font-size: .86rem; }
-  .categoria-arrow { opacity: 1; transform: none; margin: 0 0 0 auto; }
-  .vueltas-svg-wrap { display: none; }
-  .vueltas-mobile {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    max-width: 380px;
-    margin: 0 auto;
-    padding: var(--space-6) var(--space-5) var(--space-5);
-    background: var(--surface);
-    border-radius: var(--r3);
-    box-shadow: var(--s3);
-  }
-  /* Borde perforado arriba y abajo, como un tique */
-  .vueltas-mobile::before, .vueltas-mobile::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0;
-    height: 14px;
-    background-image: radial-gradient(circle at 8px 8px, var(--surface-2) 6px, transparent 7px);
-    background-size: 16px 16px;
-    background-repeat: repeat-x;
-  }
-  .vueltas-mobile::before { top: -1px; }
-  .vueltas-mobile::after { bottom: -1px; transform: rotate(180deg); }
-
-  .vueltas-ticket-heading {
-    text-align: center;
-    font-family: var(--font-body);
-    font-size: .78rem;
-    color: var(--t3);
-    letter-spacing: .04em;
-    margin-bottom: var(--space-4);
-  }
-  .vueltas-ticket-line {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    padding: 7px 0;
-    color: var(--t3);
-    font-size: .86rem;
-  }
-  .vueltas-ticket-dots {
-    flex: 1;
-    border-bottom: 1.5px dotted var(--line);
-    transform: translateY(-3px);
-  }
-  .vueltas-ticket-name {
-    text-decoration: line-through;
-    text-decoration-color: rgba(111, 116, 110, .4);
-    white-space: nowrap;
-  }
-  .vueltas-ticket-mark {
-    color: var(--t3);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .vueltas-ticket-divider {
-    border: none;
-    border-top: 1.5px dashed var(--line-soft);
-    margin: var(--space-4) 0;
-  }
-  .vueltas-ticket-stamp {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: var(--space-3);
-    border: 2px dashed var(--accent);
-    border-radius: var(--r3);
-    transform: rotate(-1.5deg);
-  }
-  .vueltas-ticket-stamp-text strong {
-    display: block;
-    color: var(--accent-2);
-    font-size: .95rem;
-    text-transform: uppercase;
-    letter-spacing: .03em;
-  }
-  .vueltas-ticket-stamp-text span {
-    display: block;
-    font-size: .8rem;
-    color: var(--t2);
-    font-family: var(--font-body);
-    margin-top: 2px;
-  }
+  .como-comprar-inner, .vueltas-inner,
+  .cta-final-inner { padding: var(--space-7) var(--space-4); }
+  .cta-card { padding: var(--space-6) var(--space-5); gap: var(--space-4); }
   .card.expanded { grid-column: 1 / -1; }
   .carrito-items { padding: var(--space-4); }
   .carrito-header { padding: var(--space-4); }
   .carrito-footer { padding: var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
 
   /* Footer: jerarquía clara, navegación liviana y WhatsApp como acción principal. */
-  .cta-final h2 { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 1.1rem; line-height: 1.05; letter-spacing: -.04em; }
+  /* Mobile: el título se parte en dos renglones — "Listo para comprar" arriba
+     y "más simple" abajo, grande y en verde. */
+  .cta-final h2 { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.035em; }
   .cta-final h2 span { font-weight: 500; }
-  .cta-final h2 strong { color: var(--accent); font-size: clamp(1.75rem, 9vw, 2.25rem); font-weight: 700; letter-spacing: -.055em; }
+  .cta-final h2 strong { color: var(--accent-2); font-size: clamp(1.75rem, 9vw, 2.25rem); font-weight: 700; letter-spacing: -.05em; line-height: 1.05; }
   .footer-inner { padding: var(--space-6) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom, 0px)); text-align: center; }
   .footer-logo { margin: 0 auto var(--space-5); height: 32px; }
   .footer-nav { display: flex; justify-content: center; gap: 0 var(--space-4); margin-bottom: var(--space-5); }
@@ -4551,13 +4546,6 @@ body.modal-abierto {
     border-color var(--t) var(--ease),
     box-shadow 0.25s var(--ease),
     transform 0.25s var(--ease);
-}
-
-/* ── Categorías — transición base (hover visual definido arriba) ── */
-.categoria-card {
-  transition:
-    border-color var(--t) var(--ease),
-    box-shadow 0.25s var(--ease);
 }
 
 /* ── Botones — press feedback ── */
