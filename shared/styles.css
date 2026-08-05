@@ -2465,15 +2465,35 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .ns-flecha svg { width: 24px; height: 24px; }
 
-/* ── Tablet y mobile: una sola columna ── */
+/* ── Tablet y mobile: una sola columna ──
+   Al apilarse, el manifiesto queda centrado: alineado a la izquierda se ve
+   como una columna suelta arriba de la tarjeta. La línea del eyebrow pasa a
+   los dos lados para que el centrado se lea intencional. */
 @media (max-width: 900px) {
   .vueltas-inner {
     grid-template-columns: 1fr;
     gap: var(--space-6);
     max-width: 560px;
   }
-  .ns-frase { max-width: none; }
-  .ns-bajada { max-width: none; }
+  .ns-txt { text-align: center; }
+  .ns-eyebrow { justify-content: center; }
+  .ns-eyebrow::before {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--accent-line);
+    max-width: 70px;
+  }
+  /* "Comprar debería ser más simple" tiene que entrar en un solo renglón:
+     el tamaño se ata al ancho de pantalla y no se permite el corte. */
+  .ns-frase {
+    max-width: none;
+    font-size: min(1.45rem, 5.45vw);
+    letter-spacing: -.035em;
+    white-space: nowrap;
+  }
+  .ns-frase em svg { height: .26em; bottom: -.1em; }
+  .ns-bajada { max-width: 42ch; margin-left: auto; margin-right: auto; }
   .ns-esquema { padding: var(--space-5) var(--space-4) var(--space-4); }
 }
 
@@ -4295,8 +4315,12 @@ body.modal-abierto {
     -webkit-mask-image: none;
     mask-image: none;
   }
+  /* Apilado: el encabezado se centra sobre el acordeón. Las preguntas
+     siguen alineadas a la izquierda — es una lista, no un título. */
   .faq-inner { grid-template-columns: 1fr; gap: var(--space-5); }
+  .faq-header { text-align: center; }
   .faq-title { font-size: 1.25rem; }
+  .faq-ayuda { max-width: 34ch; margin: 0 auto; }
 
 
   /* Destacados: en pantallas medianas ya no hace falta el botón de flecha,
