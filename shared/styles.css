@@ -638,6 +638,59 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   margin-bottom: var(--space-6);
 }
 
+/* ── Cuenta regresiva de la promo ──
+   Ocupa el lugar del párrafo: cuatro cajas de vidrio con días / horas /
+   minutos / segundos. La fecha límite viaja en el data-fin del HTML, así
+   cambiar de campaña no obliga a tocar el JS. */
+.promo-cd {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+.promo-cd-label {
+  font-family: var(--font);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+}
+.promo-cd-nums { display: flex; gap: 7px; }
+.promo-cd-u {
+  min-width: 52px;
+  padding: 7px 6px 5px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.34);
+  border-radius: var(--r2);
+  text-align: center;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.promo-cd-u b {
+  display: block;
+  font-family: var(--font);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: white;
+  /* Ancho fijo por dígito: sin esto los números bailan a cada segundo. */
+  font-variant-numeric: tabular-nums;
+}
+.promo-cd-u i {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.62);
+}
+/* Si la promo venció, el JS marca el bloque y desaparece. */
+.promo-cd.vencida { display: none; }
+
 .hero-promo-nota {
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -733,6 +786,24 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     margin-bottom: 0;
     text-shadow: 0 1px 5px rgba(0,0,0,.45);
   }
+  /* El contador se apila: "Termina en" pasa a ser un renglón propio arriba
+     de las cajas (en fila no entra), y las cuatro cajas se reparten el
+     ancho. Sin el rótulo los números no se entienden. */
+  .promo-cd {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .promo-cd-label {
+    font-size: 0.62rem;
+    text-shadow: 0 1px 4px rgba(0,0,0,.5);
+  }
+  .promo-cd-nums { width: 100%; gap: 6px; }
+  .promo-cd-u { flex: 1; min-width: 0; padding: 6px 4px 4px; }
+  .promo-cd-u b { font-size: 1.1rem; }
+  .promo-cd-u i { font-size: 0.5rem; }
   .hero-promo-nota {
     align-self: stretch;
     max-width: none;

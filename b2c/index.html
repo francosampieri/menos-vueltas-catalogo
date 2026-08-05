@@ -128,15 +128,28 @@
             <path d="M7.5 8a2.5 2.5 0 0 1 0 -5c1.5 0 2.5 2 2.5 5" />
             <path d="M16.5 8a2.5 2.5 0 0 0 0 -5c-1.5 0 -2.5 2 -2.5 5" />
           </svg>
-          Promoción de Bienvenida
+          Promoción de Lanzamiento
         </span>
         <h1 class="hero-promo-titulo"><strong>10% de descuento</strong><br>+ Envío Gratis</h1>
-        <p class="hero-promo-texto">Probá Menos Vueltas con esta promoción en tu primer pedido.</p>
+
+        <!-- Cuenta regresiva hasta el cierre de la promo. La fecha límite
+             está en data-fin (ver initContadorPromo en app.js). Si la promo
+             ya venció, el bloque entero se oculta solo. -->
+        <div class="promo-cd" id="promoContador" data-fin="2026-08-31T23:59:59-03:00">
+          <span class="promo-cd-label">Termina en</span>
+          <div class="promo-cd-nums">
+            <div class="promo-cd-u"><b data-cd-d>00</b><i>días</i></div>
+            <div class="promo-cd-u"><b data-cd-h>00</b><i>hs</i></div>
+            <div class="promo-cd-u"><b data-cd-m>00</b><i>min</i></div>
+            <div class="promo-cd-u"><b data-cd-s>00</b><i>seg</i></div>
+          </div>
+        </div>
+
         <div class="hero-promo-actions">
           <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
           <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Como pedir</button>
         </div>
-        <p class="hero-promo-nota">Te descontamos el 10% sobre el total cuando envíes el pedido por WhatsApp.</p>
+        <p class="hero-promo-nota">Probá Menos Vueltas con este descuento en todos tus pedidos de Agosto</p>
       </div>
     </div>
   </section>
@@ -680,6 +693,6 @@
 
 <script>window.CANAL = 'B2C';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a268dedab96a17f9',t:'MTc4NTk2NTA4NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a26902058da1e9b0',t:'MTc4NTk2NjUyNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

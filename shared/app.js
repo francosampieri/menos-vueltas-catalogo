@@ -2039,3 +2039,46 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', actualizarFlechas);
   actualizarFlechas();
 });
+
+
+// ══ CONTADOR DE LA PROMO ══
+// Cuenta regresiva hasta la fecha del atributo data-fin (formato ISO con
+// huso, ej. "2026-08-31T23:59:59-03:00"). Vive en el HTML y no acá para que
+// cambiar de campaña sea editar un atributo. Si la fecha ya pasó — o es
+// inválida — el bloque se oculta solo: nunca se muestra "00 00 00 00" ni
+// una promo vencida.
+function initContadorPromo() {
+  const cont = document.getElementById('promoContador');
+  if (!cont) return;
+
+  const fin = new Date(cont.dataset.fin).getTime();
+  if (isNaN(fin)) { cont.classList.add('vencida'); return; }
+
+  const el = {
+    d: cont.querySelector('[data-cd-d]'),
+    h: cont.querySelector('[data-cd-h]'),
+    m: cont.querySelector('[data-cd-m]'),
+    s: cont.querySelector('[data-cd-s]')
+  };
+  const dosDigitos = n => String(n).padStart(2, '0');
+  let timer = null;
+
+  const tick = () => {
+    const resta = fin - Date.now();
+    if (resta <= 0) {
+      cont.classList.add('vencida');
+      clearInterval(timer);
+      return;
+    }
+    const seg = Math.floor(resta / 1000);
+    if (el.d) el.d.textContent = dosDigitos(Math.floor(seg / 86400));
+    if (el.h) el.h.textContent = dosDigitos(Math.floor(seg % 86400 / 3600));
+    if (el.m) el.m.textContent = dosDigitos(Math.floor(seg % 3600 / 60));
+    if (el.s) el.s.textContent = dosDigitos(seg % 60);
+  };
+
+  tick();
+  timer = setInterval(tick, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', initContadorPromo);
