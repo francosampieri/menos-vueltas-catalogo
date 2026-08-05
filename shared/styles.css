@@ -2597,22 +2597,62 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 /* ══════════════════════════════════════════════════════
    CTA FINAL
 ══════════════════════════════════════════════════════ */
+/* La sección va en gris y el mensaje en una tarjeta blanca elevada, con un
+   patrón de puntitos verdes en dos esquinas opuestas. */
 .cta-final {
-  background: var(--surface);
+  background: var(--surface-2);
 }
 .cta-final-inner {
-  position: relative;
-  overflow: hidden;
   max-width: var(--content-wide);
   margin: 0 auto;
-  padding: var(--space-9) var(--space-5);
+  padding: var(--space-8) var(--space-5);
+  display: flex;
+  justify-content: center;
+}
+.cta-card {
+  position: relative;
+  overflow: hidden;
+  max-width: 680px;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r5);
+  padding: var(--space-8) var(--space-7);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-5);
   text-align: center;
+  box-shadow: 0 1px 2px rgba(47, 52, 48, .05), 0 16px 40px rgba(47, 52, 48, .07);
+}
+/* Los puntitos se recortan con una máscara radial para que se desvanezcan
+   hacia el centro en vez de cortarse con un borde duro. */
+.cta-card::before,
+.cta-card::after {
+  content: '';
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background-image: radial-gradient(var(--accent-line) 1.2px, transparent 1.2px);
+  background-size: 13px 13px;
+  opacity: .5;
+  pointer-events: none;
+}
+.cta-card::before {
+  top: -20px;
+  right: -20px;
+  -webkit-mask-image: radial-gradient(circle at 100% 0, #000, transparent 72%);
+  mask-image: radial-gradient(circle at 100% 0, #000, transparent 72%);
+}
+.cta-card::after {
+  bottom: -20px;
+  left: -20px;
+  -webkit-mask-image: radial-gradient(circle at 0 100%, #000, transparent 72%);
+  mask-image: radial-gradient(circle at 0 100%, #000, transparent 72%);
 }
 .cta-final h2 {
+  position: relative;
+  z-index: 2;
   font-family: var(--font);
   font-size: clamp(1.6rem, 3.4vw, 2.3rem);
   font-weight: 600;
@@ -4327,15 +4367,18 @@ body.modal-abierto {
   /* Beneficios: una lista de atajos, más fácil de recorrer que seis mini tarjetas. */
   .como-comprar-inner, .vueltas-inner,
   .cta-final-inner { padding: var(--space-7) var(--space-4); }
+  .cta-card { padding: var(--space-6) var(--space-5); gap: var(--space-4); }
   .card.expanded { grid-column: 1 / -1; }
   .carrito-items { padding: var(--space-4); }
   .carrito-header { padding: var(--space-4); }
   .carrito-footer { padding: var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
 
   /* Footer: jerarquía clara, navegación liviana y WhatsApp como acción principal. */
-  .cta-final h2 { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 1.1rem; line-height: 1.05; letter-spacing: -.04em; }
+  /* Mobile: el título se parte en dos renglones — "Listo para comprar" arriba
+     y "más simple" abajo, grande y en verde. */
+  .cta-final h2 { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.035em; }
   .cta-final h2 span { font-weight: 500; }
-  .cta-final h2 strong { color: var(--accent); font-size: clamp(1.75rem, 9vw, 2.25rem); font-weight: 700; letter-spacing: -.055em; }
+  .cta-final h2 strong { color: var(--accent-2); font-size: clamp(1.75rem, 9vw, 2.25rem); font-weight: 700; letter-spacing: -.05em; line-height: 1.05; }
   .footer-inner { padding: var(--space-6) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom, 0px)); text-align: center; }
   .footer-logo { margin: 0 auto var(--space-5); height: 32px; }
   .footer-nav { display: flex; justify-content: center; gap: 0 var(--space-4); margin-bottom: var(--space-5); }
