@@ -803,7 +803,7 @@
       "Tamaño": "380",
       "UM": "g",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tags": "caballa, aceite, lata, mar, proteína",
       "Id_Grupo": "36",
       "Tipo_Variante": "",
@@ -20314,7 +20314,7 @@
       "Nombre_Grupo": "Caballa en Aceite",
       "Marca": "CUMANA",
       "Categoria": "Almacén",
-      "Subcategoria": "Conservas"
+      "Subcategoria": "Enlatados"
     },
     {
       "Id_Grupo": "37",
@@ -29621,7 +29621,7 @@
       "Id_proveedor": "CUM31823",
       "Producto": "Caballa en Aceite CUMANA 380 g",
       "Categoría": "Almacén",
-      "Subcategoria": "Conservas",
+      "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
       "Precio_Costo": "$3.793,89",
       "Precio_Venta": "$4.500,00",
