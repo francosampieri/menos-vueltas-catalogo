@@ -800,7 +800,9 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   letter-spacing: -0.03em;
   color: var(--t1);
   text-align: center;
-  margin-bottom: var(--space-7);
+  /* Ajustado: la bajada tiene que leerse pegada al título, como una sola
+     unidad. El aire grande va después del par, no en el medio. */
+  margin-bottom: var(--space-2);
 }
 
 
@@ -925,7 +927,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-size: 0.95rem;
   color: var(--t2);
   max-width: 520px;
-  margin: calc(var(--space-3) * -1) auto var(--space-7);
+  margin: 0 auto var(--space-7);
 }
 
 .demo-pasos {
