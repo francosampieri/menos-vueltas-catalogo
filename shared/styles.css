@@ -864,6 +864,29 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   color: var(--t1);
 }
 
+/* Flechas de navegación: solo en desktop, empujadas al extremo derecho del
+   encabezado. En mobile se ocultan — ahí se desliza con el dedo. */
+.destacados-arrows {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+.destacados-arrow {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--rf);
+  background: var(--surface);
+  color: var(--t2);
+  cursor: pointer;
+  transition: color var(--t), border-color var(--t), opacity var(--t);
+}
+.destacados-arrow svg { width: 15px; height: 15px; }
+.destacados-arrow:hover:not(:disabled) { color: var(--accent-2); border-color: var(--accent); }
+.destacados-arrow:disabled { opacity: .35; cursor: default; }
+
 .destacados-track {
   display: flex;
   gap: var(--space-3);
@@ -4367,6 +4390,7 @@ body.modal-abierto {
      vea que hay más cards al costado. */
   .destacados-strip-inner { padding: var(--space-5) 0 var(--space-5) var(--space-4); }
   .destacados-strip-label { padding-right: var(--space-4); margin-bottom: var(--space-3); }
+  .destacados-arrows { display: none; }
   .destacados-track { padding-right: var(--space-4); }
   .destacados-track .card { flex-basis: 132px; width: 132px; max-width: 132px; }
 
