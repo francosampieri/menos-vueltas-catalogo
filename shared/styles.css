@@ -864,16 +864,23 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   color: var(--t1);
 }
 
-/* Flechas de navegación: solo en desktop, empujadas al extremo derecho del
-   encabezado. En mobile se ocultan — ahí se desliza con el dedo. */
-.destacados-arrows {
-  margin-left: auto;
+/* El riel y sus flechas. Las flechas van a los costados, centradas sobre la
+   altura de la foto de las cards (no del alto total, que incluye el texto),
+   que es donde el ojo espera encontrarlas. Solo en desktop. */
+.destacados-scroller {
+  position: relative;
   display: flex;
-  gap: 6px;
+  /* Alineadas arriba y bajadas a mano hasta el centro de la foto: centrarlas
+     sobre el alto total las dejaría a la altura del precio, no de la imagen. */
+  align-items: flex-start;
+  gap: var(--space-2);
 }
 .destacados-arrow {
-  width: 30px;
-  height: 30px;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  /* padding-top del riel (4px) + media altura de la foto (148/2) − medio botón */
+  margin-top: calc(4px + 74px - 16px);
   display: grid;
   place-items: center;
   border: 1px solid var(--accent-line);
@@ -881,13 +888,16 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   background: var(--surface);
   color: var(--t2);
   cursor: pointer;
+  box-shadow: 0 1px 3px rgba(47, 52, 48, .07);
   transition: color var(--t), border-color var(--t), opacity var(--t);
 }
 .destacados-arrow svg { width: 15px; height: 15px; }
 .destacados-arrow:hover:not(:disabled) { color: var(--accent-2); border-color: var(--accent); }
-.destacados-arrow:disabled { opacity: .35; cursor: default; }
+.destacados-arrow:disabled { opacity: .3; cursor: default; }
 
 .destacados-track {
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   gap: var(--space-3);
   overflow-x: auto;
@@ -4390,7 +4400,7 @@ body.modal-abierto {
      vea que hay más cards al costado. */
   .destacados-strip-inner { padding: var(--space-5) 0 var(--space-5) var(--space-4); }
   .destacados-strip-label { padding-right: var(--space-4); margin-bottom: var(--space-3); }
-  .destacados-arrows { display: none; }
+  .destacados-arrow { display: none; }
   .destacados-track { padding-right: var(--space-4); }
   .destacados-track .card { flex-basis: 132px; width: 132px; max-width: 132px; }
 
