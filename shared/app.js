@@ -647,7 +647,9 @@ function crearCardDestacada(gid, vars) {
 
   const card = document.createElement('div');
   card.className = 'card card-destacada';
-  card.addEventListener('click', () => irAProducto(nombre));
+  // Igual que en el catálogo: abre el detalle del producto con sus
+  // variantes, en vez de mandar al catálogo con la búsqueda cargada.
+  card.addEventListener('click', () => abrirModalProducto(gid, vars));
 
   const imgWrap = document.createElement('div');
   imgWrap.className = 'card-img-wrap';
@@ -701,18 +703,6 @@ function crearCardDestacada(gid, vars) {
 
   card.append(imgWrap, body);
   return card;
-}
-
-// Lleva al catálogo con el producto ya buscado, para que el kiosquero vea
-// la card real (con todas sus variantes) y pueda agregarla al pedido.
-function irAProducto(nombre) {
-  mostrarCatalogo();
-  const input = document.getElementById('buscador');
-  if (input) input.value = nombre;
-  busquedaActiva = nombre;
-  const label = document.getElementById('catalogo-titulo-label');
-  if (label) label.textContent = `Resultados para "${nombre}"`;
-  renderGrupos();
 }
 
 function crearCard(gid, vars) {
@@ -2025,26 +2015,5 @@ function addRevealClasses() {
 // Iniciar reveal al cargar la página
 document.addEventListener('DOMContentLoaded', addRevealClasses);
 
-// ══ DESTACADOS: flechas del scroll horizontal ══
-document.addEventListener('DOMContentLoaded', () => {
-  const track = document.getElementById('destacados-grid');
-  const prev  = document.getElementById('destacadosPrev');
-  const next  = document.getElementById('destacadosNext');
-  if (!track || !prev || !next) return;
 
-  const paso = () => Math.round(track.clientWidth * 0.8);
-  prev.addEventListener('click', () => track.scrollBy({ left: -paso(), behavior: 'smooth' }));
-  next.addEventListener('click', () => track.scrollBy({ left: paso(), behavior: 'smooth' }));
-
-  const actualizarFlechas = () => {
-    const maxScroll = track.scrollWidth - track.clientWidth;
-    prev.disabled = track.scrollLeft <= 4;
-    next.disabled = track.scrollLeft >= maxScroll - 4;
-  };
-  track.addEventListener('scroll', actualizarFlechas);
-  // Recalcular cuando cambian las cards (ej. al cargar el catálogo)
-  new MutationObserver(actualizarFlechas).observe(track, { childList: true });
-  window.addEventListener('resize', actualizarFlechas);
-  actualizarFlechas();
-});
 

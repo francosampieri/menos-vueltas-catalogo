@@ -806,85 +806,90 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 
 
-/* ══════════════════════════════════════════════════════
-   DESTACADOS (franja horizontal, solo B2B)
-   Una fila de scroll horizontal con las cards del catálogo, achicadas.
-══════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════
+   DESTACADOS (franja verde, solo B2B)
+   Fondo verde claro que separa la franja del hero y de la sección que sigue.
+   Las cards pierden el borde y flotan con sombra. Tocar una abre el modal
+   del producto, igual que en el catálogo.
+════════════════════════════════════════════════════ */
 .destacados-strip {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line-soft);
+  position: relative;
+  overflow: hidden;
+  background: var(--accent-bg);
+  border-top: 1px solid var(--accent-line);
+  border-bottom: 1px solid var(--accent-line);
+}
+/* Círculo punteado de fondo, del mismo lenguaje que el resto de la landing */
+.destacados-strip::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  top: -140px;
+  right: 6%;
+  border: 1px dashed var(--accent-line);
+  border-radius: 50%;
+  opacity: .7;
+  pointer-events: none;
 }
 .destacados-strip-inner {
+  position: relative;
+  z-index: 2;
   max-width: var(--content-wide);
   margin: 0 auto;
-  padding: var(--space-4) var(--space-5);
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
+  padding: var(--space-6) var(--space-5);
 }
 .destacados-strip-label {
-  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  border-right: 1px solid var(--line-soft);
-  padding-right: var(--space-5);
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-4);
 }
+.destacados-icono {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: grid;
+  place-items: center;
+}
+.destacados-icono svg { width: 14px; height: 14px; }
 .destacados-strip-title {
   font-family: var(--font);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--t1);
-  white-space: nowrap;
 }
-.destacados-scroller {
-  position: relative;
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.destacados-arrow {
-  flex: 0 0 auto;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--line-soft);
-  border-radius: var(--rf);
-  background: var(--surface);
-  color: var(--t2);
-  cursor: pointer;
-  transition: color var(--t), border-color var(--t), opacity var(--t);
-}
-.destacados-arrow svg { width: 15px; height: 15px; }
-.destacados-arrow:hover:not(:disabled) { color: var(--accent); border-color: var(--accent-line); }
-.destacados-arrow:disabled { opacity: .3; cursor: default; }
 
 .destacados-track {
-  flex: 1 1 auto;
-  min-width: 0;
   display: flex;
   gap: var(--space-3);
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 2px 0;
+  /* Aire para que la sombra de las cards no se recorte al scrollear */
+  padding: 4px 0 6px;
 }
 .destacados-track::-webkit-scrollbar { display: none; }
 
-/* Las cards heredan el estilo del catálogo pero acá van en fila y con un
-   ancho fijo chico: sin esto crecen a todo el ancho disponible. */
+/* Las cards heredan el estilo del catálogo pero acá van en fila, con ancho
+   fijo y sin borde: sobre el fondo verde flotan con sombra. */
 .destacados-track .card {
-  flex: 0 0 132px;
-  width: 132px;
-  max-width: 132px;
+  flex: 0 0 148px;
+  width: 148px;
+  max-width: 148px;
   scroll-snap-align: start;
   border-radius: var(--r3);
+  border-color: transparent;
+  box-shadow: 0 1px 2px rgba(47, 52, 48, .05), 0 6px 18px rgba(47, 52, 48, .07);
+}
+.destacados-track .card:hover {
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(47, 52, 48, .07), 0 12px 28px rgba(47, 52, 48, .11);
 }
 .destacados-track .card .card-img-wrap { aspect-ratio: 1; }
 .destacados-track .card .card-img-wrap img { padding: var(--space-2); }
@@ -4325,10 +4330,7 @@ body.modal-abierto {
   .faq-ayuda { max-width: 34ch; margin: 0 auto; }
 
 
-  /* Destacados: en pantallas medianas ya no hace falta el botón de flecha,
-     el swipe táctil alcanza */
-  .destacados-arrow { display: none; }
-  .destacados-strip-inner { gap: var(--space-3); }
+
 }
 
 /* Zona intermedia (tablet / ventana achicada): el buscador ya se encogió
@@ -4361,11 +4363,12 @@ body.modal-abierto {
   .cart-trigger { padding: 0 8px; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
 
-  /* Destacados en mobile: label arriba (angosto), franja de scroll abajo,
-     cards un poco más chicas para que entren 2 y pico por pantalla */
-  .destacados-strip-inner { flex-direction: column; align-items: stretch; gap: var(--space-2); padding: var(--space-3) var(--space-4); }
-  .destacados-strip-label { flex-direction: row; align-items: baseline; gap: 6px; border-right: none; padding-right: 0; }
-  .destacados-track .card { flex-basis: 116px; }
+  /* Destacados en mobile: el riel sangra hasta el borde derecho para que se
+     vea que hay más cards al costado. */
+  .destacados-strip-inner { padding: var(--space-5) 0 var(--space-5) var(--space-4); }
+  .destacados-strip-label { padding-right: var(--space-4); margin-bottom: var(--space-3); }
+  .destacados-track { padding-right: var(--space-4); }
+  .destacados-track .card { flex-basis: 132px; width: 132px; max-width: 132px; }
 
   .catalogo-main { padding: var(--space-4) var(--space-4) 100px; }
   .catalogo-topbar-inner { padding: 0 var(--space-4); }
