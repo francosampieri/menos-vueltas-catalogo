@@ -3062,11 +3062,34 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
 .seccion-titulo::after { content: ''; flex: 1; height: 1px; background: var(--line-soft); }
 .seccion-titulo:first-child { margin-top: 0; }
 
+/* Con el sidebar (244px + gap) la zona de grilla ronda los 988px en la
+   máxima: con un mínimo de 148px entran 6 columnas en vez de 4. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
   gap: 10px;
 }
+
+/* Al achicar la columna, la tipografía y los espacios de la card bajan en
+   proporción; si no, el texto queda desbordado y la foto se pierde. El
+   nombre se recorta a dos renglones para que todas midan lo mismo. */
+.grid > .card { border-radius: var(--r3); }
+.grid > .card .card-img-wrap img { padding: var(--space-2); }
+.grid > .card .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+.grid > .card .card-marca { font-size: 0.6rem; letter-spacing: .06em; margin-bottom: 2px; }
+.grid > .card .card-nombre {
+  font-size: 0.78rem;
+  line-height: 1.28;
+  min-height: calc(0.78rem * 1.28 * 2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.grid > .card .card-variante-label { font-size: 0.68rem; margin-bottom: 5px; min-height: 12px; }
+.grid > .card .card-precio { font-size: 0.92rem; }
+.grid > .card .card-precio.sin-precio { font-size: 0.68rem; }
+.grid > .card .card-precio-dto { font-size: 0.68rem; }
 
 
 /* ══════════════════════════════════════════════════════
