@@ -3514,6 +3514,57 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   margin-top: 2px;
   transition: opacity 0.2s var(--ease);
 }
+
+
+/* ════════════════════════════════════════════════════
+   PROMO: precio tachado + cinta
+   Todo en el verde de marca — sin colores nuevos. El precio de lista queda
+   chico y tachado, y el de promo toma el lugar del precio principal.
+════════════════════════════════════════════════════ */
+.precio-viejo {
+  margin-right: 6px;
+  font-size: 0.74em;
+  font-weight: 400;
+  color: var(--t3);
+  text-decoration: line-through;
+  text-decoration-color: var(--line);
+}
+.precio-promo { color: inherit; }
+
+/* Cinta en la esquina superior izquierda de la card. La card ya es
+   position:relative, y el badge de "en carrito" vive a la derecha, así que
+   no se pisan. */
+.promo-badge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 2;
+  padding: 3px 8px;
+  border-radius: var(--rf);
+  background: var(--accent);
+  color: white;
+  font-family: var(--font);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  line-height: 1.4;
+  box-shadow: 0 2px 6px rgba(88, 117, 71, .3);
+  pointer-events: none;
+}
+/* Dentro del modal la etiqueta acompaña al precio en la misma línea. */
+.promo-badge--inline {
+  position: static;
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+  font-size: 0.6rem;
+  box-shadow: none;
+}
+
+/* En la franja de destacados las cards son más chicas: cinta más discreta. */
+.destacados-track .card .promo-badge { font-size: .54rem; padding: 2px 7px; }
+/* En los rieles de mobile, idem. */
+.riel > .card .promo-badge { font-size: .54rem; padding: 2px 6px; }
 .card-precio-dto strong {
   color: var(--accent-2);
   font-weight: 700;

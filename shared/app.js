@@ -44,6 +44,90 @@ function formatPrecio(n) {
   return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
+
+// ══ PROMO VIGENTE ══
+// Punto único de verdad del descuento: card, modal, carrito y mensaje de
+// WhatsApp pasan todos por acá. Para terminar la promo alcanza con poner
+// ACTIVA en false (o dejar pasar la fecha de FIN).
+const PROMO = {
+  ACTIVA: true,
+  PORCENTAJE: 10,
+  ETIQUETA: '10% OFF',
+  NOMBRE: 'Promo Agosto',
+  FIN: '2026-08-31T23:59:59-03:00'
+};
+
+function promoVigente() {
+  if (!PROMO.ACTIVA) return false;
+  const fin = new Date(PROMO.FIN).getTime();
+  return isNaN(fin) ? true : Date.now() < fin;
+}
+
+// En Menos Vueltas los precios son siempre múltiplos de 50: después de
+// aplicar el porcentaje hay que volver a la grilla, si no aparecen precios
+// como $20.205 que nadie cobra así.
+function redondear50(n) {
+  return Math.round(n / 50) * 50;
+}
+
+// Precio final que paga el cliente. Si no hay promo devuelve el original,
+// así el resto del código puede llamarla siempre sin preguntar.
+function precioConPromo(n) {
+  if (n === null || n === undefined) return n;
+  if (!promoVigente()) return n;
+  return redondear50(n * (100 - PROMO.PORCENTAJE) / 100);
+}
+
+// true solo si el descuento efectivamente baja el precio: en importes muy
+// chicos el redondeo a 50 puede dejarlo igual, y ahí mostrar un tachado
+// con los dos números iguales quedaría mal.
+function hayAhorro(n) {
+  const conPromo = precioConPromo(n);
+  return conPromo !== null && n !== null && conPromo < n;
+}
+
+// Precio de card: el original tachado y chico, al lado el de promo.
+function htmlPrecioCard(n) {
+  if (n === null || n === undefined) return '';
+  if (!hayAhorro(n)) return formatPrecio(n);
+  return `<span class="precio-viejo">${formatPrecio(n)}</span>` +
+         `<span class="precio-promo">${formatPrecio(precioConPromo(n))}</span>`;
+}
+
+// Precio de modal: igual que el de card pero con la etiqueta de la promo,
+// que acá sí entra sin apretar nada.
+function htmlPrecioModal(n) {
+  if (n === null || n === undefined) return '';
+  if (!hayAhorro(n)) return formatPrecio(n);
+  return `<span class="precio-viejo">${formatPrecio(n)}</span>` +
+         `<span class="precio-promo">${formatPrecio(precioConPromo(n))}</span>` +
+         `<span class="promo-badge promo-badge--inline">${PROMO.ETIQUETA}</span>`;
+}
+
+// Cinta de la esquina superior izquierda de la card.
+function badgePromo() {
+  const b = document.createElement('span');
+  b.className = 'promo-badge';
+  b.textContent = PROMO.ETIQUETA;
+  return b;
+}
+
+// Línea de precio unitario de cada renglón del carrito. Con descuento por
+// cantidad activo se tacha el precio unitario (ya con promo) y se muestra el
+// de cantidad; si no, se tacha el de lista contra el de promo.
+function htmlPrecioItemCarrito(item, aplica) {
+  const tachado = v => `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(v)}</span>`;
+  const fuerte  = v => `<strong style="color:var(--accent-2)">${formatPrecio(v)}</strong>`;
+
+  if (aplica) return `${tachado(item.precio)} ${fuerte(item.precioDto)} c/u`;
+
+  const lista = item.precioLista;
+  if (lista != null && item.precio != null && item.precio < lista) {
+    return `${tachado(lista)} ${fuerte(item.precio)} c/u`;
+  }
+  return `${formatPrecio(item.precio)} c/u`;
+}
+
 // ══ CARGA DE DATOS ══
 async function cargarDatos() {
   try {
@@ -685,8 +769,8 @@ function crearCardDestacada(gid, vars) {
 
   const vprecioEl = document.createElement('div');
   if (precio !== null) {
-    vprecioEl.textContent = formatPrecio(precio);
     vprecioEl.className = 'card-precio';
+    vprecioEl.innerHTML = htmlPrecioCard(precio);
   } else {
     vprecioEl.textContent = 'Precio a confirmar';
     vprecioEl.className = 'card-precio sin-precio';
@@ -697,9 +781,13 @@ function crearCardDestacada(gid, vars) {
   if (hayDto) {
     const vprecioDtoEl = document.createElement('div');
     vprecioDtoEl.className = 'card-precio-dto';
-    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)}</strong> ${uniDto} o más`;
+    // El precio por cantidad ya viene con la promo aplicada: mostrar también
+    // su valor anterior sería demasiada información para una card.
+    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioConPromo(precioDto))}</strong> ${uniDto} o más`;
     body.appendChild(vprecioDtoEl);
   }
+
+  if (precio !== null && hayAhorro(precio)) card.appendChild(badgePromo());
 
   card.append(imgWrap, body);
   return card;
@@ -774,6 +862,12 @@ function crearCard(gid, vars) {
 
   card.append(imgWrap, badge, body);
 
+  // Cinta de promo. Se decide con la primera variante: al rotar entre
+  // variantes el precio cambia, pero el porcentaje de descuento es el mismo
+  // para todas, así que la cinta no necesita actualizarse.
+  const precioBase = parsePrecio(vars[0]['Precio_Venta']);
+  if (precioBase !== null && hayAhorro(precioBase)) card.appendChild(badgePromo());
+
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
   rotaciones[gid] = { indexActual: 0, timer: null };
@@ -812,7 +906,11 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
       }
       const base = vprecioEl.dataset.claseBase;
       if (precio !== null) {
-        vprecioEl.textContent = formatPrecio(precio);
+        // En el modal el precio va acompañado de la etiqueta de promo; en la
+        // card alcanza con el tachado.
+        const enModal = vprecioEl.classList.contains('pm-precio') ||
+                        base.indexOf('pm-precio') !== -1;
+        vprecioEl.innerHTML = enModal ? htmlPrecioModal(precio) : htmlPrecioCard(precio);
         vprecioEl.className = base;
       } else {
         vprecioEl.textContent = 'Precio a confirmar';
@@ -820,11 +918,12 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
       }
     }
 
-    // Precio con descuento por cantidad (debajo del precio normal).
-    // Solo el precio resalta (ver CSS); el resto del texto queda en gris.
+    // Precio con descuento por cantidad (debajo del precio normal). Ya viene
+    // con la promo aplicada; no se muestra su valor anterior para no apilar
+    // dos tachados en el mismo bloque.
     if (vprecioDtoEl) {
       if (hayDto) {
-        vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)} c/u</strong> ${uniDto} o más`;
+        vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioConPromo(precioDto))} c/u</strong> ${uniDto} o más`;
         vprecioDtoEl.style.display = 'block';
       } else {
         vprecioDtoEl.style.display = 'none';
@@ -1248,7 +1347,7 @@ function renderDetalleProducto(gid, vars, refs) {
     const pdiv = document.createElement('div');
     pdiv.className = 'precio-detalle';
     pdiv.innerHTML = precio !== null
-      ? `<span class="precio-detalle-label">Precio unitario</span><span class="precio-detalle-valor">${formatPrecio(precio)}</span>`
+      ? `<span class="precio-detalle-label">Precio unitario</span><span class="precio-detalle-valor">${htmlPrecioCard(precio)}</span>`
       : `<span class="precio-detalle-label">Precio</span><span class="precio-detalle-valor sin-precio">A confirmar</span>`;
     expanded.appendChild(pdiv);
 
@@ -1256,7 +1355,7 @@ function renderDetalleProducto(gid, vars, refs) {
     if (uniDto > 0 && precioDto !== null) {
       const dtoDiv = document.createElement('div');
       dtoDiv.className = 'descuento-bloque';
-      dtoDiv.innerHTML = `<div class="descuento-info"><span class="dto-cantidad">Comprando ${uniDto} o más</span><strong>${formatPrecio(precioDto)} c/u</strong></div>`;
+      dtoDiv.innerHTML = `<div class="descuento-info"><span class="dto-cantidad">Comprando ${uniDto} o más</span><strong>${formatPrecio(precioConPromo(precioDto))} c/u</strong></div>`;
       expanded.appendChild(dtoDiv);
     }
 
@@ -1454,8 +1553,14 @@ function agregarAlCarrito(gid, variante, qty) {
   else if (variante['Tamaño'] && variante['UM']) partes.push(`${variante['Tamaño']} ${variante['UM']}`);
   const varLabel = partes.join(' · ');
 
-  const precio    = parsePrecio(variante['Precio_Venta']);
-  const precioDto = parsePrecio(variante['Precio_Dto']);
+  // precioLista / precioDtoLista guardan el valor sin promo (para tacharlo);
+  // precio y precioDto son ya los que paga el cliente. Así los subtotales, el
+  // total y el mensaje de WhatsApp usan el precio real sin tener que acordarse
+  // de aplicar el descuento en cada lugar.
+  const precioLista    = parsePrecio(variante['Precio_Venta']);
+  const precioDtoLista = parsePrecio(variante['Precio_Dto']);
+  const precio    = precioConPromo(precioLista);
+  const precioDto = precioConPromo(precioDtoLista);
   const uniDto    = parseInt(variante['Uni Dto']) || 0;
   const idProd    = variante['Id'];
   const imagen    = variante['Imagen']?.trim() || '';
@@ -1464,7 +1569,8 @@ function agregarAlCarrito(gid, variante, qty) {
   if (existe) {
     existe.qty += qty;
   } else {
-    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto, uniDto, qty, imagen });
+    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto,
+                   precioLista, precioDtoLista, uniDto, qty, imagen });
   }
 
   actualizarUICarrito();
@@ -1494,11 +1600,7 @@ function cambiarQtyCarritoInput(idx, valStr, isFinal) {
 
       let precioLinea = '';
       if (item.precio !== null) {
-        if (aplica) {
-          precioLinea = `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--accent-2)">${formatPrecio(item.precioDto)}</strong> c/u`;
-        } else {
-          precioLinea = `${formatPrecio(item.precio)} c/u`;
-        }
+        precioLinea = htmlPrecioItemCarrito(item, aplica);
       } else {
         precioLinea = 'Precio a confirmar';
       }
@@ -1597,11 +1699,7 @@ function renderCarritoItems() {
 
     let precioLinea = '';
     if (item.precio !== null) {
-      if (aplica) {
-        precioLinea = `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--accent-2)">${formatPrecio(item.precioDto)}</strong> c/u`;
-      } else {
-        precioLinea = `${formatPrecio(item.precio)} c/u`;
-      }
+      precioLinea = htmlPrecioItemCarrito(item, aplica);
     } else {
       precioLinea = 'Precio a confirmar';
     }
@@ -1677,8 +1775,23 @@ function enviarWhatsApp() {
     msg += '\n';
   });
 
-  msg += '━━━━━━━━━━━━━━━━\n';
-  if (hayPrecio) msg += `*TOTAL: ${formatPrecio(total)}*\n`;
+  msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
+  if (hayPrecio) {
+    // El descuento ya viene aplicado en cada precio: se explicita cuánto se
+    // ahorró para que quede constancia en la conversación.
+    const totalLista = carrito.reduce((sum, i) => {
+      const aplica = i.uniDto > 0 && i.qty >= i.uniDto && i.precioDtoLista != null;
+      const base = aplica ? i.precioDtoLista : i.precioLista;
+      return sum + (base || 0) * i.qty;
+    }, 0);
+    const ahorro = totalLista - total;
+    if (promoVigente() && ahorro > 0) {
+      msg += `Subtotal: ${formatPrecio(totalLista)}\n`;
+      msg += `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%): -${formatPrecio(ahorro)}\n`;
+      msg += `Env\u00edo: GRATIS\n`;
+    }
+    msg += `*TOTAL: ${formatPrecio(total)}*\n`;
+  }
 
   window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`, '_blank');
 }
