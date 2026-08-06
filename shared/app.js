@@ -1951,7 +1951,6 @@ function abrirModalEnvio() {
           </span>
           <span class="env-tx">
             <b>Abrir WhatsApp en esta computadora</b>
-            <span>Si ya lo tenés vinculado con tu teléfono</span>
           </span>
           <svg class="env-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
         </button>
@@ -1974,13 +1973,8 @@ function abrirModalEnvio() {
           Volver
         </button>
         <h3>Escaneá con tu celular</h3>
-        <p class="env-sub">Apuntá la cámara al código. Se va a abrir tu pedido en el teléfono, listo para enviar.</p>
+        <p class="env-sub">Escaneá el código con la cámara de tu celular. Se va a abrir tu pedido en tu celular, listo para enviar.</p>
         <div class="env-qr" id="envQr"></div>
-        <ol class="env-pasos">
-          <li>Abrí la cámara de tu celular</li>
-          <li>Apuntá al código</li>
-          <li>Tocá el aviso que aparece</li>
-        </ol>
       </div>
     </div>`;
 
