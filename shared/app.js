@@ -1796,8 +1796,11 @@ function enviarWhatsApp() {
   const total     = carrito.reduce((s, i) => s + (precioEfectivo(i) || 0) * i.qty, 0);
   const hayPrecio = carrito.some(i => i.precio !== null);
 
-  let msg = '🛒 *PEDIDO*\n';
-  msg += '━━━━━━━━━━━━━━━━\n\n';
+  // Sin emojis ni caracteres decorativos fuera de Latin-1: WhatsApp Desktop
+  // los recibe mal desde un enlace wa.me y los muestra como "?". Se usan
+  // guiones y mayúsculas para marcar la jerarquía.
+  let msg = '*PEDIDO*\n';
+  msg += '--------------------------------\n\n';
 
   carrito.forEach((item, i) => {
     const aplica    = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
@@ -1814,22 +1817,30 @@ function enviarWhatsApp() {
     msg += '\n';
   });
 
-  msg += '━━━━━━━━━━━━━━━━\n';
+  msg += '--------------------------------\n';
+
   if (hayPrecio) {
-    // El descuento ya viene aplicado en cada precio: se explicita cuánto se
-    // ahorró para que quede constancia en la conversación.
-    const totalLista = carrito.reduce((sum, i) => {
+    // Mismo desglose que el resumen del carrito: subtotal a precio de lista,
+    // cada descuento en su propia línea y el ahorro total al final.
+    let bruto = 0, dtoCantidad = 0;
+    carrito.forEach(i => {
       const aplica = i.uniDto > 0 && i.qty >= i.uniDto && i.precioDtoLista != null;
-      const base = aplica ? i.precioDtoLista : i.precioLista;
-      return sum + (base || 0) * i.qty;
-    }, 0);
-    const ahorro = totalLista - total;
-    if (promoVigente() && ahorro > 0) {
-      msg += `Subtotal: ${formatPrecio(totalLista)}\n`;
-      msg += `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%): -${formatPrecio(ahorro)}\n`;
-      msg += `Envío: GRATIS\n`;
+      bruto += (i.precioLista || 0) * i.qty;
+      if (aplica) dtoCantidad += ((i.precioLista || 0) - i.precioDtoLista) * i.qty;
+    });
+    const dtoPromo = (bruto - dtoCantidad) - total;
+    const ahorro   = dtoPromo + dtoCantidad;
+
+    msg += `Subtotal: ${formatPrecio(bruto)}\n`;
+    if (promoVigente() && dtoPromo > 0) {
+      msg += `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%): -${formatPrecio(dtoPromo)}\n`;
     }
-    msg += `*TOTAL: ${formatPrecio(total)}*\n`;
+    if (dtoCantidad > 0) {
+      msg += `Descuentos por cantidad: -${formatPrecio(dtoCantidad)}\n`;
+    }
+    if (promoVigente()) msg += 'Envío: GRATIS\n';
+    msg += `\n*TOTAL: ${formatPrecio(total)}*\n`;
+    if (ahorro > 0) msg += `Estás ahorrando ${formatPrecio(ahorro)}\n`;
   }
 
   window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`, '_blank');

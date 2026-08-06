@@ -1053,9 +1053,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .como-comprar-inner {
   max-width: var(--content-wide);
   margin: 0 auto;
-  /* Menos aire arriba y abajo que el resto de las secciones: es la más alta
-     de la landing y tenía que entrar de un vistazo. */
-  padding: var(--space-7) var(--space-5) var(--space-8);
+  padding: var(--space-9) var(--space-5);
 }
 .seccion-sub-center {
   text-align: center;
@@ -1063,7 +1061,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-size: 0.95rem;
   color: var(--t2);
   max-width: 520px;
-  margin: 0 auto var(--space-6);
+  margin: 0 auto var(--space-7);
 }
 
 .demo-pasos {
@@ -1071,10 +1069,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
      los huecos entre toques serían tiempo muerto. */
   --demo-dur: 9s;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(290px, 380px);
-  gap: var(--space-7);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+  gap: var(--space-8);
   align-items: center;
-  max-width: 1020px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 
@@ -1114,7 +1112,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   display: flex;
   gap: var(--space-4);
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
   background: none;
   border: 1px solid transparent;
   border-radius: var(--r4);
@@ -1273,7 +1271,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 /* ══════════════════════════════════════════════════════
    MOCKUP NOTEBOOK (escritorio)
 ══════════════════════════════════════════════════════ */
-.mk-note { width: 100%; max-width: 560px; margin: 0 auto; }
+.mk-note { width: 100%; max-width: 620px; margin: 0 auto; }
 .mk-note-tapa {
   position: relative;
   background: #1c211c;
@@ -2337,6 +2335,23 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 
 /* ══ Tablet: mockup arriba, pasos abajo ══ */
+/* ── Desktop: la sección más alta de la landing ──
+   Con la notebook a tamaño completo la sección no entra de un vistazo en
+   pantallas de portátil, así que al llegar el botón "Como pedir" el mockup
+   quedaba cortado. Acá se comprime lo justo: menos aire vertical, mockup
+   algo más chico (el aspect-ratio hace que el alto baje solo) y pasos más
+   ajustados. Solo aplica de 1001px para arriba, donde existe la notebook. */
+@media (min-width: 1001px) {
+  .como-comprar-inner { padding: var(--space-7) var(--space-5) var(--space-8); }
+  .como-comprar .seccion-h2-center { font-size: clamp(1.4rem, 2.2vw, 1.7rem); }
+  .como-comprar .seccion-sub-center { margin-bottom: var(--space-5); font-size: 0.9rem; }
+  .demo-pasos { grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: var(--space-6); max-width: 1000px; }
+  .mk-note { max-width: 520px; }
+  .mk-note-tapa { padding: 10px 10px 12px; border-radius: 12px 12px 4px 4px; }
+  .paso-item { padding: var(--space-3) var(--space-4); }
+  .pasos-lista { gap: 2px; }
+}
+
 @media (max-width: 1000px) {
   .demo-pasos {
     grid-template-columns: 1fr;
