@@ -134,6 +134,24 @@ img { display: block; max-width: 100%; }
 .seccion-deco > *:not(.bg-circles) { position: relative; z-index: 1; }
 
 
+/* La topbar es sticky, así que al saltar a una sección con scrollIntoView el
+   arranque quedaba escondido detrás. scroll-margin-top reserva su alto — más
+   un respiro — para que lo primero que se vea sea el anteítulo ("Nosotros",
+   "Preguntas frecuentes") y no el título grande de más abajo. */
+#como-comprar,
+#vueltas,
+#faq {
+  scroll-margin-top: 96px;
+}
+@media (max-width: 600px) {
+  #como-comprar,
+  #vueltas,
+  #faq {
+    scroll-margin-top: 76px;
+  }
+}
+
+
 /* ══════════════════════════════════════════════════════
    TOPBAR
 ══════════════════════════════════════════════════════ */
@@ -638,6 +656,59 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   margin-bottom: var(--space-6);
 }
 
+/* ── Cuenta regresiva de la promo ──
+   Ocupa el lugar del párrafo: cuatro cajas de vidrio con días / horas /
+   minutos / segundos. La fecha límite viaja en el data-fin del HTML, así
+   cambiar de campaña no obliga a tocar el JS. */
+.promo-cd {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+.promo-cd-label {
+  font-family: var(--font);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+}
+.promo-cd-nums { display: flex; gap: 7px; }
+.promo-cd-u {
+  min-width: 52px;
+  padding: 7px 6px 5px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.34);
+  border-radius: var(--r2);
+  text-align: center;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.promo-cd-u b {
+  display: block;
+  font-family: var(--font);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: white;
+  /* Ancho fijo por dígito: sin esto los números bailan a cada segundo. */
+  font-variant-numeric: tabular-nums;
+}
+.promo-cd-u i {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.62);
+}
+/* Si la promo venció, el JS marca el bloque y desaparece. */
+.promo-cd.vencida { display: none; }
+
 .hero-promo-nota {
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -733,6 +804,31 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     margin-bottom: 0;
     text-shadow: 0 1px 5px rgba(0,0,0,.45);
   }
+  /* El contador se apila: "Termina en" pasa a ser un renglón propio arriba
+     de las cajas (en fila no entra). Sin el rótulo los números no se
+     entienden. Las cajas NO se estiran a todo el ancho: quedan compactas
+     contra la izquierda, ocupando poco más de la mitad de la pantalla. */
+  .promo-cd {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 0;
+  }
+  .promo-cd-label {
+    font-size: 0.62rem;
+    text-shadow: 0 1px 4px rgba(0,0,0,.5);
+  }
+  .promo-cd-nums { gap: 6px; }
+  .promo-cd-u {
+    /* Ancho fijo (sin flex, para que no se repartan todo el ancho): las
+       cuatro cajas ocupan cerca del 60% de la pantalla. */
+    flex: 0 0 auto;
+    width: 54px;
+    min-width: 0;
+    padding: 7px 3px 5px;
+  }
+  .promo-cd-u b { font-size: 1.3rem; }
+  .promo-cd-u i { font-size: 0.54rem; letter-spacing: .08em; }
   .hero-promo-nota {
     align-self: stretch;
     max-width: none;
@@ -2239,6 +2335,23 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 
 /* ══ Tablet: mockup arriba, pasos abajo ══ */
+/* ── Desktop: la sección más alta de la landing ──
+   Con la notebook a tamaño completo la sección no entra de un vistazo en
+   pantallas de portátil, así que al llegar el botón "Como pedir" el mockup
+   quedaba cortado. Acá se comprime lo justo: menos aire vertical, mockup
+   algo más chico (el aspect-ratio hace que el alto baje solo) y pasos más
+   ajustados. Solo aplica de 1001px para arriba, donde existe la notebook. */
+@media (min-width: 1001px) {
+  .como-comprar-inner { padding: var(--space-7) var(--space-5) var(--space-8); }
+  .como-comprar .seccion-h2-center { font-size: clamp(1.4rem, 2.2vw, 1.7rem); }
+  .como-comprar .seccion-sub-center { margin-bottom: var(--space-5); font-size: 0.9rem; }
+  .demo-pasos { grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); gap: var(--space-6); max-width: 1000px; }
+  .mk-note { max-width: 520px; }
+  .mk-note-tapa { padding: 10px 10px 12px; border-radius: 12px 12px 4px 4px; }
+  .paso-item { padding: var(--space-3) var(--space-4); }
+  .pasos-lista { gap: 2px; }
+}
+
 @media (max-width: 1000px) {
   .demo-pasos {
     grid-template-columns: 1fr;
@@ -2800,6 +2913,105 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 @media (max-width: 480px) {
   .footer-bottom { flex-direction: column; gap: var(--space-2); }
   .footer-dot { display: none; }
+}
+
+
+/* ════════════════════════════════════════════════════
+   BARRA DE PROMO (solo catálogo)
+   En la landing el hero ya comunica la promo. Acá hace falta porque al
+   recorrer el catálogo el descuento quedaría fuera de pantalla.
+════════════════════════════════════════════════════ */
+.promo-barra {
+  /* Sticky justo debajo de la topbar (72px), que también es sticky. */
+  position: sticky;
+  top: 72px;
+  z-index: 90;
+  background: var(--accent-2);
+  color: white;
+  padding: 9px var(--space-8) 9px var(--space-5);
+}
+.promo-barra[hidden] { display: none; }
+.promo-barra-inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  /* Nunca en dos renglones: en mobile la barra crecía al doble de alto. */
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+.promo-barra-txt {
+  font-family: var(--font-body);
+  font-size: 0.83rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, .92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+/* Versión corta del mensaje: se intercambian por CSS según el ancho, así
+   el texto entra en una sola línea sin tocar el HTML. */
+.promo-barra-txt .larga  { display: inline; }
+.promo-barra-txt .corta  { display: none; }
+.promo-barra-txt strong {
+  font-family: var(--font);
+  font-weight: 700;
+  color: white;
+}
+.promo-barra-cd {
+  flex-shrink: 0;
+  padding: 2px 10px;
+  border-radius: var(--rf);
+  background: rgba(255, 255, 255, .18);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.promo-barra-cd[hidden] { display: none; }
+.promo-barra-x {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: rgba(255, 255, 255, .68);
+  cursor: pointer;
+  transition: background var(--t), color var(--t);
+}
+.promo-barra-x svg { width: 11px; height: 11px; }
+.promo-barra-x:hover { background: rgba(255, 255, 255, .16); color: white; }
+
+/* Mobile: la topbar mide 60px, no 72. */
+@media (max-width: 600px) {
+  .promo-barra {
+    top: 60px;
+    padding: 7px 30px 7px var(--space-3);
+  }
+  .promo-barra-inner { gap: 7px; }
+  .promo-barra-txt { font-size: 0.72rem; }
+  /* Mensaje corto: "10% OFF + Envío gratis en Agosto" */
+  .promo-barra-txt .larga { display: none; }
+  .promo-barra-txt .corta { display: inline; }
+  .promo-barra-cd { font-size: 0.63rem; padding: 2px 7px; }
+  .promo-barra-x { right: 6px; width: 20px; height: 20px; }
+  .promo-barra-x svg { width: 10px; height: 10px; }
+}
+
+/* Pantallas muy angostas (iPhone SE y similares): no entran las dos cosas,
+   y el mensaje importa más que la cuenta regresiva — que además ya está en
+   el hero. Se cae el contador y el texto queda entero. */
+@media (max-width: 380px) {
+  .promo-barra-cd { display: none; }
 }
 
 
@@ -3436,6 +3648,57 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   margin-top: 2px;
   transition: opacity 0.2s var(--ease);
 }
+
+
+/* ════════════════════════════════════════════════════
+   PROMO: precio tachado + cinta
+   Todo en el verde de marca — sin colores nuevos. El precio de lista queda
+   chico y tachado, y el de promo toma el lugar del precio principal.
+════════════════════════════════════════════════════ */
+.precio-viejo {
+  margin-right: 6px;
+  font-size: 0.74em;
+  font-weight: 400;
+  color: var(--t3);
+  text-decoration: line-through;
+  text-decoration-color: var(--line);
+}
+.precio-promo { color: inherit; }
+
+/* Cinta en la esquina superior izquierda de la card. La card ya es
+   position:relative, y el badge de "en carrito" vive a la derecha, así que
+   no se pisan. */
+.promo-badge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 2;
+  padding: 3px 8px;
+  border-radius: var(--rf);
+  background: var(--accent);
+  color: white;
+  font-family: var(--font);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  line-height: 1.4;
+  box-shadow: 0 2px 6px rgba(88, 117, 71, .3);
+  pointer-events: none;
+}
+/* Dentro del modal la etiqueta acompaña al precio en la misma línea. */
+.promo-badge--inline {
+  position: static;
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+  font-size: 0.6rem;
+  box-shadow: none;
+}
+
+/* En la franja de destacados las cards son más chicas: cinta más discreta. */
+.destacados-track .card .promo-badge { font-size: .54rem; padding: 2px 7px; }
+/* En los rieles de mobile, idem. */
+.riel > .card .promo-badge { font-size: .54rem; padding: 2px 6px; }
 .card-precio-dto strong {
   color: var(--accent-2);
   font-weight: 700;
@@ -3539,6 +3802,8 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   border-radius: var(--rf);
   overflow: hidden;
   flex-shrink: 0;
+  /* Ver nota sobre el zoom en la sección de mobile, más abajo. */
+  touch-action: manipulation;
 }
 .qty-btn {
   width: 30px;
@@ -3552,8 +3817,17 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   align-items: center;
   justify-content: center;
   transition: background var(--t), color var(--t);
+  /* touch-action: manipulation desactiva SOLO el zoom por doble toque sobre
+     este botón — el zoom con dos dedos de la página sigue funcionando. Sin
+     esto, tocar +/- varias veces rápido lo interpretaba como doble toque.
+     user-select evita que el toque repetido seleccione texto y saque la lupa. */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .qty-btn:hover { background: var(--surface-2); color: var(--t1); }
+.qty-btn:active { background: var(--surface-3); color: var(--t1); }
 
 .qty-num::-webkit-inner-spin-button,
 .qty-num::-webkit-outer-spin-button,
@@ -4106,11 +4380,21 @@ body.modal-abierto {
   align-items: center;
   flex-shrink: 0;
 }
+.carrito-header-txt {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
 .carrito-header h2 {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--t1);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+}
+.carrito-count {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--t3);
 }
 
 .carrito-close {
@@ -4141,11 +4425,12 @@ body.modal-abierto {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  height: 220px;
   color: var(--t3);
   font-size: 0.875rem;
   gap: var(--space-3);
 }
+.carrito-empty svg { width: 38px; height: 38px; opacity: .5; }
 
 .carrito-item {
   display: flex;
@@ -4179,6 +4464,7 @@ body.modal-abierto {
   font-size: 1.6rem;
   opacity: 0.3;
 }
+.ci-img-placeholder svg { width: 20px; height: 20px; color: var(--t3); opacity: .55; }
 .ci-img-placeholder.hidden { display: none; }
 
 
@@ -4214,8 +4500,13 @@ body.modal-abierto {
   font-size: 0.875rem;
   color: var(--t2);
   transition: all var(--t);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .ci-qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ci-qty-btn:active { background: var(--surface-2); }
 .ci-qty-wrap {
   position: relative;
   display: flex;
@@ -4272,6 +4563,7 @@ body.modal-abierto {
   align-self: flex-start;
   margin-top: 2px;
 }
+.ci-eliminar svg { width: 15px; height: 15px; }
 .ci-eliminar:hover { color: var(--red); }
 
 .ci-subtotal {
@@ -4284,29 +4576,62 @@ body.modal-abierto {
 }
 
 .carrito-footer {
-  padding: var(--space-5) var(--space-6);
+  /* Compacto a propósito: cada píxel que ocupa el resumen es un píxel menos
+     para ver los productos del carrito. */
+  padding: var(--space-4) var(--space-6);
   border-top: 1px solid var(--line-soft);
   background: var(--surface);
   flex-shrink: 0;
 }
 
-.carrito-total {
+/* Desglose del pedido: subtotal, descuento de la promo, envío y total.
+   Las filas intermedias se ocultan solas cuando no hay promo vigente, así
+   el resumen nunca muestra renglones en cero. */
+.carrito-resumen { margin-bottom: var(--space-3); }
+.cr-fila {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: var(--space-3);
-}
-.carrito-total-label {
-  font-size: 0.845rem;
+  gap: var(--space-4);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.35;
   color: var(--t2);
-  font-weight: 500;
+  margin-bottom: 3px;
+}
+.cr-fila[hidden] { display: none; }
+.cr-fila--promo span:last-child {
+  font-family: var(--font);
+  font-weight: 700;
+  color: var(--accent-2);
+}
+.cr-fila--total {
+  margin: var(--space-2) 0 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--t1);
 }
 .carrito-total-valor {
   font-size: 1.35rem;
-  font-weight: 600;
-  color: var(--accent);
+  font-weight: 700;
+  color: var(--accent-2);
   letter-spacing: -0.03em;
 }
+
+/* Ahorro total, alineado a la derecha bajo el número del total. Sin caja:
+   los dos descuentos ya están detallados arriba, esto solo los suma. */
+.cr-ahorro {
+  margin-top: 3px;
+  text-align: right;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--accent);
+}
+.cr-ahorro[hidden] { display: none; }
+
 .carrito-total-valor.sin-precios {
   font-size: 0.825rem;
   color: var(--t3);
@@ -4316,9 +4641,11 @@ body.modal-abierto {
 .carrito-nota {
   font-size: 0.75rem;
   color: var(--t3);
-  margin-bottom: var(--space-4);
   line-height: 1.5;
 }
+/* Solo separa cuando efectivamente hay un aviso que mostrar. */
+.carrito-nota:not(:empty) { margin-bottom: var(--space-3); }
+
 
 .whatsapp-btn {
   display: flex;
@@ -4410,19 +4737,26 @@ body.modal-abierto {
   .subfiltros { padding: var(--space-1) var(--space-4); }
   .filtro-btn { height: 36px; background: var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
   .subfiltro-btn { height: 34px; }
-  /* Los botones +/- de cantidad se sacan en mobile: tocarlos varias veces
-     seguidas rápido dispara el zoom nativo del navegador y rompe la UI.
-     Queda solo el campo, que ya se puede editar con el teclado. */
-  .qty-btn { display: none; }
-  .qty-num-wrap { border-left: none; border-right: none; }
-  .qty-num { width: 64px; font-size: 0.95rem; padding: 8px 0; }
+  /* Botones +/- también en mobile.
+     Antes se ocultaban porque tocarlos rápido disparaba el zoom por doble
+     toque y el layout saltaba. Eso ya está resuelto en la regla base con
+     touch-action: manipulation + user-select: none.
+     El otro salto lo causaba el input: iOS hace zoom automático al enfocar
+     un campo con fuente menor a 16px, y al salir el layout quedaba corrido.
+     Por eso acá el número va en 16px exactos — es el umbral de Safari. */
+  .qty-btn { display: flex; width: 46px; height: 46px; font-size: 1.3rem; }
+  .qty-num-wrap { padding: 0 2px; }
+  .qty-num { width: 46px; font-size: 16px; padding: 8px 0; }
+  .qty-edit-icon { width: 12px; height: 12px; }
   .agregar-btn { height: 40px; }
   .cerrar-card { padding: var(--space-2); }
   .carrito-panel { max-height: 92dvh; }
   .carrito-close { width: 36px; height: 36px; }
-  .ci-qty-btn { display: none; }
-  .ci-qty-wrap { border-style: solid; }
-  .ci-qty-num { width: 48px; font-size: 0.9rem; padding: 6px 0; }
+  /* Ídem en el carrito: botones visibles y el campo a 16px. */
+  .ci-qty-btn { display: flex; width: 34px; height: 34px; font-size: 1.05rem; }
+  .ci-qty-wrap { border-style: solid; padding: 1px 3px; }
+  .ci-qty-num { width: 40px; font-size: 16px; padding: 5px 0; }
+  .ci-qty-row { gap: var(--space-2); }
   .ci-eliminar { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; padding: 0; }
   .carrito-footer { padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
   /* Hero móvil: la foto pasa a ser el escenario completo, no un bloque aparte. */

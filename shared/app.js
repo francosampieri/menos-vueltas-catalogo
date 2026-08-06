@@ -44,6 +44,90 @@ function formatPrecio(n) {
   return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
+
+// ══ PROMO VIGENTE ══
+// Punto único de verdad del descuento: card, modal, carrito y mensaje de
+// WhatsApp pasan todos por acá. Para terminar la promo alcanza con poner
+// ACTIVA en false (o dejar pasar la fecha de FIN).
+const PROMO = {
+  ACTIVA: true,
+  PORCENTAJE: 10,
+  ETIQUETA: '10% OFF',
+  NOMBRE: 'Promo Agosto',
+  FIN: '2026-08-31T23:59:59-03:00'
+};
+
+function promoVigente() {
+  if (!PROMO.ACTIVA) return false;
+  const fin = new Date(PROMO.FIN).getTime();
+  return isNaN(fin) ? true : Date.now() < fin;
+}
+
+// En Menos Vueltas los precios son siempre múltiplos de 50: después de
+// aplicar el porcentaje hay que volver a la grilla, si no aparecen precios
+// como $20.205 que nadie cobra así.
+function redondear50(n) {
+  return Math.round(n / 50) * 50;
+}
+
+// Precio final que paga el cliente. Si no hay promo devuelve el original,
+// así el resto del código puede llamarla siempre sin preguntar.
+function precioConPromo(n) {
+  if (n === null || n === undefined) return n;
+  if (!promoVigente()) return n;
+  return redondear50(n * (100 - PROMO.PORCENTAJE) / 100);
+}
+
+// true solo si el descuento efectivamente baja el precio: en importes muy
+// chicos el redondeo a 50 puede dejarlo igual, y ahí mostrar un tachado
+// con los dos números iguales quedaría mal.
+function hayAhorro(n) {
+  const conPromo = precioConPromo(n);
+  return conPromo !== null && n !== null && conPromo < n;
+}
+
+// Precio de card: el original tachado y chico, al lado el de promo.
+function htmlPrecioCard(n) {
+  if (n === null || n === undefined) return '';
+  if (!hayAhorro(n)) return formatPrecio(n);
+  return `<span class="precio-viejo">${formatPrecio(n)}</span>` +
+         `<span class="precio-promo">${formatPrecio(precioConPromo(n))}</span>`;
+}
+
+// Precio de modal: igual que el de card pero con la etiqueta de la promo,
+// que acá sí entra sin apretar nada.
+function htmlPrecioModal(n) {
+  if (n === null || n === undefined) return '';
+  if (!hayAhorro(n)) return formatPrecio(n);
+  return `<span class="precio-viejo">${formatPrecio(n)}</span>` +
+         `<span class="precio-promo">${formatPrecio(precioConPromo(n))}</span>` +
+         `<span class="promo-badge promo-badge--inline">${PROMO.ETIQUETA}</span>`;
+}
+
+// Cinta de la esquina superior izquierda de la card.
+function badgePromo() {
+  const b = document.createElement('span');
+  b.className = 'promo-badge';
+  b.textContent = PROMO.ETIQUETA;
+  return b;
+}
+
+// Línea de precio unitario de cada renglón del carrito. Con descuento por
+// cantidad activo se tacha el precio unitario (ya con promo) y se muestra el
+// de cantidad; si no, se tacha el de lista contra el de promo.
+function htmlPrecioItemCarrito(item, aplica) {
+  const tachado = v => `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(v)}</span>`;
+  const fuerte  = v => `<strong style="color:var(--accent-2)">${formatPrecio(v)}</strong>`;
+
+  if (aplica) return `${tachado(item.precio)} ${fuerte(item.precioDto)} c/u`;
+
+  const lista = item.precioLista;
+  if (lista != null && item.precio != null && item.precio < lista) {
+    return `${tachado(lista)} ${fuerte(item.precio)} c/u`;
+  }
+  return `${formatPrecio(item.precio)} c/u`;
+}
+
 // ══ CARGA DE DATOS ══
 async function cargarDatos() {
   try {
@@ -258,7 +342,7 @@ function getGruposFiltrados() {
     // Búsqueda siempre global — ignora filtros de categoría y subcategoría
     // Normaliza acentos para que "limon" encuentre "limón"
     if (busquedaActiva) {
-      const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
       const q = norm(busquedaActiva);
       const texto = norm(`${nombre} ${marca} ${cat} ${sub} ${tags}`);
       return texto.includes(q);
@@ -462,7 +546,7 @@ const ICONOS_CAT = {
 
 // Normaliza acentos para que "Almacén" encuentre la clave "Almacen".
 function getIconoCat(cat) {
-  const sinAcentos = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const sinAcentos = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
   const clave = Object.keys(ICONOS_CAT).find(k =>
     sinAcentos(k).toLowerCase() === sinAcentos(cat || '').toLowerCase());
   const paths = ICONOS_CAT[clave] || ICONOS_CAT['_default'];
@@ -685,8 +769,8 @@ function crearCardDestacada(gid, vars) {
 
   const vprecioEl = document.createElement('div');
   if (precio !== null) {
-    vprecioEl.textContent = formatPrecio(precio);
     vprecioEl.className = 'card-precio';
+    vprecioEl.innerHTML = htmlPrecioCard(precio);
   } else {
     vprecioEl.textContent = 'Precio a confirmar';
     vprecioEl.className = 'card-precio sin-precio';
@@ -697,9 +781,13 @@ function crearCardDestacada(gid, vars) {
   if (hayDto) {
     const vprecioDtoEl = document.createElement('div');
     vprecioDtoEl.className = 'card-precio-dto';
-    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)}</strong> ${uniDto} o más`;
+    // El precio por cantidad ya viene con la promo aplicada: mostrar también
+    // su valor anterior sería demasiada información para una card.
+    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioConPromo(precioDto))}</strong> ${uniDto} o más`;
     body.appendChild(vprecioDtoEl);
   }
+
+  if (precio !== null && hayAhorro(precio)) card.appendChild(badgePromo());
 
   card.append(imgWrap, body);
   return card;
@@ -774,6 +862,12 @@ function crearCard(gid, vars) {
 
   card.append(imgWrap, badge, body);
 
+  // Cinta de promo. Se decide con la primera variante: al rotar entre
+  // variantes el precio cambia, pero el porcentaje de descuento es el mismo
+  // para todas, así que la cinta no necesita actualizarse.
+  const precioBase = parsePrecio(vars[0]['Precio_Venta']);
+  if (precioBase !== null && hayAhorro(precioBase)) card.appendChild(badgePromo());
+
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
   rotaciones[gid] = { indexActual: 0, timer: null };
@@ -812,7 +906,11 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
       }
       const base = vprecioEl.dataset.claseBase;
       if (precio !== null) {
-        vprecioEl.textContent = formatPrecio(precio);
+        // En el modal el precio va acompañado de la etiqueta de promo; en la
+        // card alcanza con el tachado.
+        const enModal = vprecioEl.classList.contains('pm-precio') ||
+                        base.indexOf('pm-precio') !== -1;
+        vprecioEl.innerHTML = enModal ? htmlPrecioModal(precio) : htmlPrecioCard(precio);
         vprecioEl.className = base;
       } else {
         vprecioEl.textContent = 'Precio a confirmar';
@@ -820,11 +918,12 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
       }
     }
 
-    // Precio con descuento por cantidad (debajo del precio normal).
-    // Solo el precio resalta (ver CSS); el resto del texto queda en gris.
+    // Precio con descuento por cantidad (debajo del precio normal). Ya viene
+    // con la promo aplicada; no se muestra su valor anterior para no apilar
+    // dos tachados en el mismo bloque.
     if (vprecioDtoEl) {
       if (hayDto) {
-        vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)} c/u</strong> ${uniDto} o más`;
+        vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioConPromo(precioDto))} c/u</strong> ${uniDto} o más`;
         vprecioDtoEl.style.display = 'block';
       } else {
         vprecioDtoEl.style.display = 'none';
@@ -1248,7 +1347,7 @@ function renderDetalleProducto(gid, vars, refs) {
     const pdiv = document.createElement('div');
     pdiv.className = 'precio-detalle';
     pdiv.innerHTML = precio !== null
-      ? `<span class="precio-detalle-label">Precio unitario</span><span class="precio-detalle-valor">${formatPrecio(precio)}</span>`
+      ? `<span class="precio-detalle-label">Precio unitario</span><span class="precio-detalle-valor">${htmlPrecioCard(precio)}</span>`
       : `<span class="precio-detalle-label">Precio</span><span class="precio-detalle-valor sin-precio">A confirmar</span>`;
     expanded.appendChild(pdiv);
 
@@ -1256,7 +1355,7 @@ function renderDetalleProducto(gid, vars, refs) {
     if (uniDto > 0 && precioDto !== null) {
       const dtoDiv = document.createElement('div');
       dtoDiv.className = 'descuento-bloque';
-      dtoDiv.innerHTML = `<div class="descuento-info"><span class="dto-cantidad">Comprando ${uniDto} o más</span><strong>${formatPrecio(precioDto)} c/u</strong></div>`;
+      dtoDiv.innerHTML = `<div class="descuento-info"><span class="dto-cantidad">Comprando ${uniDto} o más</span><strong>${formatPrecio(precioConPromo(precioDto))} c/u</strong></div>`;
       expanded.appendChild(dtoDiv);
     }
 
@@ -1454,8 +1553,14 @@ function agregarAlCarrito(gid, variante, qty) {
   else if (variante['Tamaño'] && variante['UM']) partes.push(`${variante['Tamaño']} ${variante['UM']}`);
   const varLabel = partes.join(' · ');
 
-  const precio    = parsePrecio(variante['Precio_Venta']);
-  const precioDto = parsePrecio(variante['Precio_Dto']);
+  // precioLista / precioDtoLista guardan el valor sin promo (para tacharlo);
+  // precio y precioDto son ya los que paga el cliente. Así los subtotales, el
+  // total y el mensaje de WhatsApp usan el precio real sin tener que acordarse
+  // de aplicar el descuento en cada lugar.
+  const precioLista    = parsePrecio(variante['Precio_Venta']);
+  const precioDtoLista = parsePrecio(variante['Precio_Dto']);
+  const precio    = precioConPromo(precioLista);
+  const precioDto = precioConPromo(precioDtoLista);
   const uniDto    = parseInt(variante['Uni Dto']) || 0;
   const idProd    = variante['Id'];
   const imagen    = variante['Imagen']?.trim() || '';
@@ -1464,7 +1569,8 @@ function agregarAlCarrito(gid, variante, qty) {
   if (existe) {
     existe.qty += qty;
   } else {
-    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto, uniDto, qty, imagen });
+    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto,
+                   precioLista, precioDtoLista, uniDto, qty, imagen });
   }
 
   actualizarUICarrito();
@@ -1494,11 +1600,7 @@ function cambiarQtyCarritoInput(idx, valStr, isFinal) {
 
       let precioLinea = '';
       if (item.precio !== null) {
-        if (aplica) {
-          precioLinea = `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--accent-2)">${formatPrecio(item.precioDto)}</strong> c/u`;
-        } else {
-          precioLinea = `${formatPrecio(item.precio)} c/u`;
-        }
+        precioLinea = htmlPrecioItemCarrito(item, aplica);
       } else {
         precioLinea = 'Precio a confirmar';
       }
@@ -1557,13 +1659,52 @@ function actualizarUICarrito(rerenderItems = true) {
     }
   }
 
-  const notaEl = document.getElementById('carritoNota');
-  if (notaEl) {
-    const sinPrecio = carrito.filter(i => i.precio === null);
-    notaEl.textContent = sinPrecio.length
-      ? `⚠️ ${sinPrecio.length} producto(s) sin precio. El total puede variar.`
+  const countEl2 = document.getElementById('carritoCount');
+  if (countEl2) {
+    countEl2.textContent = totalItems
+      ? `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}`
       : '';
   }
+
+  // Desglose en tres tramos, para que se vea de dónde sale cada rebaja:
+  //   bruto     = precio de lista × cantidad, sin ningún descuento
+  //   cantidad  = lo que baja por comprar de a varios (precio de lista)
+  //   promo     = lo que baja el 10% sobre lo que quedaba después de lo anterior
+  let bruto = 0, dtoCantidad = 0;
+  carrito.forEach(i => {
+    const aplica = i.uniDto > 0 && i.qty >= i.uniDto && i.precioDtoLista != null;
+    bruto += (i.precioLista || 0) * i.qty;
+    if (aplica) dtoCantidad += ((i.precioLista || 0) - i.precioDtoLista) * i.qty;
+  });
+  const dtoPromo = (bruto - dtoCantidad) - total;
+
+  const mostrar = (id, visible) => {
+    const el = document.getElementById(id);
+    if (el) el.hidden = !visible;
+  };
+  const escribir = (id, txt) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = txt;
+  };
+
+  escribir('crSubtotal', hayPrecio ? formatPrecio(bruto) : '—');
+  mostrar('crSubtotalFila', hayPrecio);
+
+  escribir('crPromoLabel', `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%)`);
+  escribir('crPromo', '−' + formatPrecio(dtoPromo));
+  mostrar('crPromoFila', hayPrecio && promoVigente() && dtoPromo > 0);
+
+  escribir('crCantidad', '−' + formatPrecio(dtoCantidad));
+  mostrar('crCantidadFila', hayPrecio && dtoCantidad > 0);
+
+  mostrar('crEnvioFila', hayPrecio && promoVigente());
+
+  // Cierre del resumen: el ahorro total (promo + cantidad) en una línea
+  // discreta bajo el total, sin recuadro — los dos descuentos ya están
+  // detallados arriba, esto solo los suma.
+  const ahorroTotal = dtoPromo + dtoCantidad;
+  escribir('crAhorro', `Estás ahorrando ${formatPrecio(ahorroTotal)}`);
+  mostrar('crAhorro', hayPrecio && ahorroTotal > 0);
 
   if (rerenderItems) {
     renderCarritoItems();
@@ -1585,7 +1726,7 @@ window.addEventListener('scroll', () => {
 function renderCarritoItems() {
   const cont = document.getElementById('carritoItems');
   if (!carrito.length) {
-    cont.innerHTML = '<div class="carrito-empty">Tu carrito está vacío 🛒</div>';
+    cont.innerHTML = '<div class="carrito-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><span>Tu carrito está vacío</span></div>';
     return;
   }
   cont.innerHTML = '';
@@ -1597,11 +1738,7 @@ function renderCarritoItems() {
 
     let precioLinea = '';
     if (item.precio !== null) {
-      if (aplica) {
-        precioLinea = `<span style="text-decoration:line-through;color:var(--t3);font-size:0.78rem">${formatPrecio(item.precio)}</span> <strong style="color:var(--accent-2)">${formatPrecio(item.precioDto)}</strong> c/u`;
-      } else {
-        precioLinea = `${formatPrecio(item.precio)} c/u`;
-      }
+      precioLinea = htmlPrecioItemCarrito(item, aplica);
     } else {
       precioLinea = 'Precio a confirmar';
     }
@@ -1614,7 +1751,7 @@ function renderCarritoItems() {
     div.innerHTML = `
       <div class="ci-thumb">
         ${imgHtml}
-        <div class="ci-img-placeholder${item.imagen ? ' hidden' : ''}">📦</div>
+        <div class="ci-img-placeholder${item.imagen ? ' hidden' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
       </div>
       <div class="ci-info">
         <div class="ci-nombre">${item.marca} ${item.nombre}</div>
@@ -1635,7 +1772,7 @@ function renderCarritoItems() {
         </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <button class="ci-eliminar" onclick="eliminarDelCarrito(${idx})">🗑️</button>
+        <button class="ci-eliminar" onclick="eliminarDelCarrito(${idx})" aria-label="Quitar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a2 2 0 002 2h8a2 2 0 002-2l1-13M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg></button>
         <div class="ci-subtotal">${subtotal}</div>
       </div>
     `;
@@ -1659,8 +1796,11 @@ function enviarWhatsApp() {
   const total     = carrito.reduce((s, i) => s + (precioEfectivo(i) || 0) * i.qty, 0);
   const hayPrecio = carrito.some(i => i.precio !== null);
 
-  let msg = '🛒 *PEDIDO*\n';
-  msg += '━━━━━━━━━━━━━━━━\n\n';
+  // Sin emojis ni caracteres decorativos fuera de Latin-1: WhatsApp Desktop
+  // los recibe mal desde un enlace wa.me y los muestra como "?". Se usan
+  // guiones y mayúsculas para marcar la jerarquía.
+  let msg = '*PEDIDO*\n';
+  msg += '--------------------------------\n\n';
 
   carrito.forEach((item, i) => {
     const aplica    = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
@@ -1677,8 +1817,31 @@ function enviarWhatsApp() {
     msg += '\n';
   });
 
-  msg += '━━━━━━━━━━━━━━━━\n';
-  if (hayPrecio) msg += `*TOTAL: ${formatPrecio(total)}*\n`;
+  msg += '--------------------------------\n';
+
+  if (hayPrecio) {
+    // Mismo desglose que el resumen del carrito: subtotal a precio de lista,
+    // cada descuento en su propia línea y el ahorro total al final.
+    let bruto = 0, dtoCantidad = 0;
+    carrito.forEach(i => {
+      const aplica = i.uniDto > 0 && i.qty >= i.uniDto && i.precioDtoLista != null;
+      bruto += (i.precioLista || 0) * i.qty;
+      if (aplica) dtoCantidad += ((i.precioLista || 0) - i.precioDtoLista) * i.qty;
+    });
+    const dtoPromo = (bruto - dtoCantidad) - total;
+    const ahorro   = dtoPromo + dtoCantidad;
+
+    msg += `Subtotal: ${formatPrecio(bruto)}\n`;
+    if (promoVigente() && dtoPromo > 0) {
+      msg += `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%): -${formatPrecio(dtoPromo)}\n`;
+    }
+    if (dtoCantidad > 0) {
+      msg += `Descuentos por cantidad: -${formatPrecio(dtoCantidad)}\n`;
+    }
+    if (promoVigente()) msg += 'Envío: GRATIS\n';
+    msg += `\n*TOTAL: ${formatPrecio(total)}*\n`;
+    if (ahorro > 0) msg += `Estás ahorrando ${formatPrecio(ahorro)}\n`;
+  }
 
   window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`, '_blank');
 }
@@ -2039,3 +2202,93 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', actualizarFlechas);
   actualizarFlechas();
 });
+
+
+// ══ CONTADOR DE LA PROMO ══
+// Cuenta regresiva hasta la fecha del atributo data-fin (formato ISO con
+// huso, ej. "2026-08-31T23:59:59-03:00"). Vive en el HTML y no acá para que
+// cambiar de campaña sea editar un atributo. Si la fecha ya pasó — o es
+// inválida — el bloque se oculta solo: nunca se muestra "00 00 00 00" ni
+// una promo vencida.
+function initContadorPromo() {
+  const cont = document.getElementById('promoContador');
+  if (!cont) return;
+
+  const fin = new Date(cont.dataset.fin).getTime();
+  if (isNaN(fin)) { cont.classList.add('vencida'); return; }
+
+  const el = {
+    d: cont.querySelector('[data-cd-d]'),
+    h: cont.querySelector('[data-cd-h]'),
+    m: cont.querySelector('[data-cd-m]'),
+    s: cont.querySelector('[data-cd-s]')
+  };
+  const dosDigitos = n => String(n).padStart(2, '0');
+  let timer = null;
+
+  const tick = () => {
+    const resta = fin - Date.now();
+    if (resta <= 0) {
+      cont.classList.add('vencida');
+      clearInterval(timer);
+      return;
+    }
+    const seg = Math.floor(resta / 1000);
+    if (el.d) el.d.textContent = dosDigitos(Math.floor(seg / 86400));
+    if (el.h) el.h.textContent = dosDigitos(Math.floor(seg % 86400 / 3600));
+    if (el.m) el.m.textContent = dosDigitos(Math.floor(seg % 3600 / 60));
+    if (el.s) el.s.textContent = dosDigitos(seg % 60);
+  };
+
+  tick();
+  timer = setInterval(tick, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', initContadorPromo);
+
+
+// ══ BARRA DE PROMO DEL CATÁLOGO ══
+// En la landing el hero ya comunica la promo; acá el aviso existe porque al
+// navegar el catálogo la promo quedaría fuera de pantalla hasta el carrito.
+// Se puede cerrar y no vuelve a aparecer en la misma sesión (sessionStorage,
+// no localStorage: si vuelve otro día conviene que la vea de nuevo).
+const BARRA_CERRADA_KEY = 'mv_promo_barra_cerrada';
+
+function cerrarBarraPromo() {
+  const b = document.getElementById('promoBarra');
+  if (b) b.hidden = true;
+  try { sessionStorage.setItem(BARRA_CERRADA_KEY, '1'); } catch (e) { /* modo privado */ }
+}
+
+function initBarraPromo() {
+  const barra = document.getElementById('promoBarra');
+  if (!barra) return;
+  if (!promoVigente()) return;
+
+  let cerrada = false;
+  try { cerrada = sessionStorage.getItem(BARRA_CERRADA_KEY) === '1'; } catch (e) {}
+  if (cerrada) return;
+
+  barra.hidden = false;
+
+  // Cuenta regresiva compacta (sin segundos: en una barra fina el número
+  // saltando cada segundo distrae de los productos).
+  const cd = document.getElementById('promoBarraCd');
+  if (!cd) return;
+  const fin = new Date(PROMO.FIN).getTime();
+  if (isNaN(fin)) return;
+
+  const tick = () => {
+    const resta = fin - Date.now();
+    if (resta <= 0) { barra.hidden = true; clearInterval(timer); return; }
+    const seg = Math.floor(resta / 1000);
+    const d = Math.floor(seg / 86400);
+    const h = Math.floor(seg % 86400 / 3600);
+    cd.textContent = d > 0 ? `Quedan ${d} días` : `Quedan ${h} horas`;
+    cd.hidden = false;
+  };
+  tick();
+  const timer = setInterval(tick, 60000);
+}
+
+document.addEventListener('DOMContentLoaded', initBarraPromo);
