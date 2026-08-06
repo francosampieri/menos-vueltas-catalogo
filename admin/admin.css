@@ -91,6 +91,20 @@ button { cursor: pointer; background: none; border: none; }
   color: var(--t1);
 }
 
+/* Navegación entre secciones. Sin fondo: son dos lugares distintos del
+   panel, no dos filtros de la misma vista. */
+.ad-nav { display: flex; gap: 2px; }
+.ad-nav button {
+  padding: 7px 14px;
+  border-radius: var(--rf);
+  font-size: .86rem;
+  font-weight: 600;
+  color: var(--t3);
+  transition: background var(--t), color var(--t);
+}
+.ad-nav button:hover { color: var(--t1); }
+.ad-nav button.on { background: var(--surface-2); color: var(--t1); }
+
 .ad-canal {
   display: flex;
   gap: 2px;
@@ -99,6 +113,7 @@ button { cursor: pointer; background: none; border: none; }
   background: var(--surface-2);
   border-radius: var(--rf);
 }
+.ad-canal[hidden] { display: none; }
 .ad-canal button {
   padding: 6px 16px;
   border-radius: var(--rf);
@@ -748,6 +763,116 @@ input[type="date"], input[type="number"] {
 
 
 /* ══════════════════════════════════════════════════════
+   CLIENTES
+══════════════════════════════════════════════════════ */
+.celda-nota {
+  margin-top: 2px;
+  font-family: var(--font-body);
+  font-size: .72rem;
+  color: var(--t3);
+  max-width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.celda-dir {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tel-link {
+  color: var(--t1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-soft);
+  transition: color var(--t), border-color var(--t);
+}
+.tel-link:hover { color: var(--accent-2); border-color: var(--accent); }
+
+.icono-mapa {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--t3);
+  transition: background var(--t), color var(--t);
+}
+.icono-mapa:hover { background: var(--accent-bg); color: var(--accent-2); }
+.icono-mapa svg { width: 15px; height: 15px; }
+
+/* Botón para abrir la ubicación desde el editor de pedidos. */
+.campo-con-boton { display: flex; gap: var(--s2); }
+.campo-con-boton input { flex: 1; min-width: 0; }
+.btn--mapa {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 var(--s3);
+  font-size: .78rem;
+  text-decoration: none;
+}
+.btn--mapa[hidden] { display: none; }
+
+
+/* ══════════════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════════════ */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: var(--s5);
+  background: rgba(28, 34, 28, .45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  overflow-y: auto;
+}
+.modal[hidden] { display: none; }
+.modal-caja {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  padding: var(--s5);
+  background: var(--surface);
+  border-radius: var(--r4);
+  box-shadow: 0 20px 50px rgba(28, 34, 28, .24);
+}
+.modal-caja h2 {
+  margin-bottom: var(--s4);
+  padding-right: var(--s6);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+.modal-x {
+  position: absolute;
+  top: var(--s3);
+  right: var(--s3);
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--t2);
+  transition: background var(--t), color var(--t);
+}
+.modal-x:hover { background: var(--surface-3); color: var(--t1); }
+.modal-x svg { width: 13px; height: 13px; }
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s2);
+  margin-top: var(--s5);
+}
+/* El botón de eliminar se separa de los otros dos para que no se toque
+   por error al querer cancelar. */
+.modal-acciones .btn--peligro { margin-right: auto; }
+
+
+/* ══════════════════════════════════════════════════════
    TOAST
 ══════════════════════════════════════════════════════ */
 .toast {
@@ -783,7 +908,11 @@ input[type="date"], input[type="number"] {
 @media (max-width: 720px) {
   .ad-top-inner { height: auto; padding: var(--s3) var(--s4); flex-wrap: wrap; gap: var(--s2); }
   .ad-sep, .ad-seccion { display: none; }
+  .ad-nav button { padding: 6px 11px; font-size: .8rem; }
   .ad-canal { margin-left: auto; }
+  .modal-caja { padding: var(--s4); }
+  .campo-con-boton { flex-direction: column; }
+  .btn--mapa { width: 100%; justify-content: center; }
   .ad-wrap { padding: var(--s4); }
   .panel { padding: var(--s4); }
 

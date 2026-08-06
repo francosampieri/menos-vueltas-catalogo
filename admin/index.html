@@ -42,10 +42,15 @@
   <div class="ad-top-inner">
     <img src="logo.svg" alt="Menos Vueltas" class="ad-logo">
     <span class="ad-sep" aria-hidden="true"></span>
-    <span class="ad-seccion">Pedidos</span>
 
-    <!-- Cada canal tiene su catálogo, sus precios y sus pedidos. -->
-    <div class="ad-canal">
+    <nav class="ad-nav">
+      <button id="navPedidos" class="on" onclick="irASeccion('pedidos')">Pedidos</button>
+      <button id="navClientes" onclick="irASeccion('clientes')">Clientes</button>
+    </nav>
+
+    <!-- Cada canal tiene su catálogo, sus precios y sus pedidos.
+         Los clientes son compartidos: un kiosco puede comprar por los dos. -->
+    <div class="ad-canal" id="selectorCanal">
       <button id="canalB2C" class="on" onclick="setCanal('b2c')">B2C</button>
       <button id="canalB2B" onclick="setCanal('b2b')">B2B</button>
     </div>
@@ -154,9 +159,10 @@
               </select>
             </div>
             <div class="campo">
-              <label for="fCliente">Cliente</label>
-              <input id="fCliente" list="listaClientes" placeholder="Nombre" autocomplete="off">
-              <datalist id="listaClientes"></datalist>
+              <label for="fClienteSel">Cliente</label>
+              <select id="fClienteSel" onchange="elegirCliente()">
+                <option value="">— Elegir cliente —</option>
+              </select>
             </div>
             <div class="campo">
               <label for="fTel">Teléfono</label>
@@ -170,9 +176,19 @@
                 <option>Otro</option>
               </select>
             </div>
+            <div class="campo">
+              <label for="fBarrio">Barrio</label>
+              <input id="fBarrio" placeholder="Carrodilla" autocomplete="off">
+            </div>
             <div class="campo campo--full">
               <label for="fDir">Dirección de entrega</label>
-              <input id="fDir" placeholder="Calle 123, Carrodilla" autocomplete="off">
+              <div class="campo-con-boton">
+                <input id="fDir" placeholder="Calle 123, Carrodilla" autocomplete="off">
+                <a class="btn btn--mapa" id="btnMapa" href="#" target="_blank" rel="noopener" hidden title="Abrir en Google Maps">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  Mapa
+                </a>
+              </div>
             </div>
             <div class="campo campo--full">
               <label for="fNotas">Notas internas</label>
@@ -248,13 +264,90 @@
     </div>
   </section>
 
+  <!-- ═══════════ VISTA: CLIENTES ═══════════ -->
+  <section id="vistaClientes" hidden>
+
+    <div class="ad-barra">
+      <div class="ad-buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="qCli" placeholder="Buscar por nombre, teléfono o barrio…" oninput="pintarClientes()">
+      </div>
+      <button class="btn btn--pri" onclick="nuevoCliente()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Nuevo cliente
+      </button>
+    </div>
+
+    <div class="tabla-wrap">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Teléfono</th>
+            <th>Barrio</th>
+            <th>Dirección</th>
+            <th class="num">Pedidos</th>
+            <th class="num">Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tbodyClientes"></tbody>
+      </table>
+    </div>
+  </section>
+
 </main>
 
 </div><!-- /#app -->
 
+<!-- ═══════════ MODAL: ALTA / EDICIÓN DE CLIENTE ═══════════ -->
+<div class="modal" id="modalCliente" hidden>
+  <form class="modal-caja" id="formCliente" onsubmit="guardarCliente(event)" autocomplete="off">
+    <button type="button" class="modal-x" onclick="cerrarModalCliente()" aria-label="Cerrar">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2 id="modalCliTitulo">Nuevo cliente</h2>
+
+    <div class="campos">
+      <div class="campo campo--full">
+        <label for="cliNombre">Nombre *</label>
+        <input id="cliNombre" required placeholder="Kiosco La Esquina">
+      </div>
+      <div class="campo">
+        <label for="cliTel">Teléfono</label>
+        <input id="cliTel" placeholder="261 771-6916">
+      </div>
+      <div class="campo">
+        <label for="cliBarrio">Barrio</label>
+        <input id="cliBarrio" list="listaBarrios" placeholder="Carrodilla">
+        <datalist id="listaBarrios"></datalist>
+      </div>
+      <div class="campo campo--full">
+        <label for="cliDir">Dirección</label>
+        <input id="cliDir" placeholder="Belgrano 450">
+      </div>
+      <div class="campo campo--full">
+        <label for="cliMapa">Ubicación (link de Google Maps)</label>
+        <input id="cliMapa" placeholder="https://maps.app.goo.gl/…">
+      </div>
+      <div class="campo campo--full">
+        <label for="cliNotas">Notas</label>
+        <textarea id="cliNotas" placeholder="Timbre roto, llamar al llegar…"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-acciones">
+      <button type="button" class="btn btn--peligro" id="btnBorrarCli" onclick="eliminarCliente()" hidden>Eliminar</button>
+      <button type="button" class="btn" onclick="cerrarModalCliente()">Cancelar</button>
+      <button type="submit" class="btn btn--pri" id="btnGuardarCli">Guardar</button>
+    </div>
+  </form>
+</div>
+
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="admin.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a27194099bf7adae',t:'MTc4NjA1NjM5Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a271cfd6eced758b',t:'MTc4NjA1ODg0Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

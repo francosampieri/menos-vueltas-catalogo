@@ -31,17 +31,20 @@ const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDXhna8B4UC
 // Guardada como hash SHA-256 para no dejarla escrita en texto plano. Es una
 // traba, no seguridad real: quien mire el código puede saltearla.
 // Para cambiarla, ver SHEETS.md.
-const PASS_HASH  = '13e3263aa26400d509d82c644c98ccc177c947624f3405d4676d1d2a1c192670';
+const PASS_HASH  = '13e3263aa26400d509d82c644c98ccc177c947624f3405d4676d1d2a1c192670'; // menosvueltas
 const SESION_KEY = 'mv_admin_sesion';
 const LS_KEY     = 'mv_pedidos_v2';
 // Si un guardado falla, el pedido se deja acá para no perderlo.
 const BORRADOR_KEY = 'mv_borrador';
+const LS_CLIENTES  = 'mv_clientes';
 
 
 /* ══════════════ ESTADO ══════════════ */
 let CANAL    = 'b2c';
 let CATALOGO = { b2c: [], b2b: [] };
 let PEDIDOS  = [];
+let CLIENTES = [];
+let cliEnEdicion = null;
 let edicion  = null;   // copia del pedido abierto; el original no se toca
 let sugerencias = [];
 let sugSel   = -1;
@@ -271,6 +274,59 @@ const API = {
     }
     const lista = (await this.listar()).filter(p => p.id !== id);
     localStorage.setItem(LS_KEY, JSON.stringify(lista));
+  },
+
+  // ── Clientes ──
+  // Son compartidos entre B2C y B2B: el mismo kiosco puede comprar por los
+  // dos canales y no tiene sentido cargarlo dos veces.
+  async listarClientes() {
+    if (SHEETS_URL) {
+      const d = await llamarSheets({ url: `${SHEETS_URL}?accion=clientes` });
+      return d.clientes || [];
+    }
+    try {
+      return JSON.parse(localStorage.getItem(LS_CLIENTES) || '[]');
+    } catch (e) {
+      return [];
+    }
+  },
+
+  async guardarCliente(cliente) {
+    if (SHEETS_URL) {
+      const d = await llamarSheets({
+        url: SHEETS_URL,
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ accion: 'guardarCliente', cliente })
+        }
+      });
+      return d.cliente;
+    }
+    const lista = await this.listarClientes();
+    if (!cliente.id) {
+      cliente.id = lista.length ? Math.max(...lista.map(c => c.id)) + 1 : 1;
+    }
+    const i = lista.findIndex(c => c.id === cliente.id);
+    if (i >= 0) lista[i] = cliente; else lista.push(cliente);
+    localStorage.setItem(LS_CLIENTES, JSON.stringify(lista));
+    return cliente;
+  },
+
+  async eliminarCliente(id) {
+    if (SHEETS_URL) {
+      await llamarSheets({
+        url: SHEETS_URL,
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ accion: 'eliminarCliente', id })
+        }
+      });
+      return;
+    }
+    const lista = (await this.listarClientes()).filter(c => c.id !== id);
+    localStorage.setItem(LS_CLIENTES, JSON.stringify(lista));
   }
 };
 
@@ -371,10 +427,13 @@ async function arrancarPanel() {
   if (!SHEETS_URL) avisarModoLocal();
 
   try {
-    PEDIDOS = await API.listar();
+    // En paralelo: son dos llamadas independientes y así el panel abre antes.
+    const [ped, cli] = await Promise.all([API.listar(), API.listarClientes()]);
+    PEDIDOS  = ped;
+    CLIENTES = cli;
   } catch (e) {
-    PEDIDOS = [];
-    toast('No se pudieron leer los pedidos', true);
+    PEDIDOS = []; CLIENTES = [];
+    toast('No se pudieron leer los datos: ' + e.message, true);
   }
 
   verLista();
@@ -415,6 +474,20 @@ function avisarCatalogoFallido(err) {
 
 /* ══════════════ NAVEGACIÓN ══════════════ */
 
+function irASeccion(nombre) {
+  const esPedidos = nombre === 'pedidos';
+  document.getElementById('navPedidos').classList.toggle('on', esPedidos);
+  document.getElementById('navClientes').classList.toggle('on', !esPedidos);
+  // El selector de canal solo aplica a pedidos: los clientes son compartidos.
+  document.getElementById('selectorCanal').hidden = !esPedidos;
+
+  document.getElementById('vistaClientes').hidden = esPedidos;
+  document.getElementById('vistaLista').hidden = !esPedidos;
+  document.getElementById('vistaEditor').hidden = true;
+
+  if (esPedidos) pintarLista(); else pintarClientes();
+}
+
 function setCanal(canal) {
   CANAL = canal;
   document.getElementById('canalB2C').classList.toggle('on', canal === 'b2c');
@@ -425,6 +498,10 @@ function setCanal(canal) {
 function verLista() {
   document.getElementById('vistaLista').hidden = false;
   document.getElementById('vistaEditor').hidden = true;
+  document.getElementById('vistaClientes').hidden = true;
+  document.getElementById('selectorCanal').hidden = false;
+  document.getElementById('navPedidos').classList.add('on');
+  document.getElementById('navClientes').classList.remove('on');
   edicion = null;
   pintarLista();
 }
@@ -508,6 +585,194 @@ function pintarKpis(pedidos) {
 }
 
 
+
+/* ══════════════ CLIENTES ══════════════
+   Los clientes son compartidos entre B2C y B2B. Al elegir uno en un pedido
+   se copian sus datos a la fila: si después se corrige la dirección del
+   cliente, los pedidos viejos conservan la dirección a la que realmente se
+   entregó. Es el mismo criterio que con los precios.                       */
+
+function pintarClientes() {
+  const q = (document.getElementById('qCli').value || '').toLowerCase().trim();
+
+  // Cuántos pedidos hizo cada cliente y cuánto lleva gastado: es el dato
+  // que dice quién vuelve, que es lo que importa medir.
+  const resumen = {};
+  PEDIDOS.forEach(p => {
+    if (!p.clienteId) return;
+    const r = resumen[p.clienteId] || (resumen[p.clienteId] = { n: 0, total: 0 });
+    r.n++;
+    r.total += calcularPedido(p).total;
+  });
+
+  const lista = CLIENTES
+    .filter(c => !q || `${c.nombre} ${c.telefono} ${c.barrio}`.toLowerCase().includes(q))
+    .sort((a, b) => (resumen[b.id]?.n || 0) - (resumen[a.id]?.n || 0) ||
+                     a.nombre.localeCompare(b.nombre));
+
+  const tb = document.getElementById('tbodyClientes');
+  if (!lista.length) {
+    tb.innerHTML = `<tr><td colspan="7" class="vacio">${
+      CLIENTES.length ? 'No hay clientes que coincidan con la búsqueda.'
+                      : 'Todavía no cargaste ningún cliente.'}</td></tr>`;
+    return;
+  }
+
+  tb.innerHTML = lista.map(c => {
+    const r = resumen[c.id] || { n: 0, total: 0 };
+    return `<tr onclick="editarCliente(${c.id})">
+      <td>
+        <b>${esc(c.nombre)}</b>
+        ${c.notas ? `<div class="celda-nota">${esc(c.notas)}</div>` : ''}
+      </td>
+      <td>${c.telefono ? `<a href="https://wa.me/${soloDigitos(c.telefono)}" target="_blank" rel="noopener" class="tel-link" onclick="event.stopPropagation()">${esc(c.telefono)}</a>` : '—'}</td>
+      <td>${esc(c.barrio) || '—'}</td>
+      <td class="celda-dir">${esc(c.direccion) || '—'}</td>
+      <td class="num">${r.n || '—'}</td>
+      <td class="num">${r.total ? money(r.total) : '—'}</td>
+      <td class="num">${c.mapa
+        ? `<a href="${esc(c.mapa)}" target="_blank" rel="noopener" class="icono-mapa" title="Ver ubicación" onclick="event.stopPropagation()">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+           </a>` : ''}</td>
+    </tr>`;
+  }).join('');
+}
+
+// WhatsApp necesita el número sin espacios ni guiones. Se asume Argentina
+// (54 9) si el número viene sin código de país.
+function soloDigitos(tel) {
+  const d = String(tel).replace(/\D/g, '');
+  if (d.startsWith('54')) return d;
+  return '549' + d.replace(/^0/, '').replace(/^15/, '');
+}
+
+function nuevoCliente() {
+  cliEnEdicion = { id: null, nombre: '', telefono: '', direccion: '', barrio: '', mapa: '', notas: '' };
+  abrirModalCliente('Nuevo cliente');
+}
+
+function editarCliente(id) {
+  const c = CLIENTES.find(x => x.id === id);
+  if (!c) return;
+  cliEnEdicion = { ...c };
+  abrirModalCliente('Editar cliente');
+}
+
+function abrirModalCliente(titulo) {
+  document.getElementById('modalCliTitulo').textContent = titulo;
+  document.getElementById('btnBorrarCli').hidden = !cliEnEdicion.id;
+
+  const v = (id, val) => { document.getElementById(id).value = val ?? ''; };
+  v('cliNombre', cliEnEdicion.nombre);
+  v('cliTel',    cliEnEdicion.telefono);
+  v('cliBarrio', cliEnEdicion.barrio);
+  v('cliDir',    cliEnEdicion.direccion);
+  v('cliMapa',   cliEnEdicion.mapa);
+  v('cliNotas',  cliEnEdicion.notas);
+
+  // Sugerencias de barrio con los que ya se usaron: evita que el mismo
+  // barrio quede escrito de tres formas distintas.
+  document.getElementById('listaBarrios').innerHTML =
+    [...new Set(CLIENTES.map(c => c.barrio).filter(Boolean))]
+      .map(b => `<option value="${esc(b)}">`).join('');
+
+  document.getElementById('modalCliente').hidden = false;
+  document.getElementById('cliNombre').focus();
+}
+
+function cerrarModalCliente() {
+  document.getElementById('modalCliente').hidden = true;
+  cliEnEdicion = null;
+}
+
+async function guardarCliente(e) {
+  e.preventDefault();
+  if (!cliEnEdicion) return;
+
+  const g = id => document.getElementById(id).value.trim();
+  Object.assign(cliEnEdicion, {
+    nombre:    g('cliNombre'),
+    telefono:  g('cliTel'),
+    barrio:    g('cliBarrio'),
+    direccion: g('cliDir'),
+    mapa:      g('cliMapa'),
+    notas:     g('cliNotas')
+  });
+
+  if (!cliEnEdicion.nombre) { toast('Falta el nombre', true); return; }
+
+  const btn = document.getElementById('btnGuardarCli');
+  btn.disabled = true; btn.textContent = 'Guardando…';
+
+  try {
+    const guardado = await API.guardarCliente(cliEnEdicion);
+    const id = guardado?.id || cliEnEdicion.id;
+    cliEnEdicion.id = id;
+
+    const i = CLIENTES.findIndex(c => c.id === id);
+    if (i >= 0) CLIENTES[i] = cliEnEdicion; else CLIENTES.push(cliEnEdicion);
+
+    toast('Cliente guardado');
+    cerrarModalCliente();
+    pintarClientes();
+  } catch (err) {
+    toast('No se pudo guardar: ' + err.message, true);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Guardar';
+  }
+}
+
+async function eliminarCliente() {
+  if (!cliEnEdicion?.id) return;
+
+  // Un cliente con pedidos no se borra: esos pedidos quedarían huérfanos.
+  const conPedidos = PEDIDOS.filter(p => p.clienteId === cliEnEdicion.id).length;
+  if (conPedidos) {
+    alert(`No se puede eliminar: ${cliEnEdicion.nombre} tiene ${conPedidos} pedido(s) cargado(s).`);
+    return;
+  }
+  if (!confirm(`¿Eliminar a ${cliEnEdicion.nombre}?`)) return;
+
+  try {
+    await API.eliminarCliente(cliEnEdicion.id);
+    CLIENTES = CLIENTES.filter(c => c.id !== cliEnEdicion.id);
+    toast('Cliente eliminado');
+    cerrarModalCliente();
+    pintarClientes();
+  } catch (err) {
+    toast('No se pudo eliminar: ' + err.message, true);
+  }
+}
+
+// Al elegir un cliente en un pedido se copian sus datos a los campos, que
+// quedan editables: sirven de valor por defecto, no de atadura.
+function elegirCliente() {
+  const id = Number(document.getElementById('fClienteSel').value);
+  const c = CLIENTES.find(x => x.id === id);
+  if (!c) { actualizarBotonMapa(); return; }
+
+  document.getElementById('fTel').value    = c.telefono || '';
+  document.getElementById('fDir').value    = c.direccion || '';
+  document.getElementById('fBarrio').value = c.barrio || '';
+  if (edicion) edicion.mapa = c.mapa || '';
+  actualizarBotonMapa();
+}
+
+function actualizarBotonMapa() {
+  const btn = document.getElementById('btnMapa');
+  const url = edicion?.mapa;
+  btn.hidden = !url;
+  if (url) btn.href = url;
+}
+
+function llenarSelectorClientes(seleccionado) {
+  const sel = document.getElementById('fClienteSel');
+  const ordenados = [...CLIENTES].sort((a, b) => a.nombre.localeCompare(b.nombre));
+  sel.innerHTML = '<option value="">— Elegir cliente —</option>' +
+    ordenados.map(c => `<option value="${c.id}">${esc(c.nombre)}${c.barrio ? ` · ${esc(c.barrio)}` : ''}</option>`).join('');
+  sel.value = seleccionado || '';
+}
+
 /* ══════════════ EDITOR ══════════════ */
 
 function nuevoPedido() {
@@ -517,7 +782,7 @@ function nuevoPedido() {
     canal: CANAL,
     fechaPedido: hoyISO(),
     fechaEntrega: '',
-    cliente: '', telefono: '', direccion: '',
+    clienteId: null, cliente: '', telefono: '', direccion: '', barrio: '', mapa: '',
     estado: 'Nuevo',
     medioPago: 'Efectivo',
     extras: 0, descExtras: '', notas: '',
@@ -537,6 +802,7 @@ function abrirPedido(id) {
 
 function abrirEditor(esNuevo) {
   document.getElementById('vistaLista').hidden = true;
+  document.getElementById('vistaClientes').hidden = true;
   document.getElementById('vistaEditor').hidden = false;
   document.getElementById('btnEliminar').hidden = esNuevo;
 
@@ -548,19 +814,15 @@ function abrirEditor(esNuevo) {
   v('fPedido', edicion.fechaPedido);
   v('fEntrega', edicion.fechaEntrega);
   v('fEstadoPedido', edicion.estado);
-  v('fCliente', edicion.cliente);
+  llenarSelectorClientes(edicion.clienteId);
   v('fTel', edicion.telefono);
   v('fDir', edicion.direccion);
+  v('fBarrio', edicion.barrio);
+  actualizarBotonMapa();
   v('fMedioPago', edicion.medioPago);
   v('fExtras', edicion.extras || 0);
   v('fDescExtras', edicion.descExtras);
   v('fNotas', edicion.notas);
-
-  // Autocompletado con los clientes que ya pidieron antes. Es lo mínimo
-  // hasta que exista una hoja de clientes de verdad.
-  document.getElementById('listaClientes').innerHTML =
-    [...new Set(PEDIDOS.map(p => p.cliente).filter(Boolean))]
-      .map(c => `<option value="${esc(c)}">`).join('');
 
   document.getElementById('buscarProd').value = '';
   document.getElementById('sugerencias').innerHTML = '';
@@ -575,9 +837,13 @@ function leerCampos() {
     fechaPedido:  g('fPedido'),
     fechaEntrega: g('fEntrega'),
     estado:       g('fEstadoPedido'),
-    cliente:      g('fCliente').trim(),
+    clienteId:    Number(g('fClienteSel')) || null,
+    // El nombre se copia además del id: si mañana se corrige o se borra el
+    // cliente, el pedido sigue diciendo a quién se le vendió.
+    cliente:      (CLIENTES.find(c => c.id === Number(g('fClienteSel')))?.nombre) || '',
     telefono:     g('fTel').trim(),
     direccion:    g('fDir').trim(),
+    barrio:       g('fBarrio').trim(),
     medioPago:    g('fMedioPago'),
     extras:       Number(g('fExtras')) || 0,
     descExtras:   g('fDescExtras').trim(),
@@ -718,7 +984,7 @@ async function guardarPedido() {
   leerCampos();
 
   if (!edicion.items.length) { toast('Agregá al menos un producto', true); return; }
-  if (!edicion.cliente)      { toast('Falta el nombre del cliente', true); return; }
+  if (!edicion.clienteId)    { toast('Elegí un cliente', true); return; }
 
   guardando = true;
   const btn = document.getElementById('btnGuardar');
