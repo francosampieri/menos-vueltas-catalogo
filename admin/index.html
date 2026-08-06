@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedidos · Menos Vueltas</title>
+
+<!-- Panel interno: no debe aparecer en buscadores. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Cabin:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- ═══════════ BARRA SUPERIOR ═══════════ -->
+<header class="ad-top">
+  <div class="ad-top-inner">
+    <img src="logo.svg" alt="Menos Vueltas" class="ad-logo">
+    <span class="ad-sep" aria-hidden="true"></span>
+    <span class="ad-seccion">Pedidos</span>
+
+    <nav class="ad-tabs" role="tablist">
+      <button id="tabLista" class="on" onclick="verLista()">Todos</button>
+      <button id="tabNuevo" onclick="nuevoPedido()">Nuevo pedido</button>
+    </nav>
+
+    <!-- Cada canal tiene su catálogo, sus precios y sus pedidos. -->
+    <div class="ad-canal">
+      <button id="canalB2C" class="on" onclick="setCanal('b2c')">B2C</button>
+      <button id="canalB2B" onclick="setCanal('b2b')">B2B</button>
+    </div>
+
+    <span class="ad-estado" id="adEstado" title="Estado de la conexión"></span>
+  </div>
+</header>
+
+<main class="ad-wrap">
+
+  <!-- ═══════════ VISTA: LISTA DE PEDIDOS ═══════════ -->
+  <section id="vistaLista">
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="ad-barra">
+      <div class="ad-buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" placeholder="Buscar por cliente, número o estado…" oninput="pintarLista()">
+      </div>
+      <select id="filtroEstado" class="ad-select" onchange="pintarLista()">
+        <option value="">Todos los estados</option>
+        <option>Nuevo</option>
+        <option>Preparando</option>
+        <option>Entregado</option>
+        <option>Cancelado</option>
+      </select>
+      <button class="btn btn--pri" onclick="nuevoPedido()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Nuevo pedido
+      </button>
+    </div>
+
+    <div class="tabla-wrap">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pedido</th>
+            <th>Entrega</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th class="num">Items</th>
+            <th class="num">Total</th>
+            <th class="num">Ganancia</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyPedidos"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ VISTA: EDITOR DE PEDIDO ═══════════ -->
+  <section id="vistaEditor" hidden>
+
+    <div class="ad-barra ad-barra--editor">
+      <button class="btn" onclick="volverALista()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        Volver
+      </button>
+      <h1 class="ad-titulo" id="edTitulo"></h1>
+      <button class="btn btn--peligro" id="btnEliminar" onclick="eliminarPedido()" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a2 2 0 002 2h8a2 2 0 002-2l1-13M9 7V4h6v3"/></svg>
+        Eliminar
+      </button>
+    </div>
+
+    <div class="ed-grid">
+      <div class="ed-col">
+
+        <div class="panel">
+          <h2 class="panel-tit">Datos del pedido</h2>
+          <div class="campos">
+            <div class="campo">
+              <label for="fPedido">Fecha del pedido</label>
+              <input type="date" id="fPedido">
+            </div>
+            <div class="campo">
+              <label for="fEntrega">Fecha de entrega</label>
+              <input type="date" id="fEntrega">
+            </div>
+            <div class="campo">
+              <label for="fEstadoPedido">Estado</label>
+              <select id="fEstadoPedido">
+                <option>Nuevo</option>
+                <option>Preparando</option>
+                <option>Entregado</option>
+                <option>Cancelado</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="fCliente">Cliente</label>
+              <input id="fCliente" list="listaClientes" placeholder="Nombre" autocomplete="off">
+              <datalist id="listaClientes"></datalist>
+            </div>
+            <div class="campo">
+              <label for="fTel">Teléfono</label>
+              <input id="fTel" placeholder="261 771-6916" autocomplete="off">
+            </div>
+            <div class="campo">
+              <label for="fPago">Cómo paga</label>
+              <select id="fPago">
+                <option>Pendiente</option>
+                <option>Efectivo</option>
+                <option>Transferencia</option>
+              </select>
+            </div>
+            <div class="campo campo--full">
+              <label for="fDir">Dirección de entrega</label>
+              <input id="fDir" placeholder="Calle 123, Carrodilla" autocomplete="off">
+            </div>
+            <div class="campo campo--full">
+              <label for="fNotas">Notas internas</label>
+              <textarea id="fNotas" placeholder="Lo que necesites recordar de este pedido"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2 class="panel-tit">
+            Productos
+            <span class="panel-chip" id="chipItems">0 items</span>
+          </h2>
+
+          <div class="buscador-prod">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="buscarProd" placeholder="Buscá un producto y tocá Enter" autocomplete="off"
+                   oninput="buscarProducto()" onkeydown="navegarSugerencias(event)">
+            <div class="sugerencias" id="sugerencias"></div>
+          </div>
+
+          <div class="tabla-wrap">
+            <table class="tabla tabla--items">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th class="num">Cant.</th>
+                  <th class="num">Precio</th>
+                  <th class="num">Subtotal</th>
+                  <th class="num">Desc.</th>
+                  <th class="num">Total</th>
+                  <th class="num">Ganancia</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tbodyItems"></tbody>
+            </table>
+          </div>
+          <p class="vacio" id="sinItems">Todavía no agregaste productos.</p>
+        </div>
+      </div>
+
+      <!-- Resumen: acompaña el scroll para no perder el total de vista. -->
+      <aside class="ed-resumen">
+        <div class="panel">
+          <h2 class="panel-tit">Resumen</h2>
+
+          <div class="fila"><span>Subtotal</span><b id="rSub">$0</b></div>
+          <div class="fila"><span>Descuentos por cantidad</span><b id="rDto">$0</b></div>
+
+          <div class="campo campo--sep">
+            <label for="fExtras">Extras (envío, ajustes)</label>
+            <input type="number" id="fExtras" value="0" step="50" oninput="recalcular()">
+          </div>
+          <div class="campo">
+            <label for="fDescExtras">Descripción de los extras</label>
+            <input id="fDescExtras" placeholder="2000 de envío" autocomplete="off">
+          </div>
+
+          <div class="fila fila--total"><span>Total</span><b id="rTot">$0</b></div>
+          <div class="fila"><span>Costo</span><b id="rCos">$0</b></div>
+
+          <div class="fila fila--ganancia" id="rGanBox">
+            <span>Ganancia</span><b id="rGan">$0</b>
+          </div>
+          <div class="fila fila--margen"><span>Margen</span><b id="rMar">—</b></div>
+
+          <div class="acciones">
+            <button class="btn btn--pri btn--ancho" onclick="guardarPedido()">Guardar pedido</button>
+            <button class="btn btn--ancho" onclick="copiarParaWhatsApp()">Copiar para WhatsApp</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="admin.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2711ca1fcde892e',t:'MTc4NjA1MTUwMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
