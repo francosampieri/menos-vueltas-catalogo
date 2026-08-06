@@ -3802,6 +3802,8 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   border-radius: var(--rf);
   overflow: hidden;
   flex-shrink: 0;
+  /* Ver nota sobre el zoom en la sección de mobile, más abajo. */
+  touch-action: manipulation;
 }
 .qty-btn {
   width: 30px;
@@ -3815,8 +3817,17 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   align-items: center;
   justify-content: center;
   transition: background var(--t), color var(--t);
+  /* touch-action: manipulation desactiva SOLO el zoom por doble toque sobre
+     este botón — el zoom con dos dedos de la página sigue funcionando. Sin
+     esto, tocar +/- varias veces rápido lo interpretaba como doble toque.
+     user-select evita que el toque repetido seleccione texto y saque la lupa. */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .qty-btn:hover { background: var(--surface-2); color: var(--t1); }
+.qty-btn:active { background: var(--surface-3); color: var(--t1); }
 
 .qty-num::-webkit-inner-spin-button,
 .qty-num::-webkit-outer-spin-button,
@@ -4489,8 +4500,13 @@ body.modal-abierto {
   font-size: 0.875rem;
   color: var(--t2);
   transition: all var(--t);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .ci-qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ci-qty-btn:active { background: var(--surface-2); }
 .ci-qty-wrap {
   position: relative;
   display: flex;
@@ -4721,19 +4737,26 @@ body.modal-abierto {
   .subfiltros { padding: var(--space-1) var(--space-4); }
   .filtro-btn { height: 36px; background: var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
   .subfiltro-btn { height: 34px; }
-  /* Los botones +/- de cantidad se sacan en mobile: tocarlos varias veces
-     seguidas rápido dispara el zoom nativo del navegador y rompe la UI.
-     Queda solo el campo, que ya se puede editar con el teclado. */
-  .qty-btn { display: none; }
-  .qty-num-wrap { border-left: none; border-right: none; }
-  .qty-num { width: 64px; font-size: 0.95rem; padding: 8px 0; }
+  /* Botones +/- también en mobile.
+     Antes se ocultaban porque tocarlos rápido disparaba el zoom por doble
+     toque y el layout saltaba. Eso ya está resuelto en la regla base con
+     touch-action: manipulation + user-select: none.
+     El otro salto lo causaba el input: iOS hace zoom automático al enfocar
+     un campo con fuente menor a 16px, y al salir el layout quedaba corrido.
+     Por eso acá el número va en 16px exactos — es el umbral de Safari. */
+  .qty-btn { display: flex; width: 46px; height: 46px; font-size: 1.3rem; }
+  .qty-num-wrap { padding: 0 2px; }
+  .qty-num { width: 46px; font-size: 16px; padding: 8px 0; }
+  .qty-edit-icon { width: 12px; height: 12px; }
   .agregar-btn { height: 40px; }
   .cerrar-card { padding: var(--space-2); }
   .carrito-panel { max-height: 92dvh; }
   .carrito-close { width: 36px; height: 36px; }
-  .ci-qty-btn { display: none; }
-  .ci-qty-wrap { border-style: solid; }
-  .ci-qty-num { width: 48px; font-size: 0.9rem; padding: 6px 0; }
+  /* Ídem en el carrito: botones visibles y el campo a 16px. */
+  .ci-qty-btn { display: flex; width: 34px; height: 34px; font-size: 1.05rem; }
+  .ci-qty-wrap { border-style: solid; padding: 1px 3px; }
+  .ci-qty-num { width: 40px; font-size: 16px; padding: 5px 0; }
+  .ci-qty-row { gap: var(--space-2); }
   .ci-eliminar { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; padding: 0; }
   .carrito-footer { padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
   /* Hero móvil: la foto pasa a ser el escenario completo, no un bloque aparte. */
