@@ -624,6 +624,37 @@ input[type="date"], input[type="number"] {
 .ad-salir svg { width: 15px; height: 15px; }
 
 
+/* Aviso de que el panel está desconectado del Sheets. No es un error —
+   se puede trabajar así — pero tiene que verse, porque desde adentro
+   todo parece funcionar igual. */
+.aviso-local {
+  margin-bottom: var(--s4);
+  padding: var(--s4);
+  background: var(--ambar-bg);
+  border: 1px solid #EBD9B0;
+  border-radius: var(--r3);
+}
+.aviso-local b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: .88rem;
+  color: var(--ambar);
+}
+.aviso-local p {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  line-height: 1.6;
+  color: var(--t2);
+}
+.aviso-local code {
+  padding: 2px 6px;
+  background: var(--surface);
+  border-radius: var(--r1);
+  font-size: .78rem;
+}
+.ad-estado.local { background: var(--ambar); }
+
+
 /* ══════════════════════════════════════════════════════
    AVISO DE CARGA FALLIDA
 ══════════════════════════════════════════════════════ */

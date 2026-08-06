@@ -18,17 +18,20 @@
    por cantidad se aplica con los valores de aquel momento.
 ══════════════════════════════════════════════════════ */
 
-// ── Conexión con el Sheets de pedidos ──
-// Pegar la URL del Apps Script publicado como aplicación web (ver SHEETS.md).
-// Mientras esté vacío, el panel guarda en el navegador: sirve para probarlo
-// sin conectar nada.
-const SHEETS_URL = '';
+// ══ CONEXIÓN CON EL SHEETS ══
+// Pegar acá la URL del Apps Script publicado como aplicación web (ver
+// SHEETS.md). Si queda vacía, los pedidos se guardan SOLO en este navegador
+// y no llegan a la planilla — el panel avisa arriba cuando pasa eso.
+//
+// OJO al actualizar el panel: esta línea es lo único que hay que volver a
+// completar si se reemplaza el archivo entero.
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDXhna8B4UCGnh3eyl2Uy_69qdjiCz4sthAVdsvkPwhpSlUcE5e-h8yZhDIg/exec';
 
 // ── Contraseña del panel ──
 // Guardada como hash SHA-256 para no dejarla escrita en texto plano. Es una
 // traba, no seguridad real: quien mire el código puede saltearla.
 // Para cambiarla, ver SHEETS.md.
-const PASS_HASH  = '13e3263aa26400d509d82c644c98ccc177c947624f3405d4676d1d2a1c192670'; // menosvueltas
+const PASS_HASH  = '13e3263aa26400d509d82c644c98ccc177c947624f3405d4676d1d2a1c192670';
 const SESION_KEY = 'mv_admin_sesion';
 const LS_KEY     = 'mv_pedidos_v2';
 // Si un guardado falla, el pedido se deja acá para no perderlo.
@@ -362,6 +365,11 @@ async function arrancarPanel() {
     avisarCatalogoFallido(e);
   }
 
+  // Sin URL configurada el panel funciona igual, pero los pedidos no salen
+  // de esta computadora. Es un estado válido para probar, y peligroso si no
+  // se nota: por eso se avisa de forma permanente, no con un toast.
+  if (!SHEETS_URL) avisarModoLocal();
+
   try {
     PEDIDOS = await API.listar();
   } catch (e) {
@@ -371,6 +379,22 @@ async function arrancarPanel() {
 
   verLista();
   recuperarBorrador();
+}
+
+function avisarModoLocal() {
+  const luz = document.getElementById('adEstado');
+  luz.classList.remove('ok');
+  luz.classList.add('local');
+  luz.title = 'Los pedidos se guardan solo en este navegador';
+
+  const aviso = document.createElement('div');
+  aviso.className = 'aviso-local';
+  aviso.innerHTML =
+    '<b>Los pedidos se guardan solo en esta computadora</b>' +
+    '<p>No se están enviando a Google Sheets. Para conectarlos, pegá la URL ' +
+    'del Apps Script en <code>SHEETS_URL</code>, al principio de ' +
+    '<code>admin.js</code> (ver SHEETS.md).</p>';
+  document.getElementById('vistaLista').prepend(aviso);
 }
 
 // La causa más común de que no aparezcan productos es abrir el index.html
