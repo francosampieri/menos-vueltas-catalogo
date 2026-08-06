@@ -1659,11 +1659,52 @@ function actualizarUICarrito(rerenderItems = true) {
     }
   }
 
+  const countEl2 = document.getElementById('carritoCount');
+  if (countEl2) {
+    countEl2.textContent = totalItems
+      ? `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}`
+      : '';
+  }
+
+  // Desglose: subtotal a precio de lista, descuento de la promo y ahorro.
+  // Las filas de promo/envío aparecen solo si el descuento existe de verdad,
+  // así el resumen no queda con renglones en cero cuando la promo termine.
+  const totalLista = carrito.reduce((sum, i) => {
+    const aplica = i.uniDto > 0 && i.qty >= i.uniDto && i.precioDtoLista != null;
+    const base = aplica ? i.precioDtoLista : i.precioLista;
+    return sum + (base || 0) * i.qty;
+  }, 0);
+  const ahorro = totalLista - total;
+  const conPromo = promoVigente() && ahorro > 0 && hayPrecio;
+
+  const subEl = document.getElementById('crSubtotal');
+  if (subEl) subEl.textContent = hayPrecio ? formatPrecio(totalLista) : '—';
+
+  const subFila = document.getElementById('crSubtotalFila');
+  if (subFila) subFila.hidden = !conPromo;
+
+  const promoFila = document.getElementById('crPromoFila');
+  if (promoFila) promoFila.hidden = !conPromo;
+  const promoLabelEl = document.getElementById('crPromoLabel');
+  if (promoLabelEl) promoLabelEl.textContent = `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%)`;
+  const promoEl = document.getElementById('crPromo');
+  if (promoEl) promoEl.textContent = '−' + formatPrecio(ahorro);
+
+  const envioFila = document.getElementById('crEnvioFila');
+  if (envioFila) envioFila.hidden = !conPromo;
+
+  const ahorroEl = document.getElementById('carritoAhorro');
+  if (ahorroEl) {
+    ahorroEl.hidden = !conPromo;
+    const txt = document.getElementById('carritoAhorroTxt');
+    if (txt) txt.textContent = `Estás ahorrando ${formatPrecio(ahorro)}`;
+  }
+
   const notaEl = document.getElementById('carritoNota');
   if (notaEl) {
     const sinPrecio = carrito.filter(i => i.precio === null);
     notaEl.textContent = sinPrecio.length
-      ? `⚠️ ${sinPrecio.length} producto(s) sin precio. El total puede variar.`
+      ? `${sinPrecio.length} producto(s) sin precio. El total puede variar.`
       : '';
   }
 
@@ -1687,7 +1728,7 @@ window.addEventListener('scroll', () => {
 function renderCarritoItems() {
   const cont = document.getElementById('carritoItems');
   if (!carrito.length) {
-    cont.innerHTML = '<div class="carrito-empty">Tu carrito está vacío 🛒</div>';
+    cont.innerHTML = '<div class="carrito-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><span>Tu carrito está vacío</span></div>';
     return;
   }
   cont.innerHTML = '';
@@ -1712,7 +1753,7 @@ function renderCarritoItems() {
     div.innerHTML = `
       <div class="ci-thumb">
         ${imgHtml}
-        <div class="ci-img-placeholder${item.imagen ? ' hidden' : ''}">📦</div>
+        <div class="ci-img-placeholder${item.imagen ? ' hidden' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
       </div>
       <div class="ci-info">
         <div class="ci-nombre">${item.marca} ${item.nombre}</div>
@@ -1733,7 +1774,7 @@ function renderCarritoItems() {
         </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <button class="ci-eliminar" onclick="eliminarDelCarrito(${idx})">🗑️</button>
+        <button class="ci-eliminar" onclick="eliminarDelCarrito(${idx})" aria-label="Quitar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a2 2 0 002 2h8a2 2 0 002-2l1-13M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg></button>
         <div class="ci-subtotal">${subtotal}</div>
       </div>
     `;
@@ -2195,3 +2236,50 @@ function initContadorPromo() {
 }
 
 document.addEventListener('DOMContentLoaded', initContadorPromo);
+
+
+// ══ BARRA DE PROMO DEL CATÁLOGO ══
+// En la landing el hero ya comunica la promo; acá el aviso existe porque al
+// navegar el catálogo la promo quedaría fuera de pantalla hasta el carrito.
+// Se puede cerrar y no vuelve a aparecer en la misma sesión (sessionStorage,
+// no localStorage: si vuelve otro día conviene que la vea de nuevo).
+const BARRA_CERRADA_KEY = 'mv_promo_barra_cerrada';
+
+function cerrarBarraPromo() {
+  const b = document.getElementById('promoBarra');
+  if (b) b.hidden = true;
+  try { sessionStorage.setItem(BARRA_CERRADA_KEY, '1'); } catch (e) { /* modo privado */ }
+}
+
+function initBarraPromo() {
+  const barra = document.getElementById('promoBarra');
+  if (!barra) return;
+  if (!promoVigente()) return;
+
+  let cerrada = false;
+  try { cerrada = sessionStorage.getItem(BARRA_CERRADA_KEY) === '1'; } catch (e) {}
+  if (cerrada) return;
+
+  barra.hidden = false;
+
+  // Cuenta regresiva compacta (sin segundos: en una barra fina el número
+  // saltando cada segundo distrae de los productos).
+  const cd = document.getElementById('promoBarraCd');
+  if (!cd) return;
+  const fin = new Date(PROMO.FIN).getTime();
+  if (isNaN(fin)) return;
+
+  const tick = () => {
+    const resta = fin - Date.now();
+    if (resta <= 0) { barra.hidden = true; clearInterval(timer); return; }
+    const seg = Math.floor(resta / 1000);
+    const d = Math.floor(seg / 86400);
+    const h = Math.floor(seg % 86400 / 3600);
+    cd.textContent = d > 0 ? `Quedan ${d} días` : `Quedan ${h} horas`;
+    cd.hidden = false;
+  };
+  tick();
+  const timer = setInterval(tick, 60000);
+}
+
+document.addEventListener('DOMContentLoaded', initBarraPromo);
