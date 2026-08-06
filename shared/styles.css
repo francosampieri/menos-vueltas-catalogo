@@ -547,7 +547,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    LANDING — HERO DE CAMPAÑA (promociones temporales)
    Reemplaza al hero estándar cuando data-hero="promo" (ver interruptor
    arriba). Pensado para rediseñarse de cero en cada campaña: estas
-   clases son un punto de partida, no un molde fijo — la próxima promo
+   clases son un punto de partida, no un molde fijo  la próxima promo
    puede tener otra estructura, otros colores, otro layout, lo que haga
    falta para esa comunicación puntual.
 
