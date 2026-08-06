@@ -1699,6 +1699,13 @@ function actualizarUICarrito(rerenderItems = true) {
 
   mostrar('crEnvioFila', hayPrecio && promoVigente());
 
+  // Cierre del resumen: el ahorro total (promo + cantidad) en una línea
+  // discreta bajo el total, sin recuadro — los dos descuentos ya están
+  // detallados arriba, esto solo los suma.
+  const ahorroTotal = dtoPromo + dtoCantidad;
+  escribir('crAhorro', `Estás ahorrando ${formatPrecio(ahorroTotal)}`);
+  mostrar('crAhorro', hayPrecio && ahorroTotal > 0);
+
   if (rerenderItems) {
     renderCarritoItems();
   }
