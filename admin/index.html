@@ -18,6 +18,25 @@
 </head>
 <body>
 
+<!-- ═══════════ LOGIN ═══════════
+     Traba simple del lado del cliente: evita que alguien entre de casualidad,
+     pero NO protege los datos (quien sepa mirar el código ve el hash). Para
+     que sirva de verdad, el panel no debe tener datos sensibles hasta que
+     esté detrás de una protección real del servidor. -->
+<div class="login" id="login" hidden>
+  <form class="login-caja" id="loginForm" autocomplete="off">
+    <img src="logo.svg" alt="Menos Vueltas" class="login-logo">
+    <h1>Panel de pedidos</h1>
+    <p>Ingresá la contraseña para continuar.</p>
+    <input type="password" id="loginPass" placeholder="Contraseña" autocomplete="current-password" required>
+    <p class="login-error" id="loginError" hidden>Contraseña incorrecta</p>
+    <button type="submit" class="btn btn--pri btn--ancho">Entrar</button>
+  </form>
+</div>
+
+<!-- Todo el panel arranca oculto y se muestra recién al validar. -->
+<div id="app" hidden>
+
 <!-- ═══════════ BARRA SUPERIOR ═══════════ -->
 <header class="ad-top">
   <div class="ad-top-inner">
@@ -37,6 +56,9 @@
     </div>
 
     <span class="ad-estado" id="adEstado" title="Estado de la conexión"></span>
+    <button class="ad-salir" onclick="salir()" title="Cerrar sesión" aria-label="Cerrar sesión">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    </button>
   </div>
 </header>
 
@@ -74,6 +96,7 @@
             <th>Entrega</th>
             <th>Cliente</th>
             <th>Estado</th>
+            <th>Cobro</th>
             <th class="num">Items</th>
             <th class="num">Total</th>
             <th class="num">Ganancia</th>
@@ -132,11 +155,18 @@
               <input id="fTel" placeholder="261 771-6916" autocomplete="off">
             </div>
             <div class="campo">
-              <label for="fPago">Cómo paga</label>
-              <select id="fPago">
+              <label for="fCobro">Cobro</label>
+              <select id="fCobro">
                 <option>Pendiente</option>
+                <option>Cobrado</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="fMedioPago">Medio de pago</label>
+              <select id="fMedioPago">
                 <option>Efectivo</option>
                 <option>Transferencia</option>
+                <option>Otro</option>
               </select>
             </div>
             <div class="campo campo--full">
@@ -210,7 +240,7 @@
           <div class="fila fila--margen"><span>Margen</span><b id="rMar">—</b></div>
 
           <div class="acciones">
-            <button class="btn btn--pri btn--ancho" onclick="guardarPedido()">Guardar pedido</button>
+            <button class="btn btn--pri btn--ancho" id="btnGuardar" onclick="guardarPedido()">Guardar pedido</button>
             <button class="btn btn--ancho" onclick="copiarParaWhatsApp()">Copiar para WhatsApp</button>
           </div>
         </div>
@@ -220,9 +250,11 @@
 
 </main>
 
+</div><!-- /#app -->
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="admin.js"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2711ca1fcde892e',t:'MTc4NjA1MTUwMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>

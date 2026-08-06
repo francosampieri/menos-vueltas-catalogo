@@ -326,6 +326,19 @@ button { cursor: pointer; background: none; border: none; }
 .estado--entregado  { background: var(--accent-bg); color: var(--accent-2); }
 .estado--cancelado  { background: var(--rojo-bg);   color: var(--rojo); }
 
+/* Estado de cobro: separado del estado del pedido porque entregado y
+   cobrado son cosas distintas — así se ve de un vistazo cuánta plata
+   quedó en la calle. */
+.cobro {
+  font-size: .72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cobro--si { color: var(--accent-2); }
+.cobro--no { color: var(--ambar); }
+
+.kpi-v--alerta { color: var(--ambar); }
+
 .ganancia { font-weight: 700; color: var(--accent-2); }
 .ganancia--neg { color: var(--rojo); }
 
@@ -565,6 +578,103 @@ input[type="date"], input[type="number"] {
   flex-direction: column;
   gap: var(--s2);
   margin-top: var(--s4);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   LOGIN
+══════════════════════════════════════════════════════ */
+.login {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--s5);
+  background: var(--surface-3);
+}
+.login-caja {
+  width: 100%;
+  max-width: 330px;
+  padding: var(--s6) var(--s5);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r4);
+  box-shadow: var(--sombra-2);
+  text-align: center;
+}
+.login-logo { height: 30px; width: auto; margin: 0 auto var(--s5); display: block; }
+.login-caja h1 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  margin-bottom: 4px;
+}
+.login-caja p {
+  font-family: var(--font-body);
+  font-size: .83rem;
+  color: var(--t2);
+  margin-bottom: var(--s5);
+}
+.login-caja input {
+  width: 100%;
+  height: 42px;
+  margin-bottom: var(--s3);
+  padding: 0 var(--s4);
+  background: var(--bg);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r2);
+  text-align: center;
+  font-size: 16px;  /* 16px evita el zoom automático de iOS */
+}
+.login-caja input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+.login-error {
+  margin-bottom: var(--s3) !important;
+  font-size: .8rem !important;
+  font-weight: 600;
+  color: var(--rojo) !important;
+}
+
+.ad-salir {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--t3);
+  transition: background var(--t), color var(--t);
+}
+.ad-salir:hover { background: var(--surface-2); color: var(--t1); }
+.ad-salir svg { width: 15px; height: 15px; }
+
+
+/* ══════════════════════════════════════════════════════
+   AVISO DE CARGA FALLIDA
+══════════════════════════════════════════════════════ */
+.aviso-error {
+  margin-bottom: var(--s4);
+  padding: var(--s4);
+  background: var(--rojo-bg);
+  border: 1px solid #E8C4B8;
+  border-radius: var(--r3);
+}
+.aviso-error b {
+  display: block;
+  margin-bottom: 5px;
+  font-size: .88rem;
+  color: var(--rojo);
+}
+.aviso-error p {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  line-height: 1.6;
+  color: var(--t2);
+}
+.aviso-error code {
+  padding: 2px 6px;
+  background: var(--surface);
+  border-radius: var(--r1);
+  font-size: .78rem;
 }
 
 
