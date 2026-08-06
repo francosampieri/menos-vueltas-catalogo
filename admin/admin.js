@@ -19,7 +19,10 @@
 ══════════════════════════════════════════════════════ */
 
 // ── Conexión con el Sheets de pedidos ──
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDXhna8B4UCGnh3eyl2Uy_69qdjiCz4sthAVdsvkPwhpSlUcE5e-h8yZhDIg/exec';
+// Pegar la URL del Apps Script publicado como aplicación web (ver SHEETS.md).
+// Mientras esté vacío, el panel guarda en el navegador: sirve para probarlo
+// sin conectar nada.
+const SHEETS_URL = '';
 
 // ── Contraseña del panel ──
 // Guardada como hash SHA-256 para no dejarla escrita en texto plano. Es una
@@ -28,6 +31,8 @@ const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDXhna8B4UC
 const PASS_HASH  = '13e3263aa26400d509d82c644c98ccc177c947624f3405d4676d1d2a1c192670'; // menosvueltas
 const SESION_KEY = 'mv_admin_sesion';
 const LS_KEY     = 'mv_pedidos_v2';
+// Si un guardado falla, el pedido se deja acá para no perderlo.
+const BORRADOR_KEY = 'mv_borrador';
 
 
 /* ══════════════ ESTADO ══════════════ */
@@ -160,13 +165,59 @@ function calcularPedido(p) {
    nunca se reescribe la planilla entera, así dos personas cargando al
    mismo tiempo no se pisan el trabajo.                                  */
 
+// Traduce los errores de red a algo accionable. "Failed to fetch" puede ser
+// cinco cosas distintas y el mensaje del navegador no dice cuál.
+function explicarFalloRed() {
+  if (!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(SHEETS_URL)) {
+    return 'La URL de SHEETS_URL no tiene el formato correcto. Tiene que empezar ' +
+           'con https://script.google.com/macros/s/ y terminar en /exec (no /dev).';
+  }
+  if (location.protocol === 'file:') {
+    return 'Estás abriendo el panel como archivo local (file://). Google bloquea ' +
+           'los pedidos desde ahí. Subilo a Vercel o usá un servidor local.';
+  }
+  return 'No se pudo contactar al Sheets. La causa más común es que la ' +
+         'implementación del Apps Script no esté publicada con acceso ' +
+         '"Cualquier usuario" (ver SHEETS.md, paso 3).';
+}
+
+// Todas las llamadas al Sheets pasan por acá: un solo lugar donde manejar
+// tiempos de espera, respuestas que no son JSON y errores de red.
+async function llamarSheets(opciones) {
+  const ctrl = new AbortController();
+  const corte = setTimeout(() => ctrl.abort(), 20000);
+
+  let r;
+  try {
+    r = await fetch(opciones.url, { ...opciones.init, signal: ctrl.signal });
+  } catch (e) {
+    // Acá caen "Failed to fetch" (CORS, permisos, sin internet) y el timeout.
+    throw new Error(e.name === 'AbortError'
+      ? 'El Sheets tardó demasiado en responder.'
+      : explicarFalloRed());
+  } finally {
+    clearTimeout(corte);
+  }
+
+  const texto = await r.text();
+  let d;
+  try {
+    d = JSON.parse(texto);
+  } catch (e) {
+    // Si Apps Script devuelve HTML es casi siempre su pantalla de login o de
+    // error: pasa cuando la implementación no es pública.
+    throw new Error('El Sheets respondió algo inesperado. Revisá que la ' +
+                    'implementación tenga acceso "Cualquier usuario".');
+  }
+  if (!d.ok) throw new Error(d.error || 'error del servidor');
+  return d;
+}
+
 const API = {
 
   async listar() {
     if (SHEETS_URL) {
-      const r = await fetch(`${SHEETS_URL}?accion=listar`);
-      const d = await r.json();
-      if (!d.ok) throw new Error(d.error || 'error al listar');
+      const d = await llamarSheets({ url: `${SHEETS_URL}?accion=listar` });
       return d.pedidos || [];
     }
     try {
@@ -182,13 +233,14 @@ const API = {
   async guardar(pedido) {
     if (SHEETS_URL) {
       // text/plain evita el preflight CORS que Apps Script no responde.
-      const r = await fetch(SHEETS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ accion: 'guardar', pedido })
+      const d = await llamarSheets({
+        url: SHEETS_URL,
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ accion: 'guardar', pedido })
+        }
       });
-      const d = await r.json();
-      if (!d.ok) throw new Error(d.error || 'error al guardar');
       return d.pedido;
     }
 
@@ -204,13 +256,14 @@ const API = {
 
   async eliminar(id) {
     if (SHEETS_URL) {
-      const r = await fetch(SHEETS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ accion: 'eliminar', id })
+      await llamarSheets({
+        url: SHEETS_URL,
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ accion: 'eliminar', id })
+        }
       });
-      const d = await r.json();
-      if (!d.ok) throw new Error(d.error || 'error al eliminar');
       return;
     }
     const lista = (await this.listar()).filter(p => p.id !== id);
@@ -317,6 +370,7 @@ async function arrancarPanel() {
   }
 
   verLista();
+  recuperarBorrador();
 }
 
 // La causa más común de que no aparezcan productos es abrir el index.html
@@ -347,8 +401,6 @@ function setCanal(canal) {
 function verLista() {
   document.getElementById('vistaLista').hidden = false;
   document.getElementById('vistaEditor').hidden = true;
-  document.getElementById('tabLista').classList.add('on');
-  document.getElementById('tabNuevo').classList.remove('on');
   edicion = null;
   pintarLista();
 }
@@ -372,7 +424,7 @@ function pintarLista() {
 
   const tb = document.getElementById('tbodyPedidos');
   if (!lista.length) {
-    tb.innerHTML = `<tr><td colspan="9" class="vacio">${
+    tb.innerHTML = `<tr><td colspan="8" class="vacio">${
       delCanal.length ? 'No hay pedidos que coincidan con la búsqueda.'
                       : 'Todavía no hay pedidos cargados en este canal.'}</td></tr>`;
     return;
@@ -380,14 +432,12 @@ function pintarLista() {
 
   tb.innerHTML = lista.map(p => {
     const t = calcularPedido(p);
-    const cobrado = p.cobro === 'Cobrado';
     return `<tr onclick="abrirPedido(${p.id})">
       <td><b>#${p.id}</b></td>
       <td>${fechaCorta(p.fechaPedido)}</td>
       <td>${fechaCorta(p.fechaEntrega)}</td>
       <td class="celda-cliente"><b>${esc(p.cliente) || '—'}</b>${p.telefono ? `<span>${esc(p.telefono)}</span>` : ''}</td>
       <td><span class="estado estado--${p.estado.toLowerCase()}">${p.estado}</span></td>
-      <td><span class="cobro ${cobrado ? 'cobro--si' : 'cobro--no'}">${cobrado ? 'Cobrado' : 'Pendiente'}</span></td>
       <td class="num">${t.unidades}</td>
       <td class="num"><b>${money(t.total)}</b></td>
       <td class="num"><span class="ganancia${t.ganancia < 0 ? ' ganancia--neg' : ''}">${money(t.ganancia)}</span></td>
@@ -396,26 +446,25 @@ function pintarLista() {
 }
 
 function pintarKpis(pedidos) {
-  // Los cancelados no cuentan para facturación ni ganancia.
-  const validos = pedidos.filter(p => p.estado !== 'Cancelado');
-
+  // El estado avanza en un solo sentido: Nuevo → Entregado → Cobrado.
+  // Todo lo que no llegó a "Cobrado" es plata que todavía no entró.
   let facturado = 0, ganancia = 0, porCobrar = 0;
-  validos.forEach(p => {
+  pedidos.forEach(p => {
     const t = calcularPedido(p);
     facturado += t.total;
     ganancia  += t.ganancia;
-    if (p.cobro !== 'Cobrado') porCobrar += t.total;
+    if (p.estado !== 'Cobrado') porCobrar += t.total;
   });
 
-  const pendientes = pedidos.filter(p => p.estado === 'Nuevo' || p.estado === 'Preparando').length;
+  const sinEntregar = pedidos.filter(p => p.estado === 'Nuevo').length;
   const margen = facturado ? ganancia / facturado * 100 : 0;
-  const ticket = validos.length ? facturado / validos.length : 0;
+  const ticket = pedidos.length ? facturado / pedidos.length : 0;
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi">
       <div class="kpi-l">Pedidos</div>
       <div class="kpi-v">${pedidos.length}</div>
-      <div class="kpi-s">${pendientes} sin entregar</div>
+      <div class="kpi-s">${sinEntregar} sin entregar</div>
     </div>
     <div class="kpi">
       <div class="kpi-l">Facturado</div>
@@ -430,7 +479,7 @@ function pintarKpis(pedidos) {
     <div class="kpi">
       <div class="kpi-l">Por cobrar</div>
       <div class="kpi-v${porCobrar ? ' kpi-v--alerta' : ''}">${money(porCobrar)}</div>
-      <div class="kpi-s">${porCobrar ? 'plata en la calle' : 'todo cobrado'}</div>
+      <div class="kpi-s">&nbsp;</div>
     </div>`;
 }
 
@@ -446,7 +495,6 @@ function nuevoPedido() {
     fechaEntrega: '',
     cliente: '', telefono: '', direccion: '',
     estado: 'Nuevo',
-    cobro: 'Pendiente',
     medioPago: 'Efectivo',
     extras: 0, descExtras: '', notas: '',
     items: []
@@ -466,8 +514,6 @@ function abrirPedido(id) {
 function abrirEditor(esNuevo) {
   document.getElementById('vistaLista').hidden = true;
   document.getElementById('vistaEditor').hidden = false;
-  document.getElementById('tabLista').classList.remove('on');
-  document.getElementById('tabNuevo').classList.toggle('on', esNuevo);
   document.getElementById('btnEliminar').hidden = esNuevo;
 
   document.getElementById('edTitulo').textContent =
@@ -478,7 +524,6 @@ function abrirEditor(esNuevo) {
   v('fPedido', edicion.fechaPedido);
   v('fEntrega', edicion.fechaEntrega);
   v('fEstadoPedido', edicion.estado);
-  v('fCobro', edicion.cobro);
   v('fCliente', edicion.cliente);
   v('fTel', edicion.telefono);
   v('fDir', edicion.direccion);
@@ -506,7 +551,6 @@ function leerCampos() {
     fechaPedido:  g('fPedido'),
     fechaEntrega: g('fEntrega'),
     estado:       g('fEstadoPedido'),
-    cobro:        g('fCobro'),
     cliente:      g('fCliente').trim(),
     telefono:     g('fTel').trim(),
     direccion:    g('fDir').trim(),
@@ -666,10 +710,14 @@ async function guardarPedido() {
     const i = PEDIDOS.findIndex(p => p.id === id);
     if (i >= 0) PEDIDOS[i] = edicion; else PEDIDOS.push(edicion);
 
+    localStorage.removeItem(BORRADOR_KEY);
     toast(`Pedido #${id} guardado`);
     verLista();
   } catch (e) {
-    toast('No se pudo guardar: ' + e.message, true);
+    // Si el guardado falla NO se pierde el trabajo: el pedido queda en el
+    // navegador y se ofrece recuperarlo al volver a entrar.
+    localStorage.setItem(BORRADOR_KEY, JSON.stringify(edicion));
+    mostrarErrorGuardado(e.message);
   } finally {
     guardando = false;
     btn.disabled = false;
@@ -691,29 +739,38 @@ async function eliminarPedido() {
   }
 }
 
-// Texto plano para mandarle el detalle al cliente. Sin emojis ni
-// caracteres raros: WhatsApp Desktop los muestra mal.
-function copiarParaWhatsApp() {
-  leerCampos();
-  const t = calcularPedido(edicion);
-
-  let msg = edicion.id ? `*PEDIDO #${edicion.id}*\n` : '*PEDIDO*\n';
-  if (edicion.cliente) msg += `Cliente: ${edicion.cliente}\n`;
-  if (edicion.fechaEntrega) msg += `Entrega: ${fechaCorta(edicion.fechaEntrega)}\n`;
-  msg += '--------------------------------\n';
-
-  edicion.items.forEach((l, i) => {
-    const c = calcularLinea(l);
-    msg += `${i + 1}. ${l.nombre}\n   ${l.cant} un. x ${money(c.unit)} = ${money(c.total)}\n`;
-  });
-
-  msg += '--------------------------------\n';
-  msg += `Subtotal: ${money(t.subtotal)}\n`;
-  if (t.descuento) msg += `Descuentos: -${money(t.descuento)}\n`;
-  if (t.extras)    msg += `${edicion.descExtras || 'Extras'}: ${money(t.extras)}\n`;
-  msg += `\n*TOTAL: ${money(t.total)}*`;
-
-  navigator.clipboard.writeText(msg)
-    .then(() => toast('Pedido copiado'))
-    .catch(() => toast('El navegador bloqueó el portapapeles', true));
+// El toast dura tres segundos y se va: para un fallo de guardado hace falta
+// algo que se quede en pantalla y explique cómo resolverlo.
+function mostrarErrorGuardado(motivo) {
+  document.getElementById('errorGuardadoTxt').textContent = motivo;
+  document.getElementById('errorGuardado').hidden = false;
+  document.getElementById('errorGuardado').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+
+function cerrarErrorGuardado() {
+  document.getElementById('errorGuardado').hidden = true;
+}
+
+// Al abrir el panel, si quedó un pedido sin guardar de la vez anterior se
+// ofrece retomarlo en vez de dejarlo perdido en el navegador.
+function recuperarBorrador() {
+  let b;
+  try {
+    b = JSON.parse(localStorage.getItem(BORRADOR_KEY) || 'null');
+  } catch (e) { return; }
+  if (!b || !b.items?.length) return;
+
+  const quien = b.cliente ? ` de ${b.cliente}` : '';
+  if (confirm(`Quedó un pedido sin guardar${quien} con ${b.items.length} producto(s). ¿Querés retomarlo?`)) {
+    // Se cambia el canal a mano en vez de llamar a setCanal(): esa función
+    // vuelve a la lista y limpia la edición, borrando lo que se recuperó.
+    CANAL = b.canal || CANAL;
+    document.getElementById('canalB2C').classList.toggle('on', CANAL === 'b2c');
+    document.getElementById('canalB2B').classList.toggle('on', CANAL === 'b2b');
+    edicion = b;
+    abrirEditor(!b.id);
+  } else {
+    localStorage.removeItem(BORRADOR_KEY);
+  }
+}
+

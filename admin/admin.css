@@ -91,28 +91,14 @@ button { cursor: pointer; background: none; border: none; }
   color: var(--t1);
 }
 
-.ad-tabs, .ad-canal {
+.ad-canal {
   display: flex;
   gap: 2px;
   padding: 3px;
+  margin-left: auto;
   background: var(--surface-2);
   border-radius: var(--rf);
 }
-.ad-tabs { margin-left: var(--s4); }
-.ad-tabs button {
-  padding: 6px 15px;
-  border-radius: var(--rf);
-  font-size: .8rem;
-  font-weight: 600;
-  color: var(--t2);
-  transition: background var(--t), color var(--t), box-shadow var(--t);
-}
-.ad-tabs button.on {
-  background: var(--surface);
-  color: var(--t1);
-  box-shadow: var(--sombra-1);
-}
-.ad-canal { margin-left: auto; }
 .ad-canal button {
   padding: 6px 16px;
   border-radius: var(--rf);
@@ -321,21 +307,11 @@ button { cursor: pointer; background: none; border: none; }
   border-radius: 50%;
   background: currentColor;
 }
-.estado--nuevo      { background: var(--azul-bg);   color: var(--azul); }
-.estado--preparando { background: var(--ambar-bg);  color: var(--ambar); }
-.estado--entregado  { background: var(--accent-bg); color: var(--accent-2); }
-.estado--cancelado  { background: var(--rojo-bg);   color: var(--rojo); }
-
-/* Estado de cobro: separado del estado del pedido porque entregado y
-   cobrado son cosas distintas — así se ve de un vistazo cuánta plata
-   quedó en la calle. */
-.cobro {
-  font-size: .72rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.cobro--si { color: var(--accent-2); }
-.cobro--no { color: var(--ambar); }
+/* El estado avanza en un solo sentido: Nuevo → Entregado → Cobrado.
+   El color acompaña ese recorrido, de "falta hacer" a "listo". */
+.estado--nuevo     { background: var(--azul-bg);   color: var(--azul); }
+.estado--entregado { background: var(--ambar-bg);  color: var(--ambar); }
+.estado--cobrado   { background: var(--accent-bg); color: var(--accent-2); }
 
 .kpi-v--alerta { color: var(--ambar); }
 
@@ -679,6 +655,68 @@ input[type="date"], input[type="number"] {
 
 
 /* ══════════════════════════════════════════════════════
+   ERROR DE GUARDADO
+   Un toast se va en tres segundos; un fallo de guardado necesita
+   quedarse en pantalla con la causa y la tranquilidad de que el
+   trabajo no se perdió.
+══════════════════════════════════════════════════════ */
+.error-guardado {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  position: relative;
+  margin-bottom: var(--s4);
+  padding: var(--s4) var(--s5) var(--s4) var(--s4);
+  background: var(--rojo-bg);
+  border: 1px solid #E8C4B8;
+  border-radius: var(--r3);
+}
+.error-guardado-ico {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(196, 84, 58, .12);
+  color: var(--rojo);
+}
+.error-guardado-ico svg { width: 17px; height: 17px; }
+.error-guardado-tx { flex: 1; min-width: 0; }
+.error-guardado-tx b {
+  display: block;
+  margin-bottom: 3px;
+  font-size: .88rem;
+  color: var(--rojo);
+}
+.error-guardado-tx p {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  line-height: 1.55;
+  color: var(--t2);
+}
+.error-guardado-ok {
+  margin-top: 6px;
+  color: var(--accent-2) !important;
+  font-weight: 500;
+}
+.error-guardado-x {
+  position: absolute;
+  top: var(--s3);
+  right: var(--s3);
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--t3);
+  transition: background var(--t), color var(--t);
+}
+.error-guardado-x:hover { background: rgba(196, 84, 58, .1); color: var(--rojo); }
+.error-guardado-x svg { width: 12px; height: 12px; }
+
+
+/* ══════════════════════════════════════════════════════
    TOAST
 ══════════════════════════════════════════════════════ */
 .toast {
@@ -714,8 +752,7 @@ input[type="date"], input[type="number"] {
 @media (max-width: 720px) {
   .ad-top-inner { height: auto; padding: var(--s3) var(--s4); flex-wrap: wrap; gap: var(--s2); }
   .ad-sep, .ad-seccion { display: none; }
-  .ad-tabs { margin-left: auto; }
-  .ad-canal { margin-left: 0; }
+  .ad-canal { margin-left: auto; }
   .ad-wrap { padding: var(--s4); }
   .panel { padding: var(--s4); }
 

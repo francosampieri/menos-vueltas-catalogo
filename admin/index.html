@@ -44,11 +44,6 @@
     <span class="ad-sep" aria-hidden="true"></span>
     <span class="ad-seccion">Pedidos</span>
 
-    <nav class="ad-tabs" role="tablist">
-      <button id="tabLista" class="on" onclick="verLista()">Todos</button>
-      <button id="tabNuevo" onclick="nuevoPedido()">Nuevo pedido</button>
-    </nav>
-
     <!-- Cada canal tiene su catálogo, sus precios y sus pedidos. -->
     <div class="ad-canal">
       <button id="canalB2C" class="on" onclick="setCanal('b2c')">B2C</button>
@@ -77,9 +72,8 @@
       <select id="filtroEstado" class="ad-select" onchange="pintarLista()">
         <option value="">Todos los estados</option>
         <option>Nuevo</option>
-        <option>Preparando</option>
         <option>Entregado</option>
-        <option>Cancelado</option>
+        <option>Cobrado</option>
       </select>
       <button class="btn btn--pri" onclick="nuevoPedido()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
@@ -96,7 +90,6 @@
             <th>Entrega</th>
             <th>Cliente</th>
             <th>Estado</th>
-            <th>Cobro</th>
             <th class="num">Items</th>
             <th class="num">Total</th>
             <th class="num">Ganancia</th>
@@ -122,6 +115,22 @@
       </button>
     </div>
 
+    <!-- Aviso de guardado fallido: se queda hasta que se cierre, con la
+         causa concreta y qué revisar. -->
+    <div class="error-guardado" id="errorGuardado" hidden>
+      <div class="error-guardado-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L14.7 3.9a2 2 0 00-3.4 0z"/></svg>
+      </div>
+      <div class="error-guardado-tx">
+        <b>No se pudo guardar el pedido</b>
+        <p id="errorGuardadoTxt"></p>
+        <p class="error-guardado-ok">Tu pedido no se perdió: quedó guardado en este navegador y te lo vamos a ofrecer cuando vuelvas a entrar.</p>
+      </div>
+      <button class="error-guardado-x" onclick="cerrarErrorGuardado()" aria-label="Cerrar aviso">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
     <div class="ed-grid">
       <div class="ed-col">
 
@@ -138,11 +147,10 @@
             </div>
             <div class="campo">
               <label for="fEstadoPedido">Estado</label>
-              <select id="fEstadoPedido">
+              <select id="fEstadoPedido" onchange="recalcular()">
                 <option>Nuevo</option>
-                <option>Preparando</option>
                 <option>Entregado</option>
-                <option>Cancelado</option>
+                <option>Cobrado</option>
               </select>
             </div>
             <div class="campo">
@@ -153,13 +161,6 @@
             <div class="campo">
               <label for="fTel">Teléfono</label>
               <input id="fTel" placeholder="261 771-6916" autocomplete="off">
-            </div>
-            <div class="campo">
-              <label for="fCobro">Cobro</label>
-              <select id="fCobro">
-                <option>Pendiente</option>
-                <option>Cobrado</option>
-              </select>
             </div>
             <div class="campo">
               <label for="fMedioPago">Medio de pago</label>
@@ -241,7 +242,6 @@
 
           <div class="acciones">
             <button class="btn btn--pri btn--ancho" id="btnGuardar" onclick="guardarPedido()">Guardar pedido</button>
-            <button class="btn btn--ancho" onclick="copiarParaWhatsApp()">Copiar para WhatsApp</button>
           </div>
         </div>
       </aside>
@@ -255,6 +255,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="admin.js"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a27194099bf7adae',t:'MTc4NjA1NjM5Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
 </body>
 </html>
