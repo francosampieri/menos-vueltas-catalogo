@@ -214,6 +214,10 @@ function renderCatalogo() {
   llenarMegamenu();
   renderGrupos();
   renderDestacados();
+
+  // Si la página se abrió desde el QR de otra pantalla, el pedido viaja en
+  // el hash. Se restaura recién acá porque necesita el catálogo cargado.
+  restaurarPedidoDesdeHash();
 }
 
 // Sección "Los más pedidos" de la landing (solo existe en B2B; en B2C el
@@ -1791,8 +1795,9 @@ function cerrarCarrito() {
 }
 
 // ══ WHATSAPP ══
-function enviarWhatsApp() {
-  if (!carrito.length) return;
+// Arma el texto del pedido para WhatsApp. Separado del envío porque lo usan
+// tanto el botón como el flujo del QR.
+function construirMensajePedido() {
   const total     = carrito.reduce((s, i) => s + (precioEfectivo(i) || 0) * i.qty, 0);
   const hayPrecio = carrito.some(i => i.precio !== null);
 
@@ -1843,7 +1848,212 @@ function enviarWhatsApp() {
     if (ahorro > 0) msg += `Estás ahorrando ${formatPrecio(ahorro)}\n`;
   }
 
-  window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`, '_blank');
+  return msg;
+}
+
+function abrirWhatsAppConPedido() {
+  const url = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(construirMensajePedido())}`;
+  window.open(url, '_blank');
+}
+
+// ══ TRASPASO DEL PEDIDO AL CELULAR (QR) ══
+// El QR no lleva el mensaje entero — con 10 productos daba un código
+// ilegible. Lleva solo "id X cantidad" separados por punto: la web del
+// celular reconstruye nombres y precios desde el catálogo que ya tiene.
+// Todo en MAYÚSCULA porque el QR tiene un modo alfanumérico mucho más
+// compacto que solo admite 0-9 A-Z y unos pocos símbolos.
+const PEDIDO_HASH_PREFIJO = 'P';
+
+function codificarPedido() {
+  return carrito
+    .filter(i => i.idProd)
+    .map(i => `${i.idProd}X${i.qty}`)
+    .join('.')
+    .toUpperCase();
+}
+
+function urlPedidoParaCelular() {
+  // El host va en MAYÚSCULA (los dominios no distinguen mayúsculas y así el
+  // QR usa su modo alfanumérico, que ocupa casi la mitad). El path se deja
+  // tal cual: ahí sí importan las mayúsculas y cambiarlo daría 404.
+  // En producción el path es "/" y no cuesta nada; en local puede ser
+  // "/b2c/index.html" y el QR sale apenas más grande, sin romperse.
+  const host = location.origin.toUpperCase();
+  return `${host}${location.pathname}#${PEDIDO_HASH_PREFIJO}${codificarPedido()}`;
+}
+
+// Reconstruye el carrito desde el hash al abrir la página en el celular.
+// Se ejecuta una sola vez y limpia el hash, para que recargar no vuelva a
+// agregar los mismos productos.
+function restaurarPedidoDesdeHash() {
+  const h = decodeURIComponent(location.hash || '').replace(/^#/, '');
+  if (!h || h[0].toUpperCase() !== PEDIDO_HASH_PREFIJO) return false;
+
+  const partes = h.slice(1).split('.').filter(Boolean);
+  if (!partes.length) return false;
+
+  const porId = {};
+  Object.entries(catalogo).forEach(([gid, vars]) => {
+    vars.forEach(v => { if (v['Id']) porId[String(v['Id'])] = { gid, v }; });
+  });
+
+  let agregados = 0;
+  partes.forEach(par => {
+    const [id, qty] = par.toUpperCase().split('X');
+    const ref = porId[id];
+    const n = parseInt(qty, 10);
+    if (!ref || isNaN(n) || n < 1) return;
+    agregarAlCarrito(ref.gid, ref.v, n);
+    agregados++;
+  });
+
+  // Sacar el hash sin recargar ni dejar entrada en el historial.
+  history.replaceState(null, '', location.pathname + location.search);
+
+  if (!agregados) return false;
+
+  mostrarCatalogo();
+  abrirCarrito();
+  const aviso = document.getElementById('carritoAvisoTraspaso');
+  if (aviso) aviso.hidden = false;
+  return true;
+}
+
+// ══ ENVIAR PEDIDO ══
+// En celular va derecho a WhatsApp. En escritorio pregunta primero: abrir
+// WhatsApp Web (que exige tener el teléfono vinculado, el paso donde más
+// gente abandona) o pasar el pedido al celular con un QR.
+function enviarWhatsApp() {
+  if (!carrito.length) return;
+  if (MQ_MOBILE.matches) { abrirWhatsAppConPedido(); return; }
+  abrirModalEnvio();
+}
+
+function abrirModalEnvio() {
+  cerrarModalEnvio();
+
+  const ov = document.createElement('div');
+  ov.className = 'env-overlay';
+  ov.id = 'envioModal';
+  ov.innerHTML = `
+    <div class="env-panel" role="dialog" aria-modal="true" aria-labelledby="envTitulo">
+      <button class="env-close" aria-label="Cerrar">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+
+      <div class="env-paso" data-paso="elegir">
+        <h3 id="envTitulo">¿Cómo querés enviarlo?</h3>
+        <p class="env-sub">Tu pedido ya está armado. Elegí lo que te resulte más cómodo.</p>
+
+        <button class="env-op" data-accion="web">
+          <span class="env-ic env-ic--wa">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.4-1.3l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.6-5.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.2 4.6.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4z"/></svg>
+          </span>
+          <span class="env-tx">
+            <b>Abrir WhatsApp en esta computadora</b>
+            <span>Si ya lo tenés vinculado con tu teléfono</span>
+          </span>
+          <svg class="env-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <button class="env-op" data-accion="qr">
+          <span class="env-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 19h2v2h-2zM14 19h1M19 14h1"/></svg>
+          </span>
+          <span class="env-tx">
+            <b>Continuar en tu celular</b>
+            <span>Escaneás un código y seguís desde el teléfono</span>
+          </span>
+          <svg class="env-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <div class="env-paso" data-paso="qr" hidden>
+        <button class="env-volver">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          Volver
+        </button>
+        <h3>Escaneá con tu celular</h3>
+        <p class="env-sub">Apuntá la cámara al código. Se va a abrir tu pedido en el teléfono, listo para enviar.</p>
+        <div class="env-qr" id="envQr"></div>
+        <ol class="env-pasos">
+          <li>Abrí la cámara de tu celular</li>
+          <li>Apuntá al código</li>
+          <li>Tocá el aviso que aparece</li>
+        </ol>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+  bloquearScrollFondo(true);
+
+  const paso = n => {
+    ov.querySelectorAll('.env-paso').forEach(p => { p.hidden = p.dataset.paso !== n; });
+  };
+
+  ov.querySelector('[data-accion="web"]').addEventListener('click', () => {
+    abrirWhatsAppConPedido();
+    cerrarModalEnvio();
+  });
+
+  ov.querySelector('[data-accion="qr"]').addEventListener('click', () => {
+    paso('qr');
+    dibujarQrPedido(ov.querySelector('#envQr'));
+  });
+
+  ov.querySelector('.env-volver').addEventListener('click', () => paso('elegir'));
+  ov.querySelector('.env-close').addEventListener('click', () => cerrarModalEnvio());
+  ov.addEventListener('click', e => { if (e.target === ov) cerrarModalEnvio(); });
+  document.addEventListener('keydown', escCerrarEnvio);
+
+  requestAnimationFrame(() => ov.classList.add('visible'));
+}
+
+function escCerrarEnvio(e) {
+  if (e.key === 'Escape') cerrarModalEnvio();
+}
+
+function cerrarModalEnvio(silencioso) {
+  const ov = document.getElementById('envioModal');
+  if (!ov) return;
+  document.removeEventListener('keydown', escCerrarEnvio);
+  ov.remove();
+  if (!silencioso) bloquearScrollFondo(false);
+}
+
+// El QR se dibuja con una librería que se carga solo cuando hace falta: no
+// tiene sentido descargarla en cada visita si casi nadie llega hasta acá.
+function dibujarQrPedido(cont) {
+  if (!cont || cont.dataset.listo) return;
+  const url = urlPedidoParaCelular();
+
+  const pintar = () => {
+    cont.innerHTML = '';
+    try {
+      new QRCode(cont, {
+        text: url,
+        width: 208,
+        height: 208,
+        colorDark: '#2F3430',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      cont.dataset.listo = '1';
+    } catch (e) {
+      cont.innerHTML = '<p class="env-error">No pudimos generar el código. Probá con la otra opción.</p>';
+    }
+  };
+
+  if (window.QRCode) { pintar(); return; }
+
+  cont.innerHTML = '<div class="env-qr-load"></div>';
+  const sc = document.createElement('script');
+  sc.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
+  sc.onload = pintar;
+  sc.onerror = () => {
+    cont.innerHTML = '<p class="env-error">No pudimos generar el código. Probá con la otra opción.</p>';
+  };
+  document.head.appendChild(sc);
 }
 
 // ══ NAVEGACIÓN ══
