@@ -478,8 +478,8 @@ function irASeccion(nombre) {
   const esPedidos = nombre === 'pedidos';
   document.getElementById('navPedidos').classList.toggle('on', esPedidos);
   document.getElementById('navClientes').classList.toggle('on', !esPedidos);
-  // El selector de canal solo aplica a pedidos: los clientes son compartidos.
-  document.getElementById('selectorCanal').hidden = !esPedidos;
+  // El canal aplica a las dos secciones: los clientes B2C y B2B se manejan
+  // por separado, no tienen nada que ver entre sí.
 
   document.getElementById('vistaClientes').hidden = esPedidos;
   document.getElementById('vistaLista').hidden = !esPedidos;
@@ -492,14 +492,16 @@ function setCanal(canal) {
   CANAL = canal;
   document.getElementById('canalB2C').classList.toggle('on', canal === 'b2c');
   document.getElementById('canalB2B').classList.toggle('on', canal === 'b2b');
-  verLista();
+  // Se vuelve a la lista de la sección en la que se esté: cambiar de canal
+  // no debería sacarte de Clientes.
+  const enClientes = !document.getElementById('navClientes').classList.contains('on');
+  if (enClientes) verLista(); else irASeccion('clientes');
 }
 
 function verLista() {
   document.getElementById('vistaLista').hidden = false;
   document.getElementById('vistaEditor').hidden = true;
   document.getElementById('vistaClientes').hidden = true;
-  document.getElementById('selectorCanal').hidden = false;
   document.getElementById('navPedidos').classList.add('on');
   document.getElementById('navClientes').classList.remove('on');
   edicion = null;
@@ -606,15 +608,17 @@ function pintarClientes() {
   });
 
   const lista = CLIENTES
+    .filter(c => (c.canal || 'b2c') === CANAL)
     .filter(c => !q || `${c.nombre} ${c.telefono} ${c.barrio}`.toLowerCase().includes(q))
     .sort((a, b) => (resumen[b.id]?.n || 0) - (resumen[a.id]?.n || 0) ||
                      a.nombre.localeCompare(b.nombre));
 
   const tb = document.getElementById('tbodyClientes');
   if (!lista.length) {
+    const delCanal = CLIENTES.filter(c => (c.canal || 'b2c') === CANAL).length;
     tb.innerHTML = `<tr><td colspan="7" class="vacio">${
-      CLIENTES.length ? 'No hay clientes que coincidan con la búsqueda.'
-                      : 'Todavía no cargaste ningún cliente.'}</td></tr>`;
+      delCanal ? 'No hay clientes que coincidan con la búsqueda.'
+               : `Todavía no cargaste ningún cliente en ${CANAL.toUpperCase()}.`}</td></tr>`;
     return;
   }
 
@@ -647,7 +651,7 @@ function soloDigitos(tel) {
 }
 
 function nuevoCliente() {
-  cliEnEdicion = { id: null, nombre: '', telefono: '', direccion: '', barrio: '', mapa: '', notas: '' };
+  cliEnEdicion = { id: null, canal: CANAL, nombre: '', telefono: '', direccion: '', barrio: '', mapa: '', notas: '' };
   abrirModalCliente('Nuevo cliente');
 }
 
@@ -663,6 +667,7 @@ function abrirModalCliente(titulo) {
   document.getElementById('btnBorrarCli').hidden = !cliEnEdicion.id;
 
   const v = (id, val) => { document.getElementById(id).value = val ?? ''; };
+  v('cliCanal', cliEnEdicion.canal || 'b2c');
   v('cliNombre', cliEnEdicion.nombre);
   v('cliTel',    cliEnEdicion.telefono);
   v('cliBarrio', cliEnEdicion.barrio);
@@ -673,7 +678,8 @@ function abrirModalCliente(titulo) {
   // Sugerencias de barrio con los que ya se usaron: evita que el mismo
   // barrio quede escrito de tres formas distintas.
   document.getElementById('listaBarrios').innerHTML =
-    [...new Set(CLIENTES.map(c => c.barrio).filter(Boolean))]
+    [...new Set(CLIENTES.filter(c => (c.canal || 'b2c') === CANAL)
+                        .map(c => c.barrio).filter(Boolean))]
       .map(b => `<option value="${esc(b)}">`).join('');
 
   document.getElementById('modalCliente').hidden = false;
@@ -691,6 +697,7 @@ async function guardarCliente(e) {
 
   const g = id => document.getElementById(id).value.trim();
   Object.assign(cliEnEdicion, {
+    canal:     document.getElementById('cliCanal').value,
     nombre:    g('cliNombre'),
     telefono:  g('cliTel'),
     barrio:    g('cliBarrio'),
@@ -746,15 +753,17 @@ async function eliminarCliente() {
 
 // Al elegir un cliente en un pedido se copian sus datos a los campos, que
 // quedan editables: sirven de valor por defecto, no de atadura.
+// Los datos de contacto no se editan desde el pedido: se copian de la ficha
+// del cliente y quedan de solo lectura. Si hay que corregir algo se hace en
+// Clientes, y así el dato no queda distinto en cada pedido.
 function elegirCliente() {
   const id = Number(document.getElementById('fClienteSel').value);
   const c = CLIENTES.find(x => x.id === id);
-  if (!c) { actualizarBotonMapa(); return; }
 
-  document.getElementById('fTel').value    = c.telefono || '';
-  document.getElementById('fDir').value    = c.direccion || '';
-  document.getElementById('fBarrio').value = c.barrio || '';
-  if (edicion) edicion.mapa = c.mapa || '';
+  document.getElementById('fTel').value    = c ? (c.telefono || '')  : '';
+  document.getElementById('fDir').value    = c ? (c.direccion || '') : '';
+  document.getElementById('fBarrio').value = c ? (c.barrio || '')    : '';
+  if (edicion) edicion.mapa = c ? (c.mapa || '') : '';
   actualizarBotonMapa();
 }
 
@@ -763,11 +772,27 @@ function actualizarBotonMapa() {
   const url = edicion?.mapa;
   btn.hidden = !url;
   if (url) btn.href = url;
+
+  // El aviso de "esto se edita en Clientes" solo tiene sentido cuando hay
+  // un cliente elegido.
+  const aviso = document.getElementById('avisoCliente');
+  if (aviso) aviso.hidden = !Number(document.getElementById('fClienteSel').value);
+}
+
+// Abre la ficha del cliente del pedido que se está editando, para corregir
+// sus datos sin perder de vista de dónde se venía.
+function irAFichaCliente() {
+  const id = Number(document.getElementById('fClienteSel').value);
+  if (!id) return;
+  irASeccion('clientes');
+  editarCliente(id);
 }
 
 function llenarSelectorClientes(seleccionado) {
   const sel = document.getElementById('fClienteSel');
-  const ordenados = [...CLIENTES].sort((a, b) => a.nombre.localeCompare(b.nombre));
+  const ordenados = CLIENTES
+    .filter(c => (c.canal || 'b2c') === (edicion?.canal || CANAL))
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
   sel.innerHTML = '<option value="">— Elegir cliente —</option>' +
     ordenados.map(c => `<option value="${c.id}">${esc(c.nombre)}${c.barrio ? ` · ${esc(c.barrio)}` : ''}</option>`).join('');
   sel.value = seleccionado || '';
@@ -833,17 +858,19 @@ function abrirEditor(esNuevo) {
 
 function leerCampos() {
   const g = id => document.getElementById(id).value;
+  const cli = CLIENTES.find(c => c.id === Number(g('fClienteSel')));
   Object.assign(edicion, {
     fechaPedido:  g('fPedido'),
     fechaEntrega: g('fEntrega'),
     estado:       g('fEstadoPedido'),
     clienteId:    Number(g('fClienteSel')) || null,
-    // El nombre se copia además del id: si mañana se corrige o se borra el
-    // cliente, el pedido sigue diciendo a quién se le vendió.
-    cliente:      (CLIENTES.find(c => c.id === Number(g('fClienteSel')))?.nombre) || '',
-    telefono:     g('fTel').trim(),
-    direccion:    g('fDir').trim(),
-    barrio:       g('fBarrio').trim(),
+    // Los datos del cliente se copian al pedido: si mañana se corrige la
+    // ficha, los pedidos viejos conservan a quién y adónde se entregó.
+    cliente:      cli?.nombre    || '',
+    telefono:     cli?.telefono  || '',
+    direccion:    cli?.direccion || '',
+    barrio:       cli?.barrio    || '',
+    mapa:         cli?.mapa      || '',
     medioPago:    g('fMedioPago'),
     extras:       Number(g('fExtras')) || 0,
     descExtras:   g('fDescExtras').trim(),

@@ -290,6 +290,11 @@ button { cursor: pointer; background: none; border: none; }
   vertical-align: middle;
 }
 .tabla tbody tr:last-child td { border-bottom: none; }
+/* La regla va con el mismo peso que ".tabla th", que también alinea a la
+   izquierda: sin esto los encabezados de las columnas numéricas quedaban
+   pegados a la izquierda y los valores a la derecha, descuadrados. */
+.tabla th.num,
+.tabla td.num,
 .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 /* Solo la tabla de pedidos es clickeable; la de items no. */
@@ -760,6 +765,26 @@ input[type="date"], input[type="number"] {
 }
 .error-guardado-x:hover { background: rgba(196, 84, 58, .1); color: var(--rojo); }
 .error-guardado-x svg { width: 12px; height: 12px; }
+
+
+/* Campos que vienen del cliente: se muestran pero no se editan acá. Para
+   cambiarlos hay que ir a la ficha del cliente, así el dato no queda
+   distinto en cada pedido. */
+.campo input[readonly] {
+  background: var(--surface-2);
+  color: var(--t2);
+  cursor: not-allowed;
+  border-color: var(--line-soft);
+}
+.campo input[readonly]:focus { border-color: var(--line-soft); background: var(--surface-2); }
+
+.campo-ayuda {
+  margin-top: 5px;
+  font-family: var(--font-body);
+  font-size: .72rem;
+  color: var(--t3);
+}
+.campo-ayuda a { color: var(--accent-2); text-decoration: underline; cursor: pointer; }
 
 
 /* ══════════════════════════════════════════════════════
