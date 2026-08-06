@@ -342,7 +342,7 @@ function getGruposFiltrados() {
     // Búsqueda siempre global — ignora filtros de categoría y subcategoría
     // Normaliza acentos para que "limon" encuentre "limón"
     if (busquedaActiva) {
-      const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
       const q = norm(busquedaActiva);
       const texto = norm(`${nombre} ${marca} ${cat} ${sub} ${tags}`);
       return texto.includes(q);
@@ -546,7 +546,7 @@ const ICONOS_CAT = {
 
 // Normaliza acentos para que "Almacén" encuentre la clave "Almacen".
 function getIconoCat(cat) {
-  const sinAcentos = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const sinAcentos = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
   const clave = Object.keys(ICONOS_CAT).find(k =>
     sinAcentos(k).toLowerCase() === sinAcentos(cat || '').toLowerCase());
   const paths = ICONOS_CAT[clave] || ICONOS_CAT['_default'];
@@ -1666,47 +1666,38 @@ function actualizarUICarrito(rerenderItems = true) {
       : '';
   }
 
-  // Desglose: subtotal a precio de lista, descuento de la promo y ahorro.
-  // Las filas de promo/envío aparecen solo si el descuento existe de verdad,
-  // así el resumen no queda con renglones en cero cuando la promo termine.
-  const totalLista = carrito.reduce((sum, i) => {
+  // Desglose en tres tramos, para que se vea de dónde sale cada rebaja:
+  //   bruto     = precio de lista × cantidad, sin ningún descuento
+  //   cantidad  = lo que baja por comprar de a varios (precio de lista)
+  //   promo     = lo que baja el 10% sobre lo que quedaba después de lo anterior
+  let bruto = 0, dtoCantidad = 0;
+  carrito.forEach(i => {
     const aplica = i.uniDto > 0 && i.qty >= i.uniDto && i.precioDtoLista != null;
-    const base = aplica ? i.precioDtoLista : i.precioLista;
-    return sum + (base || 0) * i.qty;
-  }, 0);
-  const ahorro = totalLista - total;
-  const conPromo = promoVigente() && ahorro > 0 && hayPrecio;
+    bruto += (i.precioLista || 0) * i.qty;
+    if (aplica) dtoCantidad += ((i.precioLista || 0) - i.precioDtoLista) * i.qty;
+  });
+  const dtoPromo = (bruto - dtoCantidad) - total;
 
-  const subEl = document.getElementById('crSubtotal');
-  if (subEl) subEl.textContent = hayPrecio ? formatPrecio(totalLista) : '—';
+  const mostrar = (id, visible) => {
+    const el = document.getElementById(id);
+    if (el) el.hidden = !visible;
+  };
+  const escribir = (id, txt) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = txt;
+  };
 
-  const subFila = document.getElementById('crSubtotalFila');
-  if (subFila) subFila.hidden = !conPromo;
+  escribir('crSubtotal', hayPrecio ? formatPrecio(bruto) : '—');
+  mostrar('crSubtotalFila', hayPrecio);
 
-  const promoFila = document.getElementById('crPromoFila');
-  if (promoFila) promoFila.hidden = !conPromo;
-  const promoLabelEl = document.getElementById('crPromoLabel');
-  if (promoLabelEl) promoLabelEl.textContent = `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%)`;
-  const promoEl = document.getElementById('crPromo');
-  if (promoEl) promoEl.textContent = '−' + formatPrecio(ahorro);
+  escribir('crPromoLabel', `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%)`);
+  escribir('crPromo', '−' + formatPrecio(dtoPromo));
+  mostrar('crPromoFila', hayPrecio && promoVigente() && dtoPromo > 0);
 
-  const envioFila = document.getElementById('crEnvioFila');
-  if (envioFila) envioFila.hidden = !conPromo;
+  escribir('crCantidad', '−' + formatPrecio(dtoCantidad));
+  mostrar('crCantidadFila', hayPrecio && dtoCantidad > 0);
 
-  const ahorroEl = document.getElementById('carritoAhorro');
-  if (ahorroEl) {
-    ahorroEl.hidden = !conPromo;
-    const txt = document.getElementById('carritoAhorroTxt');
-    if (txt) txt.textContent = `Estás ahorrando ${formatPrecio(ahorro)}`;
-  }
-
-  const notaEl = document.getElementById('carritoNota');
-  if (notaEl) {
-    const sinPrecio = carrito.filter(i => i.precio === null);
-    notaEl.textContent = sinPrecio.length
-      ? `${sinPrecio.length} producto(s) sin precio. El total puede variar.`
-      : '';
-  }
+  mostrar('crEnvioFila', hayPrecio && promoVigente());
 
   if (rerenderItems) {
     renderCarritoItems();
@@ -1816,7 +1807,7 @@ function enviarWhatsApp() {
     msg += '\n';
   });
 
-  msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
+  msg += '━━━━━━━━━━━━━━━━\n';
   if (hayPrecio) {
     // El descuento ya viene aplicado en cada precio: se explicita cuánto se
     // ahorró para que quede constancia en la conversación.
@@ -1829,7 +1820,7 @@ function enviarWhatsApp() {
     if (promoVigente() && ahorro > 0) {
       msg += `Subtotal: ${formatPrecio(totalLista)}\n`;
       msg += `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%): -${formatPrecio(ahorro)}\n`;
-      msg += `Env\u00edo: GRATIS\n`;
+      msg += `Envío: GRATIS\n`;
     }
     msg += `*TOTAL: ${formatPrecio(total)}*\n`;
   }

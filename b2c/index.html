@@ -626,7 +626,7 @@
   <div class="promo-barra" id="promoBarra" hidden>
     <div class="promo-barra-inner">
       <span class="promo-barra-txt">
-        <strong>10% OFF + Envío gratis</strong> en todos tus pedidos de Agosto
+        <strong>10% OFF + Envío gratis</strong><span class="larga"> en todos tus pedidos de Agosto</span><span class="corta"> en Agosto</span>
       </span>
       <span class="promo-barra-cd" id="promoBarraCd" hidden></span>
     </div>
@@ -719,8 +719,9 @@
 
     <div class="carrito-footer">
 
-      <!-- Desglose. Las filas de promo y envío solo se muestran mientras la
-           promo esté vigente (ver actualizarUICarrito). -->
+      <!-- Desglose. Subtotal siempre a precio de lista (sin ningún descuento)
+           y cada descuento en su propia fila, para que se entienda de dónde
+           sale cada rebaja. Las filas se ocultan solas si no aplican. -->
       <div class="carrito-resumen" id="carritoResumen">
         <div class="cr-fila" id="crSubtotalFila">
           <span>Subtotal</span>
@@ -729,6 +730,10 @@
         <div class="cr-fila cr-fila--promo" id="crPromoFila" hidden>
           <span id="crPromoLabel">Promo</span>
           <span id="crPromo">—</span>
+        </div>
+        <div class="cr-fila cr-fila--promo" id="crCantidadFila" hidden>
+          <span>Descuentos por cantidad</span>
+          <span id="crCantidad">—</span>
         </div>
         <div class="cr-fila cr-fila--promo" id="crEnvioFila" hidden>
           <span>Envío</span>
@@ -740,13 +745,6 @@
         </div>
       </div>
 
-      <div class="carrito-ahorro" id="carritoAhorro" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 12V8H6a2 2 0 010-4h12v4M4 6v12a2 2 0 002 2h14v-4"/><path d="M18 12a2 2 0 000 4h4v-4z"/>
-        </svg>
-        <span id="carritoAhorroTxt"></span>
-      </div>
-
       <div class="carrito-nota" id="carritoNota"></div>
 
       <button class="whatsapp-btn" onclick="enviarWhatsApp()">
@@ -755,7 +753,6 @@
         </svg>
         Enviar pedido
       </button>
-      <p class="carrito-pie">Te lleva a WhatsApp con el pedido escrito. Pagás cuando llega.</p>
     </div>
 
   </aside>
@@ -763,6 +760,6 @@
 
 <script>window.CANAL = 'B2C';</script>
 <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a26ef13ddfa01e76',t:'MTc4NjAyODc1Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-</body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a26f128769fdb27d',t:'MTc4NjAzMDExNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

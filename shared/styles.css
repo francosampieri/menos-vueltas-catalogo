@@ -2887,7 +2887,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    recorrer el catálogo el descuento quedaría fuera de pantalla.
 ════════════════════════════════════════════════════ */
 .promo-barra {
-  position: relative;
+  /* Sticky justo debajo de la topbar (72px), que también es sticky. */
+  position: sticky;
+  top: 72px;
+  z-index: 90;
   background: var(--accent-2);
   color: white;
   padding: 9px var(--space-8) 9px var(--space-5);
@@ -2900,14 +2903,24 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
-  flex-wrap: wrap;
+  /* Nunca en dos renglones: en mobile la barra crecía al doble de alto. */
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 .promo-barra-txt {
   font-family: var(--font-body);
   font-size: 0.83rem;
   line-height: 1.35;
   color: rgba(255, 255, 255, .92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
+/* Versión corta del mensaje: se intercambian por CSS según el ancho, así
+   el texto entra en una sola línea sin tocar el HTML. */
+.promo-barra-txt .larga  { display: inline; }
+.promo-barra-txt .corta  { display: none; }
 .promo-barra-txt strong {
   font-family: var(--font);
   font-weight: 700;
@@ -2921,6 +2934,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   font-size: 0.72rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .promo-barra-cd[hidden] { display: none; }
 .promo-barra-x {
@@ -2942,11 +2956,27 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .promo-barra-x svg { width: 11px; height: 11px; }
 .promo-barra-x:hover { background: rgba(255, 255, 255, .16); color: white; }
 
+/* Mobile: la topbar mide 60px, no 72. */
 @media (max-width: 600px) {
-  .promo-barra { padding: 8px 34px 8px var(--space-4); }
-  .promo-barra-inner { gap: var(--space-2); }
-  .promo-barra-txt { font-size: 0.75rem; }
-  .promo-barra-cd { font-size: 0.66rem; padding: 2px 8px; }
+  .promo-barra {
+    top: 60px;
+    padding: 7px 30px 7px var(--space-3);
+  }
+  .promo-barra-inner { gap: 7px; }
+  .promo-barra-txt { font-size: 0.72rem; }
+  /* Mensaje corto: "10% OFF + Envío gratis en Agosto" */
+  .promo-barra-txt .larga { display: none; }
+  .promo-barra-txt .corta { display: inline; }
+  .promo-barra-cd { font-size: 0.63rem; padding: 2px 7px; }
+  .promo-barra-x { right: 6px; width: 20px; height: 20px; }
+  .promo-barra-x svg { width: 10px; height: 10px; }
+}
+
+/* Pantallas muy angostas (iPhone SE y similares): no entran las dos cosas,
+   y el mensaje importa más que la cuenta regresiva — que además ya está en
+   el hero. Se cae el contador y el texto queda entero. */
+@media (max-width: 380px) {
+  .promo-barra-cd { display: none; }
 }
 
 
@@ -4495,14 +4525,16 @@ body.modal-abierto {
 }
 
 .carrito-footer {
-  padding: var(--space-5) var(--space-6);
+  /* Compacto a propósito: cada píxel que ocupa el resumen es un píxel menos
+     para ver los productos del carrito. */
+  padding: var(--space-4) var(--space-6);
   border-top: 1px solid var(--line-soft);
   background: var(--surface);
   flex-shrink: 0;
 }
 
-/* Desglose del pedido: subtotal, descuento de la promo, env\u00edo y total.
-   Las filas intermedias se ocultan solas cuando no hay promo vigente, as\u00ed
+/* Desglose del pedido: subtotal, descuento de la promo, envío y total.
+   Las filas intermedias se ocultan solas cuando no hay promo vigente, así
    el resumen nunca muestra renglones en cero. */
 .carrito-resumen { margin-bottom: var(--space-3); }
 .cr-fila {
@@ -4511,9 +4543,10 @@ body.modal-abierto {
   align-items: baseline;
   gap: var(--space-4);
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
   color: var(--t2);
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 .cr-fila[hidden] { display: none; }
 .cr-fila--promo span:last-child {
@@ -4522,8 +4555,8 @@ body.modal-abierto {
   color: var(--accent-2);
 }
 .cr-fila--total {
-  margin: var(--space-3) 0 0;
-  padding-top: var(--space-3);
+  margin: var(--space-2) 0 0;
+  padding-top: var(--space-2);
   border-top: 1px solid var(--line-soft);
   font-family: var(--font);
   font-size: 0.95rem;
@@ -4537,23 +4570,6 @@ body.modal-abierto {
   letter-spacing: -0.03em;
 }
 
-/* Cu\u00e1nto se lleva ahorrado: el argumento m\u00e1s fuerte justo antes de enviar. */
-.carrito-ahorro {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: var(--space-3);
-  padding: 9px var(--space-3);
-  border: 1px solid var(--accent-line);
-  border-radius: var(--r2);
-  background: var(--accent-bg);
-  color: var(--accent-2);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-.carrito-ahorro[hidden] { display: none; }
-.carrito-ahorro svg { width: 15px; height: 15px; flex-shrink: 0; }
 .carrito-total-valor.sin-precios {
   font-size: 0.825rem;
   color: var(--t3);
@@ -4568,15 +4584,6 @@ body.modal-abierto {
 /* Solo separa cuando efectivamente hay un aviso que mostrar. */
 .carrito-nota:not(:empty) { margin-bottom: var(--space-3); }
 
-/* Aclaraci\u00f3n bajo el bot\u00f3n: qu\u00e9 pasa al tocarlo. */
-.carrito-pie {
-  margin-top: var(--space-3);
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  line-height: 1.45;
-  color: var(--t3);
-  text-align: center;
-}
 
 .whatsapp-btn {
   display: flex;
