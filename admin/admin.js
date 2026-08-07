@@ -72,7 +72,24 @@ function hoyISO() {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 }
 
-function fechaCorta(iso) {
+// Normaliza cualquier cosa que venga como fecha a "aaaa-mm-dd", que es lo
+// que esperan los <input type="date">. El Sheets debería mandar ya ese
+// formato, pero si una celda quedó guardada como fecha nativa puede volver
+// como "Sat Aug 08 2026 00:00:00 GMT-0300 (...)": sin esto, el panel partía
+// ese texto por los guiones y mostraba "undefined/0300/Sat Aug...".
+function fechaISO(v) {
+  if (!v) return '';
+  const txt = String(v).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(txt)) return txt;
+
+  const d = new Date(txt);
+  if (isNaN(d.getTime())) return '';
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
+}
+
+function fechaCorta(v) {
+  const iso = fechaISO(v);
   if (!iso) return '—';
   const [a, m, d] = iso.split('-');
   return `${d}/${m}/${a}`;
@@ -521,7 +538,7 @@ function pintarLista() {
   const lista = delCanal
     .filter(p => !fe || p.estado === fe)
     .filter(p => !q || `${p.cliente} ${p.id} ${p.estado}`.toLowerCase().includes(q))
-    .sort((a, b) => (b.fechaPedido || '').localeCompare(a.fechaPedido || '') || b.id - a.id);
+    .sort((a, b) => fechaISO(b.fechaPedido).localeCompare(fechaISO(a.fechaPedido)) || b.id - a.id);
 
   pintarKpis(delCanal);
 
@@ -836,8 +853,8 @@ function abrirEditor(esNuevo) {
             : `Pedido #${edicion.id} · ${edicion.canal.toUpperCase()}`;
 
   const v = (id, val) => { document.getElementById(id).value = val ?? ''; };
-  v('fPedido', edicion.fechaPedido);
-  v('fEntrega', edicion.fechaEntrega);
+  v('fPedido', fechaISO(edicion.fechaPedido));
+  v('fEntrega', fechaISO(edicion.fechaEntrega));
   v('fEstadoPedido', edicion.estado);
   llenarSelectorClientes(edicion.clienteId);
   v('fTel', edicion.telefono);
@@ -860,8 +877,8 @@ function leerCampos() {
   const g = id => document.getElementById(id).value;
   const cli = CLIENTES.find(c => c.id === Number(g('fClienteSel')));
   Object.assign(edicion, {
-    fechaPedido:  g('fPedido'),
-    fechaEntrega: g('fEntrega'),
+    fechaPedido:  fechaISO(g('fPedido')),
+    fechaEntrega: fechaISO(g('fEntrega')),
     estado:       g('fEstadoPedido'),
     clienteId:    Number(g('fClienteSel')) || null,
     // Los datos del cliente se copian al pedido: si mañana se corrige la
