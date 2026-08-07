@@ -166,8 +166,13 @@ function calcularLinea(l) {
     ganancia:  total - costoTot,
     tieneDto:  unit < l.lista,
     // De dónde viene la rebaja, para poder mostrarlo por separado.
-    porPromo:    !!l.pct && (l.promo < l.lista || (llegaAlMinimo && l.promoCant < l.porCant)),
-    porCantidad: llegaAlMinimo && l.porCant > 0
+    // No se mira `l.pct`: esa es la etiqueta ("10%") y puede faltar en un
+    // pedido guardado antes de que existiera la columna. Lo que define que
+    // hubo promo es que el precio con promo sea menor al de lista.
+    porPromo:    llegaAlMinimo
+      ? (l.promoCant > 0 && l.porCant > 0 && l.promoCant < l.porCant)
+      : (l.promo > 0 && l.promo < l.lista),
+    porCantidad: llegaAlMinimo && l.porCant > 0 && l.porCant < l.lista
   };
 }
 
