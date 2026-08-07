@@ -123,24 +123,33 @@ function lineaDesdeCatalogo(prod, cantidad) {
     id:       prod.id,
     nombre:   prod.n,
     cant:     cantidad || 1,
-    // Precios congelados
-    lista:    num(prod.pv),
-    promo:    num(prod.pp) || num(prod.pv),
-    cantMin:  parseInt(prod.ud, 10) || 0,
-    porCant:  num(prod.pd),
-    costo:    num(prod.co)
+    // Precios congelados. Se guardan los cuatro para poder recalcular el
+    // pedido si cambia la cantidad, con los valores del día en que se cargó.
+    lista:      num(prod.pv),                     // unitario sin promo
+    promo:      num(prod.pp) || num(prod.pv),     // unitario con promo
+    cantMin:    parseInt(prod.ud, 10) || 0,       // desde cuántas unidades
+    porCant:    num(prod.pd),                     // por cantidad sin promo
+    promoCant:  num(prod.ppd) || num(prod.pd),    // por cantidad con promo
+    pct:        (prod.pct || '').trim(),          // "10%", para mostrar
+    costo:      num(prod.co)
   };
 }
 
 // Precio que efectivamente se cobra por unidad, según la cantidad.
 // Usa solo los valores congelados de la línea.
+// Precio que se cobra por unidad. Los dos descuentos se combinan: la promo
+// temporal ya viene trasladada al precio por cantidad desde el Sheets, así
+// que comprar más siempre conviene.
 function precioUnitario(l) {
-  const base = l.promo || l.lista;
-  if (l.cantMin > 0 && l.cant >= l.cantMin && l.porCant > 0) {
-    // Si hay una promo más agresiva que el precio por cantidad, gana la promo.
-    return Math.min(l.porCant, base);
+  const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin;
+
+  if (llegaAlMinimo) {
+    // promoCant es el precio por cantidad con la promo ya aplicada; si el
+    // producto no tiene promo, el generador copió ahí el precio normal.
+    const porCant = l.promoCant || l.porCant;
+    if (porCant > 0) return porCant;
   }
-  return base;
+  return l.promo || l.lista;
 }
 
 function calcularLinea(l) {
@@ -148,16 +157,23 @@ function calcularLinea(l) {
   const subtotal = l.cant * l.lista;   // siempre a precio de lista
   const total    = l.cant * unit;
   const costoTot = l.cant * l.costo;
+
+  const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin;
+
   return {
     unit, subtotal, total, costoTot,
     descuento: subtotal - total,
     ganancia:  total - costoTot,
-    tieneDto:  unit < l.lista
+    tieneDto:  unit < l.lista,
+    // De dónde viene la rebaja, para poder mostrarlo por separado.
+    porPromo:    !!l.pct && (l.promo < l.lista || (llegaAlMinimo && l.promoCant < l.porCant)),
+    porCantidad: llegaAlMinimo && l.porCant > 0
   };
 }
 
 function calcularPedido(p) {
   let subtotal = 0, total = 0, costo = 0, unidades = 0;
+  let dtoPromo = 0, dtoCantidad = 0;
 
   (p.items || []).forEach(l => {
     const c = calcularLinea(l);
@@ -165,6 +181,14 @@ function calcularPedido(p) {
     total    += c.total;
     costo    += c.costoTot;
     unidades += l.cant || 0;
+
+    // Se separan las dos rebajas para poder mostrarlas por su nombre.
+    // Primero se descuenta lo que baja por cantidad (sobre precio de lista) y
+    // después la promo sobre lo que quedaba: así los dos números suman exacto.
+    const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin && l.porCant > 0;
+    const base = llegaAlMinimo ? l.porCant : l.lista;
+    dtoCantidad += (l.lista - base) * l.cant;
+    dtoPromo    += (base - c.unit) * l.cant;
   });
 
   const extras = Number(p.extras) || 0;
@@ -173,6 +197,8 @@ function calcularPedido(p) {
   return {
     subtotal,
     descuento: subtotal - total,
+    dtoPromo,
+    dtoCantidad,
     extras,
     total: totalFinal,
     costo,
@@ -923,8 +949,9 @@ function buscarProducto() {
   cont.innerHTML = sugerencias.map((p, i) => `
     <div class="sug-item" onclick="agregarProducto('${p.id}')" onmouseenter="sugSel=${i};marcarSugerencia()">
       <span class="sug-nombre">${esc(p.n)}</span>
-      ${parseInt(p.ud, 10) > 0 ? `<span class="sug-dto">${p.ud}+ → ${esc(p.pd)}</span>` : ''}
-      <span class="sug-precio">${esc(p.pv)}</span>
+      ${parseInt(p.ud, 10) > 0 ? `<span class="sug-dto">${p.ud}+ → ${esc(p.ppd || p.pd)}</span>` : ''}
+      ${p.pct ? `<span class="sug-promo">${esc(p.pct)}</span>` : ''}
+      <span class="sug-precio">${esc(p.pp || p.pv)}</span>
     </div>`).join('');
 }
 
@@ -983,14 +1010,18 @@ function pintarItems() {
     return `<tr>
       <td>
         <div class="item-nombre">${esc(l.nombre)}</div>
-        <div class="item-meta">Costo ${money(l.costo)}${l.cantMin ? ` · desde ${l.cantMin} un. ${money(l.porCant)}` : ''}</div>
+        <div class="item-meta">Costo ${money(l.costo)}${l.cantMin ? ` · desde ${l.cantMin} un. ${money(l.promoCant || l.porCant)}` : ''}</div>
       </td>
       <td class="num">
         <input type="number" min="1" value="${l.cant}"
                oninput="cambiarCantidad(${i}, this.value)"
                onfocus="this.select()">
       </td>
-      <td class="num">${money(c.unit)}${c.tieneDto ? '<span class="chip-dto">dto</span>' : ''}</td>
+      <td class="num">
+        ${money(c.unit)}
+        ${c.porPromo ? `<span class="chip-dto chip-dto--promo">${esc(l.pct || 'promo')}</span>` : ''}
+        ${c.porCantidad ? '<span class="chip-dto">x cant.</span>' : ''}
+      </td>
       <td class="num">${money(c.subtotal)}</td>
       <td class="num">${c.descuento ? '−' + money(c.descuento) : '—'}</td>
       <td class="num"><b>${money(c.total)}</b></td>
@@ -1012,7 +1043,14 @@ function recalcular() {
   const t = calcularPedido(edicion);
 
   document.getElementById('rSub').textContent = money(t.subtotal);
-  document.getElementById('rDto').textContent = t.descuento ? '−' + money(t.descuento) : '$0';
+
+  const filaPromo = document.getElementById('rPromoFila');
+  filaPromo.hidden = !t.dtoPromo;
+  document.getElementById('rPromo').textContent = '−' + money(t.dtoPromo);
+
+  const filaCant = document.getElementById('rDtoFila');
+  filaCant.hidden = !t.dtoCantidad;
+  document.getElementById('rDto').textContent = '−' + money(t.dtoCantidad);
   document.getElementById('rTot').textContent = money(t.total);
   document.getElementById('rCos').textContent = money(t.costo);
   document.getElementById('rGan').textContent = money(t.ganancia);

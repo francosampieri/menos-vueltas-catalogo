@@ -49,27 +49,50 @@ jobs:
 
           def leer_precios(url):
               """
-              La hoja Precios tiene DOS tablas lado a lado en el mismo CSV:
-              columnas 0-11  → Precios B2C (12 columnas, incluye Strat)
-              columna  12    → separador vacío
-              columnas 13-24 → Precios B2B (12 columnas, incluye Strat)
-              No se puede usar DictReader directo porque los headers se repiten.
+              La hoja Precios tiene DOS tablas lado a lado en el mismo CSV,
+              separadas por una columna vacía. No se puede usar DictReader
+              directo porque los encabezados se repiten en ambas mitades.
+
+              El corte se detecta buscando la columna separadora (encabezado
+              vacío) en vez de asumir posiciones fijas. Antes estaba
+              hardcodeado 0-11 / 13-24: al agregar una columna a la tabla B2C
+              se corrían todos los índices y los precios mayoristas salían
+              mal EN SILENCIO, sin que fallara el build. Así se pueden sumar,
+              sacar o reordenar columnas en cualquiera de las dos tablas.
               """
               content = leer_texto(url)
               filas = list(csv.reader(io.StringIO(content)))
               header = filas[0]
-              cols_b2c = header[0:12]
-              cols_b2b = header[13:25]
+
+              # Primera columna con encabezado vacío = separador entre tablas.
+              sep = next((i for i, c in enumerate(header) if not c.strip()), None)
+              if sep is None:
+                  raise SystemExit(
+                      "ERROR: no se encontró la columna separadora en la hoja Precios. "
+                      "Tiene que haber UNA columna vacía entre la tabla B2C y la B2B."
+                  )
+
+              cols_b2c = header[:sep]
+              # Se recorta en el primer encabezado vacío que aparezca después
+              # del separador, por si el CSV trae columnas de relleno al final.
+              resto = header[sep + 1:]
+              fin_b2b = next((i for i, c in enumerate(resto) if not c.strip()), len(resto))
+              cols_b2b = resto[:fin_b2b]
+
+              ini_b2b = sep + 1
+              print(f"Precios: B2C {len(cols_b2c)} cols {cols_b2c[:3]}... | "
+                    f"separador en {sep} | B2B {len(cols_b2b)} cols")
 
               precios_b2c, precios_b2b = [], []
               for fila in filas[1:]:
-                  if len(fila) < 25:
-                      continue
-                  izq = fila[0:12]
-                  der = fila[13:25]
-                  if izq[0]:  # tiene Id
+                  # Se completa la fila si el CSV la recortó por celdas vacías
+                  # al final, así zip() no descarta columnas.
+                  fila = fila + [''] * (len(header) - len(fila))
+                  izq = fila[:sep]
+                  der = fila[ini_b2b:ini_b2b + len(cols_b2b)]
+                  if izq and izq[0].strip():
                       precios_b2c.append(normalizar_id(dict(zip(cols_b2c, izq))))
-                  if der[0]:
+                  if der and der[0].strip():
                       precios_b2b.append(normalizar_id(dict(zip(cols_b2b, der))))
               return precios_b2c, precios_b2b
 
@@ -88,6 +111,76 @@ jobs:
           os.makedirs("shared", exist_ok=True)
           with open("shared/catalogo.json", "w", encoding="utf-8") as f:
               json.dump(resultado, f, ensure_ascii=False, indent=2)
+
+          # ── Catálogo reducido para el panel de pedidos ──
+          # El catalogo.json completo pesa ~900 KB porque trae tags, imágenes
+          # y campos que el panel no usa. Acá se arma una versión con lo justo
+          # para buscar y calcular (~100 KB), así el buscador es instantáneo.
+          grupos_x_id = {str(g.get("Id_Grupo")): g for g in grupos}
+          prod_x_id = {}
+          for r in productos:
+              pid = str(r.get("Id") or "")
+              if pid and pid not in prod_x_id:
+                  prod_x_id[pid] = r
+
+          # ── Precios ──
+          # Las dos tablas de la hoja tienen ahora las mismas columnas:
+          #   Precio_Venta            precio de lista, una unidad
+          #   Uni Dto                 desde cuántas unidades aplica el descuento
+          #   Precio_Mayorista        precio unitario al comprar esa cantidad
+          #   promo                   % de descuento temporal, vacío = sin promo
+          #   Precio_Promo            Precio_Venta con la promo, redondeado a 50
+          #   Precio_Promo_Mayorista  Precio_Mayorista con la promo
+          #
+          # La promo se traslada a los DOS precios a propósito: si solo bajara
+          # el unitario, en varios productos saldría más barato comprar de a
+          # una que por cantidad.
+          def limpio(fila, clave):
+              return (fila.get(clave) or "").strip()
+
+          def catalogo_panel(precios, col_activo):
+              filas = []
+              for pr in precios:
+                  pid = str(pr.get("Id") or "")
+                  base = prod_x_id.get(pid)
+                  if not base:
+                      continue
+                  if base.get("Activo") != "ON" or base.get(col_activo) != "ON":
+                      continue
+                  g = grupos_x_id.get(str(base.get("Id_Grupo")), {})
+
+                  lista     = limpio(pr, "Precio_Venta")
+                  por_cant  = limpio(pr, "Precio_Mayorista")
+                  # Si no hay promo cargada, el precio con promo es el de lista:
+                  # así el resto del sistema no necesita preguntar si hay campaña.
+                  promo     = limpio(pr, "Precio_Promo") or lista
+                  promo_cant = limpio(pr, "Precio_Promo_Mayorista") or por_cant
+
+                  filas.append({
+                      "id": pid,
+                      "n":  (pr.get("Producto") or "").strip(),
+                      "m":  (base.get("Marca") or "").strip(),
+                      "c":  (g.get("Categoria") or base.get("Categoria") or "").strip(),
+                      "co": limpio(pr, "Precio_Costo"),
+                      "pv": lista,
+                      "pp": promo,
+                      "ud": limpio(pr, "Uni Dto"),
+                      "pd": por_cant,
+                      "ppd": promo_cant,
+                      # Porcentaje tal como está en la hoja ("10%"): sirve para
+                      # mostrar la etiqueta sin recalcularlo.
+                      "pct": limpio(pr, "promo"),
+                  })
+              return sorted(filas, key=lambda x: x["n"])
+
+          panel = {
+              "b2c": catalogo_panel(precios_b2c, "Cat B2C"),
+              "b2b": catalogo_panel(precios_b2b, "Cat B2B"),
+          }
+          os.makedirs("admin", exist_ok=True)
+          with open("admin/productos.json", "w", encoding="utf-8") as f:
+              json.dump(panel, f, ensure_ascii=False, separators=(",", ":"))
+          print(f"Panel: {len(panel['b2c'])} productos B2C, {len(panel['b2b'])} B2B")
 
           # Chequeo de integridad: si el cruce productos ↔ precios se rompe,
           # el build tiene que fallar en vez de publicar un catálogo sin precios.
@@ -109,6 +202,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add shared/catalogo.json
+          git add shared/catalogo.json admin/productos.json
           git diff --cached --quiet && echo "Sin cambios" || git commit -m "chore: actualizar catálogo $(date -u '+%Y-%m-%d %H:%M UTC')"
           git push

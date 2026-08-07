@@ -46,69 +46,80 @@ function formatPrecio(n) {
 
 
 // ══ PROMO VIGENTE ══
-// Punto único de verdad del descuento: card, modal, carrito y mensaje de
-// WhatsApp pasan todos por acá. Para terminar la promo alcanza con poner
-// ACTIVA en false (o dejar pasar la fecha de FIN).
+// El descuento ya NO se calcula acá: viene resuelto desde el Sheets, en las
+// columnas Precio_Promo y Precio_Promo_Mayorista. Cada producto puede tener
+// su propio porcentaje (o ninguno), y el redondeo a múltiplos de 50 lo hace
+// la planilla. Este bloque solo aporta los textos de la campaña.
+//
+// Para terminar la promo alcanza con vaciar la columna "promo" del Sheets:
+// el generador copia el precio de lista en Precio_Promo y todo vuelve solo.
 const PROMO = {
-  ACTIVA: true,
-  PORCENTAJE: 10,
-  ETIQUETA: '10% OFF',
   NOMBRE: 'Promo Agosto',
   FIN: '2026-08-31T23:59:59-03:00'
 };
 
 function promoVigente() {
-  if (!PROMO.ACTIVA) return false;
   const fin = new Date(PROMO.FIN).getTime();
   return isNaN(fin) ? true : Date.now() < fin;
 }
 
-// En Menos Vueltas los precios son siempre múltiplos de 50: después de
-// aplicar el porcentaje hay que volver a la grilla, si no aparecen precios
-// como $20.205 que nadie cobra así.
-function redondear50(n) {
-  return Math.round(n / 50) * 50;
+// Precio de lista y precio con promo de una variante. Si la columna de promo
+// está vacía, el generador ya copió el de lista, así que ambos coinciden.
+function preciosDe(v) {
+  const lista = parsePrecio(v['Precio_Venta']);
+  const promo = promoVigente() ? (parsePrecio(v['Precio_Promo']) ?? lista) : lista;
+  return { lista, promo };
 }
 
-// Precio final que paga el cliente. Si no hay promo devuelve el original,
-// así el resto del código puede llamarla siempre sin preguntar.
-function precioConPromo(n) {
-  if (n === null || n === undefined) return n;
-  if (!promoVigente()) return n;
-  return redondear50(n * (100 - PROMO.PORCENTAJE) / 100);
+// Precio por cantidad, con la promo ya aplicada cuando corresponde. Se
+// traslada a propósito: si solo bajara el unitario, en varios productos
+// saldría más barato comprar de a una que por cantidad.
+function preciosCantidadDe(v) {
+  const lista = parsePrecio(v['Precio_Mayorista']);
+  const promo = promoVigente() ? (parsePrecio(v['Precio_Promo_Mayorista']) ?? lista) : lista;
+  return { lista, promo };
 }
 
-// true solo si el descuento efectivamente baja el precio: en importes muy
-// chicos el redondeo a 50 puede dejarlo igual, y ahí mostrar un tachado
-// con los dos números iguales quedaría mal.
-function hayAhorro(n) {
-  const conPromo = precioConPromo(n);
-  return conPromo !== null && n !== null && conPromo < n;
+// Etiqueta del descuento tal como está cargada en la hoja ("10%"). Vacía si
+// el producto no tiene promo.
+function etiquetaPromo(v) {
+  if (!promoVigente()) return '';
+  const pct = (v['promo'] || '').trim();
+  return pct ? pct.replace(/\s+/g, '') + ' OFF' : '';
 }
 
-// Precio de card: el original tachado y chico, al lado el de promo.
-function htmlPrecioCard(n) {
-  if (n === null || n === undefined) return '';
-  if (!hayAhorro(n)) return formatPrecio(n);
-  return `<span class="precio-viejo">${formatPrecio(n)}</span>` +
-         `<span class="precio-promo">${formatPrecio(precioConPromo(n))}</span>`;
+// true si el producto tiene una promo que realmente baja el precio.
+function tienePromo(v) {
+  const p = preciosDe(v);
+  return p.lista !== null && p.promo !== null && p.promo < p.lista;
 }
 
-// Precio de modal: igual que el de card pero con la etiqueta de la promo,
-// que acá sí entra sin apretar nada.
-function htmlPrecioModal(n) {
-  if (n === null || n === undefined) return '';
-  if (!hayAhorro(n)) return formatPrecio(n);
-  return `<span class="precio-viejo">${formatPrecio(n)}</span>` +
-         `<span class="precio-promo">${formatPrecio(precioConPromo(n))}</span>` +
-         `<span class="promo-badge promo-badge--inline">${PROMO.ETIQUETA}</span>`;
+// Precio de card: el de lista tachado y al lado el de promo.
+function htmlPrecioCard(v) {
+  const p = preciosDe(v);
+  if (p.lista === null) return '';
+  if (!(p.promo < p.lista)) return formatPrecio(p.lista);
+  return `<span class="precio-viejo">${formatPrecio(p.lista)}</span>` +
+         `<span class="precio-promo">${formatPrecio(p.promo)}</span>`;
+}
+
+// Precio de modal: igual que el de card más la etiqueta del descuento, que
+// acá sí entra sin apretar nada.
+function htmlPrecioModal(v) {
+  const p = preciosDe(v);
+  if (p.lista === null) return '';
+  if (!(p.promo < p.lista)) return formatPrecio(p.lista);
+  const et = etiquetaPromo(v);
+  return `<span class="precio-viejo">${formatPrecio(p.lista)}</span>` +
+         `<span class="precio-promo">${formatPrecio(p.promo)}</span>` +
+         (et ? `<span class="promo-badge promo-badge--inline">${et}</span>` : '');
 }
 
 // Cinta de la esquina superior izquierda de la card.
-function badgePromo() {
+function badgePromo(etiqueta) {
   const b = document.createElement('span');
   b.className = 'promo-badge';
-  b.textContent = PROMO.ETIQUETA;
+  b.textContent = etiqueta;
   return b;
 }
 
@@ -174,10 +185,16 @@ async function cargarDatos() {
     productos.forEach(p => {
       const precio = preciosPorId[p['Id']];
       if (!precio) sinPrecio++;
-      p['Precio_Venta'] = precio ? precio['Precio_Venta'] : '';
-      p['Uni Dto']      = precio ? precio['Uni Dto']      : '';
-      p['Dto']          = precio ? precio['Dto']          : '';
-      p['Precio_Dto']   = precio ? precio['Precio_Dto']   : '';
+      // Precio de lista y precio por cantidad, más sus versiones con la promo
+      // ya resuelta desde el Sheets. Si un producto no tiene promo cargada,
+      // la planilla deja esas columnas vacías y el código usa el de lista.
+      p['Precio_Venta']            = precio ? precio['Precio_Venta']            : '';
+      p['Uni Dto']                 = precio ? precio['Uni Dto']                 : '';
+      p['Dto']                     = precio ? precio['Dto']                     : '';
+      p['Precio_Mayorista']        = precio ? precio['Precio_Mayorista']        : '';
+      p['promo']                   = precio ? precio['promo']                   : '';
+      p['Precio_Promo']            = precio ? precio['Precio_Promo']            : '';
+      p['Precio_Promo_Mayorista']  = precio ? precio['Precio_Promo_Mayorista']  : '';
     });
 
     // Si prácticamente ningún producto encontró precio, casi seguro cambió
@@ -729,7 +746,7 @@ function crearCardDestacada(gid, vars) {
   const v = vars[0];
 
   const precio    = parsePrecio(v['Precio_Venta']);
-  const precioDto = parsePrecio(v['Precio_Dto']);
+  const precioDto = preciosCantidadDe(v).promo;
   const uniDto    = parseInt(v['Uni Dto']) || 0;
   const hayDto    = uniDto > 0 && precioDto !== null;
 
@@ -774,7 +791,7 @@ function crearCardDestacada(gid, vars) {
   const vprecioEl = document.createElement('div');
   if (precio !== null) {
     vprecioEl.className = 'card-precio';
-    vprecioEl.innerHTML = htmlPrecioCard(precio);
+    vprecioEl.innerHTML = htmlPrecioCard(v);
   } else {
     vprecioEl.textContent = 'Precio a confirmar';
     vprecioEl.className = 'card-precio sin-precio';
@@ -787,11 +804,12 @@ function crearCardDestacada(gid, vars) {
     vprecioDtoEl.className = 'card-precio-dto';
     // El precio por cantidad ya viene con la promo aplicada: mostrar también
     // su valor anterior sería demasiada información para una card.
-    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioConPromo(precioDto))}</strong> ${uniDto} o más`;
+    vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)}</strong> ${uniDto} o más`;
     body.appendChild(vprecioDtoEl);
   }
 
-  if (precio !== null && hayAhorro(precio)) card.appendChild(badgePromo());
+  const etDest = etiquetaPromo(v);
+  if (etDest && tienePromo(v)) card.appendChild(badgePromo(etDest));
 
   card.append(imgWrap, body);
   return card;
@@ -869,8 +887,8 @@ function crearCard(gid, vars) {
   // Cinta de promo. Se decide con la primera variante: al rotar entre
   // variantes el precio cambia, pero el porcentaje de descuento es el mismo
   // para todas, así que la cinta no necesita actualizarse.
-  const precioBase = parsePrecio(vars[0]['Precio_Venta']);
-  if (precioBase !== null && hayAhorro(precioBase)) card.appendChild(badgePromo());
+  const etCard = etiquetaPromo(vars[0]);
+  if (etCard && tienePromo(vars[0])) card.appendChild(badgePromo(etCard));
 
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
@@ -894,7 +912,7 @@ function crearCard(gid, vars) {
 function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, animar = true, dotsEl = null) {
   const v = vars[idx];
   const precio    = parsePrecio(v['Precio_Venta']);
-  const precioDto = parsePrecio(v['Precio_Dto']);
+  const precioDto = preciosCantidadDe(v).promo;
   const uniDto    = parseInt(v['Uni Dto']) || 0;
   const hayDto    = uniDto > 0 && precioDto !== null;
 
@@ -914,7 +932,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
         // card alcanza con el tachado.
         const enModal = vprecioEl.classList.contains('pm-precio') ||
                         base.indexOf('pm-precio') !== -1;
-        vprecioEl.innerHTML = enModal ? htmlPrecioModal(precio) : htmlPrecioCard(precio);
+        vprecioEl.innerHTML = enModal ? htmlPrecioModal(v) : htmlPrecioCard(v);
         vprecioEl.className = base;
       } else {
         vprecioEl.textContent = 'Precio a confirmar';
@@ -927,7 +945,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
     // dos tachados en el mismo bloque.
     if (vprecioDtoEl) {
       if (hayDto) {
-        vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioConPromo(precioDto))} c/u</strong> ${uniDto} o más`;
+        vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)} c/u</strong> ${uniDto} o más`;
         vprecioDtoEl.style.display = 'block';
       } else {
         vprecioDtoEl.style.display = 'none';
@@ -1334,7 +1352,7 @@ function renderDetalleProducto(gid, vars, refs) {
     // Precio
     const varSel = getVarianteSeleccionada();
     const precio    = varSel ? parsePrecio(varSel['Precio_Venta']) : null;
-    const precioDto = varSel ? parsePrecio(varSel['Precio_Dto'])   : null;
+    const precioDto = varSel ? preciosCantidadDe(varSel).promo     : null;
     const uniDto    = varSel ? (parseInt(varSel['Uni Dto']) || 0)  : 0;
 
     // Sincronizar la parte de arriba de la card (label, precio e imagen) con
@@ -1359,7 +1377,7 @@ function renderDetalleProducto(gid, vars, refs) {
     if (uniDto > 0 && precioDto !== null) {
       const dtoDiv = document.createElement('div');
       dtoDiv.className = 'descuento-bloque';
-      dtoDiv.innerHTML = `<div class="descuento-info"><span class="dto-cantidad">Comprando ${uniDto} o más</span><strong>${formatPrecio(precioConPromo(precioDto))} c/u</strong></div>`;
+      dtoDiv.innerHTML = `<div class="descuento-info"><span class="dto-cantidad">Comprando ${uniDto} o más</span><strong>${formatPrecio(precioDto)} c/u</strong></div>`;
       expanded.appendChild(dtoDiv);
     }
 
@@ -1561,10 +1579,12 @@ function agregarAlCarrito(gid, variante, qty) {
   // precio y precioDto son ya los que paga el cliente. Así los subtotales, el
   // total y el mensaje de WhatsApp usan el precio real sin tener que acordarse
   // de aplicar el descuento en cada lugar.
-  const precioLista    = parsePrecio(variante['Precio_Venta']);
-  const precioDtoLista = parsePrecio(variante['Precio_Dto']);
-  const precio    = precioConPromo(precioLista);
-  const precioDto = precioConPromo(precioDtoLista);
+  const pu = preciosDe(variante);
+  const pc = preciosCantidadDe(variante);
+  const precioLista    = pu.lista;
+  const precioDtoLista = pc.lista;
+  const precio    = pu.promo;
+  const precioDto = pc.promo;
   const uniDto    = parseInt(variante['Uni Dto']) || 0;
   const idProd    = variante['Id'];
   const imagen    = variante['Imagen']?.trim() || '';
@@ -1694,7 +1714,7 @@ function actualizarUICarrito(rerenderItems = true) {
   escribir('crSubtotal', hayPrecio ? formatPrecio(bruto) : '—');
   mostrar('crSubtotalFila', hayPrecio);
 
-  escribir('crPromoLabel', `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%)`);
+  escribir('crPromoLabel', PROMO.NOMBRE);
   escribir('crPromo', '−' + formatPrecio(dtoPromo));
   mostrar('crPromoFila', hayPrecio && promoVigente() && dtoPromo > 0);
 
@@ -1838,7 +1858,7 @@ function construirMensajePedido() {
 
     msg += `Subtotal: ${formatPrecio(bruto)}\n`;
     if (promoVigente() && dtoPromo > 0) {
-      msg += `${PROMO.NOMBRE} (${PROMO.PORCENTAJE}%): -${formatPrecio(dtoPromo)}\n`;
+      msg += `${PROMO.NOMBRE}: -${formatPrecio(dtoPromo)}\n`;
     }
     if (dtoCantidad > 0) {
       msg += `Descuentos por cantidad: -${formatPrecio(dtoCantidad)}\n`;

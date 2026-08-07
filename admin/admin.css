@@ -508,14 +508,29 @@ input[type="date"], input[type="number"] {
   text-align: center;
   font-weight: 600;
 }
+/* Las dos rebajas se distinguen: la promo temporal en ámbar (se termina) y
+   el descuento por cantidad en verde (siempre está). */
 .chip-dto {
-  margin-left: 5px;
+  display: inline-block;
+  margin-left: 4px;
   padding: 1px 6px;
   background: var(--accent-bg);
   border-radius: var(--rf);
-  font-size: .6rem;
+  font-size: .58rem;
   font-weight: 700;
   color: var(--accent-2);
+  white-space: nowrap;
+}
+.chip-dto--promo { background: var(--ambar-bg); color: var(--ambar); }
+
+.sug-promo {
+  padding: 1px 6px;
+  border-radius: var(--rf);
+  background: var(--ambar-bg);
+  color: var(--ambar);
+  font-size: .62rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 .quitar {
   width: 28px;
