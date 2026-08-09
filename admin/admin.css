@@ -390,6 +390,16 @@ button { cursor: pointer; background: none; border: none; }
   gap: var(--s3);
 }
 .campo--full { grid-column: 1 / -1; }
+
+/* En el editor de pedidos la grilla es de 4 columnas fijas, no auto-fit: los
+   campos están agrupados por quién los completa (arriba vos, abajo el cliente)
+   y con auto-fit el corte de fila cambiaba según el ancho, mezclando los dos
+   grupos. */
+.campos--pedido { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* Empuja el campo al principio de una fila nueva, dejando vacío lo que sobre
+   de la anterior. Así el bloque del cliente arranca siempre alineado. */
+.campos--pedido .campo--fila-nueva { grid-column: 1 / span 2; }
 .campo--sep { margin: var(--s3) 0; }
 
 label {
@@ -509,10 +519,22 @@ input[type="date"], input[type="number"] {
   font-weight: 600;
 }
 /* Las dos rebajas se distinguen: la promo temporal en ámbar (se termina) y
-   el descuento por cantidad en verde (siempre está). */
+   el descuento por cantidad en verde (siempre está).
+
+   Viven en su propia columna ("Motivo"), no pegados al precio: ahí empujaban
+   la cifra y desalineaban toda la columna cuando había uno o dos descuentos.
+   Se apilan en vertical porque un producto puede tener los dos a la vez y
+   en línea se comían el ancho de la tabla. */
+.motivos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.motivo-vacio { color: var(--t3); }
+
 .chip-dto {
   display: inline-block;
-  margin-left: 4px;
   padding: 1px 6px;
   background: var(--accent-bg);
   border-radius: var(--rf);
@@ -943,6 +965,18 @@ input[type="date"], input[type="number"] {
 @media (max-width: 1080px) {
   .ed-grid { grid-template-columns: 1fr; }
   .ed-resumen { position: static; }
+}
+
+/* Con menos ancho, cuatro columnas dejan los campos ilegibles. Pasa a dos y
+   el agrupado se mantiene igual: dos filas para lo que cargás vos y dos para
+   los datos del cliente. */
+@media (max-width: 900px) {
+  .campos--pedido { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .campos--pedido .campo--fila-nueva { grid-column: 1 / -1; }
+}
+
+@media (max-width: 480px) {
+  .campos--pedido { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 720px) {

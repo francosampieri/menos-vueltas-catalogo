@@ -141,7 +141,7 @@
 
         <div class="panel">
           <h2 class="panel-tit">Datos del pedido</h2>
-          <div class="campos">
+          <div class="campos campos--pedido">
             <div class="campo">
               <label for="fPedido">Fecha del pedido</label>
               <input type="date" id="fPedido">
@@ -159,6 +159,18 @@
               </select>
             </div>
             <div class="campo">
+              <label for="fMedioPago">Medio de pago</label>
+              <select id="fMedioPago">
+                <option>Efectivo</option>
+                <option>Transferencia</option>
+                <option>Otro</option>
+              </select>
+            </div>
+
+            <!-- Desde acá arranca el bloque del cliente: elegís uno y el resto
+                 se autocompleta solo. Va en su propia fila (campo--fila-nueva)
+                 para que se lea de un vistazo qué se carga a mano y qué no. -->
+            <div class="campo campo--fila-nueva">
               <label for="fClienteSel">Cliente</label>
               <select id="fClienteSel" onchange="elegirCliente()">
                 <option value="">— Elegir cliente —</option>
@@ -167,14 +179,6 @@
             <div class="campo">
               <label for="fTel">Teléfono</label>
               <input id="fTel" placeholder="—" autocomplete="off" readonly>
-            </div>
-            <div class="campo">
-              <label for="fMedioPago">Medio de pago</label>
-              <select id="fMedioPago">
-                <option>Efectivo</option>
-                <option>Transferencia</option>
-                <option>Otro</option>
-              </select>
             </div>
             <div class="campo">
               <label for="fBarrio">Barrio</label>
@@ -223,6 +227,7 @@
                   <th class="num">Precio</th>
                   <th class="num">Subtotal</th>
                   <th class="num">Desc.</th>
+                  <th>Motivo</th>
                   <th class="num">Total</th>
                   <th class="num">Ganancia</th>
                   <th></th>
@@ -360,6 +365,5 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="admin.js"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
 </body>
 </html>

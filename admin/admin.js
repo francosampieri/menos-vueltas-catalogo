@@ -1022,13 +1022,15 @@ function pintarItems() {
                oninput="cambiarCantidad(${i}, this.value)"
                onfocus="this.select()">
       </td>
-      <td class="num">
-        ${money(c.unit)}
-        ${c.porPromo ? `<span class="chip-dto chip-dto--promo">${esc(l.pct || 'promo')}</span>` : ''}
-        ${c.porCantidad ? '<span class="chip-dto">x cant.</span>' : ''}
-      </td>
+      <td class="num">${money(c.unit)}</td>
       <td class="num">${money(c.subtotal)}</td>
       <td class="num">${c.descuento ? '−' + money(c.descuento) : '—'}</td>
+      <td>
+        ${c.porPromo || c.porCantidad ? `<div class="motivos">
+          ${c.porPromo ? `<span class="chip-dto chip-dto--promo">${esc(l.pct || 'promo')}</span>` : ''}
+          ${c.porCantidad ? '<span class="chip-dto">x cant.</span>' : ''}
+        </div>` : '<span class="motivo-vacio">—</span>'}
+      </td>
       <td class="num"><b>${money(c.total)}</b></td>
       <td class="num"><span class="ganancia${c.ganancia < 0 ? ' ganancia--neg' : ''}">${money(c.ganancia)}</span></td>
       <td>
