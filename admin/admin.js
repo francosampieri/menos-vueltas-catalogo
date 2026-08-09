@@ -152,27 +152,57 @@ function precioUnitario(l) {
   return l.promo || l.lista;
 }
 
+/* Las etiquetas de descuento las arma UNA sola función, que usan tanto el
+   buscador de productos como la tabla de items del pedido. Antes cada uno
+   armaba las suyas y se fueron separando: el buscador mostraba el porcentaje
+   y la tabla la palabra "promo", y ninguno de los dos mostraba las dos
+   rebajas a la vez cuando se editaba un pedido guardado.
+
+   `pct` es la etiqueta del Sheets ("10%"). Puede faltar en pedidos guardados
+   antes de que existiera esa columna, así que hay un texto de reserva. */
+function etiquetaPromo(pct) {
+  return (pct || '').trim() || 'Promo';
+}
+
+// Recibe cualquier objeto que tenga los precios congelados (una línea de
+// pedido) o un producto del catálogo ya normalizado, más si llega al mínimo.
+// Devuelve los chips en el mismo orden siempre: primero la promo, después
+// el descuento por cantidad.
+function chipsDescuento(l, llegaAlMinimo) {
+  const chips = [];
+  const hayPromo = llegaAlMinimo
+    ? (l.promoCant > 0 && l.porCant > 0 && l.promoCant < l.porCant)
+    : (l.promo > 0 && l.lista > 0 && l.promo < l.lista);
+
+  if (hayPromo) {
+    chips.push({ texto: etiquetaPromo(l.pct), clase: 'chip-dto--promo' });
+  }
+  if (llegaAlMinimo && l.porCant > 0 && l.porCant < l.lista) {
+    chips.push({ texto: 'x cant.', clase: '' });
+  }
+  return chips;
+}
+
+function chipsHTML(chips) {
+  if (!chips.length) return '<span class="motivo-vacio">—</span>';
+  return `<div class="motivos">${chips
+    .map(c => `<span class="chip-dto ${c.clase}">${esc(c.texto)}</span>`)
+    .join('')}</div>`;
+}
+
 function calcularLinea(l) {
   const unit     = precioUnitario(l);
   const subtotal = l.cant * l.lista;   // siempre a precio de lista
   const total    = l.cant * unit;
   const costoTot = l.cant * l.costo;
 
-  const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin;
-
   return {
     unit, subtotal, total, costoTot,
     descuento: subtotal - total,
     ganancia:  total - costoTot,
-    tieneDto:  unit < l.lista,
-    // De dónde viene la rebaja, para poder mostrarlo por separado.
-    // No se mira `l.pct`: esa es la etiqueta ("10%") y puede faltar en un
-    // pedido guardado antes de que existiera la columna. Lo que define que
-    // hubo promo es que el precio con promo sea menor al de lista.
-    porPromo:    llegaAlMinimo
-      ? (l.promoCant > 0 && l.porCant > 0 && l.promoCant < l.porCant)
-      : (l.promo > 0 && l.promo < l.lista),
-    porCantidad: llegaAlMinimo && l.porCant > 0 && l.porCant < l.lista
+    tieneDto:  unit < l.lista
+    // De dónde viene cada rebaja lo resuelve chipsDescuento(), que es la
+    // única función que decide qué etiquetas se muestran.
   };
 }
 
@@ -954,8 +984,8 @@ function buscarProducto() {
   cont.innerHTML = sugerencias.map((p, i) => `
     <div class="sug-item" onclick="agregarProducto('${p.id}')" onmouseenter="sugSel=${i};marcarSugerencia()">
       <span class="sug-nombre">${esc(p.n)}</span>
-      ${parseInt(p.ud, 10) > 0 ? `<span class="sug-dto">${p.ud}+ → ${esc(p.ppd || p.pd)}</span>` : ''}
-      ${p.pct ? `<span class="sug-promo">${esc(p.pct)}</span>` : ''}
+      ${parseInt(p.ud, 10) > 0 ? `<span class="sug-dto">${p.ud}+ → ${esc(p.pd)}</span>` : ''}
+      ${p.pct ? `<span class="sug-promo">${esc(etiquetaPromo(p.pct))}</span>` : ''}
       <span class="sug-precio">${esc(p.pp || p.pv)}</span>
     </div>`).join('');
 }
@@ -1015,7 +1045,7 @@ function pintarItems() {
     return `<tr>
       <td>
         <div class="item-nombre">${esc(l.nombre)}</div>
-        <div class="item-meta">Costo ${money(l.costo)}${l.cantMin ? ` · desde ${l.cantMin} un. ${money(l.promoCant || l.porCant)}` : ''}</div>
+        <div class="item-meta">Costo ${money(l.costo)}${l.cantMin ? ` · desde ${l.cantMin} un. ${money(l.porCant)}` : ''}</div>
       </td>
       <td class="num">
         <input type="number" min="1" value="${l.cant}"
@@ -1025,12 +1055,7 @@ function pintarItems() {
       <td class="num">${money(c.unit)}</td>
       <td class="num">${money(c.subtotal)}</td>
       <td class="num">${c.descuento ? '−' + money(c.descuento) : '—'}</td>
-      <td>
-        ${c.porPromo || c.porCantidad ? `<div class="motivos">
-          ${c.porPromo ? `<span class="chip-dto chip-dto--promo">${esc(l.pct || 'promo')}</span>` : ''}
-          ${c.porCantidad ? '<span class="chip-dto">x cant.</span>' : ''}
-        </div>` : '<span class="motivo-vacio">—</span>'}
-      </td>
+      <td>${chipsHTML(chipsDescuento(l, l.cantMin > 0 && l.cant >= l.cantMin))}</td>
       <td class="num"><b>${money(c.total)}</b></td>
       <td class="num"><span class="ganancia${c.ganancia < 0 ? ' ganancia--neg' : ''}">${money(c.ganancia)}</span></td>
       <td>
