@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /catalogo.json
+Sitemap: https://menosvueltas.com.ar/sitemap.xml
