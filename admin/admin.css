@@ -91,28 +91,29 @@ button { cursor: pointer; background: none; border: none; }
   color: var(--t1);
 }
 
-.ad-tabs, .ad-canal {
+/* Navegación entre secciones. Sin fondo: son dos lugares distintos del
+   panel, no dos filtros de la misma vista. */
+.ad-nav { display: flex; gap: 2px; }
+.ad-nav button {
+  padding: 7px 14px;
+  border-radius: var(--rf);
+  font-size: .86rem;
+  font-weight: 600;
+  color: var(--t3);
+  transition: background var(--t), color var(--t);
+}
+.ad-nav button:hover { color: var(--t1); }
+.ad-nav button.on { background: var(--surface-2); color: var(--t1); }
+
+.ad-canal {
   display: flex;
   gap: 2px;
   padding: 3px;
+  margin-left: auto;
   background: var(--surface-2);
   border-radius: var(--rf);
 }
-.ad-tabs { margin-left: var(--s4); }
-.ad-tabs button {
-  padding: 6px 15px;
-  border-radius: var(--rf);
-  font-size: .8rem;
-  font-weight: 600;
-  color: var(--t2);
-  transition: background var(--t), color var(--t), box-shadow var(--t);
-}
-.ad-tabs button.on {
-  background: var(--surface);
-  color: var(--t1);
-  box-shadow: var(--sombra-1);
-}
-.ad-canal { margin-left: auto; }
+.ad-canal[hidden] { display: none; }
 .ad-canal button {
   padding: 6px 16px;
   border-radius: var(--rf);
@@ -289,6 +290,11 @@ button { cursor: pointer; background: none; border: none; }
   vertical-align: middle;
 }
 .tabla tbody tr:last-child td { border-bottom: none; }
+/* La regla va con el mismo peso que ".tabla th", que también alinea a la
+   izquierda: sin esto los encabezados de las columnas numéricas quedaban
+   pegados a la izquierda y los valores a la derecha, descuadrados. */
+.tabla th.num,
+.tabla td.num,
 .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 /* Solo la tabla de pedidos es clickeable; la de items no. */
@@ -321,10 +327,13 @@ button { cursor: pointer; background: none; border: none; }
   border-radius: 50%;
   background: currentColor;
 }
-.estado--nuevo      { background: var(--azul-bg);   color: var(--azul); }
-.estado--preparando { background: var(--ambar-bg);  color: var(--ambar); }
-.estado--entregado  { background: var(--accent-bg); color: var(--accent-2); }
-.estado--cancelado  { background: var(--rojo-bg);   color: var(--rojo); }
+/* El estado avanza en un solo sentido: Nuevo → Entregado → Cobrado.
+   El color acompaña ese recorrido, de "falta hacer" a "listo". */
+.estado--nuevo     { background: var(--azul-bg);   color: var(--azul); }
+.estado--entregado { background: var(--ambar-bg);  color: var(--ambar); }
+.estado--cobrado   { background: var(--accent-bg); color: var(--accent-2); }
+
+.kpi-v--alerta { color: var(--ambar); }
 
 .ganancia { font-weight: 700; color: var(--accent-2); }
 .ganancia--neg { color: var(--rojo); }
@@ -381,6 +390,16 @@ button { cursor: pointer; background: none; border: none; }
   gap: var(--s3);
 }
 .campo--full { grid-column: 1 / -1; }
+
+/* En el editor de pedidos la grilla es de 4 columnas fijas, no auto-fit: los
+   campos están agrupados por quién los completa (arriba vos, abajo el cliente)
+   y con auto-fit el corte de fila cambiaba según el ancho, mezclando los dos
+   grupos. */
+.campos--pedido { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* Empuja el campo al principio de una fila nueva, dejando vacío lo que sobre
+   de la anterior. Así el bloque del cliente arranca siempre alineado. */
+.campos--pedido .campo--fila-nueva { grid-column: 1 / span 2; }
 .campo--sep { margin: var(--s3) 0; }
 
 label {
@@ -499,14 +518,41 @@ input[type="date"], input[type="number"] {
   text-align: center;
   font-weight: 600;
 }
+/* Las dos rebajas se distinguen: la promo temporal en ámbar (se termina) y
+   el descuento por cantidad en verde (siempre está).
+
+   Viven en su propia columna ("Motivo"), no pegados al precio: ahí empujaban
+   la cifra y desalineaban toda la columna cuando había uno o dos descuentos.
+   Se apilan en vertical porque un producto puede tener los dos a la vez y
+   en línea se comían el ancho de la tabla. */
+.motivos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.motivo-vacio { color: var(--t3); }
+
 .chip-dto {
-  margin-left: 5px;
+  display: inline-block;
   padding: 1px 6px;
   background: var(--accent-bg);
   border-radius: var(--rf);
-  font-size: .6rem;
+  font-size: .58rem;
   font-weight: 700;
   color: var(--accent-2);
+  white-space: nowrap;
+}
+.chip-dto--promo { background: var(--ambar-bg); color: var(--ambar); }
+
+.sug-promo {
+  padding: 1px 6px;
+  border-radius: var(--rf);
+  background: var(--ambar-bg);
+  color: var(--ambar);
+  font-size: .62rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 .quitar {
   width: 28px;
@@ -569,6 +615,326 @@ input[type="date"], input[type="number"] {
 
 
 /* ══════════════════════════════════════════════════════
+   LOGIN
+══════════════════════════════════════════════════════ */
+.login {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--s5);
+  background: var(--surface-3);
+}
+.login-caja {
+  width: 100%;
+  max-width: 330px;
+  padding: var(--s6) var(--s5);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r4);
+  box-shadow: var(--sombra-2);
+  text-align: center;
+}
+.login-logo { height: 30px; width: auto; margin: 0 auto var(--s5); display: block; }
+.login-caja h1 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  margin-bottom: 4px;
+}
+.login-caja p {
+  font-family: var(--font-body);
+  font-size: .83rem;
+  color: var(--t2);
+  margin-bottom: var(--s5);
+}
+.login-caja input {
+  width: 100%;
+  height: 42px;
+  margin-bottom: var(--s3);
+  padding: 0 var(--s4);
+  background: var(--bg);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r2);
+  text-align: center;
+  font-size: 16px;  /* 16px evita el zoom automático de iOS */
+}
+.login-caja input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+.login-error {
+  margin-bottom: var(--s3) !important;
+  font-size: .8rem !important;
+  font-weight: 600;
+  color: var(--rojo) !important;
+}
+
+.ad-salir {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--t3);
+  transition: background var(--t), color var(--t);
+}
+.ad-salir:hover { background: var(--surface-2); color: var(--t1); }
+.ad-salir svg { width: 15px; height: 15px; }
+
+
+/* Aviso de que el panel está desconectado del Sheets. No es un error —
+   se puede trabajar así — pero tiene que verse, porque desde adentro
+   todo parece funcionar igual. */
+.aviso-local {
+  margin-bottom: var(--s4);
+  padding: var(--s4);
+  background: var(--ambar-bg);
+  border: 1px solid #EBD9B0;
+  border-radius: var(--r3);
+}
+.aviso-local b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: .88rem;
+  color: var(--ambar);
+}
+.aviso-local p {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  line-height: 1.6;
+  color: var(--t2);
+}
+.aviso-local code {
+  padding: 2px 6px;
+  background: var(--surface);
+  border-radius: var(--r1);
+  font-size: .78rem;
+}
+.ad-estado.local { background: var(--ambar); }
+
+
+/* ══════════════════════════════════════════════════════
+   AVISO DE CARGA FALLIDA
+══════════════════════════════════════════════════════ */
+.aviso-error {
+  margin-bottom: var(--s4);
+  padding: var(--s4);
+  background: var(--rojo-bg);
+  border: 1px solid #E8C4B8;
+  border-radius: var(--r3);
+}
+.aviso-error b {
+  display: block;
+  margin-bottom: 5px;
+  font-size: .88rem;
+  color: var(--rojo);
+}
+.aviso-error p {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  line-height: 1.6;
+  color: var(--t2);
+}
+.aviso-error code {
+  padding: 2px 6px;
+  background: var(--surface);
+  border-radius: var(--r1);
+  font-size: .78rem;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   ERROR DE GUARDADO
+   Un toast se va en tres segundos; un fallo de guardado necesita
+   quedarse en pantalla con la causa y la tranquilidad de que el
+   trabajo no se perdió.
+══════════════════════════════════════════════════════ */
+.error-guardado {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  position: relative;
+  margin-bottom: var(--s4);
+  padding: var(--s4) var(--s5) var(--s4) var(--s4);
+  background: var(--rojo-bg);
+  border: 1px solid #E8C4B8;
+  border-radius: var(--r3);
+}
+.error-guardado-ico {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(196, 84, 58, .12);
+  color: var(--rojo);
+}
+.error-guardado-ico svg { width: 17px; height: 17px; }
+.error-guardado-tx { flex: 1; min-width: 0; }
+.error-guardado-tx b {
+  display: block;
+  margin-bottom: 3px;
+  font-size: .88rem;
+  color: var(--rojo);
+}
+.error-guardado-tx p {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  line-height: 1.55;
+  color: var(--t2);
+}
+.error-guardado-ok {
+  margin-top: 6px;
+  color: var(--accent-2) !important;
+  font-weight: 500;
+}
+.error-guardado-x {
+  position: absolute;
+  top: var(--s3);
+  right: var(--s3);
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--t3);
+  transition: background var(--t), color var(--t);
+}
+.error-guardado-x:hover { background: rgba(196, 84, 58, .1); color: var(--rojo); }
+.error-guardado-x svg { width: 12px; height: 12px; }
+
+
+/* Campos que vienen del cliente: se muestran pero no se editan acá. Para
+   cambiarlos hay que ir a la ficha del cliente, así el dato no queda
+   distinto en cada pedido. */
+.campo input[readonly] {
+  background: var(--surface-2);
+  color: var(--t2);
+  cursor: not-allowed;
+  border-color: var(--line-soft);
+}
+.campo input[readonly]:focus { border-color: var(--line-soft); background: var(--surface-2); }
+
+.campo-ayuda {
+  margin-top: 5px;
+  font-family: var(--font-body);
+  font-size: .72rem;
+  color: var(--t3);
+}
+.campo-ayuda a { color: var(--accent-2); text-decoration: underline; cursor: pointer; }
+
+
+/* ══════════════════════════════════════════════════════
+   CLIENTES
+══════════════════════════════════════════════════════ */
+.celda-nota {
+  margin-top: 2px;
+  font-family: var(--font-body);
+  font-size: .72rem;
+  color: var(--t3);
+  max-width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.celda-dir {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tel-link {
+  color: var(--t1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-soft);
+  transition: color var(--t), border-color var(--t);
+}
+.tel-link:hover { color: var(--accent-2); border-color: var(--accent); }
+
+.icono-mapa {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--t3);
+  transition: background var(--t), color var(--t);
+}
+.icono-mapa:hover { background: var(--accent-bg); color: var(--accent-2); }
+.icono-mapa svg { width: 15px; height: 15px; }
+
+/* Botón para abrir la ubicación desde el editor de pedidos. */
+.campo-con-boton { display: flex; gap: var(--s2); }
+.campo-con-boton input { flex: 1; min-width: 0; }
+.btn--mapa {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 var(--s3);
+  font-size: .78rem;
+  text-decoration: none;
+}
+.btn--mapa[hidden] { display: none; }
+
+
+/* ══════════════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════════════ */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: var(--s5);
+  background: rgba(28, 34, 28, .45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  overflow-y: auto;
+}
+.modal[hidden] { display: none; }
+.modal-caja {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  padding: var(--s5);
+  background: var(--surface);
+  border-radius: var(--r4);
+  box-shadow: 0 20px 50px rgba(28, 34, 28, .24);
+}
+.modal-caja h2 {
+  margin-bottom: var(--s4);
+  padding-right: var(--s6);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+.modal-x {
+  position: absolute;
+  top: var(--s3);
+  right: var(--s3);
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--t2);
+  transition: background var(--t), color var(--t);
+}
+.modal-x:hover { background: var(--surface-3); color: var(--t1); }
+.modal-x svg { width: 13px; height: 13px; }
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s2);
+  margin-top: var(--s5);
+}
+/* El botón de eliminar se separa de los otros dos para que no se toque
+   por error al querer cancelar. */
+.modal-acciones .btn--peligro { margin-right: auto; }
+
+
+/* ══════════════════════════════════════════════════════
    TOAST
 ══════════════════════════════════════════════════════ */
 .toast {
@@ -601,11 +967,26 @@ input[type="date"], input[type="number"] {
   .ed-resumen { position: static; }
 }
 
+/* Con menos ancho, cuatro columnas dejan los campos ilegibles. Pasa a dos y
+   el agrupado se mantiene igual: dos filas para lo que cargás vos y dos para
+   los datos del cliente. */
+@media (max-width: 900px) {
+  .campos--pedido { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .campos--pedido .campo--fila-nueva { grid-column: 1 / -1; }
+}
+
+@media (max-width: 480px) {
+  .campos--pedido { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 720px) {
   .ad-top-inner { height: auto; padding: var(--s3) var(--s4); flex-wrap: wrap; gap: var(--s2); }
   .ad-sep, .ad-seccion { display: none; }
-  .ad-tabs { margin-left: auto; }
-  .ad-canal { margin-left: 0; }
+  .ad-nav button { padding: 6px 11px; font-size: .8rem; }
+  .ad-canal { margin-left: auto; }
+  .modal-caja { padding: var(--s4); }
+  .campo-con-boton { flex-direction: column; }
+  .btn--mapa { width: 100%; justify-content: center; }
   .ad-wrap { padding: var(--s4); }
   .panel { padding: var(--s4); }
 
