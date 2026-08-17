@@ -75,11 +75,18 @@
         <input id="q" placeholder="Buscar por cliente, número o estado…" oninput="pintarLista()">
       </div>
       <select id="filtroEstado" class="ad-select" onchange="pintarLista()">
-        <option value="">Todos los estados</option>
+        <option value="activos">Pedidos activos</option>
+        <option value="todos">Todos los estados</option>
         <option>Nuevo</option>
+        <option>Pedido a Distribuidora</option>
+        <option>Para entregar</option>
         <option>Entregado</option>
-        <option>Cobrado</option>
+        <option>Cancelado</option>
       </select>
+      <button class="btn" onclick="abrirListaDistribuidora()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Armar pedido a distribuidora
+      </button>
       <button class="btn btn--pri" onclick="nuevoPedido()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         Nuevo pedido
@@ -154,8 +161,10 @@
               <label for="fEstadoPedido">Estado</label>
               <select id="fEstadoPedido" onchange="recalcular()">
                 <option>Nuevo</option>
+                <option>Pedido a Distribuidora</option>
+                <option>Para entregar</option>
                 <option>Entregado</option>
-                <option>Cobrado</option>
+                <option>Cancelado</option>
               </select>
             </div>
             <div class="campo">
@@ -362,8 +371,58 @@
 </div>
 
 
+<!-- ═══════════ MODAL: PEDIDO A DISTRIBUIDORA ═══════════ -->
+<div class="modal" id="modalDistribuidora" hidden>
+  <div class="modal-caja modal-caja--ancha">
+    <button type="button" class="modal-x" onclick="cerrarModalDistribuidora()" aria-label="Cerrar">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2>Pedido a distribuidora</h2>
+    <p class="modal-descripcion">Seleccioná los pedidos que querés incluir, se suman las cantidades automáticamente y podés copiar la lista lista para mandar por WhatsApp.</p>
+
+    <div class="dist-seccion">
+      <h3 class="dist-subtit">1. Pedidos a incluir</h3>
+      <div class="dist-lista-pedidos" id="distListaPedidos"></div>
+    </div>
+
+    <div class="dist-seccion">
+      <h3 class="dist-subtit">2. Productos agrupados</h3>
+      <div class="tabla-wrap">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th class="num">Cantidad total</th>
+              <th class="num">Costo unitario</th>
+              <th class="num">Total costo</th>
+            </tr>
+          </thead>
+          <tbody id="distTbodyProductos"></tbody>
+        </table>
+      </div>
+      <p class="vacio" id="distSinProductos">Seleccioná al menos un pedido para ver la lista.</p>
+    </div>
+
+    <div class="dist-resumen" id="distResumen" hidden>
+      <div class="fila"><span>Pedidos incluidos</span><b id="distCantPedidos">0</b></div>
+      <div class="fila"><span>Unidades totales</span><b id="distCantUnidades">0</b></div>
+      <div class="fila"><span>Total a pagar a distribuidora</span><b id="distTotalCosto">$0</b></div>
+      <div class="fila"><span>Total venta</span><b id="distTotalVenta">$0</b></div>
+      <div class="fila fila--ganancia"><span>Ganancia bruta de la tanda</span><b id="distGanancia">$0</b></div>
+    </div>
+
+    <div class="modal-acciones">
+      <button type="button" class="btn" onclick="cerrarModalDistribuidora()">Cerrar</button>
+      <button type="button" class="btn btn--pri" id="btnCopiarDist" onclick="copiarListaDistribuidora()" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copiar lista para WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="admin.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2c4bc587ed6b456',t:'MTc4NjkyODM2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

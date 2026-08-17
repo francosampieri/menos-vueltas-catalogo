@@ -327,11 +327,13 @@ button { cursor: pointer; background: none; border: none; }
   border-radius: 50%;
   background: currentColor;
 }
-/* El estado avanza en un solo sentido: Nuevo → Entregado → Cobrado.
-   El color acompaña ese recorrido, de "falta hacer" a "listo". */
-.estado--nuevo     { background: var(--azul-bg);   color: var(--azul); }
-.estado--entregado { background: var(--ambar-bg);  color: var(--ambar); }
-.estado--cobrado   { background: var(--accent-bg); color: var(--accent-2); }
+/* El estado avanza en un solo sentido: Nuevo → Pedido a Distribuidora → Para entregar → Entregado.
+   El color acompaña ese recorrido, de azul (recién llega) a verde (terminado). */
+.estado--nuevo                    { background: var(--azul-bg);   color: var(--azul); }
+.estado--pedido-a-distribuidora   { background: #f0e9f6;          color: #784c9a; }
+.estado--para-entregar            { background: var(--ambar-bg);  color: var(--ambar); }
+.estado--entregado                { background: var(--accent-bg); color: var(--accent-2); }
+.estado--cancelado                { background: var(--rojo-bg);   color: var(--rojo); opacity: .7; }
 
 .kpi-v--alerta { color: var(--ambar); }
 
@@ -896,10 +898,60 @@ input[type="date"], input[type="number"] {
   position: relative;
   width: 100%;
   max-width: 480px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
   padding: var(--s5);
   background: var(--surface);
   border-radius: var(--r4);
   box-shadow: 0 20px 50px rgba(28, 34, 28, .24);
+}
+.modal-caja--ancha { max-width: 900px; }
+.modal-descripcion {
+  font-family: var(--font-body);
+  font-size: .83rem;
+  color: var(--t2);
+  margin-bottom: var(--s4);
+}
+
+/* ── Modal pedido a distribuidora ── */
+.dist-seccion { margin-bottom: var(--s4); }
+.dist-subtit {
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--t3);
+  margin-bottom: var(--s3);
+}
+.dist-lista-pedidos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--s2);
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: var(--s2);
+}
+.dist-pedido-check {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 10px var(--s3);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r2);
+  cursor: pointer;
+  transition: border-color var(--t), background var(--t);
+  font-size: .82rem;
+}
+.dist-pedido-check:hover { border-color: var(--accent-line); background: var(--accent-bg); }
+.dist-pedido-check input { margin: 0; cursor: pointer; }
+.dist-pedido-check .dist-pedido-cliente { font-weight: 600; }
+.dist-pedido-check .dist-pedido-meta { font-size: .72rem; color: var(--t3); }
+.dist-pedido-check.seleccionado { border-color: var(--accent); background: var(--accent-bg); }
+.dist-resumen {
+  margin: var(--s4) 0;
+  padding: var(--s4);
+  background: var(--surface-2);
+  border-radius: var(--r3);
 }
 .modal-caja h2 {
   margin-bottom: var(--s4);
