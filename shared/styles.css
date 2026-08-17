@@ -377,8 +377,16 @@ img { display: block; max-width: 100%; }
   transition: background var(--t), border-color var(--t), color var(--t), transform var(--t);
   flex-shrink: 0;
 }
-.whatsapp-trigger:hover { background: var(--surface-2); color: var(--t1); }
-.whatsapp-trigger svg { width: 19px; height: 19px; }
+.whatsapp-trigger:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(61,107,79,.22);
+}
+.whatsapp-trigger:active { transform: translateY(0); }
+.whatsapp-trigger svg { width: 19px; height: 19px; transition: transform var(--t) var(--ease); }
+.whatsapp-trigger:hover svg { transform: scale(1.08); }
 
 /* Agrupa WhatsApp y carrito: van pegados entre sí (gap chico propio) y
    empujados al borde derecho, a diferencia del resto de los elementos de
@@ -2458,9 +2466,31 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
    mobile se apila y el esquema queda como lista debajo del texto.
 ══════════════════════════════════════════════════════ */
 .vueltas {
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--line-soft);
+  background: var(--accent-2);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
 }
+/* Adaptacion de textos/tarjeta para fondo verde oscuro */
+.vueltas .ns-eyebrow { color: rgba(255,255,255,0.8); }
+.vueltas .ns-eyebrow::after { background: rgba(255,255,255,0.25); }
+.vueltas .ns-eyebrow::before { background: rgba(255,255,255,0.25); }
+.vueltas .ns-frase { color: white; }
+.vueltas .ns-frase em { color: #D8E6CA; }
+.vueltas .ns-frase em path { stroke: rgba(255,255,255,0.3); }
+.vueltas .ns-bajada { color: rgba(255,255,255,0.78); }
+.vueltas .ns-bajada strong { color: white; }
+.vueltas .bg-circle { border-color: rgba(255,255,255,0.15); }
+.vueltas .bg-circle--fill { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+.vueltas .ns-esquema {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: none;
+}
+.vueltas .ns-esquema-tit { color: rgba(255,255,255,0.7); }
+.vueltas .ns-col--no li { color: rgba(255,255,255,0.45); text-decoration-color: rgba(255,255,255,0.25); }
+.vueltas .ns-col--no i { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
+.vueltas .ns-col--si li { color: white; }
+.vueltas .ns-col--si i { background: var(--accent); color: white; }
+.vueltas .ns-flecha { color: rgba(255,255,255,0.3); }
 .vueltas-inner {
   max-width: var(--content-wide);
   margin: 0 auto;
