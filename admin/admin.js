@@ -596,8 +596,14 @@ function pintarLista() {
   const fe = document.getElementById('filtroEstado').value;
 
   const delCanal = PEDIDOS.filter(p => p.canal === CANAL);
-  const lista = delCanal
-    .filter(p => !fe || p.estado === fe)
+  const ESTADOS_INACTIVOS = ['Entregado', 'Cancelado'];
+  let lista = delCanal;
+  if (fe === 'activos' || !fe) {
+    lista = lista.filter(p => !ESTADOS_INACTIVOS.includes(p.estado));
+  } else if (fe !== 'todos') {
+    lista = lista.filter(p => p.estado === fe);
+  }
+  lista = lista
     .filter(p => !q || `${p.cliente} ${p.id} ${p.estado}`.toLowerCase().includes(q))
     .sort((a, b) => fechaISO(b.fechaPedido).localeCompare(fechaISO(a.fechaPedido)) || b.id - a.id);
 
@@ -613,12 +619,13 @@ function pintarLista() {
 
   tb.innerHTML = lista.map(p => {
     const t = calcularPedido(p);
-    return `<tr onclick="abrirPedido(${p.id})">
+    const claseEstado = 'estado--' + p.estado.toLowerCase().replaceAll(/\s+/g, '-');
+    return `<tr onclick="abrirPedido(${p.id})"${p.estado === 'Cancelado' ? ' style="opacity:.6"' : ''}>
       <td><b>#${p.id}</b></td>
       <td>${fechaCorta(p.fechaPedido)}</td>
       <td>${fechaCorta(p.fechaEntrega)}</td>
       <td class="celda-cliente"><b>${esc(p.cliente) || '—'}</b>${p.telefono ? `<span>${esc(p.telefono)}</span>` : ''}</td>
-      <td><span class="estado estado--${p.estado.toLowerCase()}">${p.estado}</span></td>
+      <td><span class="estado ${claseEstado}">${p.estado}</span></td>
       <td class="num">${t.unidades}</td>
       <td class="num"><b>${money(t.total)}</b></td>
       <td class="num"><span class="ganancia${t.ganancia < 0 ? ' ganancia--neg' : ''}">${money(t.ganancia)}</span></td>
@@ -627,25 +634,25 @@ function pintarLista() {
 }
 
 function pintarKpis(pedidos) {
-  // El estado avanza en un solo sentido: Nuevo → Entregado → Cobrado.
-  // Todo lo que no llegó a "Cobrado" es plata que todavía no entró.
-  let facturado = 0, ganancia = 0, porCobrar = 0;
-  pedidos.forEach(p => {
+  // El estado avanza en un solo sentido: Nuevo → Pedido a Distribuidora → Para entregar → Entregado.
+  // Cancelados no se tienen en cuenta para facturado/ganancia.
+  let facturado = 0, ganancia = 0;
+  const pedidosActivos = pedidos.filter(p => p.estado !== 'Cancelado');
+  pedidosActivos.forEach(p => {
     const t = calcularPedido(p);
     facturado += t.total;
     ganancia  += t.ganancia;
-    if (p.estado !== 'Cobrado') porCobrar += t.total;
   });
 
-  const sinEntregar = pedidos.filter(p => p.estado === 'Nuevo').length;
+  const pendientes = pedidos.filter(p => ['Nuevo', 'Pedido a Distribuidora', 'Para entregar'].includes(p.estado)).length;
   const margen = facturado ? ganancia / facturado * 100 : 0;
-  const ticket = pedidos.length ? facturado / pedidos.length : 0;
+  const ticket = pedidosActivos.length ? facturado / pedidosActivos.length : 0;
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi">
-      <div class="kpi-l">Pedidos</div>
-      <div class="kpi-v">${pedidos.length}</div>
-      <div class="kpi-s">${sinEntregar} sin entregar</div>
+      <div class="kpi-l">Pedidos activos</div>
+      <div class="kpi-v">${pendientes}</div>
+      <div class="kpi-s">${pedidos.filter(p => p.estado === 'Entregado').length} entregados</div>
     </div>
     <div class="kpi">
       <div class="kpi-l">Facturado</div>
@@ -658,8 +665,8 @@ function pintarKpis(pedidos) {
       <div class="kpi-s">${margen.toFixed(1)}% de margen</div>
     </div>
     <div class="kpi">
-      <div class="kpi-l">Por cobrar</div>
-      <div class="kpi-v${porCobrar ? ' kpi-v--alerta' : ''}">${money(porCobrar)}</div>
+      <div class="kpi-l">Cancelados</div>
+      <div class="kpi-v">${pedidos.filter(p => p.estado === 'Cancelado').length}</div>
       <div class="kpi-s">&nbsp;</div>
     </div>`;
 }
@@ -1175,6 +1182,141 @@ function recuperarBorrador() {
     abrirEditor(!b.id);
   } else {
     localStorage.removeItem(BORRADOR_KEY);
+  }
+}
+
+
+/* ══════════════ LISTA PARA DISTRIBUIDORA ══════════════ */
+let pedidosSeleccionadosDist = new Set();
+
+function abrirListaDistribuidora() {
+  // Solo se pueden agregar pedidos activos (no cancelados ni ya entregados)
+  const pedidosDisponibles = PEDIDOS
+    .filter(p => p.canal === CANAL && !['Cancelado', 'Entregado'].includes(p.estado))
+    .sort((a, b) => fechaISO(b.fechaPedido).localeCompare(fechaISO(a.fechaPedido)) || b.id - a.id);
+
+  const contenedor = document.getElementById('distListaPedidos');
+  if (!pedidosDisponibles.length) {
+    contenedor.innerHTML = '<p class="vacio" style="padding: 16px">No hay pedidos activos para incluir.</p>';
+  } else {
+    contenedor.innerHTML = pedidosDisponibles.map(p => {
+      const t = calcularPedido(p);
+      return `<label class="dist-pedido-check" data-id="${p.id}">
+        <input type="checkbox" onchange="togglePedidoDist(${p.id}, this.checked)">
+        <div style="flex:1; min-width:0">
+          <div class="dist-pedido-cliente">#${p.id} · ${esc(p.cliente) || 'Sin cliente'}</div>
+          <div class="dist-pedido-meta">${fechaCorta(p.fechaPedido)} · ${t.unidades} unidades · ${money(t.total)}</div>
+        </div>
+      </label>`;
+    }).join('');
+  }
+
+  pedidosSeleccionadosDist = new Set();
+  actualizarListaDist();
+  document.getElementById('modalDistribuidora').hidden = false;
+}
+
+function cerrarModalDistribuidora() {
+  document.getElementById('modalDistribuidora').hidden = true;
+}
+
+function togglePedidoDist(id, checked) {
+  const card = document.querySelector(`.dist-pedido-check[data-id="${id}"]`);
+  if (checked) {
+    pedidosSeleccionadosDist.add(id);
+    card.classList.add('seleccionado');
+  } else {
+    pedidosSeleccionadosDist.delete(id);
+    card.classList.remove('seleccionado');
+  }
+  actualizarListaDist();
+}
+
+function actualizarListaDist() {
+  const tbody = document.getElementById('distTbodyProductos');
+  const sinProductos = document.getElementById('distSinProductos');
+  const resumen = document.getElementById('distResumen');
+  const btnCopiar = document.getElementById('btnCopiarDist');
+
+  const pedidosElegidos = [...pedidosSeleccionadosDist].map(id => PEDIDOS.find(p => p.id === id)).filter(Boolean);
+
+  if (!pedidosElegidos.length) {
+    tbody.innerHTML = '';
+    sinProductos.hidden = false;
+    resumen.hidden = true;
+    btnCopiar.disabled = true;
+    return;
+  }
+
+  sinProductos.hidden = true;
+  resumen.hidden = false;
+  btnCopiar.disabled = false;
+
+  // Agrupar productos por id, sumar cantidades
+  const productosAgrupados = {};
+  let totalUnidades = 0, totalCosto = 0, totalVenta = 0;
+
+  pedidosElegidos.forEach(p => {
+    const t = calcularPedido(p);
+    totalVenta += t.total;
+    p.items.forEach(item => {
+      totalUnidades += item.cant;
+      totalCosto += item.cant * item.costo;
+      if (!productosAgrupados[item.id]) {
+        productosAgrupados[item.id] = {
+          nombre: item.nombre,
+          cantidad: 0,
+          costoUnit: item.costo
+        };
+      }
+      productosAgrupados[item.id].cantidad += item.cant;
+    });
+  });
+
+  // Ordenar productos por nombre alfabeticamente
+  const listaOrdenada = Object.values(productosAgrupados).sort((a,b) => a.nombre.localeCompare(b.nombre));
+
+  tbody.innerHTML = listaOrdenada.map(prod => `
+    <tr>
+      <td>${esc(prod.nombre)}</td>
+      <td class="num">${prod.cantidad}</td>
+      <td class="num">${money(prod.costoUnit)}</td>
+      <td class="num">${money(prod.cantidad * prod.costoUnit)}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('distCantPedidos').textContent = pedidosElegidos.length;
+  document.getElementById('distCantUnidades').textContent = totalUnidades;
+  document.getElementById('distTotalCosto').textContent = money(totalCosto);
+  document.getElementById('distTotalVenta').textContent = money(totalVenta);
+  const ganancia = totalVenta - totalCosto;
+  const elGanancia = document.getElementById('distGanancia');
+  elGanancia.textContent = money(ganancia);
+  elGanancia.parentElement.classList.toggle('neg', ganancia < 0);
+}
+
+async function copiarListaDistribuidora() {
+  const pedidosElegidos = [...pedidosSeleccionadosDist].map(id => PEDIDOS.find(p => p.id === id)).filter(Boolean);
+  const productosAgrupados = {};
+  pedidosElegidos.forEach(p => {
+    p.items.forEach(item => {
+      if (!productosAgrupados[item.nombre]) productosAgrupados[item.nombre] = 0;
+      productosAgrupados[item.nombre] += item.cant;
+    });
+  });
+
+  const lineas = Object.entries(productosAgrupados)
+    .sort((a,b) => a[0].localeCompare(b[0]))
+    .map(([nombre, cant]) => `- ${cant}x ${nombre}`);
+
+  const texto = `🛒 Pedido (${pedidosElegidos.length} pedidos):\n` + lineas.join('\n');
+
+  try {
+    await navigator.clipboard.writeText(texto);
+    toast('Lista copiada al portapapeles, lista para pegar en WhatsApp!');
+  } catch (e) {
+    // Fallback si el navegador no deja copiar
+    prompt('Copia la lista seleccionando todo el texto:', texto);
   }
 }
 
