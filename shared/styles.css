@@ -5280,6 +5280,174 @@ body.modal-abierto {
   transform: scale(1);
 }
 
+/* ══════════════════════════════════════════════════════
+   CARTEL NOVEDADES DESDE ABAJO
+   Aparece luego de 40s en el sitio, no interrumpe la navegacion
+══════════════════════════════════════════════════════ */
+.cartel-novedades {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  animation: slideUpCartel 0.4s cubic-bezier(.16,1,.3,1) forwards;
+}
+.cartel-novedades[hidden] { display: none !important; }
+.cartel-novedades-inner {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -4px 24px rgba(47,52,48,.18);
+  padding: 28px 20px 20px;
+  position: relative;
+}
+/* El "handle" superior para arrastrar/cerrar */
+.cartel-novedades-inner::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.cartel-novedades-cerrar {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface-2);
+  color: var(--t3);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background var(--t), color var(--t);
+}
+.cartel-novedades-cerrar:hover {
+  background: var(--surface-3);
+  color: var(--t1);
+}
+.cartel-novedades h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.cartel-novedades p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--t2);
+  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 20px;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cartel-campo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 20px;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  padding: 0 12px;
+  height: 44px;
+  background: var(--bg);
+}
+.cartel-prefijo {
+  font-weight: 600;
+  color: var(--t2);
+  font-size: 0.9rem;
+}
+.cartel-campo input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  color: var(--t1);
+  height: 100%;
+  outline: none;
+}
+.cartel-botones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.btn-cartel-principal {
+  height: 46px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background var(--t), transform var(--t);
+  box-shadow: 0 2px 8px rgba(110, 139, 91, 0.2);
+}
+.btn-cartel-principal:hover {
+  background: var(--accent-2);
+  transform: translateY(-1px);
+}
+.btn-cartel-secundario {
+  height: 40px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  color: var(--t3);
+  cursor: pointer;
+  transition: color var(--t);
+}
+.btn-cartel-secundario:hover {
+  color: var(--t1);
+}
+@keyframes slideUpCartel {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* En escritorio se ve como un cartel en la esquina inferior, no ocupa toda la pantalla */
+@media (min-width: 769px) {
+  .cartel-novedades {
+    padding: 0 0 24px 24px;
+    justify-content: flex-start;
+  }
+  .cartel-novedades-inner {
+    max-width: 340px;
+    border-radius: 16px;
+  }
+  .cartel-novedades-inner::before { display: none; }
+}
+/* Cuando el boton flotante del carrito esta abajo, levantamos el cartel */
+@media (max-width: 768px) {
+  .cartel-novedades {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 @media (max-width: 768px) {
   .cart-floating-btn {
     bottom: 20px;

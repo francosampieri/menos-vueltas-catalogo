@@ -1,5 +1,6 @@
 // ══ CONFIGURACIÓN ══
 const WHATSAPP_NUM = '5492617716916'; // reemplazar con número real
+const SHEETS_URL_PUBLICA = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDXhna8B4UCGnh3eyl2Uy_69qdjiCz4sthAVdsvkPwhpSlUcE5e-h8yZhDIg/exec';
 
 // CANAL lo define cada página (B2C o B2B) con <script>window.CANAL='B2C'</script>
 // ANTES de cargar este archivo. Fallback a B2C por seguridad si no se definió.
@@ -2516,3 +2517,108 @@ function initBarraPromo() {
 }
 
 document.addEventListener('DOMContentLoaded', initBarraPromo);
+
+/* ══════════════ CARTEL NOVEDADES ══════════════
+   Aparece 40 segundos despues de que el usuario entra al sitio, solo
+   si no lo cerro antes y no se anoto ya. Guarda el numero en Sheets.
+══════════════════════════════════════════════════════ */
+const NOVEDADES_KEY = 'mv_cartel_novedades';
+const NOVEDADES_VISTO_KEY = 'mv_cartel_novedades_cerrado';
+const NOVEDADES_ESPERA_MS = 40 * 1000; // 40 segundos
+let cartelTimer = null;
+
+function initCartelNovedades() {
+  if (!document.getElementById('cartelNovedades')) return;
+  let yaCerro = false;
+  try { yaCerro = localStorage.getItem(NOVEDADES_VISTO_KEY) === '1'; } catch(e) {}
+  if (yaCerro) return;
+
+  cartelTimer = setTimeout(mostrarCartelNovedades, NOVEDADES_ESPERA_MS);
+
+  // Si el usuario scrollea hasta el final de la pagina, mostrarlo antes
+  window.addEventListener('scroll', () => {
+    if (cartelTimer) return; // ya se mostro o ya esta programado
+    if (window.scrollY > document.body.scrollHeight - window.innerHeight - 300) {
+      clearTimeout(cartelTimer);
+      mostrarCartelNovedades();
+    }
+  }, { once: true });
+}
+
+function mostrarCartelNovedades() {
+  const cartel = document.getElementById('cartelNovedades');
+  if (!cartel) return;
+  cartel.hidden = false;
+  document.getElementById('cartelNovedadesInicial').hidden = false;
+  document.getElementById('cartelNovedadesFormulario').hidden = true;
+  document.getElementById('cartelNovedadesExito').hidden = true;
+  document.getElementById('novedadesNumero').value = '';
+}
+
+function cerrarCartelNovedades() {
+  const cartel = document.getElementById('cartelNovedades');
+  if (!cartel) return;
+  cartel.hidden = true;
+  // No le volvemos a mostrar por 15 dias
+  try { localStorage.setItem(NOVEDADES_VISTO_KEY, '1'); } catch(e) {}
+  // Limpiamos el timer por si se llamo manualmente
+  if (cartelTimer) clearTimeout(cartelTimer);
+}
+
+function abrirFormularioNovedades() {
+  document.getElementById('cartelNovedadesInicial').hidden = true;
+  document.getElementById('cartelNovedadesFormulario').hidden = false;
+  document.getElementById('novedadesNumero').focus();
+}
+
+function volverInicioCartel() {
+  document.getElementById('cartelNovedadesInicial').hidden = false;
+  document.getElementById('cartelNovedadesFormulario').hidden = true;
+  document.getElementById('cartelNovedadesExito').hidden = true;
+}
+
+async function enviarContactoNovedades() {
+  const input = document.getElementById('novedadesNumero');
+  let numero = (input.value || '').replace(/\D/g, '');
+  // Limpiamos el numero al formato internacional de WhatsApp 549XXXXXXXXX
+  if (numero.startsWith('0')) numero = numero.slice(1);
+  if (numero.length < 8) {
+    toast('Ingresa un numero valido', true);
+    return;
+  }
+  if (!numero.startsWith('54')) numero = '549' + numero;
+
+  const btn = document.querySelector('.btn-cartel-principal');
+  const textoOriginal = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+
+  try {
+    // Guardamos el contacto directamente en la hoja de Google Sheets
+    await fetch(SHEETS_URL_PUBLICA, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        accion: 'guardarContacto',
+        contacto: { numero, fecha: new Date().toISOString(), origen: 'cartel-novedades-b2c' }
+      })
+    });
+    // Marcamos como que ya se anoto para no mostrarle el cartel nunca mas
+    try { localStorage.setItem(NOVEDADES_VISTO_KEY, '1'); } catch(e) {}
+    // Mostramos pantalla de exito
+    document.getElementById('cartelNovedadesFormulario').hidden = true;
+    document.getElementById('cartelNovedadesExito').hidden = false;
+    toast('Perfecto! Te agregamos a la lista');
+  } catch(e) {
+    toast('No se pudo guardar el numero, intenta nuevamente', true);
+    btn.disabled = false;
+    btn.textContent = textoOriginal;
+  }
+}
+
+// Inicializamos el cartel cuando cargue la pagina
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCartelNovedades);
+} else {
+  initCartelNovedades();
+}
