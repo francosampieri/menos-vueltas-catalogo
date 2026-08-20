@@ -145,30 +145,18 @@ function lineaDesdeCatalogo(prod, cantidad) {
 // Precio que efectivamente se cobra por unidad, según la cantidad.
 // Usa solo los valores congelados de la línea.
 // Los dos descuentos se combinan: la promo temporal ya viene trasladada al
-// precio por cantidad desde el Sheets (precio_promo_mayorista = ppd), así
-// que al llegar al mínimo de unidades se cobra ese precio; si no, el de
-// promo unitaria. Esta es exactamente la MISMA lógica que usa al agregar
-// un producto nuevo: no puede haber diferencia entre crear y editar.
+// precio por cantidad desde el Sheets (precio_promo_mayorista = promoCant),
+// así que comprar más siempre conviene.
 function precioUnitario(l) {
   const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin;
 
   if (llegaAlMinimo) {
-    // Caso normal: ppd (promoCant) existe y es el precio correcto con los
-    // dos descuentos combinados.
-    if (l.promoCant > 0) return l.promoCant;
-    // DEFENSA: si por alguna razón la línea vino sin promoCant (pedido
-    // viejo guardado antes que existiera ese campo, o dato que volvió
-    // incompleto desde Sheets), pero SÍ tiene porCant y promo, estimamos
-    // el ppd con la misma proporción del descuento unitario. Es mejor
-    // eso que caer silenciosamente a porCant y cobrar de más.
-    if (l.porCant > 0 && l.promo > 0 && l.lista > 0 && l.promo < l.lista) {
-      const ratio = l.promo / l.lista;
-      return Math.round(l.porCant * ratio * 100) / 100;
-    }
-    // Último recurso: precio por cantidad sin promo.
-    if (l.porCant > 0) return l.porCant;
+    // promoCant es el precio por cantidad con la promo ya aplicada; si el
+    // producto no tiene promo, el generador copió ahí el precio normal.
+    const porCant = l.promoCant || l.porCant;
+    if (porCant > 0) return porCant;
   }
-  return l.promo > 0 ? l.promo : l.lista;
+  return l.promo || l.lista;
 }
 
 /* Las etiquetas de descuento las arma UNA sola función, que usan tanto el
@@ -946,24 +934,6 @@ function abrirPedido(id) {
   // Copia profunda: si el usuario se arrepiente y vuelve, el original
   // queda intacto.
   edicion = JSON.parse(JSON.stringify(p));
-
-  // DEFENSA: pedidos creados antes de que el panel guardara el campo
-  // promoCant (precio_promo_mayorista = precio x cantidad + promo
-  // combinados) pueden haber quedado con esa clave en 0 aunque el
-  // cálculo estuviera bien al momento de guardar. Si una línea tiene
-  // un precio unitario ya calculado en la cantidad que alcanza el
-  // mínimo, rellenamos promoCant con ese valor para que al recalcular
-  // siga dando el mismo número correcto y no "salte" al precio equivocado.
-  (edicion.items || []).forEach(l => {
-    if (!l.cantMin || l.cant < l.cantMin) return;
-    if (l.promoCant > 0) return;
-    // Si la línea ya tiene un unit guardado (vino del Sheets con
-    // totales calculados), tomamos ese como el precio correcto.
-    if (l.unit && l.unit > 0) {
-      l.promoCant = l.unit;
-    }
-  });
-
   abrirEditor(false);
 }
 
