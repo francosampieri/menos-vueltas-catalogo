@@ -2552,11 +2552,8 @@ function mostrarCartelNovedades() {
   // Ocultamos el onboarding toast para que no se superponga
   const onb = document.querySelector('.onb-toast');
   if (onb) onb.hidden = true;
-  // Medimos la altura del cartel para agregar el padding exacto y que no tape nada
-  setTimeout(() => {
-    const alto = cartel.offsetHeight;
-    document.body.style.paddingBottom = (alto + 20) + 'px';
-  }, 10);
+  // Solo dejamos espacio minimo para no tapar el boton flotante del carrito en mobile
+  document.body.style.paddingBottom = '70px';
   document.getElementById('cartelNovedadesInicial').hidden = false;
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
