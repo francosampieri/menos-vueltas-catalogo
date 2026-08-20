@@ -4665,7 +4665,7 @@
       "Id": "421"
     },
     {
-      "f": "485",
+      "f": "489",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4684,7 +4684,7 @@
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/485-hersheys-chocolate-special-dark-73-75-g.webp",
       "Tipo": "Rentable",
       "Precio_Costo": "3.768,36",
-      "Id": "485"
+      "Id": "489"
     },
     {
       "f": "486",
@@ -4753,7 +4753,7 @@
       "Id": "488"
     },
     {
-      "f": "489",
+      "f": "485",
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
@@ -4772,7 +4772,7 @@
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/489-hersheys-chocolate-chocolate-con-leche-75-g.webp",
       "Tipo": "Rentable",
       "Precio_Costo": "$2.309,63",
-      "Id": "489"
+      "Id": "485"
     },
     {
       "f": "108",
@@ -29135,7 +29135,7 @@
       "Strat": "63,70%"
     },
     {
-      "Id": "485",
+      "Id": "489",
       "Id_proveedor": "CAN2049",
       "Producto": "Chocolate Special Dark 73% HERSHEY'S 75 g",
       "Tipo": "Rentable",
@@ -29203,7 +29203,7 @@
       "Strat": "66,30%"
     },
     {
-      "Id": "489",
+      "Id": "485",
       "Id_proveedor": "CAN7405",
       "Producto": "Chocolate Chocolate con Leche HERSHEY'S 75 g",
       "Tipo": "Rentable",
@@ -37405,7 +37405,7 @@
       "Strat": "43,66%"
     },
     {
-      "Id": "485",
+      "Id": "489",
       "Id_proveedor": "CAN2049",
       "Producto": "Chocolate Special Dark 73% HERSHEY'S 75 g",
       "Categoría": "Snacks y Golosinas",
@@ -37481,7 +37481,7 @@
       "Strat": "41,32%"
     },
     {
-      "Id": "489",
+      "Id": "485",
       "Id_proveedor": "CAN7405",
       "Producto": "Chocolate Chocolate con Leche HERSHEY'S 75 g",
       "Categoría": "Snacks y Golosinas",
