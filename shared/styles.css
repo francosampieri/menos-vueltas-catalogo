@@ -5389,11 +5389,14 @@ body.modal-abierto {
   width: 100%;
   max-width: 300px;
   margin: 0 auto 12px;
-  border: 1px solid var(--line-soft);
+  border: 2px solid var(--line-soft);
+  border-style: solid !important;
   border-radius: 10px;
   padding: 0 12px;
   height: 44px;
-  background: var(--bg);
+  background: var(--bg) !important;
+  appearance: none;
+  -webkit-appearance: none;
   transition: border-color .15s, background .15s;
 }
 .cartel-campo:last-of-type {
@@ -5401,6 +5404,7 @@ body.modal-abierto {
 }
 .cartel-campo.cartel-error-campo {
   border: 2px solid var(--rojo) !important;
+  border-style: solid !important;
   background: var(--rojo-bg) !important;
   animation: shakeCampo 0.35s ease;
 }
@@ -5421,15 +5425,20 @@ body.modal-abierto {
   font-size: 0.9rem;
 }
 .cartel-campo input {
+  all: unset;
   flex: 1;
   border: none;
-  background: transparent;
+  background: transparent !important;
   font-size: 1rem;
   font-family: var(--font-body);
   color: var(--t1);
   height: 100%;
-  outline: none;
+  width: 100%;
+  display: block;
+  box-shadow: none !important;
+  padding: 0;
 }
+.cartel-campo input::placeholder { color: var(--t3); opacity: 1; }
 /* Campo de nombre ocupa todo el ancho */
 .cartel-campo:first-of-type input {
   width: 100%;
