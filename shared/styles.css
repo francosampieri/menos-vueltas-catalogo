@@ -1011,6 +1011,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   -ms-overflow-style: none;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
+  scroll-friction: 0.5;
   /* Aire para que la sombra de las cards no se recorte al scrollear */
   padding: 4px var(--space-4) 6px;
 }
@@ -3670,6 +3671,9 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
      se tira a scrollear la pagina verticalmente, muy molesto */
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
+  /* Friccion nativa: reduce la inercia exagerada a la mitad,
+     se siente mas tosco/preciso sin romper el scroll natural */
+  scroll-friction: 0.5;
   /* Sin esto, el snap alinea la primera card contra el borde del contenedor
      ignorando el padding izquierdo: el riel quedaba arrancado en ~16px y
      nunca podía volver al 0 real (mostraba sombra y flecha izquierda desde

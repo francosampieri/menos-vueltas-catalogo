@@ -508,41 +508,6 @@ function usarRieles() {
   return MQ_MOBILE.matches && !busquedaActiva && !filtroSubcat;
 }
 
-// Agrega friccion manual al deslizamiento horizontal: por defecto los
-// navegadores mobile tienen demasiado momentum y un swipe chico te scrollea
-// varias pantallas. Acá reducimos la velocidad a la mitad, el snap se
-// encarga de acomodar en la card mas cercana, queda mas "tosco" y preciso.
-function aplicarFriccionScrollRiel(riel) {
-  let x0 = null, y0 = null, scrollInicial = null;
-
-  riel.addEventListener('touchstart', (e) => {
-    if (e.touches.length !== 1) return;
-    x0 = e.touches[0].clientX;
-    y0 = e.touches[0].clientY;
-    scrollInicial = riel.scrollLeft;
-  }, { passive: true });
-
-  riel.addEventListener('touchmove', (e) => {
-    if (x0 === null || scrollInicial === null) return;
-    const dx = e.touches[0].clientX - x0;
-    const dy = e.touches[0].clientY - y0;
-
-    // Solo interceptamos cuando el swipe es principalmente horizontal
-    if (Math.abs(dx) < Math.abs(dy)) return;
-
-    // Movemos el scroll la MITAD de lo que se movio el dedo (friccion del 50%)
-    // asi se siente mas pesado y preciso, no se pasa de largo
-    riel.scrollLeft = scrollInicial - dx * 0.5;
-    e.preventDefault();
-  }, { passive: false });
-
-  riel.addEventListener('touchend', () => {
-    x0 = null;
-    y0 = null;
-    scrollInicial = null;
-  });
-}
-
 // Mantiene sincronizados los indicadores de un riel: sombra/flecha a la
 // derecha mientras queden productos por ver, sombra a la izquierda cuando
 // ya se desplazó.
@@ -563,9 +528,6 @@ function conectarIndicadoresRiel(wrap, riel) {
     riel._rafPend = true;
     requestAnimationFrame(() => { riel._rafPend = false; actualizar(); });
   }, { passive: true });
-
-  // Aplicamos la friccion lenta de scroll
-  aplicarFriccionScrollRiel(riel);
 
   // El scrollWidth recién es correcto cuando cargaron las imágenes.
   // Además se fuerza el arranque en 0: si el navegador aplica el snap antes
@@ -2466,9 +2428,6 @@ document.addEventListener('DOMContentLoaded', () => {
   new MutationObserver(actualizarFlechas).observe(track, { childList: true });
   window.addEventListener('resize', actualizarFlechas);
   actualizarFlechas();
-
-  // Aplicamos la misma friccion lenta al riel de destacados
-  aplicarFriccionScrollRiel(track);
 });
 
 
