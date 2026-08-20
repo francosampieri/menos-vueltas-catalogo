@@ -2533,12 +2533,26 @@ function initCartelNovedades() {
   try { yaInscripto = localStorage.getItem(NOVEDADES_INSCRIPTO_KEY) === '1'; } catch(e) {}
   if (yaInscripto) return;
 
-  cartelTimer = setTimeout(mostrarCartelNovedades, NOVEDADES_ESPERA_MS);
+  cartelTimer = setTimeout(() => {
+    // No mostrar el cartel si hay un modal de producto abierto o si esta en la landing
+    if (document.body.classList.contains('modal-abierto')) {
+      // Esperamos a que se cierre el modal para mostrarlo luego
+      const observer = new MutationObserver(() => {
+        if (!document.body.classList.contains('modal-abierto')) {
+          setTimeout(mostrarCartelNovedades, 1000);
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      return;
+    }
+    mostrarCartelNovedades();
+  }, NOVEDADES_ESPERA_MS);
 
   // Si el usuario scrollea hasta el final de la pagina, mostrarlo antes
   window.addEventListener('scroll', () => {
     if (cartelTimer) return; // ya se mostro o ya esta programado
-    if (window.scrollY > document.body.scrollHeight - window.innerHeight - 300) {
+    if (window.scrollY > document.body.scrollHeight - window.innerHeight - 300 && !document.body.classList.contains('modal-abierto')) {
       clearTimeout(cartelTimer);
       mostrarCartelNovedades();
     }
@@ -2552,8 +2566,7 @@ function mostrarCartelNovedades() {
   // Ocultamos el onboarding toast para que no se superponga
   const onb = document.querySelector('.onb-toast');
   if (onb) onb.hidden = true;
-  // Solo dejamos espacio minimo para no tapar el boton flotante del carrito en mobile
-  document.body.style.paddingBottom = '70px';
+  document.body.style.paddingBottom = '';
   document.getElementById('cartelNovedadesInicial').hidden = false;
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;

@@ -5524,16 +5524,10 @@ body.modal-abierto {
   }
   .cartel-novedades-inner::before { display: none; }
 }
-/* Cuando el boton flotante del carrito esta abajo, levantamos el cartel */
-@media (max-width: 768px) {
-  .cartel-novedades {
-    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
-  }
-}
 
 @media (max-width: 768px) {
   .cart-floating-btn {
-    bottom: 20px;
+    bottom: 80px;
     right: 18px;
     width: 58px;
     height: 58px;
