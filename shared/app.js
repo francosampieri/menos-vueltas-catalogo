@@ -316,7 +316,7 @@ function renderSubfiltros() {
   const subs = new Set();
   Object.values(catalogo).forEach(vars => {
     const g = grupos[vars[0]['Id_Grupo']] || {};
-    const cat = g.categoria || vars[0]['Categoria'] || '';
+    const cat = g.categoria    || vars[0]['Categoria']    || '';
     const sub = g.subcategoria || vars[0]['Subcategoria'] || '';
     if (cat === filtroActivo && sub) subs.add(sub);
   });
@@ -2530,7 +2530,7 @@ let cartelTimer = null;
 
 function initCartelNovedades() {
   if (!document.getElementById('cartelNovedades')) return;
-  // Si ya se inscribio, nunca mas le mostramos el cartel
+  // Si ya se inscripto, nunca mas le mostramos el cartel
   let yaInscripto = false;
   try { yaInscripto = localStorage.getItem(NOVEDADES_INSCRIPTO_KEY) === '1'; } catch(e) {}
   if (yaInscripto) return;
@@ -2727,6 +2727,24 @@ if (document.readyState === 'loading') {
    no corre en escritorio y no mide durante animaciones
    para evitar saltos o que se vaya fuera de pantalla.
 ══════════════════════════════════════════════════════ */
+let BASE_BOTTOM_CARRITO = 20;
+
+function refrescarBaseBottomCarrito() {
+  const btn = document.querySelector('.cart-floating-btn');
+  if (!btn) return;
+  // Desactivamos transiciones temporalmente para leer el valor base real del CSS
+  // sin que animen cambios intermedios que rompan los calculos
+  const transicionAnterior = btn.style.transition;
+  btn.style.transition = 'none';
+  // Quitamos cualquier estilo inline para leer el valor del media query que corresponda
+  btn.style.bottom = '';
+  // Forzamos reflow para que el valor sea el final, no intermedio
+  void btn.offsetHeight;
+  BASE_BOTTOM_CARRITO = parseFloat(getComputedStyle(btn).bottom) || 20;
+  // Restauramos la transicion
+  btn.style.transition = transicionAnterior;
+}
+
 function ajustarPosicionCarritoFlotante() {
   const btn = document.querySelector('.cart-floating-btn');
   if (!btn) return;
@@ -2738,9 +2756,6 @@ function ajustarPosicionCarritoFlotante() {
     return;
   }
 
-  // Limpiamos cualquier valor inline para leer la posicion base correcta del CSS
-  btn.style.bottom = '';
-  const baseBottom = parseFloat(getComputedStyle(btn).bottom) || 20;
   const margenSeguridad = 16;
   let offsetTotal = 0;
 
@@ -2754,12 +2769,12 @@ function ajustarPosicionCarritoFlotante() {
     const cartel = document.getElementById('cartelNovedades');
     offsetTotal = cartel.offsetHeight + margenSeguridad;
   } else if (toastVisible) {
-    // Medimos el alto real del toast, no usamos valor fijo para que se adapte si cambia el texto
     offsetTotal = toastVisible.offsetHeight + margenSeguridad;
   }
 
-  // Aplicamos la posicion final de una sola vez, sin animacion para que no salte
-  btn.style.bottom = (baseBottom + offsetTotal) + 'px';
+  // Aplicamos la posicion final directamente, sin resettear el valor antes (evita
+  // que se dispare una animacion de vuelta a la base que rompia los calculos)
+  btn.style.bottom = (BASE_BOTTOM_CARRITO + offsetTotal) + 'px';
 }
 
 // Programamos el ajuste para que corra siempre DESPUES de que terminen todos
@@ -2770,7 +2785,8 @@ function scheduleAjusteCarrito(espera = 0) {
 }
 
 function initPosicionCarritoDinamica() {
-  // Ajuste inicial al cargar la pagina
+  // Leemos el valor base inicial antes de cualquier cambio
+  refrescarBaseBottomCarrito();
   scheduleAjusteCarrito(100);
 
   // Escuchamos cambios de estado (hidden/agregado/borrado) y reajustamos cuando terminen
@@ -2800,12 +2816,33 @@ function initPosicionCarritoDinamica() {
     attributeFilter: ['hidden']
   });
 
-  // Reajustar al cambiar tamanio/orientacion
-  window.addEventListener('resize', () => scheduleAjusteCarrito(120));
+  // Reajustar al cambiar tamanio/orientacion: recalculamos tambien el valor base por si cambia el media query
+  window.addEventListener('resize', () => {
+    clearTimeout(window._resizeCarritoTimer);
+    window._resizeCarritoTimer = setTimeout(() => {
+      refrescarBaseBottomCarrito();
+      ajustarPosicionCarritoFlotante();
+    }, 120);
+  });
 }
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initPosicionCarritoDinamica);
 } else {
   initPosicionCarritoDinamica();
+}
+
+// Funcion de toast simple para notificaciones
+function toast(mensaje) {
+  const existente = document.querySelector('.mv-toast-notif');
+  if (existente) existente.remove();
+  const t = document.createElement('div');
+  t.className = 'mv-toast-notif';
+  t.textContent = mensaje;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('visible'), 10);
+  setTimeout(() => {
+    t.classList.remove('visible');
+    setTimeout(() => t.remove(), 300);
+  }, 2500);
 }
