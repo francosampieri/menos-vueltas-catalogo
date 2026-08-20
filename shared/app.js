@@ -2125,11 +2125,9 @@ function mostrarOnboardingToast() {
 
   toast.querySelector('.onb-toast-close').addEventListener('click', () => {
     document.getElementById('onbToast')?.remove();
-    requestAnimationFrame(ajustarPosicionCarritoFlotante);
   });
-  // Actualizamos posicion luego de insertar el toast
-  requestAnimationFrame(ajustarPosicionCarritoFlotante);
-  setTimeout(ajustarPosicionCarritoFlotante, 350);
+  // Esperamos a que termine la animacion de entrada del toast para medir su alto real
+  scheduleAjusteCarrito(370);
 }
 
 function scrollLanding(id) {
@@ -2571,9 +2569,6 @@ function mostrarCartelNovedades() {
   const onb = document.querySelector('.onb-toast');
   if (onb) onb.hidden = true;
   document.body.style.paddingBottom = '';
-  // Actualizamos posicion del carrito inmediatamente
-  requestAnimationFrame(ajustarPosicionCarritoFlotante);
-  setTimeout(ajustarPosicionCarritoFlotante, 400); // Luego de la animacion de slide up
   document.getElementById('cartelNovedadesInicial').hidden = false;
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
@@ -2605,8 +2600,6 @@ function cerrarCartelNovedades() {
   if (onb && sessionStorage.getItem('onbCerrado') !== '1') onb.hidden = false;
   // Si dice que no, solo no le mostramos en ESTA sesion, cuando recargue puede volver a aparecer
   if (cartelTimer) clearTimeout(cartelTimer);
-  // Actualizamos posicion del carrito
-  requestAnimationFrame(ajustarPosicionCarritoFlotante);
 }
 
 function abrirFormularioNovedades() {
@@ -2614,7 +2607,7 @@ function abrirFormularioNovedades() {
   document.getElementById('cartelNovedadesFormulario').hidden = false;
   limpiarErroresCartel();
   document.getElementById('novedadesNombre').focus();
-  requestAnimationFrame(ajustarPosicionCarritoFlotante);
+  scheduleAjusteCarrito(50);
 }
 
 function volverInicioCartel() {
@@ -2622,7 +2615,7 @@ function volverInicioCartel() {
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
   limpiarErroresCartel();
-  requestAnimationFrame(ajustarPosicionCarritoFlotante);
+  scheduleAjusteCarrito(50);
 }
 
 function limpiarErroresCartel() {
@@ -2709,7 +2702,7 @@ async function enviarContactoNovedades() {
     document.getElementById('cartelNovedadesFormulario').hidden = true;
     document.getElementById('cartelNovedadesExito').hidden = false;
     toast('Perfecto! Te agregamos a la lista');
-    requestAnimationFrame(ajustarPosicionCarritoFlotante);
+    scheduleAjusteCarrito(50);
   } catch(e) {
     errEl.textContent = 'No se pudo guardar tu información, intenta nuevamente.';
     errEl.hidden = false;
@@ -2728,79 +2721,91 @@ if (document.readyState === 'loading') {
 }
 
 /* ══════════════════════════════════════════════════════
-   POSICION DINAMICA CARRITO FLOTANTE
-   El boton sube/baja automaticamente segun si hay un
-   toast o un cartel ocupando la zona inferior de la
-   pantalla. No depende de valores fijos, no se rompe
-   si cambiamos altos/espaciados en el futuro.
+   POSICION DINAMICA CARRITO FLOTANTE (SOLO MOBILE)
+   El boton sube/baja automaticamente solo cuando hay un
+   cartel o un toast ocupando la esquina inferior derecha,
+   no corre en escritorio y no mide durante animaciones
+   para evitar saltos o que se vaya fuera de pantalla.
 ══════════════════════════════════════════════════════ */
 function ajustarPosicionCarritoFlotante() {
   const btn = document.querySelector('.cart-floating-btn');
   if (!btn) return;
 
-  // Quitamos el inline style para leer el valor base del CSS (respeta media queries y safe area)
-  btn.style.bottom = '';
-  const estilosBase = getComputedStyle(btn);
-  const baseBottom = parseFloat(estilosBase.bottom) || 24;
-  const margenSeguridad = 16;
-
-  let offsetNecesario = 0;
-  const ventanaAlto = window.innerHeight;
-
-  const elementosFijosAbajo = [
-    { el: document.querySelector('.cartel-novedades:not([hidden])'), tipo: 'fijo' },
-    { el: document.querySelector('.onb-toast:not([hidden])'), tipo: 'fijo' }
-  ];
-
-  for (const { el } of elementosFijosAbajo) {
-    if (!el) continue;
-    const rect = el.getBoundingClientRect();
-    // Si el elemento esta actualmente en pantalla (incluso si esta a mitad de la animacion de entrada)
-    if (rect.top < ventanaAlto - 8 && rect.bottom > ventanaAlto - 4) {
-      const altoElemento = ventanaAlto - rect.top;
-      offsetNecesario = Math.max(offsetNecesario, altoElemento + margenSeguridad);
-    } else if (rect.top >= ventanaAlto) {
-      // Elemento existe, esta oculto via transform (animacion de entrada arrancando):
-      // usamos su offsetHeight que ya tiene el tamaño final
-      offsetNecesario = Math.max(offsetNecesario, el.offsetHeight + margenSeguridad);
-    }
+  // Solo aplicamos esto en mobile (<=768px), en escritorio el cartel esta abajo a la izquierda
+  // y no se superpone con el boton del carrito que esta abajo a la derecha
+  if (window.innerWidth > 768) {
+    btn.style.bottom = '';
+    return;
   }
 
-  btn.style.bottom = (baseBottom + offsetNecesario) + 'px';
+  // Limpiamos cualquier valor inline para leer la posicion base correcta del CSS
+  btn.style.bottom = '';
+  const baseBottom = parseFloat(getComputedStyle(btn).bottom) || 20;
+  const margenSeguridad = 16;
+  let offsetTotal = 0;
+
+  // Chequeamos que elementos estan visibles en este momento exacto:
+  // - Cuando se abre el cartel, el JS ya oculta el toast, asi que nunca sumamos los dos.
+  // - Solo tomamos el elemento MAS ALTO que esta abajo, para no sumar de mas.
+  const toastVisible = document.querySelector('.onb-toast:not([hidden])');
+  const cartelVisible = document.getElementById('cartelNovedades') && !document.getElementById('cartelNovedades').hidden;
+
+  if (cartelVisible) {
+    const cartel = document.getElementById('cartelNovedades');
+    offsetTotal = cartel.offsetHeight + margenSeguridad;
+  } else if (toastVisible) {
+    // Medimos el alto real del toast, no usamos valor fijo para que se adapte si cambia el texto
+    offsetTotal = toastVisible.offsetHeight + margenSeguridad;
+  }
+
+  // Aplicamos la posicion final de una sola vez, sin animacion para que no salte
+  btn.style.bottom = (baseBottom + offsetTotal) + 'px';
 }
 
-// Ejecutamos cuando cambie cualquier cosa que pueda alterar elementos abajo:
-// apertura/cierre de cartel, toast, resize/orientacion, cambios de estado del formulario
-function observarCambiosPosicionCarrito() {
-  ajustarPosicionCarritoFlotante();
-  // Observamos atributos hidden/class en todo el body para detectar cuando se abre/cierra cualquier elemento flotante
+// Programamos el ajuste para que corra siempre DESPUES de que terminen todos
+// los cambios de DOM y animaciones, no en el medio
+function scheduleAjusteCarrito(espera = 0) {
+  clearTimeout(window._carritoAjusteTimer);
+  window._carritoAjusteTimer = setTimeout(ajustarPosicionCarritoFlotante, espera);
+}
+
+function initPosicionCarritoDinamica() {
+  // Ajuste inicial al cargar la pagina
+  scheduleAjusteCarrito(100);
+
+  // Escuchamos cambios de estado (hidden/agregado/borrado) y reajustamos cuando terminen
   const obs = new MutationObserver((mutations) => {
-    let necesitaAjuste = false;
+    let cambio = false;
     for (const m of mutations) {
-      if (m.type === 'attributes' && (m.attributeName === 'hidden' || m.attributeName === 'class')) {
-        necesitaAjuste = true;
-        break;
-      }
-      if (m.addedNodes.length || m.removedNodes.length) necesitaAjuste = true;
+      if (m.type === 'attributes' && m.attributeName === 'hidden') { cambio = true; break; }
+      if (m.type === 'childList' && (m.addedNodes.length || m.removedNodes.length)) { cambio = true; break; }
     }
-    if (necesitaAjuste) requestAnimationFrame(ajustarPosicionCarritoFlotante);
+    if (!cambio) return;
+
+    const cartelAhoraVisible = document.getElementById('cartelNovedades') && !document.getElementById('cartelNovedades').hidden;
+    if (cartelAhoraVisible) {
+      // Cuando se abre el cartel esperamos a que termine TODA la animacion de slide up (400ms)
+      // antes de medir, sino agarramos valores intermedios y sube de a poco
+      scheduleAjusteCarrito(430);
+    } else {
+      // Cuando se cierra algo, o se cambia de estado dentro del cartel, esperamos 1 frame
+      scheduleAjusteCarrito(16);
+    }
   });
+
   obs.observe(document.body, {
     attributes: true,
     subtree: true,
     childList: true,
-    attributeFilter: ['hidden', 'class', 'style']
+    attributeFilter: ['hidden']
   });
-  // Tambien en resize y cambios de orientacion
-  window.addEventListener('resize', ajustarPosicionCarritoFlotante);
-  window.addEventListener('scroll', () => {
-    // El cartel es fixed, pero por si hay algun cambio al scrollear (ej: promo barra sticky)
-    requestAnimationFrame(ajustarPosicionCarritoFlotante);
-  }, { passive: true });
+
+  // Reajustar al cambiar tamanio/orientacion
+  window.addEventListener('resize', () => scheduleAjusteCarrito(120));
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', observarCambiosPosicionCarrito);
+  document.addEventListener('DOMContentLoaded', initPosicionCarritoDinamica);
 } else {
-  observarCambiosPosicionCarrito();
+  initPosicionCarritoDinamica();
 }
