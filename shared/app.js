@@ -2585,7 +2585,11 @@ function volverInicioCartel() {
 
 function limpiarErroresCartel() {
   const err = document.getElementById('cartelNovedadesError');
-  if (err) err.hidden = true;
+  if (err) {
+    err.hidden = true;
+    err.textContent = '';
+    err.classList.remove('shake');
+  }
   document.querySelectorAll('.cartel-campo').forEach(c => c.classList.remove('cartel-error-campo'));
   const btn = document.getElementById('btnEnviarNovedades');
   if (btn) {
@@ -2600,26 +2604,38 @@ function limpiarErroresCartel() {
 async function enviarContactoNovedades() {
   const inputNombre = document.getElementById('novedadesNombre');
   const inputNumero = document.getElementById('novedadesNumero');
+  const errEl = document.getElementById('cartelNovedadesError');
   const nombre = (inputNombre.value || '').trim();
   let numero = (inputNumero.value || '').replace(/\D/g, '');
   limpiarErroresCartel();
 
-  let tieneError = false;
+  // Validacion personalizada por campo
+  let errores = [];
+  let camposError = [];
+
   if (!nombre || nombre.length < 2) {
-    inputNombre.parentElement.classList.add('cartel-error-campo');
-    tieneError = true;
+    errores.push('Ingresá tu nombre.');
+    camposError.push(inputNombre);
   }
-  // Validacion simple: numero de al menos 8 digitos
+
   if (numero.startsWith('0')) numero = numero.slice(1);
   if (numero.length < 8) {
-    inputNumero.parentElement.classList.add('cartel-error-campo');
-    tieneError = true;
+    errores.push('Ingresá un número de WhatsApp válido (al menos 8 dígitos).');
+    camposError.push(inputNumero);
   }
-  if (tieneError) {
-    const cartel = document.getElementById('cartelNovedades');
-    const err = document.getElementById('cartelNovedadesError');
-    err.hidden = false;
-    cartel.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (errores.length > 0) {
+    // Mostramos el/los errores
+    errEl.textContent = errores.join(' ');
+    errEl.hidden = false;
+    // Resaltamos solo los campos que fallan
+    camposError.forEach(input => input.parentElement.classList.add('cartel-error-campo'));
+    // Scrolleamos hasta el error y reproducimos la animacion
+    errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Forzamos la reproduccion de la animacion de shake
+    errEl.style.animation = 'none';
+    errEl.offsetHeight; // trigger reflow
+    errEl.style.animation = '';
     return;
   }
 
@@ -2652,7 +2668,9 @@ async function enviarContactoNovedades() {
     document.getElementById('cartelNovedadesExito').hidden = false;
     toast('Perfecto! Te agregamos a la lista');
   } catch(e) {
-    toast('No se pudo guardar, intenta nuevamente', true);
+    errEl.textContent = 'No se pudo guardar tu información, intenta nuevamente.';
+    errEl.hidden = false;
+    errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     btn.disabled = false;
     btn.querySelector('.btn-texto').textContent = 'Enviar';
     btn.querySelector('.btn-spinner').hidden = true;

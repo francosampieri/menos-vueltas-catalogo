@@ -5365,10 +5365,21 @@ body.modal-abierto {
 .cartel-error {
   background: var(--rojo-bg);
   color: var(--rojo) !important;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border-radius: 8px;
-  font-size: 0.8rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 500;
   margin-bottom: 16px !important;
+  text-align: center;
+  border: 1px solid rgba(196, 84, 58, 0.3);
+  animation: shakeError 0.4s ease;
+}
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
 }
 .cartel-campo {
   display: flex;
@@ -5386,9 +5397,18 @@ body.modal-abierto {
 .cartel-campo:last-of-type {
   margin-bottom: 20px;
 }
+.cartel-campo {
+  transition: border-color .15s, background .15s;
+}
 .cartel-campo.cartel-error-campo {
   border: 2px solid var(--rojo);
   background: var(--rojo-bg);
+  animation: shakeCampo 0.3s ease;
+}
+@keyframes shakeCampo {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
 }
 .cartel-prefijo {
   font-weight: 600;
