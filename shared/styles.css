@@ -5290,7 +5290,7 @@ body.modal-abierto {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 270; /* por encima del onboarding toast (260) */
+  z-index: 9999; /* por encima de TODO, incluido toast y boton flotante */
   padding: 0;
   display: flex;
   justify-content: center;
@@ -5342,8 +5342,16 @@ body.modal-abierto {
   font-weight: 700;
   letter-spacing: -.03em;
   margin-top: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.cartel-novedades h4 svg {
+  flex-shrink: 0;
+  color: var(--accent-2);
 }
 .cartel-novedades p {
   font-family: var(--font-body);

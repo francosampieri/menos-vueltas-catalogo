@@ -2549,8 +2549,14 @@ function mostrarCartelNovedades() {
   const cartel = document.getElementById('cartelNovedades');
   if (!cartel) return;
   cartel.hidden = false;
-  // Agregamos espacio en el fondo para que el cartel no tape el toast/onboarding ni el boton flotante
-  document.body.style.paddingBottom = '220px';
+  // Ocultamos el onboarding toast para que no se superponga
+  const onb = document.querySelector('.onb-toast');
+  if (onb) onb.hidden = true;
+  // Medimos la altura del cartel para agregar el padding exacto y que no tape nada
+  setTimeout(() => {
+    const alto = cartel.offsetHeight;
+    document.body.style.paddingBottom = (alto + 20) + 'px';
+  }, 10);
   document.getElementById('cartelNovedadesInicial').hidden = false;
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
@@ -2567,7 +2573,7 @@ function mostrarCartelNovedades() {
       if (err && document.querySelectorAll('.cartel-error-campo').length === 0) {
         err.hidden = true;
       }
-    }, { once: true });
+    });
   });
   limpiarErroresCartel();
 }
@@ -2577,6 +2583,9 @@ function cerrarCartelNovedades() {
   if (!cartel) return;
   cartel.hidden = true;
   document.body.style.paddingBottom = '';
+  // Volvemos a mostrar el onboarding si lo habiamos ocultado
+  const onb = document.querySelector('.onb-toast');
+  if (onb && sessionStorage.getItem('onbCerrado') !== '1') onb.hidden = false;
   // Si dice que no, solo no le mostramos en ESTA sesion, cuando recargue puede volver a aparecer
   if (cartelTimer) clearTimeout(cartelTimer);
 }
