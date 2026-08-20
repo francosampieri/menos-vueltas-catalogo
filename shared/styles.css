@@ -5038,10 +5038,9 @@ body.modal-abierto {
   .footer-copy { font-size: .72rem; }
   .footer-whatsapp { grid-column: 1 / -1; grid-row: 1; display: flex; align-items: center; justify-content: center; height: 42px; border: 1px solid rgba(255,255,255,.55); border-radius: var(--r2); font-size: .82rem; }
 
-  /* En mobile el botón flotante del carrito vive abajo a la derecha;
-     subimos la franja de onboarding para que no se solapen */
+  /* Toast de onboarding abajo del todo, separado del borde */
   .onb-toast {
-    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     width: calc(100vw - 32px);
   }
 }
@@ -5527,7 +5526,7 @@ body.modal-abierto {
 
 @media (max-width: 768px) {
   .cart-floating-btn {
-    bottom: 80px;
+    bottom: calc(300px + env(safe-area-inset-bottom, 0px));
     right: 18px;
     width: 58px;
     height: 58px;
