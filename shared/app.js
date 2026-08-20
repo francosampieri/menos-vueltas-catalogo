@@ -2616,7 +2616,10 @@ async function enviarContactoNovedades() {
     tieneError = true;
   }
   if (tieneError) {
-    document.getElementById('cartelNovedadesError').hidden = false;
+    const cartel = document.getElementById('cartelNovedades');
+    const err = document.getElementById('cartelNovedadesError');
+    err.hidden = false;
+    cartel.scrollTo({ top: 0, behavior: 'smooth' });
     return;
   }
 

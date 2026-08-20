@@ -5387,7 +5387,7 @@ body.modal-abierto {
   margin-bottom: 20px;
 }
 .cartel-campo.cartel-error-campo {
-  border-color: var(--rojo);
+  border: 2px solid var(--rojo);
   background: var(--rojo-bg);
 }
 .cartel-prefijo {
