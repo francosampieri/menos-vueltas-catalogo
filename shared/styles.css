@@ -5355,18 +5355,39 @@ body.modal-abierto {
   margin-left: auto;
   margin-right: auto;
 }
+.cartel-novedades p em {
+  font-family: var(--font);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--accent-2);
+}
+.cartel-error {
+  background: var(--rojo-bg);
+  color: var(--rojo) !important;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem !important;
+  margin-bottom: 16px !important;
+}
 .cartel-campo {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
   max-width: 300px;
-  margin: 0 auto 20px;
+  margin: 0 auto 12px;
   border: 1px solid var(--line-soft);
   border-radius: 10px;
   padding: 0 12px;
   height: 44px;
   background: var(--bg);
+}
+.cartel-campo:last-of-type {
+  margin-bottom: 20px;
+}
+.cartel-campo.cartel-error-campo {
+  border-color: var(--rojo);
+  background: var(--rojo-bg);
 }
 .cartel-prefijo {
   font-weight: 600;
@@ -5382,6 +5403,20 @@ body.modal-abierto {
   color: var(--t1);
   height: 100%;
   outline: none;
+}
+/* Campo de nombre ocupa todo el ancho */
+.cartel-campo:first-of-type input {
+  width: 100%;
+}
+.btn-cartel-principal {
+  position: relative;
+}
+.btn-spinner {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 .cartel-botones {
   display: flex;

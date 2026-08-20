@@ -2522,16 +2522,16 @@ document.addEventListener('DOMContentLoaded', initBarraPromo);
    Aparece 40 segundos despues de que el usuario entra al sitio, solo
    si no lo cerro antes y no se anoto ya. Guarda el numero en Sheets.
 ══════════════════════════════════════════════════════ */
-const NOVEDADES_KEY = 'mv_cartel_novedades';
-const NOVEDADES_VISTO_KEY = 'mv_cartel_novedades_cerrado';
-const NOVEDADES_ESPERA_MS = 40 * 1000; // 40 segundos
+const NOVEDADES_INSCRIPTO_KEY = 'mv_contacto_novedades';
+const NOVEDADES_ESPERA_MS = 20 * 1000; // 20 segundos (la mitad de 40)
 let cartelTimer = null;
 
 function initCartelNovedades() {
   if (!document.getElementById('cartelNovedades')) return;
-  let yaCerro = false;
-  try { yaCerro = localStorage.getItem(NOVEDADES_VISTO_KEY) === '1'; } catch(e) {}
-  if (yaCerro) return;
+  // Si ya se inscribio, nunca mas le mostramos el cartel
+  let yaInscripto = false;
+  try { yaInscripto = localStorage.getItem(NOVEDADES_INSCRIPTO_KEY) === '1'; } catch(e) {}
+  if (yaInscripto) return;
 
   cartelTimer = setTimeout(mostrarCartelNovedades, NOVEDADES_ESPERA_MS);
 
@@ -2552,46 +2552,75 @@ function mostrarCartelNovedades() {
   document.getElementById('cartelNovedadesInicial').hidden = false;
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
+  // Limpiamos campos y errores
+  document.getElementById('novedadesNombre').value = '';
   document.getElementById('novedadesNumero').value = '';
+  limpiarErroresCartel();
 }
 
 function cerrarCartelNovedades() {
   const cartel = document.getElementById('cartelNovedades');
   if (!cartel) return;
   cartel.hidden = true;
-  // No le volvemos a mostrar por 15 dias
-  try { localStorage.setItem(NOVEDADES_VISTO_KEY, '1'); } catch(e) {}
-  // Limpiamos el timer por si se llamo manualmente
+  // Si dice que no, solo no le mostramos en ESTA sesion, cuando recargue puede volver a aparecer
   if (cartelTimer) clearTimeout(cartelTimer);
 }
 
 function abrirFormularioNovedades() {
   document.getElementById('cartelNovedadesInicial').hidden = true;
   document.getElementById('cartelNovedadesFormulario').hidden = false;
-  document.getElementById('novedadesNumero').focus();
+  limpiarErroresCartel();
+  document.getElementById('novedadesNombre').focus();
 }
 
 function volverInicioCartel() {
   document.getElementById('cartelNovedadesInicial').hidden = false;
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
+  limpiarErroresCartel();
+}
+
+function limpiarErroresCartel() {
+  const err = document.getElementById('cartelNovedadesError');
+  if (err) err.hidden = true;
+  document.querySelectorAll('.cartel-campo').forEach(c => c.classList.remove('cartel-error-campo'));
+  const btn = document.getElementById('btnEnviarNovedades');
+  if (btn) {
+    btn.disabled = false;
+    btn.querySelector('.btn-texto').textContent = 'Enviar';
+    btn.querySelector('.btn-spinner').hidden = true;
+  }
 }
 
 async function enviarContactoNovedades() {
-  const input = document.getElementById('novedadesNumero');
-  let numero = (input.value || '').replace(/\D/g, '');
-  // Limpiamos el numero al formato internacional de WhatsApp 549XXXXXXXXX
+  const inputNombre = document.getElementById('novedadesNombre');
+  const inputNumero = document.getElementById('novedadesNumero');
+  const nombre = (inputNombre.value || '').trim();
+  let numero = (inputNumero.value || '').replace(/\D/g, '');
+  limpiarErroresCartel();
+
+  let tieneError = false;
+  if (!nombre || nombre.length < 2) {
+    inputNombre.parentElement.classList.add('cartel-error-campo');
+    tieneError = true;
+  }
+  // Validacion simple: numero de al menos 8 digitos
   if (numero.startsWith('0')) numero = numero.slice(1);
   if (numero.length < 8) {
-    toast('Ingresa un numero valido', true);
+    inputNumero.parentElement.classList.add('cartel-error-campo');
+    tieneError = true;
+  }
+  if (tieneError) {
+    document.getElementById('cartelNovedadesError').hidden = false;
     return;
   }
+
   if (!numero.startsWith('54')) numero = '549' + numero;
 
-  const btn = document.querySelector('.btn-cartel-principal');
-  const textoOriginal = btn.textContent;
+  const btn = document.getElementById('btnEnviarNovedades');
   btn.disabled = true;
-  btn.textContent = 'Guardando...';
+  btn.querySelector('.btn-texto').textContent = 'Guardando...';
+  btn.querySelector('.btn-spinner').hidden = false;
 
   try {
     // Guardamos el contacto directamente en la hoja de Google Sheets
@@ -2600,19 +2629,25 @@ async function enviarContactoNovedades() {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         accion: 'guardarContacto',
-        contacto: { numero, fecha: new Date().toISOString(), origen: 'cartel-novedades-b2c' }
+        contacto: {
+          numero,
+          nombre,
+          fecha: new Date().toISOString(),
+          origen: 'cartel-novedades-b2c'
+        }
       })
     });
-    // Marcamos como que ya se anoto para no mostrarle el cartel nunca mas
-    try { localStorage.setItem(NOVEDADES_VISTO_KEY, '1'); } catch(e) {}
+    // Si se guardo bien, nunca mas le mostramos el cartel
+    try { localStorage.setItem(NOVEDADES_INSCRIPTO_KEY, '1'); } catch(e) {}
     // Mostramos pantalla de exito
     document.getElementById('cartelNovedadesFormulario').hidden = true;
     document.getElementById('cartelNovedadesExito').hidden = false;
     toast('Perfecto! Te agregamos a la lista');
   } catch(e) {
-    toast('No se pudo guardar el numero, intenta nuevamente', true);
+    toast('No se pudo guardar, intenta nuevamente', true);
     btn.disabled = false;
-    btn.textContent = textoOriginal;
+    btn.querySelector('.btn-texto').textContent = 'Enviar';
+    btn.querySelector('.btn-spinner').hidden = true;
   }
 }
 
