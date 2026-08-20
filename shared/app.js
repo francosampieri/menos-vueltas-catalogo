@@ -2555,8 +2555,20 @@ function mostrarCartelNovedades() {
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
   // Limpiamos campos y errores
-  document.getElementById('novedadesNombre').value = '';
-  document.getElementById('novedadesNumero').value = '';
+  const inputNombre = document.getElementById('novedadesNombre');
+  const inputNumero = document.getElementById('novedadesNumero');
+  inputNombre.value = '';
+  inputNumero.value = '';
+  // Limpiar errores cuando el usuario empiece a escribir
+  [inputNombre, inputNumero].forEach(inp => {
+    inp.addEventListener('input', function() {
+      this.parentElement.classList.remove('cartel-error-campo');
+      const err = document.getElementById('cartelNovedadesError');
+      if (err && document.querySelectorAll('.cartel-error-campo').length === 0) {
+        err.hidden = true;
+      }
+    }, { once: true });
+  });
   limpiarErroresCartel();
 }
 

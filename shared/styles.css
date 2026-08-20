@@ -5382,6 +5382,7 @@ body.modal-abierto {
   80% { transform: translateX(4px); }
 }
 .cartel-campo {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -5393,17 +5394,21 @@ body.modal-abierto {
   padding: 0 12px;
   height: 44px;
   background: var(--bg);
+  transition: border-color .15s, background .15s;
 }
 .cartel-campo:last-of-type {
   margin-bottom: 20px;
 }
-.cartel-campo {
-  transition: border-color .15s, background .15s;
-}
 .cartel-campo.cartel-error-campo {
-  border: 2px solid var(--rojo);
-  background: var(--rojo-bg);
-  animation: shakeCampo 0.3s ease;
+  border: 2px solid var(--rojo) !important;
+  background: var(--rojo-bg) !important;
+  animation: shakeCampo 0.35s ease;
+}
+.cartel-campo.cartel-error-campo input,
+.cartel-campo.cartel-error-campo .cartel-prefijo {
+  color: var(--rojo) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 @keyframes shakeCampo {
   0%, 100% { transform: translateX(0); }
