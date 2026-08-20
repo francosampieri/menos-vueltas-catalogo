@@ -1,5 +1,6 @@
 // ══ CONFIGURACIÓN ══
 const WHATSAPP_NUM = '5492617716916'; // reemplazar con número real
+const SHEETS_URL_PUBLICA = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDXhna8B4UCGnh3eyl2Uy_69qdjiCz4sthAVdsvkPwhpSlUcE5e-h8yZhDIg/exec';
 
 // CANAL lo define cada página (B2C o B2B) con <script>window.CANAL='B2C'</script>
 // ANTES de cargar este archivo. Fallback a B2C por seguridad si no se definió.
@@ -315,7 +316,7 @@ function renderSubfiltros() {
   const subs = new Set();
   Object.values(catalogo).forEach(vars => {
     const g = grupos[vars[0]['Id_Grupo']] || {};
-    const cat = g.categoria || vars[0]['Categoria'] || '';
+    const cat = g.categoria    || vars[0]['Categoria']    || '';
     const sub = g.subcategoria || vars[0]['Subcategoria'] || '';
     if (cat === filtroActivo && sub) subs.add(sub);
   });
@@ -2125,6 +2126,8 @@ function mostrarOnboardingToast() {
   toast.querySelector('.onb-toast-close').addEventListener('click', () => {
     document.getElementById('onbToast')?.remove();
   });
+  // Esperamos a que termine la animacion de entrada del toast para medir su alto real
+  scheduleAjusteCarrito(370);
 }
 
 function scrollLanding(id) {
@@ -2516,3 +2519,330 @@ function initBarraPromo() {
 }
 
 document.addEventListener('DOMContentLoaded', initBarraPromo);
+
+/* ══════════════ CARTEL NOVEDADES ══════════════
+   Aparece 40 segundos despues de que el usuario entra al sitio, solo
+   si no lo cerro antes y no se anoto ya. Guarda el numero en Sheets.
+══════════════════════════════════════════════════════ */
+const NOVEDADES_INSCRIPTO_KEY = 'mv_contacto_novedades';
+const NOVEDADES_ESPERA_MS = 20 * 1000; // 20 segundos (la mitad de 40)
+let cartelTimer = null;
+
+function initCartelNovedades() {
+  if (!document.getElementById('cartelNovedades')) return;
+  // Si ya se inscripto, nunca mas le mostramos el cartel
+  let yaInscripto = false;
+  try { yaInscripto = localStorage.getItem(NOVEDADES_INSCRIPTO_KEY) === '1'; } catch(e) {}
+  if (yaInscripto) return;
+
+  cartelTimer = setTimeout(() => {
+    // No mostrar el cartel si hay un modal de producto abierto o si esta en la landing
+    if (document.body.classList.contains('modal-abierto')) {
+      // Esperamos a que se cierre el modal para mostrarlo luego
+      const observer = new MutationObserver(() => {
+        if (!document.body.classList.contains('modal-abierto')) {
+          setTimeout(mostrarCartelNovedades, 1000);
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      return;
+    }
+    mostrarCartelNovedades();
+  }, NOVEDADES_ESPERA_MS);
+
+  // Si el usuario scrollea hasta el final de la pagina, mostrarlo antes
+  window.addEventListener('scroll', () => {
+    if (cartelTimer) return; // ya se mostro o ya esta programado
+    if (window.scrollY > document.body.scrollHeight - window.innerHeight - 300 && !document.body.classList.contains('modal-abierto')) {
+      clearTimeout(cartelTimer);
+      mostrarCartelNovedades();
+    }
+  }, { once: true });
+}
+
+function mostrarCartelNovedades() {
+  const cartel = document.getElementById('cartelNovedades');
+  if (!cartel) return;
+  cartel.hidden = false;
+  // Ocultamos el onboarding toast para que no se superponga
+  const onb = document.querySelector('.onb-toast');
+  if (onb) onb.hidden = true;
+  document.body.style.paddingBottom = '';
+  document.getElementById('cartelNovedadesInicial').hidden = false;
+  document.getElementById('cartelNovedadesFormulario').hidden = true;
+  document.getElementById('cartelNovedadesExito').hidden = true;
+  // Limpiamos campos y errores
+  const inputNombre = document.getElementById('novedadesNombre');
+  const inputNumero = document.getElementById('novedadesNumero');
+  inputNombre.value = '';
+  inputNumero.value = '';
+  // Limpiar errores cuando el usuario empiece a escribir
+  [inputNombre, inputNumero].forEach(inp => {
+    inp.addEventListener('input', function() {
+      this.parentElement.classList.remove('cartel-error-campo');
+      const err = document.getElementById('cartelNovedadesError');
+      if (err && document.querySelectorAll('.cartel-error-campo').length === 0) {
+        err.hidden = true;
+      }
+    });
+  });
+  limpiarErroresCartel();
+}
+
+function cerrarCartelNovedades() {
+  const cartel = document.getElementById('cartelNovedades');
+  if (!cartel) return;
+  cartel.hidden = true;
+  document.body.style.paddingBottom = '';
+  // Volvemos a mostrar el onboarding si lo habiamos ocultado
+  const onb = document.querySelector('.onb-toast');
+  if (onb && sessionStorage.getItem('onbCerrado') !== '1') onb.hidden = false;
+  // Si dice que no, solo no le mostramos en ESTA sesion, cuando recargue puede volver a aparecer
+  if (cartelTimer) clearTimeout(cartelTimer);
+}
+
+function abrirFormularioNovedades() {
+  document.getElementById('cartelNovedadesInicial').hidden = true;
+  document.getElementById('cartelNovedadesFormulario').hidden = false;
+  limpiarErroresCartel();
+  document.getElementById('novedadesNombre').focus();
+  scheduleAjusteCarrito(50);
+}
+
+function volverInicioCartel() {
+  document.getElementById('cartelNovedadesInicial').hidden = false;
+  document.getElementById('cartelNovedadesFormulario').hidden = true;
+  document.getElementById('cartelNovedadesExito').hidden = true;
+  limpiarErroresCartel();
+  scheduleAjusteCarrito(50);
+}
+
+function limpiarErroresCartel() {
+  const err = document.getElementById('cartelNovedadesError');
+  if (err) {
+    err.hidden = true;
+    err.textContent = '';
+    err.classList.remove('shake');
+  }
+  document.querySelectorAll('.cartel-campo').forEach(c => c.classList.remove('cartel-error-campo'));
+  const btn = document.getElementById('btnEnviarNovedades');
+  if (btn) {
+    btn.disabled = false;
+    const txt = btn.querySelector('.btn-texto');
+    if (txt) txt.textContent = 'Enviar';
+    const spin = btn.querySelector('.btn-spinner');
+    if (spin) spin.hidden = true;
+  }
+}
+
+async function enviarContactoNovedades() {
+  const inputNombre = document.getElementById('novedadesNombre');
+  const inputNumero = document.getElementById('novedadesNumero');
+  const errEl = document.getElementById('cartelNovedadesError');
+  const nombre = (inputNombre.value || '').trim();
+  let numero = (inputNumero.value || '').replace(/\D/g, '');
+  limpiarErroresCartel();
+
+  // Validacion personalizada por campo
+  let errores = [];
+  let camposError = [];
+
+  if (!nombre || nombre.length < 2) {
+    errores.push('Ingresá tu nombre.');
+    camposError.push(inputNombre);
+  }
+
+  if (numero.startsWith('0')) numero = numero.slice(1);
+  if (numero.length < 8) {
+    errores.push('Ingresá un número de WhatsApp válido (al menos 8 dígitos).');
+    camposError.push(inputNumero);
+  }
+
+  if (errores.length > 0) {
+    // Mostramos el/los errores
+    errEl.textContent = errores.join(' ');
+    errEl.hidden = false;
+    // Resaltamos solo los campos que fallan
+    camposError.forEach(input => input.parentElement.classList.add('cartel-error-campo'));
+    // Scrolleamos hasta el error y reproducimos la animacion
+    errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Forzamos la reproduccion de la animacion de shake
+    errEl.style.animation = 'none';
+    errEl.offsetHeight; // trigger reflow
+    errEl.style.animation = '';
+    return;
+  }
+
+  if (!numero.startsWith('54')) numero = '549' + numero;
+
+  const btn = document.getElementById('btnEnviarNovedades');
+  btn.disabled = true;
+  btn.querySelector('.btn-texto').textContent = 'Guardando...';
+  btn.querySelector('.btn-spinner').hidden = false;
+
+  try {
+    // Guardamos el contacto directamente en la hoja de Google Sheets
+    await fetch(SHEETS_URL_PUBLICA, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        accion: 'guardarContacto',
+        contacto: {
+          numero,
+          nombre,
+          fecha: new Date().toISOString(),
+          origen: 'cartel-novedades-b2c'
+        }
+      })
+    });
+    // Si se guardo bien, nunca mas le mostramos el cartel
+    try { localStorage.setItem(NOVEDADES_INSCRIPTO_KEY, '1'); } catch(e) {}
+    // Mostramos pantalla de exito
+    document.getElementById('cartelNovedadesFormulario').hidden = true;
+    document.getElementById('cartelNovedadesExito').hidden = false;
+    toast('Perfecto! Te agregamos a la lista');
+    scheduleAjusteCarrito(50);
+  } catch(e) {
+    errEl.textContent = 'No se pudo guardar tu información, intenta nuevamente.';
+    errEl.hidden = false;
+    errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    btn.disabled = false;
+    btn.querySelector('.btn-texto').textContent = 'Enviar';
+    btn.querySelector('.btn-spinner').hidden = true;
+  }
+}
+
+// Inicializamos el cartel cuando cargue la pagina
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCartelNovedades);
+} else {
+  initCartelNovedades();
+}
+
+/* ══════════════════════════════════════════════════════
+   POSICION DINAMICA CARRITO FLOTANTE (SOLO MOBILE)
+   El boton sube/baja automaticamente solo cuando hay un
+   cartel o un toast ocupando la esquina inferior derecha,
+   no corre en escritorio y no mide durante animaciones
+   para evitar saltos o que se vaya fuera de pantalla.
+══════════════════════════════════════════════════════ */
+let BASE_BOTTOM_CARRITO = 20;
+
+function refrescarBaseBottomCarrito() {
+  const btn = document.querySelector('.cart-floating-btn');
+  if (!btn) return;
+  // Desactivamos transiciones temporalmente para leer el valor base real del CSS
+  // sin que animen cambios intermedios que rompan los calculos
+  const transicionAnterior = btn.style.transition;
+  btn.style.transition = 'none';
+  // Quitamos cualquier estilo inline para leer el valor del media query que corresponda
+  btn.style.bottom = '';
+  // Forzamos reflow para que el valor sea el final, no intermedio
+  void btn.offsetHeight;
+  BASE_BOTTOM_CARRITO = parseFloat(getComputedStyle(btn).bottom) || 20;
+  // Restauramos la transicion
+  btn.style.transition = transicionAnterior;
+}
+
+function ajustarPosicionCarritoFlotante() {
+  const btn = document.querySelector('.cart-floating-btn');
+  if (!btn) return;
+
+  // Solo aplicamos esto en mobile (<=768px), en escritorio el cartel esta abajo a la izquierda
+  // y no se superpone con el boton del carrito que esta abajo a la derecha
+  if (window.innerWidth > 768) {
+    btn.style.bottom = '';
+    return;
+  }
+
+  const margenSeguridad = 16;
+  let offsetTotal = 0;
+
+  // Chequeamos que elementos estan visibles en este momento exacto:
+  // - Cuando se abre el cartel, el JS ya oculta el toast, asi que nunca sumamos los dos.
+  // - Solo tomamos el elemento MAS ALTO que esta abajo, para no sumar de mas.
+  const toastVisible = document.querySelector('.onb-toast:not([hidden])');
+  const cartelVisible = document.getElementById('cartelNovedades') && !document.getElementById('cartelNovedades').hidden;
+
+  if (cartelVisible) {
+    const cartel = document.getElementById('cartelNovedades');
+    offsetTotal = cartel.offsetHeight + margenSeguridad;
+  } else if (toastVisible) {
+    offsetTotal = toastVisible.offsetHeight + margenSeguridad;
+  }
+
+  // Aplicamos la posicion final directamente, sin resettear el valor antes (evita
+  // que se dispare una animacion de vuelta a la base que rompia los calculos)
+  btn.style.bottom = (BASE_BOTTOM_CARRITO + offsetTotal) + 'px';
+}
+
+// Programamos el ajuste para que corra siempre DESPUES de que terminen todos
+// los cambios de DOM y animaciones, no en el medio
+function scheduleAjusteCarrito(espera = 0) {
+  clearTimeout(window._carritoAjusteTimer);
+  window._carritoAjusteTimer = setTimeout(ajustarPosicionCarritoFlotante, espera);
+}
+
+function initPosicionCarritoDinamica() {
+  // Leemos el valor base inicial antes de cualquier cambio
+  refrescarBaseBottomCarrito();
+  scheduleAjusteCarrito(100);
+
+  // Escuchamos cambios de estado (hidden/agregado/borrado) y reajustamos cuando terminen
+  const obs = new MutationObserver((mutations) => {
+    let cambio = false;
+    for (const m of mutations) {
+      if (m.type === 'attributes' && m.attributeName === 'hidden') { cambio = true; break; }
+      if (m.type === 'childList' && (m.addedNodes.length || m.removedNodes.length)) { cambio = true; break; }
+    }
+    if (!cambio) return;
+
+    const cartelAhoraVisible = document.getElementById('cartelNovedades') && !document.getElementById('cartelNovedades').hidden;
+    if (cartelAhoraVisible) {
+      // Cuando se abre el cartel esperamos a que termine TODA la animacion de slide up (400ms)
+      // antes de medir, sino agarramos valores intermedios y sube de a poco
+      scheduleAjusteCarrito(430);
+    } else {
+      // Cuando se cierra algo, o se cambia de estado dentro del cartel, esperamos 1 frame
+      scheduleAjusteCarrito(16);
+    }
+  });
+
+  obs.observe(document.body, {
+    attributes: true,
+    subtree: true,
+    childList: true,
+    attributeFilter: ['hidden']
+  });
+
+  // Reajustar al cambiar tamanio/orientacion: recalculamos tambien el valor base por si cambia el media query
+  window.addEventListener('resize', () => {
+    clearTimeout(window._resizeCarritoTimer);
+    window._resizeCarritoTimer = setTimeout(() => {
+      refrescarBaseBottomCarrito();
+      ajustarPosicionCarritoFlotante();
+    }, 120);
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPosicionCarritoDinamica);
+} else {
+  initPosicionCarritoDinamica();
+}
+
+// Funcion de toast simple para notificaciones
+function toast(mensaje) {
+  const existente = document.querySelector('.mv-toast-notif');
+  if (existente) existente.remove();
+  const t = document.createElement('div');
+  t.className = 'mv-toast-notif';
+  t.textContent = mensaje;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('visible'), 10);
+  setTimeout(() => {
+    t.classList.remove('visible');
+    setTimeout(() => t.remove(), 300);
+  }, 2500);
+}
