@@ -1006,11 +1006,13 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   display: flex;
   gap: var(--space-3);
   overflow-x: auto;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   /* Aire para que la sombra de las cards no se recorte al scrollear */
-  padding: 4px 0 6px;
+  padding: 4px var(--space-4) 6px;
 }
 .destacados-track::-webkit-scrollbar { display: none; }
 
@@ -3661,9 +3663,13 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
   scrollbar-width: none;
   padding: 2px var(--space-4) var(--space-2);
+  /* Sin esto, al llegar al final del scroll horizontal el navegador
+     se tira a scrollear la pagina verticalmente, muy molesto */
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   /* Sin esto, el snap alinea la primera card contra el borde del contenedor
      ignorando el padding izquierdo: el riel quedaba arrancado en ~16px y
      nunca podía volver al 0 real (mostraba sombra y flecha izquierda desde
