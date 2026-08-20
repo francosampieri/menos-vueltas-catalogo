@@ -82,6 +82,7 @@
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
 /* overflow-x: clip (y no hidden) — hidden convierte al elemento en un
    contenedor de scroll y anula el position:sticky del sidebar del catálogo. */
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
