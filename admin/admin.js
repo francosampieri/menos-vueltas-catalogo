@@ -67,6 +67,13 @@ function money(n) {
   return '$' + Math.round(n || 0).toLocaleString('es-AR');
 }
 
+// Quita tildes/diacríticos para que el buscador no sea quisquilloso:
+// "aceite" encuentra "Aceite", "yerba" encuentra "Yerba" aunque el
+// catálogo lo tenga con tilde, etc.
+function sinAcentos(s) {
+  return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 function hoyISO() {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -137,19 +144,31 @@ function lineaDesdeCatalogo(prod, cantidad) {
 
 // Precio que efectivamente se cobra por unidad, según la cantidad.
 // Usa solo los valores congelados de la línea.
-// Precio que se cobra por unidad. Los dos descuentos se combinan: la promo
-// temporal ya viene trasladada al precio por cantidad desde el Sheets, así
-// que comprar más siempre conviene.
+// Los dos descuentos se combinan: la promo temporal ya viene trasladada al
+// precio por cantidad desde el Sheets (precio_promo_mayorista = ppd), así
+// que al llegar al mínimo de unidades se cobra ese precio; si no, el de
+// promo unitaria. Esta es exactamente la MISMA lógica que usa al agregar
+// un producto nuevo: no puede haber diferencia entre crear y editar.
 function precioUnitario(l) {
   const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin;
 
   if (llegaAlMinimo) {
-    // promoCant es el precio por cantidad con la promo ya aplicada; si el
-    // producto no tiene promo, el generador copió ahí el precio normal.
-    const porCant = l.promoCant || l.porCant;
-    if (porCant > 0) return porCant;
+    // Caso normal: ppd (promoCant) existe y es el precio correcto con los
+    // dos descuentos combinados.
+    if (l.promoCant > 0) return l.promoCant;
+    // DEFENSA: si por alguna razón la línea vino sin promoCant (pedido
+    // viejo guardado antes que existiera ese campo, o dato que volvió
+    // incompleto desde Sheets), pero SÍ tiene porCant y promo, estimamos
+    // el ppd con la misma proporción del descuento unitario. Es mejor
+    // eso que caer silenciosamente a porCant y cobrar de más.
+    if (l.porCant > 0 && l.promo > 0 && l.lista > 0 && l.promo < l.lista) {
+      const ratio = l.promo / l.lista;
+      return Math.round(l.porCant * ratio * 100) / 100;
+    }
+    // Último recurso: precio por cantidad sin promo.
+    if (l.porCant > 0) return l.porCant;
   }
-  return l.promo || l.lista;
+  return l.promo > 0 ? l.promo : l.lista;
 }
 
 /* Las etiquetas de descuento las arma UNA sola función, que usan tanto el
@@ -603,8 +622,17 @@ function pintarLista() {
   } else if (fe !== 'todos') {
     lista = lista.filter(p => p.estado === fe);
   }
+  const qNorm = sinAcentos(q);
   lista = lista
-    .filter(p => !q || `${p.cliente} ${p.id} ${p.estado}`.toLowerCase().includes(q))
+    .filter(p => {
+      if (!q) return true;
+      // Si el pedido tiene un clienteId vinculado, buscamos contra el
+      // nombre ACTUAL del cliente (no el congelado en el pedido), así
+      // al renombrar un cliente lo seguís encontrando.
+      const clienteVinculado = p.clienteId ? (CLIENTES.find(c => c.id === p.clienteId)?.nombre || '') : '';
+      const texto = sinAcentos(`${p.cliente} ${clienteVinculado} ${p.id} ${p.estado}`).toLowerCase();
+      return texto.includes(qNorm);
+    })
     .sort((a, b) => fechaISO(b.fechaPedido).localeCompare(fechaISO(a.fechaPedido)) || b.id - a.id);
 
   pintarKpis(delCanal);
@@ -620,11 +648,18 @@ function pintarLista() {
   tb.innerHTML = lista.map(p => {
     const t = calcularPedido(p);
     const claseEstado = 'estado--' + p.estado.toLowerCase().replaceAll(/\s+/g, '-');
+    // Si el pedido está vinculado a una ficha de cliente, mostramos el
+    // nombre ACTUAL de esa ficha (por si lo corregiste). Si no (pedido
+    // viejo sin vínculo, o cliente eliminado), caemos al nombre congelado
+    // que quedó guardado en el pedido.
+    const clienteVinculado = p.clienteId ? CLIENTES.find(c => c.id === p.clienteId) : null;
+    const nombreMostrar = clienteVinculado?.nombre || p.cliente;
+    const telMostrar = clienteVinculado?.telefono || p.telefono;
     return `<tr onclick="abrirPedido(${p.id})"${p.estado === 'Cancelado' ? ' style="opacity:.6"' : ''}>
       <td><b>#${p.id}</b></td>
       <td>${fechaCorta(p.fechaPedido)}</td>
       <td>${fechaCorta(p.fechaEntrega)}</td>
-      <td class="celda-cliente"><b>${esc(p.cliente) || '—'}</b>${p.telefono ? `<span>${esc(p.telefono)}</span>` : ''}</td>
+      <td class="celda-cliente"><b>${esc(nombreMostrar) || '—'}</b>${telMostrar ? `<span>${esc(telMostrar)}</span>` : ''}</td>
       <td><span class="estado ${claseEstado}">${p.estado}</span></td>
       <td class="num">${t.unidades}</td>
       <td class="num"><b>${money(t.total)}</b></td>
@@ -680,7 +715,7 @@ function pintarKpis(pedidos) {
    entregó. Es el mismo criterio que con los precios.                       */
 
 function pintarClientes() {
-  const q = (document.getElementById('qCli').value || '').toLowerCase().trim();
+  const q = sinAcentos((document.getElementById('qCli').value || '').toLowerCase().trim());
 
   // Cuántos pedidos hizo cada cliente y cuánto lleva gastado: es el dato
   // que dice quién vuelve, que es lo que importa medir.
@@ -694,7 +729,11 @@ function pintarClientes() {
 
   const lista = CLIENTES
     .filter(c => (c.canal || 'b2c') === CANAL)
-    .filter(c => !q || `${c.nombre} ${c.telefono} ${c.barrio}`.toLowerCase().includes(q))
+    .filter(c => {
+      if (!q) return true;
+      const texto = sinAcentos(`${c.nombre} ${c.telefono} ${c.barrio} ${c.direccion} ${c.notas}`).toLowerCase();
+      return texto.includes(q);
+    })
     .sort((a, b) => (resumen[b.id]?.n || 0) - (resumen[a.id]?.n || 0) ||
                      a.nombre.localeCompare(b.nombre));
 
@@ -907,6 +946,24 @@ function abrirPedido(id) {
   // Copia profunda: si el usuario se arrepiente y vuelve, el original
   // queda intacto.
   edicion = JSON.parse(JSON.stringify(p));
+
+  // DEFENSA: pedidos creados antes de que el panel guardara el campo
+  // promoCant (precio_promo_mayorista = precio x cantidad + promo
+  // combinados) pueden haber quedado con esa clave en 0 aunque el
+  // cálculo estuviera bien al momento de guardar. Si una línea tiene
+  // un precio unitario ya calculado en la cantidad que alcanza el
+  // mínimo, rellenamos promoCant con ese valor para que al recalcular
+  // siga dando el mismo número correcto y no "salte" al precio equivocado.
+  (edicion.items || []).forEach(l => {
+    if (!l.cantMin || l.cant < l.cantMin) return;
+    if (l.promoCant > 0) return;
+    // Si la línea ya tiene un unit guardado (vino del Sheets con
+    // totales calculados), tomamos ese como el precio correcto.
+    if (l.unit && l.unit > 0) {
+      l.promoCant = l.unit;
+    }
+  });
+
   abrirEditor(false);
 }
 
@@ -975,10 +1032,12 @@ function buscarProducto() {
 
   // Se buscan todas las palabras sueltas, en cualquier orden: así
   // "aceite natura" encuentra "Aceite Girasol NATURA 3000 cc".
-  const palabras = q.split(/\s+/);
+  // Ambos lados se normalizan sin tildes para que "yerba" encuentre
+  // "Yerba", "jugo" encuentre "Jugo" aunque en el catálogo tenga tilde.
+  const palabras = sinAcentos(q).split(/\s+/);
   sugerencias = CATALOGO[edicion.canal]
     .filter(p => {
-      const texto = `${p.n} ${p.m}`.toLowerCase();
+      const texto = sinAcentos(`${p.n} ${p.m}`).toLowerCase();
       return palabras.every(w => texto.includes(w));
     })
     .slice(0, 8);
