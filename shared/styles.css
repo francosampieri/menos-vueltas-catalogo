@@ -5038,7 +5038,6 @@ body.modal-abierto {
   .footer-copy { font-size: .72rem; }
   .footer-whatsapp { grid-column: 1 / -1; grid-row: 1; display: flex; align-items: center; justify-content: center; height: 42px; border: 1px solid rgba(255,255,255,.55); border-radius: var(--r2); font-size: .82rem; }
 
-  /* Toast de onboarding abajo del todo, separado del borde */
   .onb-toast {
     bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     width: calc(100vw - 32px);
@@ -5229,7 +5228,8 @@ body.modal-abierto {
   pointer-events: none;
   transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              background var(--t);
+              background var(--t),
+              bottom 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cart-floating-btn.visible {
@@ -5526,7 +5526,7 @@ body.modal-abierto {
 
 @media (max-width: 768px) {
   .cart-floating-btn {
-    bottom: calc(300px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     right: 18px;
     width: 58px;
     height: 58px;

@@ -2125,7 +2125,11 @@ function mostrarOnboardingToast() {
 
   toast.querySelector('.onb-toast-close').addEventListener('click', () => {
     document.getElementById('onbToast')?.remove();
+    requestAnimationFrame(ajustarPosicionCarritoFlotante);
   });
+  // Actualizamos posicion luego de insertar el toast
+  requestAnimationFrame(ajustarPosicionCarritoFlotante);
+  setTimeout(ajustarPosicionCarritoFlotante, 350);
 }
 
 function scrollLanding(id) {
@@ -2567,6 +2571,9 @@ function mostrarCartelNovedades() {
   const onb = document.querySelector('.onb-toast');
   if (onb) onb.hidden = true;
   document.body.style.paddingBottom = '';
+  // Actualizamos posicion del carrito inmediatamente
+  requestAnimationFrame(ajustarPosicionCarritoFlotante);
+  setTimeout(ajustarPosicionCarritoFlotante, 400); // Luego de la animacion de slide up
   document.getElementById('cartelNovedadesInicial').hidden = false;
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
@@ -2598,6 +2605,8 @@ function cerrarCartelNovedades() {
   if (onb && sessionStorage.getItem('onbCerrado') !== '1') onb.hidden = false;
   // Si dice que no, solo no le mostramos en ESTA sesion, cuando recargue puede volver a aparecer
   if (cartelTimer) clearTimeout(cartelTimer);
+  // Actualizamos posicion del carrito
+  requestAnimationFrame(ajustarPosicionCarritoFlotante);
 }
 
 function abrirFormularioNovedades() {
@@ -2605,6 +2614,7 @@ function abrirFormularioNovedades() {
   document.getElementById('cartelNovedadesFormulario').hidden = false;
   limpiarErroresCartel();
   document.getElementById('novedadesNombre').focus();
+  requestAnimationFrame(ajustarPosicionCarritoFlotante);
 }
 
 function volverInicioCartel() {
@@ -2612,6 +2622,7 @@ function volverInicioCartel() {
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
   limpiarErroresCartel();
+  requestAnimationFrame(ajustarPosicionCarritoFlotante);
 }
 
 function limpiarErroresCartel() {
@@ -2698,6 +2709,7 @@ async function enviarContactoNovedades() {
     document.getElementById('cartelNovedadesFormulario').hidden = true;
     document.getElementById('cartelNovedadesExito').hidden = false;
     toast('Perfecto! Te agregamos a la lista');
+    requestAnimationFrame(ajustarPosicionCarritoFlotante);
   } catch(e) {
     errEl.textContent = 'No se pudo guardar tu información, intenta nuevamente.';
     errEl.hidden = false;
@@ -2713,4 +2725,82 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCartelNovedades);
 } else {
   initCartelNovedades();
+}
+
+/* ══════════════════════════════════════════════════════
+   POSICION DINAMICA CARRITO FLOTANTE
+   El boton sube/baja automaticamente segun si hay un
+   toast o un cartel ocupando la zona inferior de la
+   pantalla. No depende de valores fijos, no se rompe
+   si cambiamos altos/espaciados en el futuro.
+══════════════════════════════════════════════════════ */
+function ajustarPosicionCarritoFlotante() {
+  const btn = document.querySelector('.cart-floating-btn');
+  if (!btn) return;
+
+  // Quitamos el inline style para leer el valor base del CSS (respeta media queries y safe area)
+  btn.style.bottom = '';
+  const estilosBase = getComputedStyle(btn);
+  const baseBottom = parseFloat(estilosBase.bottom) || 24;
+  const margenSeguridad = 16;
+
+  let offsetNecesario = 0;
+  const ventanaAlto = window.innerHeight;
+
+  const elementosFijosAbajo = [
+    { el: document.querySelector('.cartel-novedades:not([hidden])'), tipo: 'fijo' },
+    { el: document.querySelector('.onb-toast:not([hidden])'), tipo: 'fijo' }
+  ];
+
+  for (const { el } of elementosFijosAbajo) {
+    if (!el) continue;
+    const rect = el.getBoundingClientRect();
+    // Si el elemento esta actualmente en pantalla (incluso si esta a mitad de la animacion de entrada)
+    if (rect.top < ventanaAlto - 8 && rect.bottom > ventanaAlto - 4) {
+      const altoElemento = ventanaAlto - rect.top;
+      offsetNecesario = Math.max(offsetNecesario, altoElemento + margenSeguridad);
+    } else if (rect.top >= ventanaAlto) {
+      // Elemento existe, esta oculto via transform (animacion de entrada arrancando):
+      // usamos su offsetHeight que ya tiene el tamaño final
+      offsetNecesario = Math.max(offsetNecesario, el.offsetHeight + margenSeguridad);
+    }
+  }
+
+  btn.style.bottom = (baseBottom + offsetNecesario) + 'px';
+}
+
+// Ejecutamos cuando cambie cualquier cosa que pueda alterar elementos abajo:
+// apertura/cierre de cartel, toast, resize/orientacion, cambios de estado del formulario
+function observarCambiosPosicionCarrito() {
+  ajustarPosicionCarritoFlotante();
+  // Observamos atributos hidden/class en todo el body para detectar cuando se abre/cierra cualquier elemento flotante
+  const obs = new MutationObserver((mutations) => {
+    let necesitaAjuste = false;
+    for (const m of mutations) {
+      if (m.type === 'attributes' && (m.attributeName === 'hidden' || m.attributeName === 'class')) {
+        necesitaAjuste = true;
+        break;
+      }
+      if (m.addedNodes.length || m.removedNodes.length) necesitaAjuste = true;
+    }
+    if (necesitaAjuste) requestAnimationFrame(ajustarPosicionCarritoFlotante);
+  });
+  obs.observe(document.body, {
+    attributes: true,
+    subtree: true,
+    childList: true,
+    attributeFilter: ['hidden', 'class', 'style']
+  });
+  // Tambien en resize y cambios de orientacion
+  window.addEventListener('resize', ajustarPosicionCarritoFlotante);
+  window.addEventListener('scroll', () => {
+    // El cartel es fixed, pero por si hay algun cambio al scrollear (ej: promo barra sticky)
+    requestAnimationFrame(ajustarPosicionCarritoFlotante);
+  }, { passive: true });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', observarCambiosPosicionCarrito);
+} else {
+  observarCambiosPosicionCarrito();
 }
