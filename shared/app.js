@@ -2549,6 +2549,8 @@ function mostrarCartelNovedades() {
   const cartel = document.getElementById('cartelNovedades');
   if (!cartel) return;
   cartel.hidden = false;
+  // Agregamos espacio en el fondo para que el cartel no tape el toast/onboarding ni el boton flotante
+  document.body.style.paddingBottom = '220px';
   document.getElementById('cartelNovedadesInicial').hidden = false;
   document.getElementById('cartelNovedadesFormulario').hidden = true;
   document.getElementById('cartelNovedadesExito').hidden = true;
@@ -2562,6 +2564,7 @@ function cerrarCartelNovedades() {
   const cartel = document.getElementById('cartelNovedades');
   if (!cartel) return;
   cartel.hidden = true;
+  document.body.style.paddingBottom = '';
   // Si dice que no, solo no le mostramos en ESTA sesion, cuando recargue puede volver a aparecer
   if (cartelTimer) clearTimeout(cartelTimer);
 }
@@ -2587,8 +2590,10 @@ function limpiarErroresCartel() {
   const btn = document.getElementById('btnEnviarNovedades');
   if (btn) {
     btn.disabled = false;
-    btn.querySelector('.btn-texto').textContent = 'Enviar';
-    btn.querySelector('.btn-spinner').hidden = true;
+    const txt = btn.querySelector('.btn-texto');
+    if (txt) txt.textContent = 'Enviar';
+    const spin = btn.querySelector('.btn-spinner');
+    if (spin) spin.hidden = true;
   }
 }
 
