@@ -1006,7 +1006,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   display: flex;
   gap: var(--space-3);
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
   scrollbar-width: none;
   -ms-overflow-style: none;
   overscroll-behavior-x: contain;
@@ -3663,7 +3663,7 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
   scrollbar-width: none;
   padding: 2px var(--space-4) var(--space-2);
   /* Sin esto, al llegar al final del scroll horizontal el navegador
