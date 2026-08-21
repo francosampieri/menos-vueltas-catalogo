@@ -168,7 +168,19 @@ function precioUnitario(l) {
    `pct` es la etiqueta del Sheets ("10%"). Puede faltar en pedidos guardados
    antes de que existiera esa columna, así que hay un texto de reserva. */
 function etiquetaPromo(pct) {
-  return (pct || '').trim() || 'Promo';
+  // El pct puede venir como "10%" (string del catálogo), como 0.1 (cuando
+  // Sheets convirtió "10%" al número subyacente al guardarlo), como 10, o
+  // directamente vacío. Normalizamos todo a texto con %; si no hay nada,
+  // cae al texto por defecto "Promo".
+  if (pct == null || pct === '' || pct === 0) return 'Promo';
+  if (typeof pct === 'number') {
+    if (pct < 1) pct = Math.round(pct * 100);           // 0.1 → 10
+    return Math.round(pct) + '%';
+  }
+  const txt = String(pct).trim();
+  if (!txt) return 'Promo';
+  if (/^\d+(\.\d+)?$/.test(txt)) return txt + '%';      // "10" → "10%"
+  return txt;                                            // ya es "10%"
 }
 
 // Recibe cualquier objeto que tenga los precios congelados (una línea de
