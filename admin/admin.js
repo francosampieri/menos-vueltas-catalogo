@@ -67,6 +67,13 @@ function money(n) {
   return '$' + Math.round(n || 0).toLocaleString('es-AR');
 }
 
+// Quita tildes/diacríticos para que el buscador no sea quisquilloso:
+// "aceite" encuentra "Aceite", "yerba" encuentra "Yerba" aunque el
+// catálogo lo tenga con tilde, etc.
+function sinAcentos(s) {
+  return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 function hoyISO() {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -137,9 +144,9 @@ function lineaDesdeCatalogo(prod, cantidad) {
 
 // Precio que efectivamente se cobra por unidad, según la cantidad.
 // Usa solo los valores congelados de la línea.
-// Precio que se cobra por unidad. Los dos descuentos se combinan: la promo
-// temporal ya viene trasladada al precio por cantidad desde el Sheets, así
-// que comprar más siempre conviene.
+// Los dos descuentos se combinan: la promo temporal ya viene trasladada al
+// precio por cantidad desde el Sheets (precio_promo_mayorista = promoCant),
+// así que comprar más siempre conviene.
 function precioUnitario(l) {
   const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin;
 
@@ -161,7 +168,19 @@ function precioUnitario(l) {
    `pct` es la etiqueta del Sheets ("10%"). Puede faltar en pedidos guardados
    antes de que existiera esa columna, así que hay un texto de reserva. */
 function etiquetaPromo(pct) {
-  return (pct || '').trim() || 'Promo';
+  // El pct puede venir como "10%" (string del catálogo), como 0.1 (cuando
+  // Sheets convirtió "10%" al número subyacente al guardarlo), como 10, o
+  // directamente vacío. Normalizamos todo a texto con %; si no hay nada,
+  // cae al texto por defecto "Promo".
+  if (pct == null || pct === '' || pct === 0) return 'Promo';
+  if (typeof pct === 'number') {
+    if (pct < 1) pct = Math.round(pct * 100);           // 0.1 → 10
+    return Math.round(pct) + '%';
+  }
+  const txt = String(pct).trim();
+  if (!txt) return 'Promo';
+  if (/^\d+(\.\d+)?$/.test(txt)) return txt + '%';      // "10" → "10%"
+  return txt;                                            // ya es "10%"
 }
 
 // Recibe cualquier objeto que tenga los precios congelados (una línea de
@@ -603,8 +622,17 @@ function pintarLista() {
   } else if (fe !== 'todos') {
     lista = lista.filter(p => p.estado === fe);
   }
+  const qNorm = sinAcentos(q);
   lista = lista
-    .filter(p => !q || `${p.cliente} ${p.id} ${p.estado}`.toLowerCase().includes(q))
+    .filter(p => {
+      if (!q) return true;
+      // Si el pedido tiene un clienteId vinculado, buscamos contra el
+      // nombre ACTUAL del cliente (no el congelado en el pedido), así
+      // al renombrar un cliente lo seguís encontrando.
+      const clienteVinculado = p.clienteId ? (CLIENTES.find(c => c.id === p.clienteId)?.nombre || '') : '';
+      const texto = sinAcentos(`${p.cliente} ${clienteVinculado} ${p.id} ${p.estado}`).toLowerCase();
+      return texto.includes(qNorm);
+    })
     .sort((a, b) => fechaISO(b.fechaPedido).localeCompare(fechaISO(a.fechaPedido)) || b.id - a.id);
 
   pintarKpis(delCanal);
@@ -620,11 +648,18 @@ function pintarLista() {
   tb.innerHTML = lista.map(p => {
     const t = calcularPedido(p);
     const claseEstado = 'estado--' + p.estado.toLowerCase().replaceAll(/\s+/g, '-');
+    // Si el pedido está vinculado a una ficha de cliente, mostramos el
+    // nombre ACTUAL de esa ficha (por si lo corregiste). Si no (pedido
+    // viejo sin vínculo, o cliente eliminado), caemos al nombre congelado
+    // que quedó guardado en el pedido.
+    const clienteVinculado = p.clienteId ? CLIENTES.find(c => c.id === p.clienteId) : null;
+    const nombreMostrar = clienteVinculado?.nombre || p.cliente;
+    const telMostrar = clienteVinculado?.telefono || p.telefono;
     return `<tr onclick="abrirPedido(${p.id})"${p.estado === 'Cancelado' ? ' style="opacity:.6"' : ''}>
       <td><b>#${p.id}</b></td>
       <td>${fechaCorta(p.fechaPedido)}</td>
       <td>${fechaCorta(p.fechaEntrega)}</td>
-      <td class="celda-cliente"><b>${esc(p.cliente) || '—'}</b>${p.telefono ? `<span>${esc(p.telefono)}</span>` : ''}</td>
+      <td class="celda-cliente"><b>${esc(nombreMostrar) || '—'}</b>${telMostrar ? `<span>${esc(telMostrar)}</span>` : ''}</td>
       <td><span class="estado ${claseEstado}">${p.estado}</span></td>
       <td class="num">${t.unidades}</td>
       <td class="num"><b>${money(t.total)}</b></td>
@@ -680,7 +715,7 @@ function pintarKpis(pedidos) {
    entregó. Es el mismo criterio que con los precios.                       */
 
 function pintarClientes() {
-  const q = (document.getElementById('qCli').value || '').toLowerCase().trim();
+  const q = sinAcentos((document.getElementById('qCli').value || '').toLowerCase().trim());
 
   // Cuántos pedidos hizo cada cliente y cuánto lleva gastado: es el dato
   // que dice quién vuelve, que es lo que importa medir.
@@ -694,7 +729,11 @@ function pintarClientes() {
 
   const lista = CLIENTES
     .filter(c => (c.canal || 'b2c') === CANAL)
-    .filter(c => !q || `${c.nombre} ${c.telefono} ${c.barrio}`.toLowerCase().includes(q))
+    .filter(c => {
+      if (!q) return true;
+      const texto = sinAcentos(`${c.nombre} ${c.telefono} ${c.barrio} ${c.direccion} ${c.notas}`).toLowerCase();
+      return texto.includes(q);
+    })
     .sort((a, b) => (resumen[b.id]?.n || 0) - (resumen[a.id]?.n || 0) ||
                      a.nombre.localeCompare(b.nombre));
 
@@ -975,10 +1014,12 @@ function buscarProducto() {
 
   // Se buscan todas las palabras sueltas, en cualquier orden: así
   // "aceite natura" encuentra "Aceite Girasol NATURA 3000 cc".
-  const palabras = q.split(/\s+/);
+  // Ambos lados se normalizan sin tildes para que "yerba" encuentre
+  // "Yerba", "jugo" encuentre "Jugo" aunque en el catálogo tenga tilde.
+  const palabras = sinAcentos(q).split(/\s+/);
   sugerencias = CATALOGO[edicion.canal]
     .filter(p => {
-      const texto = `${p.n} ${p.m}`.toLowerCase();
+      const texto = sinAcentos(`${p.n} ${p.m}`).toLowerCase();
       return palabras.every(w => texto.includes(w));
     })
     .slice(0, 8);
