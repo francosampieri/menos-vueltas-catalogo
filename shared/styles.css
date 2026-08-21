@@ -656,6 +656,37 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   color: #D9E8C9;
 }
 
+.hero-promo-chips {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+}
+
+.hero-promo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: var(--rf);
+  padding: 7px 14px;
+  color: white;
+  font-family: var(--font);
+  font-size: .84rem;
+  font-weight: 600;
+  letter-spacing: -.005em;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  text-shadow: 0 1px 4px rgba(0,0,0,.4);
+}
+
+.hero-promo-chip svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 .hero-promo-texto {
   font-family: var(--font-body);
   font-size: 0.95rem;
@@ -792,7 +823,11 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    padding: var(--space-6) var(--space-4) var(--space-5);
+    /* Arriba achicamos un pelo el padding para que el bloque
+       título/chips/contador quede unos px más arriba, en mejor
+       armonía con la bolsa de la foto; abajo se mantiene igual
+       para que los botones sigan apoyados en el fondo. */
+    padding: 20px var(--space-4) var(--space-5);
     max-width: none;
   }
   .hero-promo-badge {
@@ -807,6 +842,25 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   }
   .hero-promo-titulo strong {
     text-shadow: 0 2px 6px rgba(0,0,0,.5), 0 8px 30px rgba(0,0,0,.35);
+  }
+  /* Los chips de beneficios también se cortan antes de chocar con la bolsa
+     del super de la foto, y se achican bien para quedar los dos en una sola
+     hilera sin desplazar el contador. */
+  .hero-promo-chips {
+    max-width: 60%;
+    gap: 5px;
+    margin-bottom: var(--space-2);
+    flex-wrap: nowrap;
+  }
+  .hero-promo-chip {
+    padding: 4px 9px;
+    font-size: .72rem;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .hero-promo-chip svg {
+    width: 11px;
+    height: 11px;
   }
   .hero-promo-texto {
     max-width: 60%; /* corta antes de chocar con la bolsa de la foto */

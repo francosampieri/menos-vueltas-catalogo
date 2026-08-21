@@ -2525,7 +2525,7 @@ document.addEventListener('DOMContentLoaded', initBarraPromo);
    si no lo cerro antes y no se anoto ya. Guarda el numero en Sheets.
 ══════════════════════════════════════════════════════ */
 const NOVEDADES_INSCRIPTO_KEY = 'mv_contacto_novedades';
-const NOVEDADES_ESPERA_MS = 20 * 1000; // 20 segundos (la mitad de 40)
+const NOVEDADES_ESPERA_MS = 35 * 1000; // 35 segundos antes de mostrar el cartel
 let cartelTimer = null;
 
 function initCartelNovedades() {
