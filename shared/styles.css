@@ -827,7 +827,7 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
        título/chips/contador quede unos px más arriba, en mejor
        armonía con la bolsa de la foto; abajo se mantiene igual
        para que los botones sigan apoyados en el fondo. */
-    padding: 26px var(--space-4) var(--space-5);
+    padding: 20px var(--space-4) var(--space-5);
     max-width: none;
   }
   .hero-promo-badge {
