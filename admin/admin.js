@@ -1427,9 +1427,11 @@ function parsearMensajeWAPorLineas(texto) {
   }
   if (actual) items.push(actual);
 
-  // Parsear el total del mensaje (última línea con "TOTAL: $X.XXX")
+  // Parsear el total del mensaje: buscamos una línea que ARRANQUE con "TOTAL:"
+  // (anclada al inicio de línea) para no confundirla con "Subtotal:" que contiene
+  // la subsecuencia "total" pero empieza con otras letras.
   let totalMsg = null;
-  const totalMatch = texto.match(/TOTAL\s*:?\s*\$?\s*([\d\.,]+)/i);
+  const totalMatch = texto.match(/(?:^|[\n\r])\**\s*TOTAL\s*:?\s*\$?\s*([\d\.,]+)/i);
   if (totalMatch) totalMsg = num(totalMatch[1]);
 
   return { items, totalMsg };
