@@ -1361,3 +1361,297 @@ async function copiarListaDistribuidora() {
   }
 }
 
+
+
+/* ══════════════ IMPORTAR DESDE WHATSAPP ══════════════ */
+
+// Estado de la importación mientras está abierto el modal
+let waParse = null; // { items: [{nombreOriginal, cant, variante, precioMsg?, matchId, score}], totalMsg }
+
+function abrirImportarWA() {
+  if (!edicion) {
+    toast('Primero abrí o creá un pedido.', true);
+    return;
+  }
+  document.getElementById('waTexto').value = '';
+  document.getElementById('waPasoResultados').hidden = true;
+  document.getElementById('waTexto').focus();
+  document.getElementById('modalImportarWA').hidden = false;
+}
+
+function cerrarImportarWA() {
+  document.getElementById('modalImportarWA').hidden = true;
+  waParse = null;
+}
+
+function limpiarImportarWA() {
+  document.getElementById('waPasoResultados').hidden = true;
+  document.getElementById('waTexto').value = '';
+  document.getElementById('waTexto').focus();
+}
+
+/**
+ * Extrae items numerados del mensaje de WhatsApp con regex.
+ * Formato esperado:
+ *    1. MARCA Producto
+ *       Variante: X
+ *       Cantidad: N unidades
+ *       ... (opcional Precio unit./Subtotal/otros)
+ */
+function parsearMensajeWAPorLineas(texto) {
+  // Normalizar saltos de línea, quitar líneas decorativas (----)
+  const lineas = texto.replace(/\r/g, '').split('\n').map(l => l.trimEnd());
+  const items = [];
+  // Buscar líneas que empiecen con número seguido de punto (1., 2., etc.)
+  const headerRe = /^(\d+)\.\s+(.+)$/;
+  let actual = null;
+  for (const ln0 of lineas) {
+    const ln = ln0.trim();
+    const m = ln.match(headerRe);
+    if (m) {
+      if (actual) items.push(actual);
+      actual = {
+        nro: parseInt(m[1], 10),
+        nombre: m[2].trim(),
+        variante: '',
+        cant: 1
+      };
+      continue;
+    }
+    if (!actual) continue;
+    const v = ln.match(/^variante\s*:\s*(.+)$/i);
+    if (v) { actual.variante = v[1].trim(); continue; }
+    const c = ln.match(/^cantidad\s*:\s*(\d+)\s*(?:unid(?:ad)?es?)?$/i);
+    if (c) { actual.cant = parseInt(c[1], 10) || 1; continue; }
+    // Si es otra línea tipo "Precio unit.", "Subtotal:" la ignoramos
+  }
+  if (actual) items.push(actual);
+
+  // Parsear el total del mensaje (última línea con "TOTAL: $X.XXX")
+  let totalMsg = null;
+  const totalMatch = texto.match(/TOTAL\s*:?\s*\$?\s*([\d\.,]+)/i);
+  if (totalMatch) totalMsg = num(totalMatch[1]);
+
+  return { items, totalMsg };
+}
+
+/**
+ * Normaliza un string para matchear: minúsculas, sin tildes, sin unidades de tamaño
+ * para que la comparación sea más robusta.
+ */
+function normalizarBusqueda(s) {
+  return sinAcentos(String(s || '').toLowerCase())
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Trigram similarity: robusto para comparar nombres aun con palabras invertidas
+function trigramas(s) {
+  const t = new Set();
+  const pad = '  ' + s + '  ';
+  for (let i = 0; i < pad.length - 2; i++) t.add(pad.slice(i, i+3));
+  return t;
+}
+function similitud(a, b) {
+  const ta = trigramas(a), tb = trigramas(b);
+  let inter = 0;
+  for (const t of ta) if (tb.has(t)) inter++;
+  return inter / Math.max(ta.size + tb.size - inter, 1);
+}
+
+/**
+ * Busca el producto del catálogo que mejor matchea con el nombre+variante
+ * del mensaje. Devuelve { id, score } donde score está entre 0 y 1.
+ */
+function buscarMejorMatch(nombre, variante) {
+  const catalogo = CATALOGO[edicion.canal] || [];
+  const buscar = normalizarBusqueda(nombre + ' ' + (variante || ''));
+  if (!buscar) return { id: null, score: 0 };
+
+  // Separar palabras de búsqueda para el primer filtro (rápido)
+  const palabras = buscar.split(/\s+/).filter(p => p.length > 1);
+
+  let mejor = { id: null, score: 0 };
+  for (const p of catalogo) {
+    const nomCat = normalizarBusqueda(p.n + ' ' + (p.m || ''));
+    // Filtrado rápido: tiene que contener al menos la mitad de las palabras
+    const presentes = palabras.filter(w => nomCat.includes(w)).length;
+    if (presentes < Math.ceil(palabras.length * 0.5)) continue;
+    const score = similitud(buscar, nomCat);
+    if (score > mejor.score) mejor = { id: p.id, score };
+  }
+  return mejor;
+}
+
+function parsearPedidoWA() {
+  const texto = document.getElementById('waTexto').value.trim();
+  if (!texto) { toast('Pegá el mensaje del pedido antes.', true); return; }
+
+  const { items, totalMsg } = parsearMensajeWAPorLineas(texto);
+
+  if (!items.length) {
+    toast('No se detectaron productos numerados en el mensaje. Asegurate de pegar el texto tal cual llega.', true);
+    return;
+  }
+
+  // Matchear cada item contra el catálogo
+  const resultados = [];
+  for (const it of items) {
+    const match = buscarMejorMatch(it.nombre, it.variante);
+    resultados.push({
+      nombreOriginal: it.nombre + (it.variante ? ' · ' + it.variante : ''),
+      cant: it.cant,
+      variante: it.variante,
+      matchId: match.score >= 0.3 ? match.id : null,
+      score: match.score
+    });
+  }
+
+  waParse = { items: resultados, totalMsg };
+  renderizarPreviewWA();
+}
+
+function renderizarPreviewWA() {
+  const lista = document.getElementById('waLista');
+  const catalogo = CATALOGO[edicion.canal] || [];
+  const opcionesPorId = {};
+  for (const p of catalogo) opcionesPorId[p.id] = p;
+
+  let okCount = 0, warnCount = 0, failCount = 0;
+
+  let html = '';
+  waParse.items.forEach((it, i) => {
+    const estado = it.matchId ? (it.score >= 0.5 ? 'ok' : 'warn') : 'fail';
+    if (estado === 'ok') okCount++;
+    else if (estado === 'warn') warnCount++;
+    else failCount++;
+
+    html += `<div class="wa-row ${estado}">
+      <div class="wa-cant">×${it.cant}</div>
+      <div class="wa-nombre">
+        ${esc(it.nombreOriginal)}
+        <small>Linea ${i+1} del mensaje</small>
+      </div>
+      <div class="wa-match">
+        <span class="wa-badge ${estado}">${
+          estado === 'ok' ? `Match ${Math.round(it.score*100)}%`
+          : estado === 'warn' ? `Revisar ${Math.round(it.score*100)}%`
+          : 'Sin match'
+        }</span>
+        <select onchange="waCambiarMatch(${i}, this.value)">
+          <option value="">— Elegí un producto —</option>
+          ${catalogo.map(p =>
+            `<option value="${esc(p.id)}"${p.id === it.matchId ? ' selected' : ''}>${esc(p.n)}</option>`
+          ).join('')}
+        </select>
+      </div>
+    </div>`;
+  });
+
+  lista.innerHTML = html;
+
+  // Leyenda con contadores
+  let leyenda = [];
+  if (okCount) leyenda.push(`<b style="color:#497b4a">${okCount} match${okCount===1?'':'es'} seguro${okCount===1?'':'s'}</b>`);
+  if (warnCount) leyenda.push(`<b style="color:#c18c1f">${warnCount} para revisar</b>`);
+  if (failCount) leyenda.push(`<b style="color:#c66">${failCount} sin match</b>`);
+  document.getElementById('waLeyenda').innerHTML =
+    `Se detectaron <b>${waParse.items.length}</b> productos. ` + leyenda.join(' · ') +
+    `. Corregí los que hagan falta desde el desplegable.`;
+
+  // Comparación de total
+  const comp = document.getElementById('waComparacion');
+  const filaDiff = document.getElementById('waFilaDiff');
+  const btnConfirmar = document.getElementById('btnConfirmarWA');
+
+  // Calcular total con lo matcheado para la comparación (precios del catálogo)
+  let calc = 0;
+  for (const it of waParse.items) {
+    const p = it.matchId ? opcionesPorId[it.matchId] : null;
+    if (!p) continue;
+    const unit = num(p.pp) || num(p.pv);
+    if (p.ud && it.cant >= parseInt(p.ud, 10) && num(p.pd)) {
+      // descuento por cantidad
+      calc += it.cant * num(p.ppd || p.pd);
+    } else {
+      calc += it.cant * unit;
+    }
+  }
+
+  document.getElementById('waTotalMsg').textContent =
+    waParse.totalMsg != null ? money(waParse.totalMsg) : '—';
+  document.getElementById('waTotalCalc').textContent =
+    calc > 0 ? money(calc) : '—';
+
+  if (waParse.totalMsg != null && calc > 0) {
+    comp.hidden = false;
+    filaDiff.hidden = false;
+    const diff = calc - waParse.totalMsg;
+    const diffPct = waParse.totalMsg > 0 ? (diff / waParse.totalMsg * 100) : 0;
+    const el = document.getElementById('waDiff');
+    const lbl = document.getElementById('waDiffLabel');
+    if (Math.abs(diffPct) < 2) {
+      el.textContent = '✓ Coincide';
+      filaDiff.className = 'wa-fila wa-fila--diff ok';
+    } else {
+      const signo = diff >= 0 ? '+' : '';
+      el.textContent = `${signo}${money(diff)} (${signo}${diffPct.toFixed(1)}%)`;
+      filaDiff.className = 'wa-fila wa-fila--diff warn';
+      lbl.textContent = 'Diferencia (revisar si hay descuentos/envio/cambios de precio)';
+    }
+  } else {
+    comp.hidden = (waParse.totalMsg == null && calc === 0);
+    filaDiff.hidden = true;
+  }
+
+  btnConfirmar.disabled = failCount > 0;
+  btnConfirmar.title = failCount > 0 ? 'Hay productos sin matchear, elegilos del desplegable.' : '';
+
+  document.getElementById('waPasoResultados').hidden = false;
+}
+
+function waCambiarMatch(i, nuevoId) {
+  if (!waParse) return;
+  const catalogo = CATALOGO[edicion.canal] || [];
+  if (!nuevoId) {
+    waParse.items[i].matchId = null;
+    waParse.items[i].score = 0;
+  } else {
+    const prod = catalogo.find(p => p.id === nuevoId);
+    if (!prod) return;
+    // Recalcular score con el nuevo nombre para que la badge sea representativa
+    const buscar = normalizarBusqueda(waParse.items[i].nombreOriginal);
+    const nomCat = normalizarBusqueda(prod.n + ' ' + (prod.m || ''));
+    waParse.items[i].matchId = nuevoId;
+    waParse.items[i].score = similitud(buscar, nomCat);
+  }
+  renderizarPreviewWA();
+}
+
+function confirmarImportarWA() {
+  if (!waParse) return;
+  const catalogo = CATALOGO[edicion.canal] || [];
+  let agregados = 0, salteados = 0;
+
+  for (const it of waParse.items) {
+    const prod = catalogo.find(p => p.id === it.matchId);
+    if (!prod) { salteados++; continue; }
+
+    // Si ya existe en el pedido, sumar la cantidad (igual que agregarProducto)
+    const existente = edicion.items.find(l => l.id === prod.id);
+    if (existente) {
+      existente.cant += it.cant;
+    } else {
+      edicion.items.push(lineaDesdeCatalogo(prod, it.cant));
+    }
+    agregados++;
+  }
+
+  pintarItems();
+  cerrarImportarWA();
+
+  let msg = `Se agregaron ${agregados} productos al pedido.`;
+  if (salteados) msg += ` (${salteados} salteados por falta de match)`;
+  toast(msg);
+}
