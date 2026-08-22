@@ -25468,16 +25468,16 @@
       "Producto": "Pepas DON SATUR 300 g",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.260,58",
-      "Precio_Venta": "$2.300,00",
+      "Precio_Venta": "$2.100,00",
       "Uni Dto": "3",
       "Dto": "15%",
-      "Precio_Mayorista": "$1.950,00",
+      "Precio_Mayorista": "$1.800,00",
       "promo": "10%",
-      "Precio_Promo": "$2.050,00",
-      "Precio_Promo_Mayorista": "$1.750,00",
-      "Markup": "82,46%",
-      "Ganancia_Bruta": "$1.039,42",
-      "Strat": "82,50%"
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.600,00",
+      "Markup": "66,59%",
+      "Ganancia_Bruta": "$839,42",
+      "Strat": "66,59%"
     },
     {
       "Id": "229",
