@@ -1391,22 +1391,91 @@ function limpiarImportarWA() {
 }
 
 /**
+ * Limpia el formato que WhatsApp agrega al copiar un mensaje con el botón
+ * "Copiar" del celu o de la compu. El markdown que WhatsApp usa es:
+ *   *negrita*   _itálica_   ~tachado~   `monoespacio`   ```bloque```
+ * Cuando el mensaje tiene esos estilos, al copiarlo vienen los asteriscos/
+ * guiones bajos/tiles/backticks pegados alrededor de las palabras. Si no
+ * los sacamos, la regex de líneas numeradas no reconoce "1. *Producto*" ni
+ * "*Cantidad:* 2" y el match contra el catálogo se rompe.
+ *
+ * También limpia otros artefactos del portapapeles: espacios no separables,
+ * zero-width, prefijos de cita (>) que WhatsApp agrega al reenviar, BOM, etc.
+ */
+function limpiarMarkdownWA(texto) {
+  if (!texto) return '';
+  let t = String(texto);
+
+  // Normalizar saltos de línea (Windows/CRLF → LF) y quitar BOM/zero-width.
+  t = t.replace(/\r\n?/g, '\n')
+       .replace(/^\uFEFF/, '')
+       // zero-width space/joiner/non-joiner/BOM left-to-right/right-to-left marks
+       .replace(/[\u200B-\u200F\u202A-\u202E\uFEFF]/g, '')
+       // Espacio no separable (nbsp) → espacio normal
+       .replace(/\u00A0/g, ' ');
+
+  // Quitar prefijos de cita de WhatsApp "> " al comienzo de cada línea
+  // (aparecen al copiar mensajes reenviados o con respuesta). Acepta
+  // cualquier espacio después del > (incluido el nbsp \u00A0 que a veces
+  // pone WhatsApp Web).
+  t = t.split('\n').map(ln => ln.replace(/^>[\s\u00A0]?/, '')).join('\n');
+
+  // Desenvolver markdown de WhatsApp. Los marcadores van "pegados" al texto
+  // (no puede haber espacio entre el * y la primera letra), así que la regex
+  // no se come asteriscos sueltos en medio de una oración. Se hace en varias
+  // pasadas para capturar los casos anidados (ej. "*1.* *Nombre*") y los
+  // marcadores triples de ```código``` que también llegan a veces.
+  const limpiar = (re) => {
+    let antes;
+    do {
+      antes = t;
+      t = t.replace(re, '$1');
+    } while (t !== antes);
+  };
+  // ```bloque``` monoespacio (triple backtick)
+  limpiar(/```([^`\n]+)```/g);
+  // `mono`
+  limpiar(/`([^`\n]+)`/g);
+  // **negrita** (WA usa uno solo, pero por las dudas también el doble)
+  limpiar(/\*\*([^*\n]+)\*\*/g);
+  // *negrita* — no acepta espacios inmediatos al * para no borrar asteriscos
+  // que estén separados del texto ("hola * cómo andas").
+  limpiar(/\*([^*\n]+?)\*/g);
+  // _itálica_
+  limpiar(/_([^_\n]+?)_/g);
+  // ~tachado~
+  limpiar(/~([^~\n]+?)~/g);
+
+  // Colapsar espacios múltiples y limpiar cada línea.
+  t = t.split('\n').map(ln => ln.replace(/[ \t]+/g, ' ').trim()).join('\n');
+
+  return t;
+}
+
+/**
  * Extrae items numerados del mensaje de WhatsApp con regex.
- * Formato esperado:
+ * Soporta mensajes crudos (con formato de WhatsApp) porque primero pasa por
+ * limpiarMarkdownWA(), que quita asteriscos/guiones/backticks de negrita,
+ * itálica, tachado y monoespacio.
+ *
+ * Formato esperado (luego de limpiar):
  *    1. MARCA Producto
  *       Variante: X
  *       Cantidad: N unidades
  *       ... (opcional Precio unit./Subtotal/otros)
  */
 function parsearMensajeWAPorLineas(texto) {
-  // Normalizar saltos de línea, quitar líneas decorativas (----)
-  const lineas = texto.replace(/\r/g, '').split('\n').map(l => l.trimEnd());
+  const limpio = limpiarMarkdownWA(texto);
+  const lineas = limpio.split('\n').map(l => l.trimEnd());
   const items = [];
   // Buscar líneas que empiecen con número seguido de punto (1., 2., etc.)
-  const headerRe = /^(\d+)\.\s+(.+)$/;
+  // Tolerante a un punto/círculo/guion inicial que a veces agrega WA al copiar
+  // listas con viñetas (●, •, -, etc.), y a paréntesis "1)" en vez de "1.".
+  const headerRe = /^(?:[•●\-]\s*)?(\d+)\s*[\.\)]\s+(.+)$/;
   let actual = null;
   for (const ln0 of lineas) {
     const ln = ln0.trim();
+    if (!ln) continue;
     const m = ln.match(headerRe);
     if (m) {
       if (actual) items.push(actual);
@@ -1419,19 +1488,24 @@ function parsearMensajeWAPorLineas(texto) {
       continue;
     }
     if (!actual) continue;
-    const v = ln.match(/^variante\s*:\s*(.+)$/i);
+    // Labels aceptados: "Variante:", "Presentación:", "Tamaño:", "Formato:"
+    // (a veces el generador de la app varía un poco). El two-point del
+    // regex acepta dos puntos con o sin espacio, y el texto puede estar en
+    // mayúscula o minúscula.
+    const v = ln.match(/^(?:variante|presentaci[oó]n|tama[nñ]o|formato|sabor|modelo)\s*:?\s*(.+)$/i);
     if (v) { actual.variante = v[1].trim(); continue; }
-    const c = ln.match(/^cantidad\s*:\s*(\d+)\s*(?:unid(?:ad)?es?)?$/i);
+    const c = ln.match(/^cant(?:idad)?\s*:?\s*(\d+)\s*(?:unid(?:ad)?es?|u\.?|x)?\s*$/i);
     if (c) { actual.cant = parseInt(c[1], 10) || 1; continue; }
-    // Si es otra línea tipo "Precio unit.", "Subtotal:" la ignoramos
+    // Si es otra línea tipo "Precio unit.", "Subtotal:", "Total:", la ignoramos
+    // (cae acá y no modifica el item).
   }
   if (actual) items.push(actual);
 
-  // Parsear el total del mensaje: buscamos una línea que ARRANQUE con "TOTAL:"
-  // (anclada al inicio de línea) para no confundirla con "Subtotal:" que contiene
-  // la subsecuencia "total" pero empieza con otras letras.
+  // Parsear el total del mensaje: buscamos una línea que ARRANQUE con "TOTAL"
+  // (o "Total") para no confundirla con "Subtotal". El dos puntos y el signo $
+  // son opcionales. Trabajamos sobre el texto ya limpio de markdown.
   let totalMsg = null;
-  const totalMatch = texto.match(/(?:^|[\n\r])\**\s*TOTAL\s*:?\s*\$?\s*([\d\.,]+)/i);
+  const totalMatch = limpio.match(/(?:^|\n)\s*total\s*:?\s*\$?\s*([\d\.,]+)/i);
   if (totalMatch) totalMsg = num(totalMatch[1]);
 
   return { items, totalMsg };
