@@ -9070,7 +9070,7 @@
       "Label_Tamaño": "600 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/509-baggio-agua-saborizada-fresh-manzana-600-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": ""
+      "Precio_Costo": "$729,59"
     },
     {
       "Id": "510",
@@ -9091,7 +9091,7 @@
       "Label_Tamaño": "600 cc",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/510-baggio-agua-saborizada-fresh-pomelo-600-cc.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": ""
+      "Precio_Costo": "$729,59"
     },
     {
       "Id": "511",
@@ -25696,7 +25696,7 @@
       "Id_proveedor": "BAG015",
       "Producto": "Agua Saborizada Fresh Manzana BAGGIO 600 cc",
       "Tipo": "Rentable",
-      "Precio_Costo": "",
+      "Precio_Costo": "$729,59",
       "Precio_Venta": "$1.050,00",
       "Uni Dto": "6",
       "Dto": "6%",
@@ -25704,8 +25704,8 @@
       "promo": "10%",
       "Precio_Promo": "$950,00",
       "Precio_Promo_Mayorista": "$900,00",
-      "Markup": "#DIV/0!",
-      "Ganancia_Bruta": "$1.050,00",
+      "Markup": "43,92%",
+      "Ganancia_Bruta": "$320,41",
       "Strat": "37,70%"
     },
     {
@@ -25713,7 +25713,7 @@
       "Id_proveedor": "BAG016",
       "Producto": "Agua Saborizada Fresh Pomelo BAGGIO 600 cc",
       "Tipo": "Rentable",
-      "Precio_Costo": "",
+      "Precio_Costo": "$729,59",
       "Precio_Venta": "$1.050,00",
       "Uni Dto": "6",
       "Dto": "6%",
@@ -25721,8 +25721,8 @@
       "promo": "10%",
       "Precio_Promo": "$950,00",
       "Precio_Promo_Mayorista": "$900,00",
-      "Markup": "#DIV/0!",
-      "Ganancia_Bruta": "$1.050,00",
+      "Markup": "43,92%",
+      "Ganancia_Bruta": "$320,41",
       "Strat": "37,70%"
     },
     {
@@ -33614,7 +33614,7 @@
       "Categoría": "Almacén",
       "Subcategoria": "Bebidas",
       "Tipo": "Rentable",
-      "Precio_Costo": "",
+      "Precio_Costo": "$729,59",
       "Precio_Venta": "$950,00",
       "Uni Dto": "6",
       "Dto": "8%",
@@ -33622,8 +33622,8 @@
       "promo": "",
       "Precio_Promo": "$950,00",
       "Precio_Promo_Mayorista": "$850,00",
-      "Markup": "#DIV/0!",
-      "Ganancia_Bruta": "$950,00",
+      "Markup": "30,21%",
+      "Ganancia_Bruta": "$220,41",
       "Strat": "23,70%"
     },
     {
@@ -33633,7 +33633,7 @@
       "Categoría": "Almacén",
       "Subcategoria": "Bebidas",
       "Tipo": "Rentable",
-      "Precio_Costo": "",
+      "Precio_Costo": "$729,59",
       "Precio_Venta": "$950,00",
       "Uni Dto": "6",
       "Dto": "8%",
@@ -33641,8 +33641,8 @@
       "promo": "",
       "Precio_Promo": "$950,00",
       "Precio_Promo_Mayorista": "$850,00",
-      "Markup": "#DIV/0!",
-      "Ganancia_Bruta": "$950,00",
+      "Markup": "30,21%",
+      "Ganancia_Bruta": "$220,41",
       "Strat": "23,70%"
     },
     {
