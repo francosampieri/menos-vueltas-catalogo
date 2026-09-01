@@ -64,32 +64,44 @@ function promoVigente() {
   return isNaN(fin) ? true : Date.now() < fin;
 }
 
-// Precio de lista y precio con promo de una variante. Si la columna de promo
-// está vacía, el generador ya copió el de lista, así que ambos coinciden.
+// Precio de lista y precio con descuento de una variante. Si Precio_Promo
+// está vacío o no es menor que el de lista, se usa el de lista: así cada
+// producto puede tener su propio descuento (o ninguno), independientemente
+// de si hay una campaña global activa.
 function preciosDe(v) {
   const lista = parsePrecio(v['Precio_Venta']);
-  const promo = promoVigente() ? (parsePrecio(v['Precio_Promo']) ?? lista) : lista;
+  const promoPrecio = parsePrecio(v['Precio_Promo']);
+  const promo = (promoPrecio !== null && promoPrecio < lista) ? promoPrecio : lista;
   return { lista, promo };
 }
 
-// Precio por cantidad, con la promo ya aplicada cuando corresponde. Se
-// traslada a propósito: si solo bajara el unitario, en varios productos
-// saldría más barato comprar de a una que por cantidad.
+// Precio por cantidad (descuento por volumen). Mismo criterio que preciosDe:
+// Precio_Promo_Mayorista aplica siempre que sea menor al de lista, sin
+// depender de si hay campaña global. Se traslada el descuento a propósito
+// para que nunca salga más barato comprar de a una que por cantidad.
 function preciosCantidadDe(v) {
   const lista = parsePrecio(v['Precio_Mayorista']);
-  const promo = promoVigente() ? (parsePrecio(v['Precio_Promo_Mayorista']) ?? lista) : lista;
+  const promoPrecio = parsePrecio(v['Precio_Promo_Mayorista']);
+  const promo = (promoPrecio !== null && promoPrecio < lista) ? promoPrecio : lista;
   return { lista, promo };
 }
 
-// Etiqueta del descuento tal como está cargada en la hoja ("10%"). Vacía si
-// el producto no tiene promo.
+// Etiqueta del descuento tal como está cargada en la hoja ("10%", "15%").
+// Vacía si el producto no tiene descuento cargado o si Precio_Promo no
+// baja realmente el precio (por ejemplo, la promo ya se venció en la
+// planilla y los precios volvieron a coincidir).
 function etiquetaPromo(v) {
-  if (!promoVigente()) return '';
   const pct = (v['promo'] || '').trim();
-  return pct ? pct.replace(/\s+/g, '') + ' OFF' : '';
+  if (!pct) return '';
+  // Solo mostramos la etiqueta si efectivamente hay una rebaja real
+  const p = preciosDe(v);
+  if (!(p.lista !== null && p.promo !== null && p.promo < p.lista)) return '';
+  return pct.replace(/\s+/g, '') + ' OFF';
 }
 
-// true si el producto tiene una promo que realmente baja el precio.
+// true si el producto tiene un descuento que realmente baja el precio.
+// Funciona tanto para promos globales como para descuentos puntuales por
+// producto, sin depender de promoVigente().
 function tienePromo(v) {
   const p = preciosDe(v);
   return p.lista !== null && p.promo !== null && p.promo < p.lista;
@@ -1715,14 +1727,24 @@ function actualizarUICarrito(rerenderItems = true) {
   escribir('crSubtotal', hayPrecio ? formatPrecio(bruto) : '—');
   mostrar('crSubtotalFila', hayPrecio);
 
-  escribir('crPromoLabel', PROMO.NOMBRE);
+  // Línea de descuento: si hay campaña global usa su nombre; si no, pero
+  // hay productos con descuento puntual, dice "Descuentos" (genérico).
+  // Si no hay descuentos en ningún producto, no se muestra.
+  const hayPromoGlobal = promoVigente();
+  const hayDescProd   = dtoPromo > 0;
+  if (hayPromoGlobal) {
+    escribir('crPromoLabel', PROMO.NOMBRE);
+  } else {
+    escribir('crPromoLabel', 'Descuentos');
+  }
   escribir('crPromo', '−' + formatPrecio(dtoPromo));
-  mostrar('crPromoFila', hayPrecio && promoVigente() && dtoPromo > 0);
+  mostrar('crPromoFila', hayPrecio && hayDescProd);
 
   escribir('crCantidad', '−' + formatPrecio(dtoCantidad));
   mostrar('crCantidadFila', hayPrecio && dtoCantidad > 0);
 
-  mostrar('crEnvioFila', hayPrecio && promoVigente());
+  // Envío GRATIS solo durante campaña global
+  mostrar('crEnvioFila', hayPrecio && hayPromoGlobal);
 
   // Cierre del resumen: el ahorro total (promo + cantidad) en una línea
   // discreta bajo el total, sin recuadro — los dos descuentos ya están
@@ -1858,8 +1880,9 @@ function construirMensajePedido() {
     const ahorro   = dtoPromo + dtoCantidad;
 
     msg += `Subtotal: ${formatPrecio(bruto)}\n`;
-    if (promoVigente() && dtoPromo > 0) {
-      msg += `${PROMO.NOMBRE}: -${formatPrecio(dtoPromo)}\n`;
+    if (dtoPromo > 0) {
+      const labelDesc = promoVigente() ? PROMO.NOMBRE : 'Descuentos';
+      msg += `${labelDesc}: -${formatPrecio(dtoPromo)}\n`;
     }
     if (dtoCantidad > 0) {
       msg += `Descuentos por cantidad: -${formatPrecio(dtoCantidad)}\n`;
