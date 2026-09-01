@@ -9299,7 +9299,7 @@
       "Tipo_Variante": "Tipo",
       "Label_Variante": "Al Natural",
       "Label_Tamaño": "",
-      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/520-cumana-atun-natural-170-g.webp",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/520-cumana-atun-desmenuzado-natural-170-g.webp",
       "Tipo": "Rentable",
       "Precio_Costo": "$1.056,17"
     },
@@ -9418,7 +9418,7 @@
       "Marca": "PURISIMA",
       "Tamaño": "800",
       "UM": "g",
-      "Categoria": "Almacén",
+      "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Té e Infusiones",
       "Tags": "leche, leche en polvo, lácteo, polvo, leche instantánea, preparar leche, desayuno, merienda, cocina, repostería",
       "Id_Grupo": "278",
@@ -21454,7 +21454,7 @@
       "Id_Grupo": "278",
       "Nombre_Grupo": "Leche en Polvo",
       "Marca": "PURISIMA",
-      "Categoria": "Almacén",
+      "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Té e Infusiones"
     },
     {
@@ -37774,7 +37774,7 @@
       "Id": "526",
       "Id_proveedor": "PUR2982881100",
       "Producto": "Leche en Polvo PURISIMA 800 g",
-      "Categoría": "Almacén",
+      "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Té e Infusiones",
       "Tipo": "Rentable",
       "Precio_Costo": "$7.501,04",
