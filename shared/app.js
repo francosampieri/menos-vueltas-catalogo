@@ -22,18 +22,27 @@ const PRODUCTOS_DESTACADOS = [
   '8', '41', '108', '117', '124', '133', '152', '155', '220', '252', '267'
 ];
 
-// Productos nuevos: muestran la cinta "NUEVO" con estrella en la esquina
-// superior derecha de la card y del modal. Agregá acá los Id_Grupo cuando
-// haya un lanzamiento (Semana de Estrenos, etc.) — no hace falta una
-// columna extra en Sheets, y no hay fecha de vencimiento automático:
-// cuando el producto deja de ser novedad se saca de esta lista a mano.
+// Productos nuevos (a nivel VARIANTE individual, no grupo): muestran la
+// cinta "NUEVO" con estrella en la esquina superior de la card y del modal.
+// Poné acá los Id de cada variante nueva (columna "Id" de la hoja Productos,
+// NO Id_Grupo). Así se puede agregar una variante nueva (sabor, tamaño, etc.)
+// a un producto que ya existía sin marcar todo el grupo como nuevo.
+//
+// En la card del catálogo la badge se muestra si CUALQUIERA de las
+// variantes del grupo es nueva (no parpadea al rotar); en el modal la
+// badge se muestra solo cuando la variante seleccionada es nueva.
 const NUEVOS = [
-  '1', '514', '515', '516', '517', '518', '519', '520', '521', '522',
-  '523', '524', '525', '526', '527', '528', '529', '530', '531'
+  '514', '515', '516', '517', '518', '519', '520', '521', '522', '523', '524', '525', '526', '527', '528', '529', '530', '531'
 ];
 
-function esNuevo(gid) {
-  return NUEVOS.includes(String(gid));
+function esNuevo(idProd) {
+  return NUEVOS.includes(String(idProd));
+}
+
+// true si alguna variante del grupo es nueva (para la card, que rota y
+// no puede andar prendiendo/apagando la badge).
+function grupoTieneNuevo(vars) {
+  return vars.some(v => esNuevo(v['Id']));
 }
 
 // SVG del carrito para el badge icon-only (la bolsita)
@@ -795,8 +804,7 @@ function crearCardDestacada(gid, vars) {
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
-  const v = vars[0];
-  const nuevo  = esNuevo(gid);
+  const nuevo  = grupoTieneNuevo(vars);
 
   const precio    = parsePrecio(v['Precio_Venta']);
   const precioDto = preciosCantidadDe(v).promo;
@@ -880,7 +888,7 @@ function crearCard(gid, vars) {
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
-  const nuevo  = esNuevo(gid);
+  const nuevo  = grupoTieneNuevo(vars);
 
   const card = document.createElement('div');
   card.className = 'card' + (nuevo ? ' tiene-nuevo' : '');
@@ -1062,6 +1070,26 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
     if (vlabelEl)  vlabelEl.style.opacity  = '1';
     if (vprecioEl) vprecioEl.style.opacity = '1';
     if (vprecioDtoEl) vprecioDtoEl.style.opacity = '1';
+
+    // Si estamos dentro del modal (se detecta porque el ancestro img-wrap
+    // tiene la clase .pm-img), actualizamos la badge NUEVO según si la
+    // variante que acaba de entrar es nueva. Esto es lo que permite que
+    // agregar una variante nueva a un grupo existente marque solo ESA
+    // variante y no todas.
+    if (imgEl) {
+      const pmImg = imgEl.closest('.pm-img');
+      if (pmImg) {
+        const badgeNuevoEl = pmImg.querySelector(':scope > .badge-nuevo');
+        const esNuevoAhora = esNuevo(v['Id']);
+        if (esNuevoAhora) {
+          pmImg.classList.add('tiene-nuevo');
+          if (!badgeNuevoEl) pmImg.appendChild(badgeNuevo());
+        } else {
+          pmImg.classList.remove('tiene-nuevo');
+          if (badgeNuevoEl) badgeNuevoEl.remove();
+        }
+      }
+    }
   };
 
   if (!animar || !imgEl) {
@@ -1146,7 +1174,10 @@ function abrirModalProducto(gid, vars) {
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
-  const nuevo  = esNuevo(gid);
+
+  // En el modal la badge NUEVO se muestra solo para la variante actual.
+  // Empieza con la variante 0.
+  const nuevoInicial = esNuevo(vars[0]['Id']);
 
   const overlay = document.createElement('div');
   overlay.className = 'pm-overlay';
@@ -1157,16 +1188,15 @@ function abrirModalProducto(gid, vars) {
   // la información a la derecha (modal apaisado que entra sin scroll); en
   // mobile las columnas se apilan.
   // Los badges (promo/nuevo/carrito) se insertan por JS dentro de .pm-img,
-  // igual que en las cards: promo arriba-izq, nuevo arriba-der, carrito
-  // abajo-der (o arriba-der si no hay nuevo). NO se pone badge nuevo junto
-  // al precio — solo sobre la foto.
+  // todos en la esquina superior izquierda (para no chocar con la X).
+  // NO se pone badge nuevo junto al precio — solo sobre la foto.
   overlay.innerHTML = `
     <div class="pm-panel" role="dialog" aria-modal="true" aria-label="${nombre}">
       <button class="pm-close" aria-label="Cerrar">
         <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
       <div class="pm-media">
-        <div class="pm-img${nuevo ? ' tiene-nuevo' : ''}" id="pm-img-wrap">
+        <div class="pm-img${nuevoInicial ? ' tiene-nuevo' : ''}" id="pm-img-wrap">
           <div class="pm-img-placeholder"></div>
           <img alt="" style="display:none">
         </div>
@@ -1211,7 +1241,7 @@ function abrirModalProducto(gid, vars) {
   const hayPromoModal = etModal && tienePromo(vars[0]);
   if (hayPromoModal) imgWrap.classList.add('tiene-promo');
   if (hayPromoModal) imgWrap.appendChild(badgePromo(etModal));
-  if (nuevo) imgWrap.appendChild(badgeNuevo());
+  if (nuevoInicial) imgWrap.appendChild(badgeNuevo());
 
   // Badge carrito en ícono (círculo blanco con bolsita). Se marca visible
   // si este producto ya está en el carrito.
