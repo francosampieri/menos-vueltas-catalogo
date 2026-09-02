@@ -9540,7 +9540,7 @@
       "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "MV_001",
-      "Producto": "Maple de Huevos Extragrande",
+      "Producto": "Maple de Huevos Extragrandes",
       "Marca": "CASEROS",
       "Tamaño": "30",
       "UM": "u",
@@ -21463,6 +21463,13 @@
       "Marca": "TOSTEX",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Salados"
+    },
+    {
+      "Id_Grupo": "280",
+      "Nombre_Grupo": "Maple de Huevos Extragrandes",
+      "Marca": "CASEROS",
+      "Categoria": "Almacén",
+      "Subcategoria": "Huevos"
     }
   ],
   "precios_b2c": [
@@ -29217,6 +29224,23 @@
       "Markup": "37,68%",
       "Ganancia_Bruta": "$383,18",
       "Strat": "37,68%"
+    },
+    {
+      "Id": "532",
+      "Id_proveedor": "MV_001",
+      "Producto": "Maple de Huevos Extragrandes CASEROS 30 u",
+      "Tipo": "Rentable",
+      "Precio_Costo": "$4.667,00",
+      "Precio_Venta": "$6.800,00",
+      "Uni Dto": "3",
+      "Dto": "5%",
+      "Precio_Mayorista": "$6.450,00",
+      "promo": "15%",
+      "Precio_Promo": "$5.800,00",
+      "Precio_Promo_Mayorista": "$5.500,00",
+      "Markup": "45,70%",
+      "Ganancia_Bruta": "$2.133,00",
+      "Strat": "45,70%"
     }
   ],
   "precios_b2b": [
@@ -37882,6 +37906,25 @@
       "Precio_Promo_Mayorista": "115000,00%",
       "Markup": "27,85%",
       "Ganancia_Bruta": "$283,18",
+      "Strat": ""
+    },
+    {
+      "Id": "532",
+      "Id_proveedor": "MV_001",
+      "Producto": "Maple de Huevos Extragrandes CASEROS 30 u",
+      "Categoría": "Almacén",
+      "Subcategoria": "Huevos",
+      "Tipo": "Rentable",
+      "Precio_Costo": "$4.667,00",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "0,00%",
+      "Markup": "-100,00%",
+      "Ganancia_Bruta": "-$4.667,00",
       "Strat": ""
     }
   ]
