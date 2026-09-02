@@ -28,7 +28,11 @@ const PRODUCTOS_DESTACADOS = [
 // columna extra en Sheets, y no hay fecha de vencimiento automático:
 // cuando el producto deja de ser novedad se saca de esta lista a mano.
 const NUEVOS = [
-  '1', '514', '515', '516', '517', '518', '519', '520', '521', '522', '523', '524', '525', '526', '527', '528', '529', '530', '531'
+  '514', '515', '516', '517', '518', '519', '520', '521', '522', '523', '524', '525', '526', '527', '528', '529', '530', '531'
+  // Agregá acá los Id_Grupo de los productos nuevos (ej: Café Cabrales,
+  // maple de huevos, salsa de tomate, golosinas). Sacalos cuando dejen de
+  // ser novedad. El array va con strings de IDs así:
+  // '123', '124', '125'
 ];
 
 function esNuevo(gid) {
