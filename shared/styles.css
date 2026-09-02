@@ -1149,6 +1149,13 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   max-width: 218px;
 }
 .nuevos-track .card .card-img-wrap img { padding: var(--space-3); }
+/* La imagen de Nuevos vive dentro de un riel horizontal. La regla general
+   de las cards usa pan-y para el swipe de variantes; acá no hay variantes
+   rotables y, en WebKit móvil, esa restricción hace que el gesto vertical
+   iniciado sobre la foto quede tomado por el riel. Dejamos que el track
+   (pan-x pan-y) resuelva ambos ejes. */
+.nuevos-track .card .card-img-wrap,
+.nuevos-track .card .card-img-wrap img { touch-action: auto; }
 .nuevos-track .card .card-body { padding: var(--space-3) var(--space-4) var(--space-4); }
 .nuevos-track .card .card-marca { font-size: .65rem; }
 .nuevos-track .card .card-nombre { font-size: .875rem; }
