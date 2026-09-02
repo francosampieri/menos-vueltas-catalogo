@@ -22,6 +22,26 @@ const PRODUCTOS_DESTACADOS = [
   '8', '41', '108', '117', '124', '133', '152', '155', '220', '252', '267'
 ];
 
+// Productos nuevos: muestran la cinta "NUEVO" con estrella en la esquina
+// superior derecha de la card y del modal. Agregá acá los Id_Grupo cuando
+// haya un lanzamiento (Semana de Estrenos, etc.) — no hace falta una
+// columna extra en Sheets, y no hay fecha de vencimiento automático:
+// cuando el producto deja de ser novedad se saca de esta lista a mano.
+const NUEVOS = [
+  '1', '514', '515', '516', '517', '518', '519', '520', '521', '522',
+  '523', '524', '525', '526', '527', '528', '529', '530', '531'
+];
+
+function esNuevo(gid) {
+  return NUEVOS.includes(String(gid));
+}
+
+// SVG del carrito para el badge icon-only (la bolsita)
+const SVG_CARRITO_BADGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>';
+
+// SVG de la estrella para el badge NUEVO
+const SVG_ESTRELLA_NUEVO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>';
+
 let filtroActivo    = 'Todos';
 let filtroSubcat    = null;
 let busquedaActiva  = '';
@@ -133,6 +153,25 @@ function badgePromo(etiqueta) {
   const b = document.createElement('span');
   b.className = 'promo-badge';
   b.textContent = etiqueta;
+  return b;
+}
+
+// Cinta "NUEVO" de la esquina superior derecha (ámbar con estrella).
+function badgeNuevo() {
+  const b = document.createElement('span');
+  b.className = 'badge-nuevo';
+  b.innerHTML = SVG_ESTRELLA_NUEVO + 'Nuevo';
+  return b;
+}
+
+// Badge "en carrito" en forma de ícono: círculo blanco con borde verde y
+// la bolsita del súper en verde. Cuando no hay badge de nuevo, este ícono
+// sube a la esquina superior derecha (top-right); cuando sí lo hay, queda
+// justo debajo (la clase .tiene-nuevo en la card/pm-img lo desplaza).
+function badgeCarritoIcono() {
+  const b = document.createElement('span');
+  b.className = 'card-en-carrito';
+  b.innerHTML = SVG_CARRITO_BADGE;
   return b;
 }
 
@@ -757,6 +796,7 @@ function crearCardDestacada(gid, vars) {
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
   const v = vars[0];
+  const nuevo  = esNuevo(gid);
 
   const precio    = parsePrecio(v['Precio_Venta']);
   const precioDto = preciosCantidadDe(v).promo;
@@ -764,7 +804,7 @@ function crearCardDestacada(gid, vars) {
   const hayDto    = uniDto > 0 && precioDto !== null;
 
   const card = document.createElement('div');
-  card.className = 'card card-destacada';
+  card.className = 'card card-destacada' + (nuevo ? ' tiene-nuevo' : '');
   // Igual que en el catálogo: abre el detalle del producto con sus
   // variantes, en vez de mandar al catálogo con la búsqueda cargada.
   card.addEventListener('click', () => abrirModalProducto(gid, vars));
@@ -821,10 +861,17 @@ function crearCardDestacada(gid, vars) {
     body.appendChild(vprecioDtoEl);
   }
 
+  card.append(imgWrap, body);
+
+  // Badges sobre la card: promo, nuevo y carrito (mismo orden que crearCard)
   const etDest = etiquetaPromo(v);
   if (etDest && tienePromo(v)) card.appendChild(badgePromo(etDest));
+  if (nuevo) card.appendChild(badgeNuevo());
 
-  card.append(imgWrap, body);
+  const badgeCart = badgeCarritoIcono();
+  badgeCart.id = `badge-${gid}`;
+  card.appendChild(badgeCart);
+
   return card;
 }
 
@@ -833,9 +880,10 @@ function crearCard(gid, vars) {
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
+  const nuevo  = esNuevo(gid);
 
   const card = document.createElement('div');
-  card.className = 'card';
+  card.className = 'card' + (nuevo ? ' tiene-nuevo' : '');
   card.id = `card-${gid}`;
 
   // ── Imagen ──
@@ -863,11 +911,12 @@ function crearCard(gid, vars) {
     imgWrap.appendChild(dots);
   }
 
-  // ── Badge carrito ──
-  const badge = document.createElement('div');
-  badge.className = 'card-en-carrito';
-  badge.id = `badge-${gid}`;
-  badge.textContent = 'En carrito';
+  // ── Badges sobre la imagen: promo (izq), nuevo (der), carrito (der abajo) ──
+  // Todos se posicionan absolutamente dentro de la card (position:relative).
+  // El orden del DOM importa para el z-index: últimos = arriba.
+
+  const badgeCarrito = badgeCarritoIcono();
+  badgeCarrito.id = `badge-${gid}`;
 
   // ── Body ──
   const body = document.createElement('div');
@@ -895,13 +944,22 @@ function crearCard(gid, vars) {
 
   body.append(marcaEl, nombreEl, vlabelEl, vprecioEl, vprecioDtoEl);
 
-  card.append(imgWrap, badge, body);
+  card.append(imgWrap, body);
 
-  // Cinta de promo. Se decide con la primera variante: al rotar entre
-  // variantes el precio cambia, pero el porcentaje de descuento es el mismo
-  // para todas, así que la cinta no necesita actualizarse.
+  // Cinta de promo (arriba a la izquierda). Se decide con la primera
+  // variante: al rotar entre variantes el precio cambia, pero el porcentaje
+  // de descuento es el mismo para todas, así que la cinta no necesita
+  // actualizarse.
   const etCard = etiquetaPromo(vars[0]);
   if (etCard && tienePromo(vars[0])) card.appendChild(badgePromo(etCard));
+
+  // Cinta NUEVO (arriba a la derecha, ámbar con estrella).
+  if (nuevo) card.appendChild(badgeNuevo());
+
+  // Ícono de carrito (círculo blanco con borde verde, bolista).
+  // Si hay badge nuevo, la clase .tiene-nuevo en la card lo desplaza hacia
+  // abajo para que no se superpongan.
+  card.appendChild(badgeCarrito);
 
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
@@ -1088,6 +1146,7 @@ function abrirModalProducto(gid, vars) {
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
+  const nuevo  = esNuevo(gid);
 
   const overlay = document.createElement('div');
   overlay.className = 'pm-overlay';
@@ -1097,13 +1156,17 @@ function abrirModalProducto(gid, vars) {
   // Estructura en dos columnas: en desktop la foto va a la izquierda y toda
   // la información a la derecha (modal apaisado que entra sin scroll); en
   // mobile las columnas se apilan.
+  // Los badges (promo/nuevo/carrito) se insertan por JS dentro de .pm-img,
+  // igual que en las cards: promo arriba-izq, nuevo arriba-der, carrito
+  // abajo-der (o arriba-der si no hay nuevo). NO se pone badge nuevo junto
+  // al precio — solo sobre la foto.
   overlay.innerHTML = `
     <div class="pm-panel" role="dialog" aria-modal="true" aria-label="${nombre}">
       <button class="pm-close" aria-label="Cerrar">
         <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
       <div class="pm-media">
-        <div class="pm-img">
+        <div class="pm-img${nuevo ? ' tiene-nuevo' : ''}" id="pm-img-wrap">
           <div class="pm-img-placeholder"></div>
           <img alt="" style="display:none">
         </div>
@@ -1131,6 +1194,7 @@ function abrirModalProducto(gid, vars) {
 
   const panel   = overlay.querySelector('.pm-panel');
   const media   = overlay.querySelector('.pm-media');
+  const imgWrap = overlay.querySelector('.pm-img');
   const imgEl   = overlay.querySelector('.pm-img img');
   const dotsEl  = overlay.querySelector('.pm-dots');
   const detalle = overlay.querySelector('.pm-detalle');
@@ -1138,6 +1202,23 @@ function abrirModalProducto(gid, vars) {
   overlay.querySelector('.pm-img-placeholder').textContent = getEmoji(cat);
   overlay.querySelector('.pm-marca').textContent  = marca;
   overlay.querySelector('.pm-nombre').textContent = nombre;
+
+  // Badges sobre la foto del modal (ahora todos a la izquierda para no
+  // superponerse con la X de cerrar).
+  // El badge de promo solo aparece si la primera variante tiene descuento
+  // (la etiqueta no cambia entre variantes del mismo grupo).
+  const etModal = etiquetaPromo(vars[0]);
+  const hayPromoModal = etModal && tienePromo(vars[0]);
+  if (hayPromoModal) imgWrap.classList.add('tiene-promo');
+  if (hayPromoModal) imgWrap.appendChild(badgePromo(etModal));
+  if (nuevo) imgWrap.appendChild(badgeNuevo());
+
+  // Badge carrito en ícono (círculo blanco con bolsita). Se marca visible
+  // si este producto ya está en el carrito.
+  const badgeCartModal = badgeCarritoIcono();
+  badgeCartModal.id = `badge-modal-${gid}`;
+  if (carrito.some(i => i.gid === gid)) badgeCartModal.classList.add('visible');
+  imgWrap.appendChild(badgeCartModal);
 
   if (vars.length > 1) {
     vars.forEach((_, i) => {
@@ -1612,8 +1693,12 @@ function agregarAlCarrito(gid, variante, qty) {
 
   actualizarUICarrito();
 
+  // Mostrar ícono de carrito tanto en la card del catálogo como en el modal
+  // si está abierto para este mismo producto.
   const badge = document.getElementById(`badge-${gid}`);
   if (badge) badge.classList.add('visible');
+  const badgeModal = document.getElementById(`badge-modal-${gid}`);
+  if (badgeModal) badgeModal.classList.add('visible');
 }
 
 function cambiarQtyCarrito(idx, delta) {
@@ -1664,6 +1749,8 @@ function eliminarDelCarrito(idx) {
   if (!carrito.some(i => i.gid === gid)) {
     const badge = document.getElementById(`badge-${gid}`);
     if (badge) badge.classList.remove('visible');
+    const badgeModal = document.getElementById(`badge-modal-${gid}`);
+    if (badgeModal) badgeModal.classList.remove('visible');
   }
   actualizarUICarrito();
 }

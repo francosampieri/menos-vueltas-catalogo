@@ -3894,23 +3894,55 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
 }
 .variante-dot.active { background: var(--accent); }
 
-/* Badge carrito */
+/* ── Badge NUEVO (ámbar #C48A2B con estrella, arriba a la derecha en cards) ── */
+.badge-nuevo {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 2;
+  padding: 2px 8px;
+  border-radius: var(--rf);
+  background: #C48A2B;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(167,115,30,.35);
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.badge-nuevo svg { width: 8px; height: 8px; flex-shrink: 0; }
+
+/* ── Badge carrito (ícono solo: círculo blanco con borde verde) ── */
 .card-en-carrito {
   position: absolute;
   top: var(--space-2);
   right: var(--space-2);
-  height: 20px;
-  padding: 0 8px;
-  background: var(--accent);
-  color: white;
-  border-radius: var(--rf);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: .03em;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
   display: none;
   align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  pointer-events: none;
 }
 .card-en-carrito.visible { display: flex; }
+.card-en-carrito svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* Cuando la card tiene badge NUEVO, el ícono del carrito baja para no
+   superponerse (queda en el mismo borde derecho, justo debajo). */
+.card.tiene-nuevo .card-en-carrito {
+  top: 34px;
+}
 
 /* Body */
 .card-body { padding: var(--space-3) var(--space-4) var(--space-4); }
@@ -4007,10 +4039,21 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   box-shadow: none;
 }
 
-/* En la franja de destacados las cards son más chicas: cinta más discreta. */
+/* En la franja de destacados las cards son más chicas: cintas más discretas. */
 .destacados-track .card .promo-badge { font-size: .54rem; padding: 2px 7px; }
-/* En los rieles de mobile, idem. */
+.destacados-track .card .badge-nuevo { font-size: .48rem; padding: 2px 6px; gap: 2px; }
+.destacados-track .card .badge-nuevo svg { width: 7px; height: 7px; }
+.destacados-track .card .card-en-carrito { width: 24px; height: 24px; }
+.destacados-track .card .card-en-carrito svg { width: 12px; height: 12px; }
+.destacados-track .card.tiene-nuevo .card-en-carrito { top: 32px; }
+
+/* En los rieles de mobile, ídem */
 .riel > .card .promo-badge { font-size: .54rem; padding: 2px 6px; }
+.riel > .card .badge-nuevo { font-size: .48rem; padding: 2px 6px; top: var(--space-2); right: var(--space-2); gap: 2px; }
+.riel > .card .badge-nuevo svg { width: 7px; height: 7px; }
+.riel > .card .card-en-carrito { width: 24px; height: 24px; }
+.riel > .card .card-en-carrito svg { width: 12px; height: 12px; }
+.riel > .card.tiene-nuevo .card-en-carrito { top: 32px; }
 .card-precio-dto strong {
   color: var(--accent-2);
   font-weight: 700;
@@ -4384,6 +4427,25 @@ body.modal-abierto {
   justify-content: center;
   overflow: hidden;
 }
+
+/* Badges sobre la foto del modal: todos a la izquierda para no
+   superponerse con la X de cerrar (arriba-derecha). Promo va primero
+   (esquina sup. izq), Nuevo abajo de promo y carrito abajo de nuevo. */
+.pm-img .promo-badge { top: 14px; left: 14px; font-size: 0.64rem; padding: 4px 10px; }
+.pm-img .badge-nuevo { top: 14px; left: 14px; right: auto; font-size: 0.62rem; padding: 4px 10px; gap: 4px; }
+.pm-img .badge-nuevo svg { width: 9px; height: 9px; }
+.pm-img .card-en-carrito { top: 14px; left: 14px; right: auto; width: 26px; height: 26px; }
+.pm-img .card-en-carrito svg { width: 13px; height: 13px; }
+/* Cuando hay promo, Nuevo baja debajo de la cinta verde */
+.pm-img.tiene-promo .badge-nuevo { top: 46px; }
+/* Carrito: si hay nuevo baja debajo de nuevo; si además hay promo
+   hay que bajarlo más */
+.pm-img.tiene-nuevo .card-en-carrito { top: 46px; }
+.pm-img.tiene-promo.tiene-nuevo .card-en-carrito { top: 78px; }
+/* Cuando solo hay promo (sin nuevo), carrito queda bajo promo */
+.pm-img.tiene-promo:not(.tiene-nuevo) .card-en-carrito { top: 46px; }
+
+/* El botón de cerrar (X) tiene z-index 5, los badges 2 — no se pisan. */
 .pm-img img {
   width: 100%;
   height: 100%;
@@ -4532,6 +4594,16 @@ body.modal-abierto {
     max-width: 340px;
     max-height: 88dvh;
   }
+  /* Badges un poco más chicos en mobile, todos a la izquierda */
+  .pm-img .promo-badge { top: 10px; left: 10px; font-size: 0.56rem; padding: 3px 8px; }
+  .pm-img .badge-nuevo { top: 10px; left: 10px; right: auto; font-size: 0.54rem; padding: 3px 8px; gap: 3px; }
+  .pm-img .badge-nuevo svg { width: 8px; height: 8px; }
+  .pm-img .card-en-carrito { top: 10px; left: 10px; right: auto; width: 24px; height: 24px; }
+  .pm-img .card-en-carrito svg { width: 12px; height: 12px; }
+  .pm-img.tiene-promo .badge-nuevo { top: 40px; }
+  .pm-img.tiene-nuevo .card-en-carrito { top: 40px; }
+  .pm-img.tiene-promo.tiene-nuevo .card-en-carrito { top: 68px; }
+  .pm-img.tiene-promo:not(.tiene-nuevo) .card-en-carrito { top: 40px; }
   /* La foto arranca con un alto cómodo pero puede encogerse: cuando el
      producto tiene dos grupos de opciones (sabor + tamaño) le cede lugar a
      los datos, y así el modal entra entero sin scroll. */
