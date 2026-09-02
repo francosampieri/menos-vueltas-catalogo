@@ -346,6 +346,15 @@ function crearCardVerTodosNuevos() {
   return card;
 }
 
+// Categorías y subcategorías vienen del catálogo y pueden llegar en cualquier
+// orden de inserción. Normalizamos valores vacíos para que una etiqueta nueva
+// se ubique de forma predecible sin alterar el orden de los productos.
+function compararEtiquetasCatalogo(a, b) {
+  const etiquetaA = a == null ? '' : String(a);
+  const etiquetaB = b == null ? '' : String(b);
+  return etiquetaA.localeCompare(etiquetaB, 'es', { sensitivity: 'base' });
+}
+
 function construirFiltrosCategorias() {
   const cont = document.getElementById('filtros');
   // Limpiar excepto "Todos"
@@ -375,7 +384,7 @@ function construirFiltrosCategorias() {
     if (cat) cats.add(cat);
   });
 
-  cats.forEach(cat => {
+  [...cats].sort(compararEtiquetasCatalogo).forEach(cat => {
     const btn = document.createElement('button');
     btn.className = 'filtro-btn' + (!filtroEspecial && filtroActivo === cat ? ' active' : '');
     btn.dataset.cat = cat;
@@ -449,7 +458,7 @@ function renderSubfiltros() {
   btnTodos.onclick = () => setFiltroSubcat(null);
   cont.appendChild(btnTodos);
 
-  subs.forEach(sub => {
+  [...subs].sort(compararEtiquetasCatalogo).forEach(sub => {
     const btn = document.createElement('button');
     btn.className = 'subfiltro-btn' + (filtroSubcat === sub ? ' active' : '');
     btn.textContent = sub;
@@ -526,7 +535,12 @@ function renderGrupos() {
     porSeccion[key].items.push([gid, vars]);
   });
 
-  Object.values(porSeccion).forEach(({ sub, cat, items }) => {
+  Object.values(porSeccion)
+    .sort((a, b) => {
+      const porCategoria = compararEtiquetasCatalogo(a.cat, b.cat);
+      return porCategoria || compararEtiquetasCatalogo(a.sub, b.sub);
+    })
+    .forEach(({ sub, cat, items }) => {
     // Ordenar alfabéticamente por nombre de producto: así los productos
     // "parecidos" (mismo tipo, distinta marca — ej. "Obleas 9 de Oro" y
     // "Obleas Bauducco") quedan agrupados uno al lado del otro, en vez de
@@ -617,7 +631,7 @@ function renderGrupos() {
     grid.className = 'grid';
     items.forEach(([gid, vars]) => grid.appendChild(crearCard(gid, vars)));
     cont.appendChild(grid);
-  });
+    });
 }
 
 // ¿Corresponde mostrar el catálogo como rieles horizontales?
@@ -744,7 +758,7 @@ function construirSidebar() {
   };
   nav.appendChild(btnTodos);
 
-  Object.keys(porCat).forEach(cat => {
+  Object.keys(porCat).sort(compararEtiquetasCatalogo).forEach(cat => {
     const abierta = catsAbiertas.has(cat);
 
     const btn = document.createElement('button');
@@ -772,7 +786,8 @@ function construirSidebar() {
     const subs = Object.keys(porSub)
       .filter(k => k.startsWith(cat + '|||'))
       .map(k => k.split('|||')[1])
-      .filter(Boolean);
+      .filter(Boolean)
+      .sort(compararEtiquetasCatalogo);
 
     if (!subs.length) return;
 
@@ -2401,7 +2416,9 @@ function llenarMegamenu() {
     if (sub) estructura[cat].add(sub);
   });
 
-  Object.entries(estructura).forEach(([cat, subs]) => {
+  Object.entries(estructura)
+    .sort(([catA], [catB]) => compararEtiquetasCatalogo(catA, catB))
+    .forEach(([cat, subs]) => {
     const col = document.createElement('div');
     col.className = 'megamenu-col';
 
@@ -2414,7 +2431,7 @@ function llenarMegamenu() {
     });
     col.appendChild(catEl);
 
-    subs.forEach(sub => {
+    [...subs].sort(compararEtiquetasCatalogo).forEach(sub => {
       const btn = document.createElement('button');
       btn.className = 'megamenu-sub';
       btn.textContent = sub;
@@ -2426,7 +2443,7 @@ function llenarMegamenu() {
     });
 
     grid.appendChild(col);
-  });
+    });
 }
 
 function toggleMegamenu() {
