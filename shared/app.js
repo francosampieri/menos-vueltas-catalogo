@@ -19,7 +19,7 @@ const rotaciones    = {};  // id_grupo → { timer, indexActual }
 // en que querés que aparezcan. El Id_Grupo se ve en la columna "Id_Grupo"
 // de la hoja de Productos.
 const PRODUCTOS_DESTACADOS = [
-  '8', '41', '108', '117', '124', '133', '152', '155', '220', '252', '267'
+  '1', '8', '41', '108', '117', '124', '133', '152', '155', '220', '252', '267'
 ];
 
 // Productos nuevos: muestran la cinta "NUEVO" con estrella en la esquina
