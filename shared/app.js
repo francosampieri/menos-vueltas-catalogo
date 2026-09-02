@@ -2321,6 +2321,12 @@ function mostrarCatalogo(cat, sub) {
   mostrarOnboardingToast();
 }
 
+// Los CTAs principales de la landing siempre inician una exploración nueva,
+// sin heredar filtros o una búsqueda de una visita anterior al catálogo.
+function mostrarCatalogoCompleto() {
+  mostrarCatalogo('Todos');
+}
+
 function mostrarCatalogoEspecial(tipo, gid) {
   const filtro = FILTROS_ESPECIALES[tipo];
   if (!filtro) return;

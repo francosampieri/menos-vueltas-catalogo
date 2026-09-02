@@ -1099,6 +1099,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   scrollbar-width: none;
   -ms-overflow-style: none;
   overscroll-behavior-x: contain;
+  /* El riel puede desplazarse en X, pero el navegador conserva el gesto
+     vertical para seguir recorriendo la landing desde cualquier card. */
+  overscroll-behavior-y: auto;
+  touch-action: pan-x pan-y;
   -webkit-overflow-scrolling: touch;
   scroll-friction: 0.5;
   /* Aire para que la sombra de las cards no se recorte al scrollear */
