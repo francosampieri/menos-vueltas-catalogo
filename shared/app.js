@@ -28,11 +28,8 @@ const PRODUCTOS_DESTACADOS = [
 // columna extra en Sheets, y no hay fecha de vencimiento automático:
 // cuando el producto deja de ser novedad se saca de esta lista a mano.
 const NUEVOS = [
-  '514', '515', '516', '517', '518', '519', '520', '521', '522', '523', '524', '525', '526', '527', '528', '529', '530', '531'
-  // Agregá acá los Id_Grupo de los productos nuevos (ej: Café Cabrales,
-  // maple de huevos, salsa de tomate, golosinas). Sacalos cuando dejen de
-  // ser novedad. El array va con strings de IDs así:
-  // '123', '124', '125'
+  '514', '515', '516', '517', '518', '519', '520', '521', '522',
+  '523', '524', '525', '526', '527', '528', '529', '530', '531'
 ];
 
 function esNuevo(gid) {
@@ -1169,7 +1166,7 @@ function abrirModalProducto(gid, vars) {
         <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
       <div class="pm-media">
-        <div class="pm-img${nuevo ? ' tiene-nuevo' : ''}">
+        <div class="pm-img${nuevo ? ' tiene-nuevo' : ''}" id="pm-img-wrap">
           <div class="pm-img-placeholder"></div>
           <img alt="" style="display:none">
         </div>
@@ -1206,11 +1203,14 @@ function abrirModalProducto(gid, vars) {
   overlay.querySelector('.pm-marca').textContent  = marca;
   overlay.querySelector('.pm-nombre').textContent = nombre;
 
-  // Badges sobre la foto del modal (mismo esquema que las cards).
+  // Badges sobre la foto del modal (ahora todos a la izquierda para no
+  // superponerse con la X de cerrar).
   // El badge de promo solo aparece si la primera variante tiene descuento
   // (la etiqueta no cambia entre variantes del mismo grupo).
   const etModal = etiquetaPromo(vars[0]);
-  if (etModal && tienePromo(vars[0])) imgWrap.appendChild(badgePromo(etModal));
+  const hayPromoModal = etModal && tienePromo(vars[0]);
+  if (hayPromoModal) imgWrap.classList.add('tiene-promo');
+  if (hayPromoModal) imgWrap.appendChild(badgePromo(etModal));
   if (nuevo) imgWrap.appendChild(badgeNuevo());
 
   // Badge carrito en ícono (círculo blanco con bolsita). Se marca visible

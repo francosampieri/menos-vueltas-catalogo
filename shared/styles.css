@@ -3894,18 +3894,18 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
 }
 .variante-dot.active { background: var(--accent); }
 
-/* ── Badge NUEVO (ámbar #C48A2B con estrella, arriba a la derecha) ── */
+/* ── Badge NUEVO (ámbar #C48A2B con estrella, arriba a la derecha en cards) ── */
 .badge-nuevo {
   position: absolute;
   top: var(--space-2);
   right: var(--space-2);
   z-index: 2;
-  padding: 3px 9px;
+  padding: 2px 8px;
   border-radius: var(--rf);
   background: #C48A2B;
   color: #fff;
   font-family: var(--font);
-  font-size: 0.6rem;
+  font-size: 0.56rem;
   font-weight: 700;
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -3913,9 +3913,9 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   pointer-events: none;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
-.badge-nuevo svg { width: 9px; height: 9px; flex-shrink: 0; }
+.badge-nuevo svg { width: 8px; height: 8px; flex-shrink: 0; }
 
 /* ── Badge carrito (ícono solo: círculo blanco con borde verde) ── */
 .card-en-carrito {
@@ -3923,8 +3923,8 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   top: var(--space-2);
   right: var(--space-2);
   z-index: 2;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #fff;
   border: 1.5px solid var(--accent);
@@ -3936,13 +3936,12 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   pointer-events: none;
 }
 .card-en-carrito.visible { display: flex; }
-.card-en-carrito svg { width: 12px; height: 12px; flex-shrink: 0; }
+.card-en-carrito svg { width: 14px; height: 14px; flex-shrink: 0; }
 
 /* Cuando la card tiene badge NUEVO, el ícono del carrito baja para no
    superponerse (queda en el mismo borde derecho, justo debajo). */
-.card.tiene-nuevo .card-en-carrito,
-.pm-img.tiene-nuevo .card-en-carrito {
-  top: 38px;
+.card.tiene-nuevo .card-en-carrito {
+  top: 34px;
 }
 
 /* Body */
@@ -4042,19 +4041,19 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
 
 /* En la franja de destacados las cards son más chicas: cintas más discretas. */
 .destacados-track .card .promo-badge { font-size: .54rem; padding: 2px 7px; }
-.destacados-track .card .badge-nuevo { font-size: .52rem; padding: 2px 7px; gap: 3px; }
-.destacados-track .card .badge-nuevo svg { width: 8px; height: 8px; }
-.destacados-track .card .card-en-carrito { width: 22px; height: 22px; }
-.destacados-track .card .card-en-carrito svg { width: 11px; height: 11px; }
-.destacados-track .card.tiene-nuevo .card-en-carrito { top: 34px; }
+.destacados-track .card .badge-nuevo { font-size: .48rem; padding: 2px 6px; gap: 2px; }
+.destacados-track .card .badge-nuevo svg { width: 7px; height: 7px; }
+.destacados-track .card .card-en-carrito { width: 24px; height: 24px; }
+.destacados-track .card .card-en-carrito svg { width: 12px; height: 12px; }
+.destacados-track .card.tiene-nuevo .card-en-carrito { top: 32px; }
 
-/* En los rieles de mobile, ídem: todo un punto más chico. */
+/* En los rieles de mobile, ídem */
 .riel > .card .promo-badge { font-size: .54rem; padding: 2px 6px; }
-.riel > .card .badge-nuevo { font-size: .52rem; padding: 2px 7px; top: var(--space-2); right: var(--space-2); gap: 3px; }
-.riel > .card .badge-nuevo svg { width: 8px; height: 8px; }
-.riel > .card .card-en-carrito { width: 22px; height: 22px; }
-.riel > .card .card-en-carrito svg { width: 11px; height: 11px; }
-.riel > .card.tiene-nuevo .card-en-carrito { top: 34px; }
+.riel > .card .badge-nuevo { font-size: .48rem; padding: 2px 6px; top: var(--space-2); right: var(--space-2); gap: 2px; }
+.riel > .card .badge-nuevo svg { width: 7px; height: 7px; }
+.riel > .card .card-en-carrito { width: 24px; height: 24px; }
+.riel > .card .card-en-carrito svg { width: 12px; height: 12px; }
+.riel > .card.tiene-nuevo .card-en-carrito { top: 32px; }
 .card-precio-dto strong {
   color: var(--accent-2);
   font-weight: 700;
@@ -4429,14 +4428,22 @@ body.modal-abierto {
   overflow: hidden;
 }
 
-/* Badges sobre la foto del modal: posiciones análogas a las cards pero con
-   un poco más de margen (el panel es más grande). */
+/* Badges sobre la foto del modal: todos a la izquierda para no
+   superponerse con la X de cerrar (arriba-derecha). Promo va primero
+   (esquina sup. izq), Nuevo abajo de promo y carrito abajo de nuevo. */
 .pm-img .promo-badge { top: 14px; left: 14px; font-size: 0.64rem; padding: 4px 10px; }
-.pm-img .badge-nuevo { top: 14px; right: 14px; font-size: 0.62rem; padding: 4px 10px; }
+.pm-img .badge-nuevo { top: 14px; left: 14px; right: auto; font-size: 0.62rem; padding: 4px 10px; gap: 4px; }
 .pm-img .badge-nuevo svg { width: 9px; height: 9px; }
-.pm-img .card-en-carrito { top: 14px; right: 14px; width: 26px; height: 26px; }
+.pm-img .card-en-carrito { top: 14px; left: 14px; right: auto; width: 26px; height: 26px; }
 .pm-img .card-en-carrito svg { width: 13px; height: 13px; }
-.pm-img.tiene-nuevo .card-en-carrito { top: 44px; }
+/* Cuando hay promo, Nuevo baja debajo de la cinta verde */
+.pm-img.tiene-promo .badge-nuevo { top: 46px; }
+/* Carrito: si hay nuevo baja debajo de nuevo; si además hay promo
+   hay que bajarlo más */
+.pm-img.tiene-nuevo .card-en-carrito { top: 46px; }
+.pm-img.tiene-promo.tiene-nuevo .card-en-carrito { top: 78px; }
+/* Cuando solo hay promo (sin nuevo), carrito queda bajo promo */
+.pm-img.tiene-promo:not(.tiene-nuevo) .card-en-carrito { top: 46px; }
 
 /* El botón de cerrar (X) tiene z-index 5, los badges 2 — no se pisan. */
 .pm-img img {
@@ -4587,13 +4594,16 @@ body.modal-abierto {
     max-width: 340px;
     max-height: 88dvh;
   }
-  /* Badges un poco más chicos en mobile para que no tapen la foto */
+  /* Badges un poco más chicos en mobile, todos a la izquierda */
   .pm-img .promo-badge { top: 10px; left: 10px; font-size: 0.56rem; padding: 3px 8px; }
-  .pm-img .badge-nuevo { top: 10px; right: 10px; font-size: 0.54rem; padding: 3px 8px; gap: 3px; }
+  .pm-img .badge-nuevo { top: 10px; left: 10px; right: auto; font-size: 0.54rem; padding: 3px 8px; gap: 3px; }
   .pm-img .badge-nuevo svg { width: 8px; height: 8px; }
-  .pm-img .card-en-carrito { top: 10px; right: 10px; width: 24px; height: 24px; }
+  .pm-img .card-en-carrito { top: 10px; left: 10px; right: auto; width: 24px; height: 24px; }
   .pm-img .card-en-carrito svg { width: 12px; height: 12px; }
-  .pm-img.tiene-nuevo .card-en-carrito { top: 38px; }
+  .pm-img.tiene-promo .badge-nuevo { top: 40px; }
+  .pm-img.tiene-nuevo .card-en-carrito { top: 40px; }
+  .pm-img.tiene-promo.tiene-nuevo .card-en-carrito { top: 68px; }
+  .pm-img.tiene-promo:not(.tiene-nuevo) .card-en-carrito { top: 40px; }
   /* La foto arranca con un alto cómodo pero puede encogerse: cuando el
      producto tiene dos grupos de opciones (sabor + tamaño) le cede lugar a
      los datos, y así el modal entra entero sin scroll. */
