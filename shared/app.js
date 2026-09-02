@@ -19,7 +19,7 @@ const rotaciones    = {};  // id_grupo → { timer, indexActual }
 // en que querés que aparezcan. El Id_Grupo se ve en la columna "Id_Grupo"
 // de la hoja de Productos.
 const PRODUCTOS_DESTACADOS = [
-  '1', '8', '41', '108', '117', '124', '133', '152', '155', '220', '252', '267'
+  '8', '41', '108', '117', '124', '133', '152', '155', '220', '252', '267'
 ];
 
 // Productos nuevos: muestran la cinta "NUEVO" con estrella en la esquina
@@ -28,7 +28,7 @@ const PRODUCTOS_DESTACADOS = [
 // columna extra en Sheets, y no hay fecha de vencimiento automático:
 // cuando el producto deja de ser novedad se saca de esta lista a mano.
 const NUEVOS = [
-  '514', '515', '516', '517', '518', '519', '520', '521', '522',
+  '1', '514', '515', '516', '517', '518', '519', '520', '521', '522',
   '523', '524', '525', '526', '527', '528', '529', '530', '531'
 ];
 
