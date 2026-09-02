@@ -56,7 +56,7 @@ const FILTROS_ESPECIALES = {
     icono: SVG_ESTRELLA_FILTRO
   },
   descuento: {
-    nombre: 'Con descuento',
+    nombre: 'Descuentos',
     titulo: 'Productos con descuento',
     icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15l6 -6"/><path d="M9 9.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0" fill="currentColor"/><path d="M14 14.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0" fill="currentColor"/><path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7a2.2 2.2 0 0 0 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1a2.2 2.2 0 0 0 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"/></svg>'
   }
@@ -341,15 +341,7 @@ function crearCardVerTodosNuevos() {
   card.type = 'button';
   card.className = 'card card-nuevos-cta';
   card.setAttribute('aria-label', 'Ver todos los nuevos ingresos');
-  card.innerHTML = `
-    <span class="card-img-wrap"><span class="nuevos-cta-icon">${SVG_ESTRELLA_FILTRO}</span></span>
-    <span class="card-body">
-      <span class="card-marca">Catálogo</span>
-      <span class="card-nombre">Todos los nuevos ingresos</span>
-      <span class="nuevos-cta-accion">Ver todos
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-      </span>
-    </span>`;
+  card.innerHTML = '<span class="nuevos-cta-texto">Ver todos</span>';
   card.addEventListener('click', () => mostrarCatalogoEspecial('nuevos'));
   return card;
 }
