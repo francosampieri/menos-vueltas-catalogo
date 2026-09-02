@@ -9117,7 +9117,7 @@
     {
       "Id": "512",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "6170010001",
       "Producto": "Barbacoa Ahumada",
@@ -9138,7 +9138,7 @@
     {
       "Id": "513",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "6170010002",
       "Producto": "Barbacoa Ahumada",
@@ -9159,7 +9159,7 @@
     {
       "Id": "514",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CANAIF0132",
       "Producto": "Vaso Avena Almendra y Chips de Chocolate",
@@ -9180,7 +9180,7 @@
     {
       "Id": "515",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CANAIF0143",
       "Producto": "Vaso Avena Banana y DDL",
@@ -9201,7 +9201,7 @@
     {
       "Id": "516",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CANAIF0134",
       "Producto": "Vaso Avena Arándanos",
@@ -9222,7 +9222,7 @@
     {
       "Id": "517",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CANAIF0081",
       "Producto": "Vaso Pasta Salsa Bolognesa",
@@ -9243,7 +9243,7 @@
     {
       "Id": "518",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CANAIF0082",
       "Producto": "Vaso Pasta Salsa de Queso",
@@ -9264,7 +9264,7 @@
     {
       "Id": "519",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CANAIF0084",
       "Producto": "Vaso Pasta Salsa Rosa",
@@ -9285,7 +9285,7 @@
     {
       "Id": "520",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CUM30617",
       "Producto": "Atún Desmenuzado Natural",
@@ -9306,7 +9306,7 @@
     {
       "Id": "521",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CUM30644",
       "Producto": "Lomo Atún Aceite",
@@ -9327,7 +9327,7 @@
     {
       "Id": "522",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "PEN005",
       "Producto": "Calamares",
@@ -9348,7 +9348,7 @@
     {
       "Id": "523",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "PEN006",
       "Producto": "Cazuela de Mariscos",
@@ -9369,7 +9369,7 @@
     {
       "Id": "524",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "PEN007",
       "Producto": "Mejillones",
@@ -9390,7 +9390,7 @@
     {
       "Id": "525",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CAN7745",
       "Producto": "Candado de Hierro",
@@ -9411,7 +9411,7 @@
     {
       "Id": "526",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "PUR2982881100",
       "Producto": "Leche en Polvo",
@@ -9432,7 +9432,7 @@
     {
       "Id": "527",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CANBIZ0405",
       "Producto": "Galletas Crackers Pizza",
@@ -9453,7 +9453,7 @@
     {
       "Id": "528",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "CUM30127",
       "Producto": "Ananá en Rodajas",
@@ -9474,7 +9474,7 @@
     {
       "Id": "529",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "TOS9010218",
       "Producto": "Cintitas Barbacoa",
@@ -9495,7 +9495,7 @@
     {
       "Id": "530",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "TOS901024",
       "Producto": "Cintitas Pizza",
@@ -9516,7 +9516,7 @@
     {
       "Id": "531",
       "Activo": "ON",
-      "Cat B2C": "OFF",
+      "Cat B2C": "ON",
       "Cat B2B": "ON",
       "Id_Proveedor": "TOS9010334",
       "Producto": "Cintitas Provoleta",
