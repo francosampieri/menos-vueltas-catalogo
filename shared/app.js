@@ -32,7 +32,10 @@ const PRODUCTOS_DESTACADOS = [
 // variantes del grupo es nueva (no parpadea al rotar); en el modal la
 // badge se muestra solo cuando la variante seleccionada es nueva.
 const NUEVOS = [
-  '514', '515', '516', '517', '518', '519', '520', '521', '522', '523', '524', '525', '526', '527', '528', '529', '530', '531'
+  // Agregá acá los Id de las variantes nuevas (ej: Café Cabrales, maple
+  // de huevos, salsa de tomate, golosinas). Sacalos cuando dejen de ser
+  // novedad. El array va con strings de IDs así:
+  // '1234', '1235', '1236'
 ];
 
 function esNuevo(idProd) {
@@ -804,7 +807,10 @@ function crearCardDestacada(gid, vars) {
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
-  const nuevo  = grupoTieneNuevo(vars);
+  const v = vars[0];
+  // La card destacada es estática (no rota), solo muestra la primera
+  // variante — la badge NUEVO se muestra si esa variante es nueva.
+  const nuevo  = esNuevo(v['Id']);
 
   const precio    = parsePrecio(v['Precio_Venta']);
   const precioDto = preciosCantidadDe(v).promo;
@@ -871,14 +877,21 @@ function crearCardDestacada(gid, vars) {
 
   card.append(imgWrap, body);
 
-  // Badges sobre la card: promo, nuevo y carrito (mismo orden que crearCard)
+  // Badges sobre la imagen: promo, nuevo y carrito, todos dentro del imgWrap
   const etDest = etiquetaPromo(v);
-  if (etDest && tienePromo(v)) card.appendChild(badgePromo(etDest));
-  if (nuevo) card.appendChild(badgeNuevo());
+  if (etDest && tienePromo(v)) {
+    imgWrap.classList.add('tiene-promo');
+    imgWrap.appendChild(badgePromo(etDest));
+  }
+  if (nuevo) {
+    imgWrap.classList.add('tiene-nuevo');
+    imgWrap.appendChild(badgeNuevo());
+  }
 
   const badgeCart = badgeCarritoIcono();
   badgeCart.id = `badge-${gid}`;
-  card.appendChild(badgeCart);
+  if (carrito.some(i => i.gid === gid)) badgeCart.classList.add('visible');
+  imgWrap.appendChild(badgeCart);
 
   return card;
 }
@@ -888,15 +901,17 @@ function crearCard(gid, vars) {
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
-  const nuevo  = grupoTieneNuevo(vars);
+  // Estado inicial de la badge NUEVO: lo marca la primera variante, después
+  // al rotar se va actualizando solo (igual que en el modal).
+  const nuevo  = esNuevo(vars[0]['Id']);
 
   const card = document.createElement('div');
-  card.className = 'card' + (nuevo ? ' tiene-nuevo' : '');
+  card.className = 'card';
   card.id = `card-${gid}`;
 
   // ── Imagen ──
   const imgWrap = document.createElement('div');
-  imgWrap.className = 'card-img-wrap';
+  imgWrap.className = 'card-img-wrap' + (nuevo ? ' tiene-nuevo' : '');
 
   const placeholder = document.createElement('div');
   placeholder.className = 'card-img-placeholder';
@@ -919,10 +934,14 @@ function crearCard(gid, vars) {
     imgWrap.appendChild(dots);
   }
 
-  // ── Badges sobre la imagen: promo (izq), nuevo (der), carrito (der abajo) ──
-  // Todos se posicionan absolutamente dentro de la card (position:relative).
-  // El orden del DOM importa para el z-index: últimos = arriba.
+  // ── Badges sobre la imagen (promo izq, nuevo der, carrito der abajo) ──
+  // Todas las badges viven DENTRO de .card-img-wrap (que tiene
+  // position:relative) para que el posicionamiento y el z-index sean
+  // iguales que en el .pm-img del modal — y para que la lógica de
+  // prender/apagar la badge NUEVO al rotar variantes funcione con el
+  // mismo código que usa el modal.
 
+  // Badge carrito (círculo blanco con borde verde, bolista)
   const badgeCarrito = badgeCarritoIcono();
   badgeCarrito.id = `badge-${gid}`;
 
@@ -955,19 +974,20 @@ function crearCard(gid, vars) {
   card.append(imgWrap, body);
 
   // Cinta de promo (arriba a la izquierda). Se decide con la primera
-  // variante: al rotar entre variantes el precio cambia, pero el porcentaje
-  // de descuento es el mismo para todas, así que la cinta no necesita
-  // actualizarse.
+  // variante porque el porcentaje de descuento es el mismo para todas.
   const etCard = etiquetaPromo(vars[0]);
-  if (etCard && tienePromo(vars[0])) card.appendChild(badgePromo(etCard));
+  const hayPromoCard = etCard && tienePromo(vars[0]);
+  if (hayPromoCard) {
+    imgWrap.classList.add('tiene-promo');
+    imgWrap.appendChild(badgePromo(etCard));
+  }
 
-  // Cinta NUEVO (arriba a la derecha, ámbar con estrella).
-  if (nuevo) card.appendChild(badgeNuevo());
+  // Cinta NUEVO: solo si la primera variante es nueva. Al rotar se
+  // agrega/quita según corresponda (misma lógica que el modal).
+  if (nuevo) imgWrap.appendChild(badgeNuevo());
 
-  // Ícono de carrito (círculo blanco con borde verde, bolista).
-  // Si hay badge nuevo, la clase .tiene-nuevo en la card lo desplaza hacia
-  // abajo para que no se superpongan.
-  card.appendChild(badgeCarrito);
+  // Ícono de carrito
+  imgWrap.appendChild(badgeCarrito);
 
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
@@ -1071,21 +1091,19 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
     if (vprecioEl) vprecioEl.style.opacity = '1';
     if (vprecioDtoEl) vprecioDtoEl.style.opacity = '1';
 
-    // Si estamos dentro del modal (se detecta porque el ancestro img-wrap
-    // tiene la clase .pm-img), actualizamos la badge NUEVO según si la
-    // variante que acaba de entrar es nueva. Esto es lo que permite que
-    // agregar una variante nueva a un grupo existente marque solo ESA
-    // variante y no todas.
+    // Badge NUEVO por variante: prendida/apagada según la variante actual.
+    // Funciona tanto en el modal (.pm-img) como en las cards del catálogo
+    // (.card-img-wrap), así al rotar la card la badge se va con la variante.
     if (imgEl) {
-      const pmImg = imgEl.closest('.pm-img');
-      if (pmImg) {
-        const badgeNuevoEl = pmImg.querySelector(':scope > .badge-nuevo');
+      const imgWrap = imgEl.closest('.pm-img, .card-img-wrap');
+      if (imgWrap) {
+        const badgeNuevoEl = imgWrap.querySelector(':scope > .badge-nuevo');
         const esNuevoAhora = esNuevo(v['Id']);
         if (esNuevoAhora) {
-          pmImg.classList.add('tiene-nuevo');
-          if (!badgeNuevoEl) pmImg.appendChild(badgeNuevo());
+          imgWrap.classList.add('tiene-nuevo');
+          if (!badgeNuevoEl) imgWrap.appendChild(badgeNuevo());
         } else {
-          pmImg.classList.remove('tiene-nuevo');
+          imgWrap.classList.remove('tiene-nuevo');
           if (badgeNuevoEl) badgeNuevoEl.remove();
         }
       }
