@@ -1046,6 +1046,10 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   place-items: center;
 }
 .destacados-icono svg { width: 14px; height: 14px; }
+.nuevos-strip .destacados-icono {
+  background: #C48A2B;
+  box-shadow: 0 2px 6px rgba(167,115,30,.28);
+}
 .destacados-strip-title {
   font-family: var(--font);
   font-size: 1rem;
@@ -1147,6 +1151,39 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 .nuevos-track .card .card-variante-label { font-size: .75rem; }
 .nuevos-track .card .card-precio { font-size: 1.05rem; }
 .nuevos-track .card .card-precio-dto { font-size: .78rem; }
+.nuevos-track .card-nuevos-cta {
+  display: block;
+  padding: 0;
+  border-color: var(--accent-line);
+  color: var(--t1);
+  font-family: var(--font);
+  text-align: left;
+}
+.nuevos-track .card-nuevos-cta .card-img-wrap {
+  background: var(--accent-bg);
+}
+.nuevos-cta-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+  color: var(--accent);
+  background: var(--surface);
+}
+.nuevos-cta-icon svg { width: 20px; height: 20px; }
+.nuevos-track .card-nuevos-cta .card-marca { color: var(--accent); }
+.nuevos-cta-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: var(--space-3);
+  color: var(--accent-2);
+  font-size: .8rem;
+  font-weight: 700;
+}
+.nuevos-cta-accion svg { width: 14px; height: 14px; }
 
 
 /* ══════════════════════════════════════════════════════
@@ -3435,7 +3472,6 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .filtro-btn-icono { display: inline-flex; color: var(--accent); }
 .filtro-btn-icono svg { width: 14px; height: 14px; }
-.filtro-btn--nuevos .filtro-btn-icono { color: #C48A2B; }
 .filtro-btn--especial.active .filtro-btn-icono { color: white; }
 
 /* Subfiltros */
@@ -3553,7 +3589,6 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
 }
 .cat-nav-btn--especial:hover { background: var(--surface-3); }
 .cat-nav-btn--especial .cat-nav-icono { color: var(--accent); }
-.cat-nav-btn--nuevos .cat-nav-icono { color: #C48A2B; }
 .cat-nav-btn--especial.active .cat-nav-icono { color: white; }
 .cat-nav-txt {
   flex: 1;

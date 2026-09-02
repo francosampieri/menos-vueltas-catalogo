@@ -42,6 +42,7 @@ const SVG_CARRITO_BADGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentC
 
 // SVG de la estrella para el badge NUEVO
 const SVG_ESTRELLA_NUEVO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>';
+const SVG_ESTRELLA_FILTRO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>';
 
 let filtroActivo    = 'Todos';
 let filtroSubcat    = null;
@@ -52,12 +53,12 @@ const FILTROS_ESPECIALES = {
   nuevos: {
     nombre: 'Nuevos',
     titulo: 'Nuevos ingresos',
-    icono: SVG_ESTRELLA_NUEVO
+    icono: SVG_ESTRELLA_FILTRO
   },
   descuento: {
     nombre: 'Con descuento',
     titulo: 'Productos con descuento',
-    icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 3H6a3 3 0 0 0-3 3v6.5a3 3 0 0 0 .88 2.12l6.5 6.5a3 3 0 0 0 4.24 0l6.5-6.5A3 3 0 0 0 22 12.5V6a3 3 0 0 0-3-3z"/><circle cx="8" cy="8" r="1"/></svg>'
+    icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15l6 -6"/><path d="M9 9.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0" fill="currentColor"/><path d="M14 14.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0" fill="currentColor"/><path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7a2.2 2.2 0 0 0 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1a2.2 2.2 0 0 0 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"/></svg>'
   }
 };
 
@@ -321,7 +322,7 @@ function renderNuevosIngresos() {
         .map(v => NUEVOS.indexOf(String(v['Id']))));
       return indice(varsA) - indice(varsB);
     })
-    .slice(0, 4);
+    .slice(0, 5);
 
   // Si no hay ningún producto nuevo activo/cargado, ocultamos la sección entera
   // en vez de mostrarla vacía.
@@ -332,6 +333,25 @@ function renderNuevosIngresos() {
   if (seccion) seccion.style.display = '';
 
   items.forEach(([gid, vars]) => cont.appendChild(crearCardNuevo(gid, vars)));
+  cont.appendChild(crearCardVerTodosNuevos());
+}
+
+function crearCardVerTodosNuevos() {
+  const card = document.createElement('button');
+  card.type = 'button';
+  card.className = 'card card-nuevos-cta';
+  card.setAttribute('aria-label', 'Ver todos los nuevos ingresos');
+  card.innerHTML = `
+    <span class="card-img-wrap"><span class="nuevos-cta-icon">${SVG_ESTRELLA_FILTRO}</span></span>
+    <span class="card-body">
+      <span class="card-marca">Catálogo</span>
+      <span class="card-nombre">Todos los nuevos ingresos</span>
+      <span class="nuevos-cta-accion">Ver todos
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+      </span>
+    </span>`;
+  card.addEventListener('click', () => mostrarCatalogoEspecial('nuevos'));
+  return card;
 }
 
 function construirFiltrosCategorias() {
