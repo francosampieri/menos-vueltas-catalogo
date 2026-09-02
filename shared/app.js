@@ -24,7 +24,7 @@ const rotaciones    = {};  // id_grupo → { timer, indexActual }
 // variantes del grupo es nueva (no parpadea al rotar); en el modal la
 // badge se muestra solo cuando la variante seleccionada es nueva.
 const NUEVOS = [
-  '514', '515', '516', '517', '518', '519', '520', '521', '522', '523', '524', '525', '526', '527', '528', '529', '530', '531', '512', '513', '307', '308', '311', '312', '313'
+  '532', '484', '514', '515', '516', '517', '518', '519', '520', '521', '522', '523', '524', '525', '526', '527', '528', '529', '530', '531', '512', '513', '307', '308', '311', '312', '313'
 ];
 
 function esNuevo(idProd) {
