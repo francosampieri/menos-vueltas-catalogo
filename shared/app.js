@@ -14,14 +14,6 @@ const rotaciones    = {};  // id_grupo → { timer, indexActual }
 
 
 
-// Productos destacados en la landing (solo B2B, sección "Los más pedidos").
-// Poné acá los Id_Grupo de los productos que querés mostrar, en el orden
-// en que querés que aparezcan. El Id_Grupo se ve en la columna "Id_Grupo"
-// de la hoja de Productos.
-const PRODUCTOS_DESTACADOS = [
-  '8', '41', '108', '117', '124', '133', '152', '155', '220', '252', '267'
-];
-
 // Productos nuevos (a nivel VARIANTE individual, no grupo): muestran la
 // cinta "NUEVO" con estrella en la esquina superior de la card y del modal.
 // Poné acá los Id de cada variante nueva (columna "Id" de la hoja Productos,
@@ -50,10 +42,25 @@ const SVG_CARRITO_BADGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentC
 
 // SVG de la estrella para el badge NUEVO
 const SVG_ESTRELLA_NUEVO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>';
+const SVG_ESTRELLA_FILTRO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>';
 
 let filtroActivo    = 'Todos';
 let filtroSubcat    = null;
+let filtroEspecial  = null; // 'nuevos' | 'descuento'
 let busquedaActiva  = '';
+
+const FILTROS_ESPECIALES = {
+  nuevos: {
+    nombre: 'Nuevos',
+    titulo: 'Nuevos ingresos',
+    icono: SVG_ESTRELLA_FILTRO
+  },
+  descuento: {
+    nombre: 'Descuentos',
+    titulo: 'Productos con descuento',
+    icono: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15l6 -6"/><path d="M9 9.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0" fill="currentColor"/><path d="M14 14.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0" fill="currentColor"/><path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7a2.2 2.2 0 0 0 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1a2.2 2.2 0 0 0 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"/></svg>'
+  }
+};
 
 // Onboarding del catálogo: se muestra una sola vez por carga de página
 // (si el usuario recarga o vuelve a entrar al sitio, se vuelve a mostrar).
@@ -291,27 +298,33 @@ function renderCatalogo() {
   construirSidebar();
   llenarMegamenu();
   renderGrupos();
-  renderDestacados();
+  renderNuevosIngresos();
 
   // Si la página se abrió desde el QR de otra pantalla, el pedido viaja en
   // el hash. Se restaura recién acá porque necesita el catálogo cargado.
   restaurarPedidoDesdeHash();
 }
 
-// Sección "Los más pedidos" de la landing (solo existe en B2B; en B2C el
-// contenedor no está en el HTML y esta función no hace nada).
-function renderDestacados() {
-  const cont = document.getElementById('destacados-grid');
+// Sección "Nuevos ingresos" de la landing. Solo muestra una selección breve:
+// el catálogo con el filtro Nuevos permite recorrer la colección completa.
+function renderNuevosIngresos() {
+  const cont = document.getElementById('nuevos-grid');
   if (!cont) return;
 
   cont.innerHTML = '';
-  const seccion = document.getElementById('destacados');
+  const seccion = document.getElementById('nuevos-ingresos');
 
-  const items = PRODUCTOS_DESTACADOS
-    .map(gid => [gid, catalogo[gid]])
-    .filter(([, vars]) => vars && vars.length);
+  const items = Object.entries(catalogo)
+    .filter(([, vars]) => grupoTieneNuevo(vars))
+    // NUEVOS ya expresa el orden de alta que se quiere comunicar.
+    .sort(([, varsA], [, varsB]) => {
+      const indice = vars => Math.min(...vars.filter(v => esNuevo(v['Id']))
+        .map(v => NUEVOS.indexOf(String(v['Id']))));
+      return indice(varsA) - indice(varsB);
+    })
+    .slice(0, 5);
 
-  // Si no hay ningún destacado activo/cargado, ocultamos la sección entera
+  // Si no hay ningún producto nuevo activo/cargado, ocultamos la sección entera
   // en vez de mostrarla vacía.
   if (!items.length) {
     if (seccion) seccion.style.display = 'none';
@@ -319,7 +332,18 @@ function renderDestacados() {
   }
   if (seccion) seccion.style.display = '';
 
-  items.forEach(([gid, vars]) => cont.appendChild(crearCardDestacada(gid, vars)));
+  items.forEach(([gid, vars]) => cont.appendChild(crearCardNuevo(gid, vars)));
+  cont.appendChild(crearCardVerTodosNuevos());
+}
+
+function crearCardVerTodosNuevos() {
+  const card = document.createElement('button');
+  card.type = 'button';
+  card.className = 'card card-nuevos-cta';
+  card.setAttribute('aria-label', 'Ver todos los nuevos ingresos');
+  card.innerHTML = '<span class="nuevos-cta-texto">Ver todos</span>';
+  card.addEventListener('click', () => mostrarCatalogoEspecial('nuevos'));
+  return card;
 }
 
 function construirFiltrosCategorias() {
@@ -327,8 +351,18 @@ function construirFiltrosCategorias() {
   // Limpiar excepto "Todos"
   cont.innerHTML = '';
 
+  Object.entries(FILTROS_ESPECIALES).forEach(([tipo, filtro]) => {
+    const btn = document.createElement('button');
+    btn.className = `filtro-btn filtro-btn--especial filtro-btn--${tipo}` +
+                    (filtroEspecial === tipo ? ' active' : '');
+    btn.dataset.especial = tipo;
+    btn.innerHTML = `<span class="filtro-btn-icono" aria-hidden="true">${filtro.icono}</span>${filtro.nombre}`;
+    btn.onclick = () => setFiltroEspecial(tipo, btn);
+    cont.appendChild(btn);
+  });
+
   const btnTodos = document.createElement('button');
-  btnTodos.className = 'filtro-btn active';
+  btnTodos.className = 'filtro-btn' + (!filtroEspecial && filtroActivo === 'Todos' ? ' active' : '');
   btnTodos.dataset.cat = 'Todos';
   btnTodos.textContent = 'Todos';
   btnTodos.onclick = () => setFiltroCategoria('Todos', btnTodos);
@@ -343,7 +377,7 @@ function construirFiltrosCategorias() {
 
   cats.forEach(cat => {
     const btn = document.createElement('button');
-    btn.className = 'filtro-btn';
+    btn.className = 'filtro-btn' + (!filtroEspecial && filtroActivo === cat ? ' active' : '');
     btn.dataset.cat = cat;
     btn.textContent = cat;
     btn.onclick = () => setFiltroCategoria(cat, btn);
@@ -354,13 +388,34 @@ function construirFiltrosCategorias() {
 function setFiltroCategoria(cat, btn) {
   filtroActivo = cat;
   filtroSubcat = null;
+  filtroEspecial = null;
   // Limpiar búsqueda al navegar por categorías
   busquedaActiva = '';
   document.getElementById('buscador').value = '';
-  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+  actualizarEstadoFiltros();
   renderSubfiltros();
   renderGrupos();
+}
+
+function setFiltroEspecial(tipo, btn) {
+  filtroEspecial = tipo;
+  filtroActivo = 'Todos';
+  filtroSubcat = null;
+  catsAbiertas.clear();
+  busquedaActiva = '';
+  document.getElementById('buscador').value = '';
+  actualizarEstadoFiltros();
+  renderSubfiltros();
+  renderGrupos();
+}
+
+function actualizarEstadoFiltros() {
+  document.querySelectorAll('.filtro-btn').forEach(btn => {
+    const activo = btn.dataset.especial
+      ? btn.dataset.especial === filtroEspecial
+      : !filtroEspecial && btn.dataset.cat === filtroActivo;
+    btn.classList.toggle('active', activo);
+  });
 }
 
 function renderSubfiltros() {
@@ -368,7 +423,7 @@ function renderSubfiltros() {
   const cont = document.getElementById('subfiltros');
   cont.innerHTML = '';
 
-  if (filtroActivo === 'Todos') {
+  if (filtroEspecial || filtroActivo === 'Todos') {
     wrap.classList.remove('visible');
     return;
   }
@@ -405,9 +460,11 @@ function renderSubfiltros() {
 
 function setFiltroSubcat(sub) {
   filtroSubcat = sub;
+  filtroEspecial = null;
   // Limpiar búsqueda al navegar por subcategorías
   busquedaActiva = '';
   document.getElementById('buscador').value = '';
+  actualizarEstadoFiltros();
   renderSubfiltros();
   renderGrupos();
 }
@@ -429,6 +486,9 @@ function getGruposFiltrados() {
       const texto = norm(`${nombre} ${marca} ${cat} ${sub} ${tags}`);
       return texto.includes(q);
     }
+
+    if (filtroEspecial === 'nuevos') return grupoTieneNuevo(vars);
+    if (filtroEspecial === 'descuento') return vars.some(v => tienePromo(v));
 
     if (filtroActivo !== 'Todos' && cat !== filtroActivo) return false;
     if (filtroSubcat && sub !== filtroSubcat) return false;
@@ -638,6 +698,7 @@ function getIconoCat(cat) {
 
 function contarPorCategoria() {
   const porCat = {}, porSub = {};
+  let nuevos = 0, descuentos = 0;
   Object.entries(catalogo).forEach(([gid, vars]) => {
     const g = grupos[gid] || {};
     const cat = g.categoria    || vars[0]['Categoria']    || 'Otros';
@@ -645,8 +706,10 @@ function contarPorCategoria() {
     porCat[cat] = (porCat[cat] || 0) + 1;
     const k = cat + '|||' + sub;
     porSub[k] = (porSub[k] || 0) + 1;
+    if (grupoTieneNuevo(vars)) nuevos++;
+    if (vars.some(v => tienePromo(v))) descuentos++;
   });
-  return { porCat, porSub };
+  return { porCat, porSub, nuevos, descuentos };
 }
 
 function construirSidebar() {
@@ -654,12 +717,24 @@ function construirSidebar() {
   if (!nav) return;
   nav.innerHTML = '';
 
-  const { porCat, porSub } = contarPorCategoria();
+  const { porCat, porSub, nuevos, descuentos } = contarPorCategoria();
   const total = Object.keys(catalogo).length;
+
+  Object.entries(FILTROS_ESPECIALES).forEach(([tipo, filtro]) => {
+    const cantidad = tipo === 'nuevos' ? nuevos : descuentos;
+    const btn = document.createElement('button');
+    btn.className = `cat-nav-btn cat-nav-btn--especial cat-nav-btn--${tipo}` +
+                    (filtroEspecial === tipo && !busquedaActiva ? ' active' : '');
+    btn.innerHTML = `<span class="cat-nav-icono">${filtro.icono}</span>
+      <span class="cat-nav-txt">${filtro.nombre}</span>
+      <span class="cat-nav-num">${cantidad}</span>`;
+    btn.onclick = () => setFiltroEspecial(tipo);
+    nav.appendChild(btn);
+  });
 
   // "Todo el catálogo"
   const btnTodos = document.createElement('button');
-  btnTodos.className = 'cat-nav-btn' + (filtroActivo === 'Todos' && !busquedaActiva ? ' active' : '');
+  btnTodos.className = 'cat-nav-btn' + (!filtroEspecial && filtroActivo === 'Todos' && !busquedaActiva ? ' active' : '');
   btnTodos.innerHTML = `<span class="cat-nav-icono">${getIconoCat('_default')}</span>
     <span class="cat-nav-txt">Todo el catálogo</span>
     <span class="cat-nav-num">${total}</span>`;
@@ -673,7 +748,7 @@ function construirSidebar() {
     const abierta = catsAbiertas.has(cat);
 
     const btn = document.createElement('button');
-    btn.className = 'cat-nav-btn' + (filtroActivo === cat && !filtroSubcat ? ' active' : '')
+    btn.className = 'cat-nav-btn' + (!filtroEspecial && filtroActivo === cat && !filtroSubcat ? ' active' : '')
                                   + (filtroActivo === cat ? ' en-rama' : '');
     btn.innerHTML = `<span class="cat-nav-icono">${getIconoCat(cat)}</span>
       <span class="cat-nav-txt">${cat}</span>
@@ -712,10 +787,11 @@ function construirSidebar() {
         catsAbiertas.clear();
         catsAbiertas.add(cat);
         filtroActivo = cat;
+        filtroEspecial = null;
         busquedaActiva = '';
         const input = document.getElementById('buscador');
         if (input) input.value = '';
-        document.querySelectorAll('.filtro-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+        actualizarEstadoFiltros();
         setFiltroSubcat(filtroSubcat === sub ? null : sub);
       };
       grupo.appendChild(s);
@@ -735,6 +811,9 @@ function actualizarEncabezadoCatalogo(cantidad) {
   if (busquedaActiva) {
     titulo = `Resultados para “${busquedaActiva}”`;
     ruta = ['Catálogo', 'Búsqueda'];
+  } else if (filtroEspecial) {
+    titulo = FILTROS_ESPECIALES[filtroEspecial].titulo;
+    ruta = ['Catálogo', FILTROS_ESPECIALES[filtroEspecial].titulo];
   } else if (filtroSubcat) {
     titulo = filtroSubcat;
     ruta = ['Catálogo', filtroActivo, filtroSubcat];
@@ -794,20 +873,14 @@ function buildVarianteLabel(v, vars) {
   return partes.join(' · ');
 }
 
-// Card "destacada": versión liviana y estática (sin rotación de variantes
-// ni expandido propio) para usar en la sección "Los más pedidos" de la
-// landing, evitando así tener ids duplicados con la card real que vive en
-// el catálogo. Al tocarla, lleva directo al catálogo con ese producto
-// buscado.
-function crearCardDestacada(gid, vars) {
+// Card de nuevo ingreso: versión estática para la landing. Representa la
+// variante nueva del grupo y lleva al catálogo antes de abrir su detalle.
+function crearCardNuevo(gid, vars) {
   const g = grupos[gid] || {};
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
   const marca  = g.marca  || vars[0]['Marca']    || '';
   const cat    = g.categoria || vars[0]['Categoria'] || '';
-  const v = vars[0];
-  // La card destacada es estática (no rota), solo muestra la primera
-  // variante — la badge NUEVO se muestra si esa variante es nueva.
-  const nuevo  = esNuevo(v['Id']);
+  const v = vars.find(variante => esNuevo(variante['Id'])) || vars[0];
 
   const precio    = parsePrecio(v['Precio_Venta']);
   const precioDto = preciosCantidadDe(v).promo;
@@ -815,10 +888,8 @@ function crearCardDestacada(gid, vars) {
   const hayDto    = uniDto > 0 && precioDto !== null;
 
   const card = document.createElement('div');
-  card.className = 'card card-destacada' + (nuevo ? ' tiene-nuevo' : '');
-  // Igual que en el catálogo: abre el detalle del producto con sus
-  // variantes, en vez de mandar al catálogo con la búsqueda cargada.
-  card.addEventListener('click', () => abrirModalProducto(gid, vars));
+  card.className = 'card card-nuevo tiene-nuevo';
+  card.addEventListener('click', () => mostrarCatalogoEspecial('nuevos', gid));
 
   const imgWrap = document.createElement('div');
   imgWrap.className = 'card-img-wrap';
@@ -880,15 +951,8 @@ function crearCardDestacada(gid, vars) {
     imgWrap.classList.add('tiene-promo');
     imgWrap.appendChild(badgePromo(etDest));
   }
-  if (nuevo) {
-    imgWrap.classList.add('tiene-nuevo');
-    imgWrap.appendChild(badgeNuevo());
-  }
-
-  const badgeCart = badgeCarritoIcono();
-  badgeCart.id = `badge-${gid}`;
-  if (carrito.some(i => i.gid === gid)) badgeCart.classList.add('visible');
-  imgWrap.appendChild(badgeCart);
+  imgWrap.classList.add('tiene-nuevo');
+  imgWrap.appendChild(badgeNuevo());
 
   return card;
 }
@@ -1182,8 +1246,11 @@ function sincronizarYReanudarRotacion(gid) {
 //  desenfocado, en vez de expandir la card dentro del catálogo (que en
 //  mobile desacomodaba el riel y dejaba al usuario perdido).
 // ══════════════════════════════════════════════════════
-function abrirModalProducto(gid, vars) {
+function abrirModalProducto(gid, vars, indiceInicial = 0) {
   cerrarModalProducto(true);
+
+  const indice = Math.max(0, Math.min(indiceInicial, vars.length - 1));
+  const varianteInicial = vars[indice] || vars[0];
 
   const g = grupos[gid] || {};
   const nombre = g.nombre || vars[0]['Producto'] || 'Producto';
@@ -1191,8 +1258,7 @@ function abrirModalProducto(gid, vars) {
   const cat    = g.categoria || vars[0]['Categoria'] || '';
 
   // En el modal la badge NUEVO se muestra solo para la variante actual.
-  // Empieza con la variante 0.
-  const nuevoInicial = esNuevo(vars[0]['Id']);
+  const nuevoInicial = esNuevo(varianteInicial['Id']);
 
   const overlay = document.createElement('div');
   overlay.className = 'pm-overlay';
@@ -1250,10 +1316,8 @@ function abrirModalProducto(gid, vars) {
 
   // Badges sobre la foto del modal (ahora todos a la izquierda para no
   // superponerse con la X de cerrar).
-  // El badge de promo solo aparece si la primera variante tiene descuento
-  // (la etiqueta no cambia entre variantes del mismo grupo).
-  const etModal = etiquetaPromo(vars[0]);
-  const hayPromoModal = etModal && tienePromo(vars[0]);
+  const etModal = etiquetaPromo(varianteInicial);
+  const hayPromoModal = etModal && tienePromo(varianteInicial);
   if (hayPromoModal) imgWrap.classList.add('tiene-promo');
   if (hayPromoModal) imgWrap.appendChild(badgePromo(etModal));
   if (nuevoInicial) imgWrap.appendChild(badgeNuevo());
@@ -1285,7 +1349,7 @@ function abrirModalProducto(gid, vars) {
     vprecioEl:    overlay.querySelector('.pm-precio'),
     vprecioDtoEl: overlay.querySelector('.pm-precio-dto'),
     dotsEl
-  });
+  }, indice);
 
   // Cambio de variante: flechas al costado de la foto (desktop y mobile) y
   // deslizando sobre la imagen (mobile).
@@ -1385,7 +1449,7 @@ function cerrarModalProducto(inmediato = false) {
 
 // ══ DETALLE DE PRODUCTO (contenido del modal) ══
 // refs = { cont, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, dotsEl }
-function renderDetalleProducto(gid, vars, refs) {
+function renderDetalleProducto(gid, vars, refs, indiceInicial = 0) {
   const expanded = refs.cont;
   const imgEl = refs.imgEl;
   expanded.innerHTML = '';
@@ -1399,8 +1463,9 @@ function renderDetalleProducto(gid, vars, refs) {
   const soloPorTamaño   = tamañosUnicos.length > 0   && variantesUnicas.length === 0;
   const tieneDoble      = variantesUnicas.length > 0  && tamañosUnicos.length > 0;
 
-  let selVariante = null;
-  let selTamaño   = null;
+  const varianteInicial = vars[Math.max(0, Math.min(indiceInicial, vars.length - 1))] || vars[0];
+  let selVariante = varianteInicial?.['Label_Variante'] || null;
+  let selTamaño   = varianteInicial?.['Label_Tamaño']   || null;
   let esPrimeraDibujada = true;
 
   function getVarianteSeleccionada() {
@@ -2256,6 +2321,29 @@ function mostrarCatalogo(cat, sub) {
   mostrarOnboardingToast();
 }
 
+function mostrarCatalogoEspecial(tipo, gid) {
+  const filtro = FILTROS_ESPECIALES[tipo];
+  if (!filtro) return;
+
+  document.getElementById('vista-landing').classList.add('oculta');
+  document.getElementById('vista-catalogo').classList.add('visible');
+  window.scrollTo({ top: 0 });
+
+  setFiltroEspecial(tipo);
+  document.getElementById('catalogo-titulo-label').textContent = filtro.titulo;
+  mostrarOnboardingToast();
+
+  if (!gid || !catalogo[gid]) return;
+  const vars = catalogo[gid];
+  const indiceNuevo = tipo === 'nuevos'
+    ? vars.findIndex(v => esNuevo(v['Id']))
+    : vars.findIndex(v => tienePromo(v));
+
+  // El catálogo y su filtro ya se renderizaron antes de crear el modal: así
+  // la vuelta atrás deja al usuario en el contexto correcto.
+  requestAnimationFrame(() => abrirModalProducto(gid, vars, indiceNuevo >= 0 ? indiceNuevo : 0));
+}
+
 // Franja de onboarding: avisa una sola vez por carga de página que las
 // cards se pueden tocar para ver variantes y precio por cantidad. Solo
 // se cierra con el botón "Entendido" — no sola ni al tocar un producto,
@@ -2368,6 +2456,12 @@ document.addEventListener('click', e => {
 document.getElementById('buscador').addEventListener('input', function() {
   busquedaActiva = this.value.trim();
   if (busquedaActiva) {
+    filtroEspecial = null;
+    filtroActivo = 'Todos';
+    filtroSubcat = null;
+    catsAbiertas.clear();
+    actualizarEstadoFiltros();
+    renderSubfiltros();
     mostrarCatalogo();
     document.getElementById('catalogo-titulo-label').textContent = `Resultados para "${busquedaActiva}"`;
   }
@@ -2561,13 +2655,13 @@ function addRevealClasses() {
 document.addEventListener('DOMContentLoaded', addRevealClasses);
 
 
-// ══ DESTACADOS: flechas del riel (solo desktop) ══
+// ══ NUEVOS INGRESOS: flechas del riel (solo desktop) ══
 // Se desactivan al llegar a cada extremo. El observer recalcula cuando las
 // cards se cargan, que ocurre después de traer el catálogo.
 document.addEventListener('DOMContentLoaded', () => {
-  const track = document.getElementById('destacados-grid');
-  const prev  = document.getElementById('destacadosPrev');
-  const next  = document.getElementById('destacadosNext');
+  const track = document.getElementById('nuevos-grid');
+  const prev  = document.getElementById('nuevosPrev');
+  const next  = document.getElementById('nuevosNext');
   if (!track || !prev || !next) return;
 
   const paso = () => Math.round(track.clientWidth * 0.8);
