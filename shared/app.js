@@ -32,10 +32,7 @@ const PRODUCTOS_DESTACADOS = [
 // variantes del grupo es nueva (no parpadea al rotar); en el modal la
 // badge se muestra solo cuando la variante seleccionada es nueva.
 const NUEVOS = [
-  // Agregá acá los Id de las variantes nuevas (ej: Café Cabrales, maple
-  // de huevos, salsa de tomate, golosinas). Sacalos cuando dejen de ser
-  // novedad. El array va con strings de IDs así:
-  // '1234', '1235', '1236'
+  '514', '515', '516', '517', '518', '519', '520', '521', '522', '523', '524', '525', '526', '527', '528', '529', '530', '531'
 ];
 
 function esNuevo(idProd) {
