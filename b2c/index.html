@@ -123,12 +123,7 @@
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body data-hero="estandar">
-<!-- ═ HERO ACTIVO ═
-     Cambiá el atributo data-hero del <body> (arriba) a "promo" o
-     "estandar" para elegir qué hero se muestra en la landing. El que no
-     esté elegido queda armado más abajo en el HTML, sin borrarse, listo
-     para prenderlo de nuevo cuando haga falta. Es lo único que hay que
-     tocar. -->
+<!-- ═ HERO ACTIVO ═ -->
 
 <!-- ═ BARRA SUPERIOR ═ -->
 <header class="topbar">
@@ -221,64 +216,6 @@
       <img src="hero-bolsas.jpg" alt="Bolsas de compras Menos Vueltas" class="hero-photo">
     </div>
   </div>
-  </section>
-
-  <!-- ═ HERO DE CAMPAÑA ═ (se muestra cuando data-hero="promo")
-       10% OFF + envío gratis en la primera compra, con foto de campaña
-       (hero-promo.jpg). Se rediseña de cero en cada campaña — no hace
-       falta reutilizar esta estructura, es solo el punto de partida
-       actual. Cambiá data-hero en el <body> para activarlo. -->
-  <section class="hero-promo-bg">
-    <img src="hero-promo.jpg" alt="Promoción lanzamiento Menos Vueltas: bolsas de compras en la puerta de casa — 10% de descuento y envío gratis en Carrodilla, Mendoza" class="hero-promo-photo">
-    <div class="hero-promo">
-      <div class="hero-promo-inner">
-        <span class="hero-promo-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z" />
-            <path d="M12 8l0 13" />
-            <path d="M19 12l0 7a2 2 0 0 1 -2 2l-10 0a2 2 0 0 1 -2 -2l0 -7" />
-            <path d="M7.5 8a2.5 2.5 0 0 1 0 -5c1.5 0 2.5 2 2.5 5" />
-            <path d="M16.5 8a2.5 2.5 0 0 0 0 -5c-1.5 0 -2.5 2 -2.5 5" />
-          </svg>
-          Promoción de Lanzamiento
-        </span>
-        <h1 class="hero-promo-titulo"><strong>10% de descuento</strong><br>+ Envío Gratis</h1>
-
-        <div class="hero-promo-chips">
-          <span class="hero-promo-chip">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
-            Sin mínimos
-          </span>
-          <span class="hero-promo-chip">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2.5 11.5 12 3l9.5 8.5"/>
-              <path d="M5 10.5V21h14V10.5"/>
-              <path d="M10.5 21v-5.5h3V21"/>
-            </svg>
-            Pagas al recibir
-          </span>
-        </div>
-
-        <!-- Cuenta regresiva hasta el cierre de la promo. La fecha límite
-             está en data-fin (ver initContadorPromo en app.js). Si la promo
-             ya venció, el bloque entero se oculta solo. -->
-        <div class="promo-cd" id="promoContador" data-fin="2026-08-31T23:59:59-03:00">
-          <span class="promo-cd-label">Termina en</span>
-          <div class="promo-cd-nums">
-            <div class="promo-cd-u"><b data-cd-d>00</b><i>días</i></div>
-            <div class="promo-cd-u"><b data-cd-h>00</b><i>hs</i></div>
-            <div class="promo-cd-u"><b data-cd-m>00</b><i>min</i></div>
-            <div class="promo-cd-u"><b data-cd-s>00</b><i>seg</i></div>
-          </div>
-        </div>
-
-        <div class="hero-promo-actions">
-          <button class="btn-primary" onclick="mostrarCatalogoCompleto()">Ver catálogo</button>
-          <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Cómo pedir</button>
-        </div>
-        <p class="hero-promo-nota">Probá Menos Vueltas con este descuento en todos tus pedidos de Agosto</p>
-      </div>
-    </div>
   </section>
 
   <!-- Nuevos ingresos: una selección breve en la landing. Cada card lleva
@@ -680,6 +617,18 @@
           </div>
         </div>
 
+        <div class="faq-item">
+          <button class="faq-pregunta" onclick="toggleFaq(this)">
+            <span>¿Cuánto cuesta el envío?</span>
+            <svg class="faq-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-resp-wrap">
+            <div class="faq-respuesta">
+              <p>El envío cuesta $1.500. Desde $35.000 en productos, el envío es gratis. Confirmamos por WhatsApp si tu dirección está dentro de nuestra zona de cobertura.</p>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -725,22 +674,6 @@
 
 <!-- ══ CATÁLOGO ══ -->
 <div id="vista-catalogo">
-
-  <!-- Barra de promo: solo en el catálogo. En la landing el hero ya la
-       comunica, acá en cambio la promo se perdería de vista al navegar.
-       Se puede cerrar y no vuelve a aparecer en la misma sesión. Si la
-       promo venció, initBarraPromo() la saca sola. -->
-  <div class="promo-barra" id="promoBarra" hidden>
-    <div class="promo-barra-inner">
-      <span class="promo-barra-txt">
-        <strong>10% OFF + Envío gratis</strong><span class="larga"> en todos tus pedidos de Agosto</span><span class="corta"> en Agosto</span>
-      </span>
-      <span class="promo-barra-cd" id="promoBarraCd" hidden></span>
-    </div>
-    <button class="promo-barra-x" onclick="cerrarBarraPromo()" aria-label="Cerrar aviso">
-      <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-  </div>
 
   <div class="catalogo-topbar">
     <div class="catalogo-topbar-inner">
@@ -850,8 +783,15 @@
         </div>
         <div class="cr-fila cr-fila--promo" id="crEnvioFila" hidden>
           <span>Envío</span>
-          <span>GRATIS</span>
+          <span id="crEnvio">—</span>
         </div>
+        <div class="cr-envio-progreso" id="crEnvioProgreso" hidden>
+          <span id="crEnvioProgresoTexto"></span>
+          <div class="cr-envio-progreso-pista" role="progressbar" aria-label="Progreso hacia envío gratis" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span class="cr-envio-progreso-barra" id="crEnvioProgresoBarra"></span>
+          </div>
+        </div>
+
         <div class="cr-fila cr-fila--total">
           <span>Total</span>
           <span class="carrito-total-valor" id="carritoTotal">—</span>
@@ -918,6 +858,7 @@
 </div>
 
 <script>window.CANAL = 'B2C';</script>
+<script src="shipping.js"></script>
 <script src="app.js"></script>
 <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3413da61b33b51a',t:'MTc4ODIzMzg5Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

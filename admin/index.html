@@ -262,8 +262,16 @@
           <div class="fila" id="rPromoFila" hidden><span>Promo</span><b id="rPromo">$0</b></div>
           <div class="fila" id="rDtoFila" hidden><span>Descuentos por cantidad</span><b id="rDto">$0</b></div>
 
-          <div class="campo campo--sep">
-            <label for="fExtras">Extras (envío, ajustes)</label>
+          <div class="campo campo--sep" id="fEnvioBox">
+            <label for="fEnvio">Envío</label>
+            <div class="campo-con-boton">
+              <input type="number" id="fEnvio" step="50" min="0" placeholder="A confirmar" oninput="editarEnvioManual()">
+              <button type="button" class="btn btn--peque" id="btnRestablecerEnvio" onclick="restablecerEnvioRegla()">Restablecer regla</button>
+            </div>
+            <p class="campo-ayuda" id="avisoEnvio"></p>
+          </div>
+          <div class="campo">
+            <label for="fExtras">Extras (ajustes)</label>
             <input type="number" id="fExtras" value="0" step="50" oninput="recalcular()">
           </div>
           <div class="campo">
@@ -275,7 +283,7 @@
           <div class="fila"><span>Costo</span><b id="rCos">$0</b></div>
 
           <div class="fila fila--ganancia" id="rGanBox">
-            <span>Ganancia</span><b id="rGan">$0</b>
+            <span>Ganancia antes de logística</span><b id="rGan">$0</b>
           </div>
           <div class="fila fila--margen"><span>Margen</span><b id="rMar">—</b></div>
 
@@ -450,6 +458,8 @@
       <p class="wa-leyenda" id="waLeyenda"></p>
       <div class="wa-lista" id="waLista"></div>
       <div class="wa-comparacion" id="waComparacion" hidden>
+        <div class="wa-fila"><span>Envío según mensaje</span><b id="waEnvioMsg">—</b></div>
+        <div class="wa-fila"><span>Envío con regla actual</span><b id="waEnvioCalc">—</b></div>
         <div class="wa-fila"><span>Total según mensaje</span><b id="waTotalMsg">—</b></div>
         <div class="wa-fila"><span>Total con catálogo actual</span><b id="waTotalCalc">—</b></div>
         <div class="wa-fila wa-fila--diff" id="waFilaDiff" hidden><span id="waDiffLabel">Diferencia</span><b id="waDiff">—</b></div>
@@ -467,6 +477,9 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- El admin se publica bajo /admin/, por eso los recursos compartidos se
+     resuelven desde el directorio padre en el mismo sitio estático. -->
+<script src="../shared/shipping.js"></script>
 <script src="admin.js"></script>
 <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2ef808e5bec584a',t:'MTc4NzM3NjgwMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

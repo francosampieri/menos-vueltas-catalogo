@@ -29,7 +29,10 @@
 6. Actualmente no se emiten facturas.
 7. El resultado financiero más confiable son los cobros registrados en Finanzas, no sólo el conteo del panel.
 8. Un pedido contabilizado por el panel deja de aportar si luego se cancela.
-9. La política definitiva de envío está pendiente. El viaje a la distribuidora tiene costo operativo aunque la entrega local sea cercana.
+9. Para B2C, dentro de la cobertura vigente, el envío cuesta $1.500 por pedido sin importar la zona. Es gratis cuando el neto de productos, luego de promociones y descuentos por cantidad, es igual o superior a $35.000. El cálculo no incluye envío ni extras.
+10. La cobertura se confirma por WhatsApp; esta regla no extiende las zonas atendidas. El viaje a la distribuidora tiene costo operativo aunque la entrega local sea cercana.
+11. B2B no tiene aún política de envío, por lo que no debe heredar ni mostrar la regla B2C.
+12. En un pedido B2C, el total es productos netos + envío + extras. El envío se conserva como dato histórico independiente y la ganancia expuesta por el panel es previa al costo logístico.
 
 ## Cobertura y datos personales
 

@@ -45,9 +45,17 @@ La hoja `Pedidos` usa estos encabezados:
 
 ```text
 Id, Canal, Fecha_Pedido, Fecha_Entrega, Cliente_Id, Cliente, Telefono,
-Direccion, Barrio, Estado, Medio_Pago, Subtotal, Descuento, Extras,
+Direccion, Barrio, Estado, Medio_Pago, Subtotal, Descuento, Envio, Extras,
 Desc_Extras, Total, Costo, Ganancia, Notas, Actualizado
 ```
+
+`Envio` es un campo monetario propio, ubicado entre `Descuento` y `Extras`. En
+pedidos B2C nuevos vale `1500` cuando se cobra envío y `0` cuando se bonifica;
+vacío preserva que un pedido histórico no registraba esta información. `Extras`
+y `Desc_Extras` son conceptos independientes y no deben reutilizarse para
+envío. El total del pedido es productos netos + `Envio` + `Extras`. La
+ganancia que muestra el panel incluye el ingreso de envío y se interpreta como
+ganancia antes del costo logístico.
 
 Estados presentes en el panel:
 
@@ -92,6 +100,6 @@ La planilla de Finanzas es separada y manual; es la referencia práctica de tran
 
 ## Integridad
 
-El Apps Script usa `LockService` para serializar escrituras. Lee y relaciona pedidos e ítems por `Id_Pedido`, permite guardar y eliminar pedidos y clientes, y guardar contactos. Desde el panel se evita borrar clientes con pedidos vinculados. El script puede agregar encabezados faltantes de promoción a `Items` sin reordenar las columnas existentes.
+El Apps Script usa `LockService` para serializar escrituras. Lee y relaciona pedidos e ítems por `Id_Pedido`, permite guardar y eliminar pedidos y clientes, y guardar contactos. Desde el panel se evita borrar clientes con pedidos vinculados. Debe leer y escribir `Envio` por nombre de encabezado para conservar compatibilidad con pedidos históricos y no requiere completar valores anteriores. El script puede agregar encabezados faltantes de promoción a `Items` sin reordenar las columnas existentes.
 
 No cambiar nombres, orden de columnas ni relaciones sin revisar el Apps Script y el workflow de catálogo.

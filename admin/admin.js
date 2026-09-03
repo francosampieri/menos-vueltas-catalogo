@@ -225,6 +225,22 @@ function calcularLinea(l) {
   };
 }
 
+// El precio efectivo de cada línea ya incorpora promoción y descuento por
+// cantidad. Esa es la única base válida para la política B2C de envío.
+function calcularEnvioPedido(p) {
+  if (p.canal !== 'b2c') return null;
+  if (p.envioManual) return MenosVueltasAdminShipping.serializeShipping(p.envio);
+
+  const resumen = MenosVueltasShipping.calculateShipping({
+    channel: 'B2C',
+    items: (p.items || []).map(l => ({
+      unitPrice: precioUnitario(l),
+      quantity: l.cant
+    }))
+  });
+  return resumen.shippingCost;
+}
+
 function calcularPedido(p) {
   let subtotal = 0, total = 0, costo = 0, unidades = 0;
   let dtoPromo = 0, dtoCantidad = 0;
@@ -246,13 +262,19 @@ function calcularPedido(p) {
   });
 
   const extras = Number(p.extras) || 0;
-  const totalFinal = total + extras;
+  const envio = calcularEnvioPedido(p);
+  const totalFinal = MenosVueltasAdminShipping.totalWithShipping({
+    productsTotal: total,
+    shipping: envio,
+    extras
+  });
 
   return {
     subtotal,
     descuento: subtotal - total,
     dtoPromo,
     dtoCantidad,
+    envio,
     extras,
     total: totalFinal,
     costo,
@@ -432,11 +454,14 @@ const API = {
 // solo lugar (acá), no duplicado en el script.
 function paraGuardar(p) {
   const t = calcularPedido(p);
+  const { envioManual, ...pedido } = p;
   return {
-    ...p,
+    ...pedido,
+    envio: MenosVueltasAdminShipping.serializeShipping(t.envio),
     totales: {
       subtotal:  Math.round(t.subtotal),
       descuento: Math.round(t.descuento),
+      envio:     MenosVueltasAdminShipping.serializeShipping(t.envio),
       total:     Math.round(t.total),
       costo:     Math.round(t.costo),
       ganancia:  Math.round(t.ganancia)
@@ -934,6 +959,7 @@ function nuevoPedido() {
     clienteId: null, cliente: '', telefono: '', direccion: '', barrio: '', mapa: '',
     estado: 'Nuevo',
     medioPago: 'Efectivo',
+    envio: null, envioManual: false,
     extras: 0, descExtras: '', notas: '',
     items: []
   };
@@ -946,6 +972,9 @@ function abrirPedido(id) {
   // Copia profunda: si el usuario se arrepiente y vuelve, el original
   // queda intacto.
   edicion = JSON.parse(JSON.stringify(p));
+  // Los pedidos guardados conservan el importe (o vacío histórico) con el
+  // que fueron registrados; abrirlos nunca vuelve a aplicar una regla nueva.
+  edicion.envioManual = true;
   abrirEditor(false);
 }
 
@@ -969,6 +998,7 @@ function abrirEditor(esNuevo) {
   v('fBarrio', edicion.barrio);
   actualizarBotonMapa();
   v('fMedioPago', edicion.medioPago);
+  v('fEnvio', edicion.envio);
   v('fExtras', edicion.extras || 0);
   v('fDescExtras', edicion.descExtras);
   v('fNotas', edicion.notas);
@@ -996,6 +1026,7 @@ function leerCampos() {
     barrio:       cli?.barrio    || '',
     mapa:         cli?.mapa      || '',
     medioPago:    g('fMedioPago'),
+    envio:        MenosVueltasAdminShipping.serializeShipping(g('fEnvio')),
     extras:       Number(g('fExtras')) || 0,
     descExtras:   g('fDescExtras').trim(),
     notas:        g('fNotas').trim()
@@ -1117,10 +1148,53 @@ function pintarItems() {
   recalcular();
 }
 
+function editarEnvioManual() {
+  if (!edicion || edicion.canal !== 'b2c') return;
+  edicion.envioManual = true;
+  edicion.envio = MenosVueltasAdminShipping.serializeShipping(document.getElementById('fEnvio').value);
+  recalcular();
+}
+
+function restablecerEnvioRegla() {
+  if (!edicion || edicion.canal !== 'b2c') return;
+  edicion.envioManual = false;
+  recalcular();
+}
+
+function actualizarCampoEnvio(envio) {
+  const input = document.getElementById('fEnvio');
+  const boton = document.getElementById('btnRestablecerEnvio');
+  const aviso = document.getElementById('avisoEnvio');
+  const esB2C = edicion.canal === 'b2c';
+
+  input.disabled = !esB2C;
+  boton.hidden = !esB2C || !edicion.envioManual;
+  if (!esB2C) {
+    input.value = '';
+    input.placeholder = 'No aplica a B2B';
+    aviso.textContent = 'B2B no tiene una política de envío definida.';
+    return;
+  }
+
+  input.placeholder = 'A confirmar';
+  input.value = envio == null ? '' : envio;
+  if (edicion.envioManual) {
+    aviso.textContent = envio == null
+      ? 'Envío a confirmar. Este valor queda fijado para este pedido.'
+      : 'Valor manual fijado para este pedido.';
+  } else {
+    aviso.textContent = envio === 0
+      ? 'Envío gratis por superar $35.000 netos en productos.'
+      : 'Regla B2C automática: $1.500 dentro de la cobertura vigente.';
+  }
+}
+
 function recalcular() {
   if (!edicion) return;
   edicion.extras = Number(document.getElementById('fExtras').value) || 0;
   const t = calcularPedido(edicion);
+  if (!edicion.envioManual && edicion.canal === 'b2c') edicion.envio = t.envio;
+  actualizarCampoEnvio(t.envio);
 
   document.getElementById('rSub').textContent = money(t.subtotal);
 
@@ -1131,6 +1205,7 @@ function recalcular() {
   const filaCant = document.getElementById('rDtoFila');
   filaCant.hidden = !t.dtoCantidad;
   document.getElementById('rDto').textContent = '−' + money(t.dtoCantidad);
+  // Envío se muestra como campo editable para no mezclarlo con Extras.
   document.getElementById('rTot').textContent = money(t.total);
   document.getElementById('rCos').textContent = money(t.costo);
   document.getElementById('rGan').textContent = money(t.ganancia);
@@ -1508,7 +1583,12 @@ function parsearMensajeWAPorLineas(texto) {
   const totalMatch = limpio.match(/(?:^|\n)\s*total\s*:?\s*\$?\s*([\d\.,]+)/i);
   if (totalMatch) totalMsg = num(totalMatch[1]);
 
-  return { items, totalMsg };
+  const tieneEnvioMsg = /(?:^|\n)\s*env[ií]o\s*:/i.test(limpio);
+  const envioMsg = tieneEnvioMsg
+    ? MenosVueltasAdminShipping.parseShippingFromMessage(limpio)
+    : null;
+
+  return { items, totalMsg, envioMsg, tieneEnvioMsg };
 }
 
 /**
@@ -1564,7 +1644,7 @@ function parsearPedidoWA() {
   const texto = document.getElementById('waTexto').value.trim();
   if (!texto) { toast('Pegá el mensaje del pedido antes.', true); return; }
 
-  const { items, totalMsg } = parsearMensajeWAPorLineas(texto);
+  const { items, totalMsg, envioMsg, tieneEnvioMsg } = parsearMensajeWAPorLineas(texto);
 
   if (!items.length) {
     toast('No se detectaron productos numerados en el mensaje. Asegurate de pegar el texto tal cual llega.', true);
@@ -1584,7 +1664,7 @@ function parsearPedidoWA() {
     });
   }
 
-  waParse = { items: resultados, totalMsg };
+  waParse = { items: resultados, totalMsg, envioMsg, tieneEnvioMsg };
   renderizarPreviewWA();
 }
 
@@ -1641,26 +1721,35 @@ function renderizarPreviewWA() {
   const filaDiff = document.getElementById('waFilaDiff');
   const btnConfirmar = document.getElementById('btnConfirmarWA');
 
-  // Calcular total con lo matcheado para la comparación (precios del catálogo)
-  let calc = 0;
+  // Calcular el neto efectivo con lo matcheado. Se reutiliza calcularLinea()
+  // para que promo y descuento por cantidad coincidan con el editor.
+  let productosCalc = 0;
+  const itemsParaEnvio = [];
   for (const it of waParse.items) {
     const p = it.matchId ? opcionesPorId[it.matchId] : null;
     if (!p) continue;
-    const unit = num(p.pp) || num(p.pv);
-    if (p.ud && it.cant >= parseInt(p.ud, 10) && num(p.pd)) {
-      // descuento por cantidad
-      calc += it.cant * num(p.ppd || p.pd);
-    } else {
-      calc += it.cant * unit;
-    }
+    const linea = lineaDesdeCatalogo(p, it.cant);
+    const calculada = calcularLinea(linea);
+    productosCalc += calculada.total;
+    itemsParaEnvio.push({ unitPrice: calculada.unit, quantity: it.cant });
   }
 
+  const reglaEnvio = edicion.canal === 'b2c'
+    ? MenosVueltasShipping.calculateShipping({ channel: 'B2C', items: itemsParaEnvio }).shippingCost
+    : null;
+  const envioParaComparar = waParse.tieneEnvioMsg ? waParse.envioMsg : reglaEnvio;
+  const calc = envioParaComparar == null ? null :
+    MenosVueltasAdminShipping.totalWithShipping({ productsTotal: productosCalc, shipping: envioParaComparar });
+  const textoEnvio = valor => valor == null ? 'A confirmar' : valor === 0 ? 'GRATIS' : money(valor);
+
+  document.getElementById('waEnvioMsg').textContent = waParse.tieneEnvioMsg ? textoEnvio(waParse.envioMsg) : '—';
+  document.getElementById('waEnvioCalc').textContent = reglaEnvio == null ? 'No aplica' : textoEnvio(reglaEnvio);
   document.getElementById('waTotalMsg').textContent =
     waParse.totalMsg != null ? money(waParse.totalMsg) : '—';
   document.getElementById('waTotalCalc').textContent =
-    calc > 0 ? money(calc) : '—';
+    calc != null && productosCalc > 0 ? money(calc) : 'A confirmar';
 
-  if (waParse.totalMsg != null && calc > 0) {
+  if (waParse.totalMsg != null && calc != null && productosCalc > 0) {
     comp.hidden = false;
     filaDiff.hidden = false;
     const diff = calc - waParse.totalMsg;
@@ -1677,7 +1766,7 @@ function renderizarPreviewWA() {
       lbl.textContent = 'Diferencia (revisar si hay descuentos/envio/cambios de precio)';
     }
   } else {
-    comp.hidden = (waParse.totalMsg == null && calc === 0);
+    comp.hidden = (waParse.totalMsg == null && productosCalc === 0 && !waParse.tieneEnvioMsg);
     filaDiff.hidden = true;
   }
 
@@ -1722,6 +1811,13 @@ function confirmarImportarWA() {
       edicion.items.push(lineaDesdeCatalogo(prod, it.cant));
     }
     agregados++;
+  }
+
+  // El mensaje es una evidencia histórica: si informa envío, se fija para
+  // este pedido en vez de reemplazarlo al cambiar productos o precios.
+  if (edicion.canal === 'b2c' && waParse.tieneEnvioMsg) {
+    edicion.envio = waParse.envioMsg;
+    edicion.envioManual = true;
   }
 
   pintarItems();

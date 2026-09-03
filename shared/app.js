@@ -82,24 +82,6 @@ function formatPrecio(n) {
 }
 
 
-// ══ PROMO VIGENTE ══
-// El descuento ya NO se calcula acá: viene resuelto desde el Sheets, en las
-// columnas Precio_Promo y Precio_Promo_Mayorista. Cada producto puede tener
-// su propio porcentaje (o ninguno), y el redondeo a múltiplos de 50 lo hace
-// la planilla. Este bloque solo aporta los textos de la campaña.
-//
-// Para terminar la promo alcanza con vaciar la columna "promo" del Sheets:
-// el generador copia el precio de lista en Precio_Promo y todo vuelve solo.
-const PROMO = {
-  NOMBRE: 'Promo Agosto',
-  FIN: '2026-08-31T23:59:59-03:00'
-};
-
-function promoVigente() {
-  const fin = new Date(PROMO.FIN).getTime();
-  return isNaN(fin) ? true : Date.now() < fin;
-}
-
 // Precio de lista y precio con descuento de una variante. Si Precio_Promo
 // está vacío o no es menor que el de lista, se usa el de lista: así cada
 // producto puede tener su propio descuento (o ninguno), independientemente
@@ -1783,6 +1765,32 @@ function precioEfectivo(item) {
   return aplica ? item.precioDto : item.precio;
 }
 
+// El único cálculo de envío para carrito, WhatsApp y traspaso por QR.
+// shipping.js reúne la regla de envío y las utilidades del panel para evitar
+// duplicar esta regla de negocio.
+function resumenPedidoActual() {
+  const items = carrito.map(item => ({
+    unitPrice: precioEfectivo(item),
+    quantity: item.qty
+  }));
+  const policy = window.MenosVueltasShipping;
+
+  if (policy) return policy.calculateShipping({ channel: CANAL, items });
+
+  // B2B puede cargar shared/app.js sin el helper B2C: conserva su total
+  // histórico y no recibe una política de envío por defecto.
+  const hasMissingPrice = items.some(item => item.unitPrice === null);
+  const productsTotal = hasMissingPrice ? null : items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+  return {
+    productsTotal,
+    shippingCost: 0,
+    total: productsTotal,
+    amountRemaining: 0,
+    progress: 0,
+    status: hasMissingPrice ? 'confirm' : 'not-applicable'
+  };
+}
+
 function agregarAlCarrito(gid, variante, qty) {
   const g      = grupos[gid] || {};
   const nombre = g.nombre    || variante['Producto'] || '';
@@ -1881,9 +1889,10 @@ function eliminarDelCarrito(idx) {
 }
 
 function actualizarUICarrito(rerenderItems = true) {
-  const total      = carrito.reduce((s, i) => s + (precioEfectivo(i) || 0) * i.qty, 0);
+  const resumen    = resumenPedidoActual();
+  const total      = resumen.productsTotal || 0;
   const totalItems = carrito.reduce((s, i) => s + i.qty, 0);
-  const hayPrecio  = carrito.some(i => i.precio !== null);
+  const hayPrecio  = resumen.status !== 'confirm';
 
   const countEl = document.getElementById('cartCount');
   if (countEl) {
@@ -1900,7 +1909,7 @@ function actualizarUICarrito(rerenderItems = true) {
   const totalEl = document.getElementById('carritoTotal');
   if (totalEl) {
     if (hayPrecio) {
-      totalEl.textContent  = formatPrecio(total);
+      totalEl.textContent  = formatPrecio(resumen.total);
       totalEl.className    = 'carrito-total-valor';
     } else {
       totalEl.textContent  = 'Precios a confirmar';
@@ -1939,24 +1948,30 @@ function actualizarUICarrito(rerenderItems = true) {
   escribir('crSubtotal', hayPrecio ? formatPrecio(bruto) : '—');
   mostrar('crSubtotalFila', hayPrecio);
 
-  // Línea de descuento: si hay campaña global usa su nombre; si no, pero
-  // hay productos con descuento puntual, dice "Descuentos" (genérico).
-  // Si no hay descuentos en ningún producto, no se muestra.
-  const hayPromoGlobal = promoVigente();
   const hayDescProd   = dtoPromo > 0;
-  if (hayPromoGlobal) {
-    escribir('crPromoLabel', PROMO.NOMBRE);
-  } else {
-    escribir('crPromoLabel', 'Descuentos');
-  }
+  escribir('crPromoLabel', 'Descuentos');
   escribir('crPromo', '−' + formatPrecio(dtoPromo));
   mostrar('crPromoFila', hayPrecio && hayDescProd);
 
   escribir('crCantidad', '−' + formatPrecio(dtoCantidad));
   mostrar('crCantidadFila', hayPrecio && dtoCantidad > 0);
 
-  // Envío GRATIS solo durante campaña global
-  mostrar('crEnvioFila', hayPrecio && hayPromoGlobal);
+  const mostrarEnvio = carrito.length > 0 && CANAL === 'B2C';
+  escribir('crEnvio', resumen.status === 'confirm'
+    ? 'A confirmar'
+    : resumen.status === 'free' ? 'GRATIS' : formatPrecio(resumen.shippingCost));
+  mostrar('crEnvioFila', mostrarEnvio);
+
+  const mostrarProgreso = mostrarEnvio && resumen.status !== 'confirm';
+  escribir('crEnvioProgresoTexto', resumen.status === 'free'
+    ? '¡Tenés envío gratis!'
+    : `Te faltan ${formatPrecio(resumen.amountRemaining)} para tener envío gratis`);
+  const barra = document.getElementById('crEnvioProgresoBarra');
+  if (barra) {
+    barra.style.width = `${resumen.progress}%`;
+    barra.setAttribute('aria-valuenow', String(resumen.progress));
+  }
+  mostrar('crEnvioProgreso', mostrarProgreso);
 
   // Cierre del resumen: el ahorro total (promo + cantidad) en una línea
   // discreta bajo el total, sin recuadro — los dos descuentos ya están
@@ -2053,8 +2068,9 @@ function cerrarCarrito() {
 // Arma el texto del pedido para WhatsApp. Separado del envío porque lo usan
 // tanto el botón como el flujo del QR.
 function construirMensajePedido() {
-  const total     = carrito.reduce((s, i) => s + (precioEfectivo(i) || 0) * i.qty, 0);
-  const hayPrecio = carrito.some(i => i.precio !== null);
+  const resumen   = resumenPedidoActual();
+  const total     = resumen.productsTotal || 0;
+  const hayPrecio = resumen.status !== 'confirm';
 
   // Sin emojis ni caracteres decorativos fuera de Latin-1: WhatsApp Desktop
   // los recibe mal desde un enlace wa.me y los muestra como "?". Se usan
@@ -2093,15 +2109,19 @@ function construirMensajePedido() {
 
     msg += `Subtotal: ${formatPrecio(bruto)}\n`;
     if (dtoPromo > 0) {
-      const labelDesc = promoVigente() ? PROMO.NOMBRE : 'Descuentos';
-      msg += `${labelDesc}: -${formatPrecio(dtoPromo)}\n`;
+      msg += `Descuentos: -${formatPrecio(dtoPromo)}\n`;
     }
     if (dtoCantidad > 0) {
       msg += `Descuentos por cantidad: -${formatPrecio(dtoCantidad)}\n`;
     }
-    if (promoVigente()) msg += 'Envío: GRATIS\n';
-    msg += `\n*TOTAL: ${formatPrecio(total)}*\n`;
+    if (CANAL === 'B2C') {
+      msg += `Envío: ${resumen.status === 'free' ? 'GRATIS' : formatPrecio(resumen.shippingCost)}\n`;
+    }
+    msg += `\n*TOTAL: ${formatPrecio(resumen.total)}*\n`;
     if (ahorro > 0) msg += `Estás ahorrando ${formatPrecio(ahorro)}\n`;
+  } else if (CANAL === 'B2C') {
+    msg += 'Envío: a confirmar\n';
+    msg += '\n*TOTAL: a confirmar*\n';
   }
 
   return msg;
@@ -2702,95 +2722,6 @@ document.addEventListener('DOMContentLoaded', () => {
   actualizarFlechas();
 });
 
-
-// ══ CONTADOR DE LA PROMO ══
-// Cuenta regresiva hasta la fecha del atributo data-fin (formato ISO con
-// huso, ej. "2026-08-31T23:59:59-03:00"). Vive en el HTML y no acá para que
-// cambiar de campaña sea editar un atributo. Si la fecha ya pasó — o es
-// inválida — el bloque se oculta solo: nunca se muestra "00 00 00 00" ni
-// una promo vencida.
-function initContadorPromo() {
-  const cont = document.getElementById('promoContador');
-  if (!cont) return;
-
-  const fin = new Date(cont.dataset.fin).getTime();
-  if (isNaN(fin)) { cont.classList.add('vencida'); return; }
-
-  const el = {
-    d: cont.querySelector('[data-cd-d]'),
-    h: cont.querySelector('[data-cd-h]'),
-    m: cont.querySelector('[data-cd-m]'),
-    s: cont.querySelector('[data-cd-s]')
-  };
-  const dosDigitos = n => String(n).padStart(2, '0');
-  let timer = null;
-
-  const tick = () => {
-    const resta = fin - Date.now();
-    if (resta <= 0) {
-      cont.classList.add('vencida');
-      clearInterval(timer);
-      return;
-    }
-    const seg = Math.floor(resta / 1000);
-    if (el.d) el.d.textContent = dosDigitos(Math.floor(seg / 86400));
-    if (el.h) el.h.textContent = dosDigitos(Math.floor(seg % 86400 / 3600));
-    if (el.m) el.m.textContent = dosDigitos(Math.floor(seg % 3600 / 60));
-    if (el.s) el.s.textContent = dosDigitos(seg % 60);
-  };
-
-  tick();
-  timer = setInterval(tick, 1000);
-}
-
-document.addEventListener('DOMContentLoaded', initContadorPromo);
-
-
-// ══ BARRA DE PROMO DEL CATÁLOGO ══
-// En la landing el hero ya comunica la promo; acá el aviso existe porque al
-// navegar el catálogo la promo quedaría fuera de pantalla hasta el carrito.
-// Se puede cerrar y no vuelve a aparecer en la misma sesión (sessionStorage,
-// no localStorage: si vuelve otro día conviene que la vea de nuevo).
-const BARRA_CERRADA_KEY = 'mv_promo_barra_cerrada';
-
-function cerrarBarraPromo() {
-  const b = document.getElementById('promoBarra');
-  if (b) b.hidden = true;
-  try { sessionStorage.setItem(BARRA_CERRADA_KEY, '1'); } catch (e) { /* modo privado */ }
-}
-
-function initBarraPromo() {
-  const barra = document.getElementById('promoBarra');
-  if (!barra) return;
-  if (!promoVigente()) return;
-
-  let cerrada = false;
-  try { cerrada = sessionStorage.getItem(BARRA_CERRADA_KEY) === '1'; } catch (e) {}
-  if (cerrada) return;
-
-  barra.hidden = false;
-
-  // Cuenta regresiva compacta (sin segundos: en una barra fina el número
-  // saltando cada segundo distrae de los productos).
-  const cd = document.getElementById('promoBarraCd');
-  if (!cd) return;
-  const fin = new Date(PROMO.FIN).getTime();
-  if (isNaN(fin)) return;
-
-  const tick = () => {
-    const resta = fin - Date.now();
-    if (resta <= 0) { barra.hidden = true; clearInterval(timer); return; }
-    const seg = Math.floor(resta / 1000);
-    const d = Math.floor(seg / 86400);
-    const h = Math.floor(seg % 86400 / 3600);
-    cd.textContent = d > 0 ? `Quedan ${d} días` : `Quedan ${h} horas`;
-    cd.hidden = false;
-  };
-  tick();
-  const timer = setInterval(tick, 60000);
-}
-
-document.addEventListener('DOMContentLoaded', initBarraPromo);
 
 /* ══════════════ CARTEL NOVEDADES ══════════════
    Aparece 40 segundos despues de que el usuario entra al sitio, solo

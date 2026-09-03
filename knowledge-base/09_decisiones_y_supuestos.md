@@ -11,6 +11,9 @@
 - El público objetivo puede incluir barrios privados; la estética se mantiene accesible y no premium.
 - La identidad visual vigente toma como referencia el Brand Book de Canva: verde oliva, fondo cálido claro, grafito, DM Sans, Cabin e iconografía Tabler.
 - WhatsApp es el canal de cierre y coordinación.
+- La política de envío B2C vigente es $1.500 fijo dentro de la cobertura actual y gratis desde $35.000 netos de productos, después de promociones y descuentos por cantidad. B2B no adopta esta política.
+- `Envio` es un campo monetario histórico propio del pedido: `1500` cobrado, `0` bonificado y vacío si el pedido histórico no lo registraba. El total incluye envío y extras; la ganancia visible es antes del costo logístico.
+- El Apps Script debe leer y escribir `Envio` por encabezado y no se hará backfill de pedidos anteriores.
 - El modelo actual es compra contra pedido y retiro en distribuidora, no stock propio en tiempo real.
 - La prioridad técnica es velocidad y bajo costo.
 - Entender el código e incorporar funcionalidades tiene prioridad sobre eliminar código muerto.
@@ -21,7 +24,6 @@
 - Los datos publicados desde Sheets son suficientes y consistentes para alimentar las vistas web.
 - Los estados actuales del panel representan adecuadamente el flujo operativo.
 - La frecuencia de un retiro semanal seguirá siendo viable mientras crezca la base de clientes.
-- La política de envío será definida antes de incorporar lógica rígida de cálculo o cobro.
 - Faltantes, sustituciones y cantidades no disponibles se resolverán por WhatsApp hasta una política explícita.
 - La exposición pública actual de ciertos datos de catálogo/costos es conocida y aceptada por el responsable, pero no debe interpretarse como recomendación de seguridad.
 
