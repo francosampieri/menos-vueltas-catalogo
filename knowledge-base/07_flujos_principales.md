@@ -4,8 +4,8 @@
 
 1. El cliente visita la web B2C.
 2. Explora catálogo, precios, promociones y condiciones de compra por cantidad.
-3. Agrega productos al carrito y envía el resumen a WhatsApp.
-4. El equipo recibe el pedido, solicita o confirma dirección y acuerda día y horario.
+3. Agrega productos al carrito; este calcula el neto de productos, el envío B2C y el total. Si el neto alcanza $35.000, el envío es gratis; de lo contrario es $1.500.
+4. Envía a WhatsApp un resumen que incluye productos, envío y total. El equipo recibe el pedido, solicita o confirma dirección y acuerda día y horario dentro de la cobertura vigente.
 5. Los pedidos acordados se agrupan para enviar a la distribuidora.
 6. El equipo retira los productos, normalmente en una única visita semanal.
 7. El pedido se entrega a domicilio.

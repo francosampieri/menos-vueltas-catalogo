@@ -26,7 +26,7 @@ Google Sheets (fuente de verdad)
 | `admin/` | Panel de pedidos y clientes |
 | `shared/` | JavaScript, estilos, imágenes y catálogo generado compartidos |
 
-B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. El carrito crea un mensaje de pedido para WhatsApp. En escritorio contempla abrir WhatsApp Web o transferir el pedido al teléfono mediante QR; en móvil abre WhatsApp directamente.
+B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. La política de envío se aplica sólo a B2C: el mismo cálculo debe alimentar el carrito, el mensaje de pedido y la transferencia por QR; el QR conserva productos y cantidades, y recalcula el envío al abrirse en el teléfono. El carrito crea un mensaje de pedido para WhatsApp. En escritorio contempla abrir WhatsApp Web o transferir el pedido al teléfono mediante QR; en móvil abre WhatsApp directamente.
 
 ### Actualización del catálogo
 
@@ -34,7 +34,7 @@ B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. El carri
 
 ### Panel administrativo
 
-El panel estático carga pedidos y clientes desde Apps Script, consume `admin/productos.json` para buscar y calcular, y permite gestionar pedidos y fichas de clientes. Incluye preparación de lista agregada para el proveedor, importación de mensajes de WhatsApp y recuperación local de borradores. No reemplaza la planilla de Finanzas como registro de cobros reales.
+El panel estático carga pedidos y clientes desde Apps Script, consume `admin/productos.json` para buscar y calcular, y permite gestionar pedidos y fichas de clientes. Para B2C, conserva `Envio` como componente propio del pedido y totaliza productos netos + envío + extras; el importador de WhatsApp debe reconocer ese componente. El Apps Script debe resolver la columna por encabezado, preservando registros históricos sin valor y sin backfill. Incluye preparación de lista agregada para el proveedor, importación de mensajes de WhatsApp y recuperación local de borradores. No reemplaza la planilla de Finanzas como registro de cobros reales.
 
 ## Seguridad actual: estado conocido
 

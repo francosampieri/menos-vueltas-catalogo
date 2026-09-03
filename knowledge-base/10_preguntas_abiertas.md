@@ -2,12 +2,11 @@
 
 ## Operación y entregas
 
-1. ¿Cuál será la política permanente de envío: costo fijo, envío gratis desde un mínimo, costo por zona, absorción parcial u otra?
-2. ¿Cuál será el mínimo de compra, si existirá?
-3. ¿Qué días y franjas horarias de entrega se ofrecerán de forma estándar?
-4. ¿Cómo se manejarán faltantes, sustituciones y diferencias entre pedido y disponibilidad?
-5. ¿Qué límite de pedidos es viable por visita semanal y por jornada de reparto?
-6. ¿Cuándo se incorporará planificación de rutas?
+1. ¿Cuál será el mínimo de compra, si existirá?
+2. ¿Qué días y franjas horarias de entrega se ofrecerán de forma estándar?
+3. ¿Cómo se manejarán faltantes, sustituciones y diferencias entre pedido y disponibilidad?
+4. ¿Qué límite de pedidos es viable por visita semanal y por jornada de reparto?
+5. ¿Cuándo se incorporará planificación de rutas?
 
 ## Finanzas y precios
 
