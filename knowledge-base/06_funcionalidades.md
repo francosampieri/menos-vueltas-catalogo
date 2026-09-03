@@ -7,6 +7,9 @@
 - Mostrar catálogo organizado por categorías o grupos.
 - Mostrar precios B2C, promociones y condiciones mayoristas por cantidad cuando estén configuradas.
 - Actualizar el catálogo desde planillas administradas por el negocio.
+- Ofrecer filtros especiales de `Nuevos` y `Descuentos`, además de categorías y subcategorías. `Nuevos` usa la marca manual de variantes definida en el frontend y `Descuentos` muestra variantes con una rebaja real en el precio del canal actual.
+- Ordenar visualmente las categorías y subcategorías alfabéticamente, sin depender del orden de inserción del JSON; el orden interno de productos conserva el orden alfabético vigente por nombre y marca.
+- Mostrar en la landing una franja de `Nuevos ingresos`: carrusel de hasta cinco productos y una acción para ver todos los nuevos. Al elegir un producto, se abre primero el catálogo con el filtro Nuevos y luego su detalle; la acción general abre ese catálogo filtrado.
 
 ### Carrito y pedido
 
@@ -33,6 +36,7 @@
 - Preparar catálogo y precios diferenciados de B2C.
 - Mantener una base de clientes separada.
 - Diseñar posteriormente reglas de frecuencia, entregas, mínimos de compra y operación comercial para kioscos y almacenes.
+- Mantener los filtros y la presentación de Nuevos/Descuentos usando exclusivamente los precios y productos del canal B2B.
 
 ## Futuro deseado, no confirmado como funcionalidad actual
 

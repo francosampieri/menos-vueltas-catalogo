@@ -33,6 +33,12 @@ Campos comerciales confirmados:
 
 Para publicarse, un producto debe estar `Activo` y habilitado con `Cat B2C` o `Cat B2B`. El panel consume `admin/productos.json`, una versión reducida con los campos necesarios para búsqueda y cálculos.
 
+### Señales de presentación del catálogo público
+
+`Nuevo` no tiene hoy una columna ni una regla derivada en Sheets o en el JSON generado. La web lo determina mediante una lista manual de IDs de variantes en `shared/app.js`; un grupo se considera nuevo si alguna de sus variantes figura en esa lista. Esta marca es solo de presentación y no modifica datos comerciales.
+
+El filtro público `Descuentos` evalúa, por variante, una rebaja real: `Precio_Promo < Precio_Venta`. Los precios ya llegan resueltos para el canal de la página, por lo que B2C y B2B aplican el mismo criterio sobre sus respectivos precios y no se mezclan. El descuento por cantidad no basta por sí solo para incluir un producto en este filtro.
+
 ## Pedidos
 
 La hoja `Pedidos` usa estos encabezados:
