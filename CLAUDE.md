@@ -52,6 +52,20 @@ Antes de editar, leer siempre [knowledge-base/README.md](knowledge-base/README.m
 - NUNCA dar una feature por terminada sin verificarla manualmente → probar el flujo afectado; si toca interfaz, revisar desktop y mobile. Informar qué se verificó y qué no.
 - NUNCA asumir que un pedido del panel equivale a un cobro real → Finanzas conserva el registro operativo de cobros reales.
 
+## Protocolo de actualización de contexto
+
+Al cierre de una sesión que cambie código, revisar si se tomó una decisión potencialmente permanente sobre marca, negocio, operación, arquitectura, datos, reglas o mensajes de la web.
+
+1. Distinguir las ideas, hipótesis o recomendaciones de las decisiones que el responsable confirmó explícitamente.
+2. Si sólo hay ideas o recomendaciones, no modificar `knowledge-base/`; resumirlas como propuestas pendientes.
+3. Si hay una decisión confirmada, indicar el o los archivos canónicos exactos que deberían actualizarse y describir brevemente el cambio propuesto.
+4. Esperar una confirmación explícita del responsable antes de editar cualquier archivo de contexto.
+5. Tras la confirmación y la actualización, informar qué archivo se modificó.
+
+Los documentos canónicos se eligen según el alcance: visión y mensajes en `knowledge-base/01_vision_y_objetivos.md`; negocio y canales en `knowledge-base/02_descripcion_general.md`; datos en `knowledge-base/04_modelo_de_datos.md`; reglas operativas en `knowledge-base/05_reglas_de_negocio.md`; funcionalidades en `knowledge-base/06_funcionalidades.md`; flujos en `knowledge-base/07_flujos_principales.md`; arquitectura en `knowledge-base/08_arquitectura_propuesta.md`; y decisiones o supuestos en `knowledge-base/09_decisiones_y_supuestos.md`.
+
+Si se modifica este archivo, sincronizar `CLAUDE.md` con contenido idéntico antes de terminar la sesión.
+
 ## Flujo para implementar una feature
 
 1. Leer la KB relevante y el código involucrado.
