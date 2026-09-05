@@ -24,6 +24,8 @@ La marca debe percibirse como cercana, confiable, simple y accesible. Puede aten
 - Conseguir clientes fuera del círculo familiar y de amistades.
 - Validar adquisición mediante WhatsApp, referidos y visitas/tarjetas promocionales.
 - Consolidar clientes fijos y activos en zonas cercanas.
+- Alcanzar y sostener 10 pedidos B2C semanales antes de priorizar la captación activa en segmentos de mayor poder adquisitivo.
+- Validar la adquisición de clientes no conocidos mediante un piloto de visitas puerta a puerta en 21 de Julio y seguimiento manual por WhatsApp.
 - Definir una política estable de costos o condiciones de envío tras la promoción de lanzamiento.
 - Entender y aprovechar el sistema existente para incorporar funcionalidades de forma segura y rápida.
 

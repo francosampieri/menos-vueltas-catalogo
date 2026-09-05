@@ -3,9 +3,9 @@
 ## Operación y entregas
 
 1. ¿Cuál será el mínimo de compra, si existirá?
-2. ¿Qué días y franjas horarias de entrega se ofrecerán de forma estándar?
-3. ¿Cómo se manejarán faltantes, sustituciones y diferencias entre pedido y disponibilidad?
-4. ¿Qué límite de pedidos es viable por visita semanal y por jornada de reparto?
+2. ¿Qué franjas horarias de entrega se ofrecerán de forma estándar los viernes?
+3. ¿Qué preferencia previa sobre sustituciones debería elegir el cliente antes de comprar: alternativa similar, consulta obligatoria o eliminación del producto?
+4. ¿Qué límite de pedidos es viable por visita semanal y por jornada de reparto una vez superados los 10 pedidos B2C semanales considerados cómodos hoy?
 5. ¿Cuándo se incorporará planificación de rutas?
 
 ## Finanzas y precios
@@ -46,3 +46,7 @@
 4. ¿Cómo se implementará la estrategia de referidos?
 5. ¿Qué oferta se usará para tarjetas promocionales y visitas a hogares?
 6. ¿Cuál es el criterio para expandirse a un nuevo barrio?
+7. El beneficio de bienvenida de 21 de Julio será 10% sin envío gratis. ¿Cuál será su vigencia, uso por cliente y acumulación con otras promociones?
+8. ¿Qué proveedor o mayorista puede complementar a Distrosec sin afectar el modelo contra pedido? Deben investigarse mínimos, venta por unidad, pago, distancia, precios y marcas disponibles.
+9. ¿Bajo qué condiciones se justificará un micro-stock de productos de alta confianza? La propuesta inicial —todavía no aprobada— considera pastas y arroz de marcas reconocidas, bebidas líderes y azúcar.
+10. ¿Cuándo conviene probar una campaña voluntaria de comparación de tickets de supermercados locales y con qué protocolo transparente de comparación?

@@ -2,15 +2,24 @@
 
 ## Flujo B2C: compra y entrega
 
-1. El cliente visita la web B2C.
+1. El cliente visita la web B2C o, si tiene dificultades para usarla, envía una lista escrita por WhatsApp para que el equipo arme el pedido de forma asistida.
 2. Explora catálogo, precios, promociones y condiciones de compra por cantidad.
 3. Agrega productos al carrito; este calcula el neto de productos, el envío B2C y el total. Si el neto alcanza $35.000, el envío es gratis; de lo contrario es $1.500.
 4. Envía a WhatsApp un resumen que incluye productos, envío y total. El equipo recibe el pedido, solicita o confirma dirección y acuerda día y horario dentro de la cobertura vigente.
-5. Los pedidos acordados se agrupan para enviar a la distribuidora.
-6. El equipo retira los productos, normalmente en una única visita semanal.
-7. El pedido se entrega a domicilio.
-8. El cliente paga en efectivo o transferencia al momento de la entrega.
-9. La operación financiera real se registra en Finanzas.
+5. La entrega B2C se organiza actualmente para los viernes. Los pedidos ingresados hasta el jueves a las 16 h pueden entrar en esa tanda; se recomienda realizar el pedido entre martes y miércoles. Los posteriores al corte sólo entran si sigue siendo viable; los pedidos del viernes pasan a la semana siguiente, previa comunicación al cliente.
+6. Los pedidos acordados se agrupan para enviar a la distribuidora.
+7. El equipo retira los productos, normalmente en una única visita semanal. Si detecta un faltante con tiempo, consulta al cliente por WhatsApp; si lo detecta durante el retiro, puede elegir una alternativa equivalente y debe informarla al entregar.
+8. El pedido se entrega a domicilio. El cliente puede rechazar una sustitución no consultada y ese producto se elimina del pedido.
+9. El cliente paga en efectivo o transferencia al momento de la entrega.
+10. La operación financiera real se registra en Finanzas.
+
+## Flujo B2C: captación inicial fuera del círculo cercano
+
+1. El equipo realiza visitas puerta a puerta en una zona piloto de cobertura, actualmente 21 de Julio, y entrega una tarjeta promocional.
+2. La persona interesada inicia una conversación por WhatsApp para recibir el beneficio de bienvenida definido para la campaña: 10% de descuento, sin envío gratis.
+3. El equipo entrega el beneficio y comparte el acceso al catálogo B2C.
+4. Se etiquetan para seguimiento manual los contactos que se inscriben en el formulario de novedades, inician una conversación que demuestra interés o realizan una compra. Si un contacto no responde ni realiza pedidos durante tres o cuatro semanas, puede retirarse de la lista o recibir comunicaciones con menor frecuencia para evitar ser molesto. No se asume una lista de difusión masiva.
+5. La campaña se evalúa por zona mediante tarjetas entregadas, conversaciones iniciadas, contactos etiquetados para seguimiento, pedidos, margen de primera compra y recompra. No se registran datos personales en la medición de campaña.
 
 ## Flujo de actualización de precios
 

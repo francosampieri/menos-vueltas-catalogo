@@ -11,6 +11,9 @@
 - El público objetivo puede incluir barrios privados; la estética se mantiene accesible y no premium.
 - La identidad visual vigente toma como referencia el Brand Book de Canva: verde oliva, fondo cálido claro, grafito, DM Sans, Cabin e iconografía Tabler.
 - WhatsApp es el canal de cierre y coordinación.
+- La prioridad comercial inmediata es alcanzar y sostener 10 pedidos B2C semanales; la validación activa de segmentos de mayor poder adquisitivo queda después de ese objetivo.
+- La primera campaña de adquisición fuera del círculo cercano se prueba mediante visitas puerta a puerta en 21 de Julio. Busca captar contactos B2C interesados por WhatsApp; el seguimiento es manual y los contactos inactivos durante tres o cuatro semanas pueden retirarse de la lista o recibir comunicaciones con menor frecuencia.
+- El beneficio de bienvenida de la campaña en 21 de Julio es 10% de descuento y no incluye envío gratis.
 - La política de envío B2C vigente es $1.500 fijo dentro de la cobertura actual y gratis desde $35.000 netos de productos, después de promociones y descuentos por cantidad. B2B no adopta esta política.
 - `Envio` es un campo monetario histórico propio del pedido: `1500` cobrado, `0` bonificado y vacío si el pedido histórico no lo registraba. El total incluye envío y extras; la ganancia visible es antes del costo logístico.
 - El Apps Script debe leer y escribir `Envio` por encabezado y no se hará backfill de pedidos anteriores.
@@ -24,7 +27,7 @@
 - Los datos publicados desde Sheets son suficientes y consistentes para alimentar las vistas web.
 - Los estados actuales del panel representan adecuadamente el flujo operativo.
 - La frecuencia de un retiro semanal seguirá siendo viable mientras crezca la base de clientes.
-- Faltantes, sustituciones y cantidades no disponibles se resolverán por WhatsApp hasta una política explícita.
+- La preferencia previa del cliente ante sustituciones no está formalizada. El tratamiento actual de faltantes y cambios se detalla en las reglas y flujo B2C.
 - La exposición pública actual de ciertos datos de catálogo/costos es conocida y aceptada por el responsable, pero no debe interpretarse como recomendación de seguridad.
 
 ## Límites para agentes
