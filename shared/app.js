@@ -77,6 +77,12 @@ function parsePrecio(str) {
   return isNaN(n) || n <= 0 ? null : n;
 }
 
+function redondearPrecioB2C(precio) {
+  if (precio === null || CANAL !== 'B2C') return precio;
+  const api = window.MenosVueltasPromotion;
+  return api ? api.roundToNearest50(precio) : precio;
+}
+
 function formatPrecio(n) {
   if (n === null || n === undefined) return null;
   return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -88,8 +94,8 @@ function formatPrecio(n) {
 // producto puede tener su propio descuento (o ninguno), independientemente
 // de si hay una campaña global activa.
 function preciosDe(v) {
-  const lista = parsePrecio(v['Precio_Venta']);
-  const promoPrecio = parsePrecio(v['Precio_Promo']);
+  const lista = redondearPrecioB2C(parsePrecio(v['Precio_Venta']));
+  const promoPrecio = redondearPrecioB2C(parsePrecio(v['Precio_Promo']));
   const promo = (promoPrecio !== null && promoPrecio < lista) ? promoPrecio : lista;
   return { lista, promo };
 }
@@ -99,8 +105,8 @@ function preciosDe(v) {
 // depender de si hay campaña global. Se traslada el descuento a propósito
 // para que nunca salga más barato comprar de a una que por cantidad.
 function preciosCantidadDe(v) {
-  const lista = parsePrecio(v['Precio_Mayorista']);
-  const promoPrecio = parsePrecio(v['Precio_Promo_Mayorista']);
+  const lista = redondearPrecioB2C(parsePrecio(v['Precio_Mayorista']));
+  const promoPrecio = redondearPrecioB2C(parsePrecio(v['Precio_Promo_Mayorista']));
   const promo = (promoPrecio !== null && promoPrecio < lista) ? promoPrecio : lista;
   return { lista, promo };
 }
@@ -880,7 +886,7 @@ function crearCardNuevo(gid, vars) {
   const cat    = g.categoria || vars[0]['Categoria'] || '';
   const v = vars.find(variante => esNuevo(variante['Id'])) || vars[0];
 
-  const precio    = parsePrecio(v['Precio_Venta']);
+  const precio    = preciosDe(v).promo;
   const precioDto = preciosCantidadDe(v).promo;
   const uniDto    = parseInt(v['Uni Dto']) || 0;
   const hayDto    = uniDto > 0 && precioDto !== null;
@@ -1069,7 +1075,7 @@ function crearCard(gid, vars) {
 // del catálogo como para el modal de producto.
 function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, animar = true, dotsEl = null) {
   const v = vars[idx];
-  const precio    = parsePrecio(v['Precio_Venta']);
+  const precio    = preciosDe(v).promo;
   const precioDto = preciosCantidadDe(v).promo;
   const uniDto    = parseInt(v['Uni Dto']) || 0;
   const hayDto    = uniDto > 0 && precioDto !== null;
@@ -1553,7 +1559,7 @@ function renderDetalleProducto(gid, vars, refs, indiceInicial = 0) {
 
     // Precio
     const varSel = getVarianteSeleccionada();
-    const precio    = varSel ? parsePrecio(varSel['Precio_Venta']) : null;
+    const precio    = varSel ? preciosDe(varSel).promo : null;
     const precioDto = varSel ? preciosCantidadDe(varSel).promo     : null;
     const uniDto    = varSel ? (parseInt(varSel['Uni Dto']) || 0)  : 0;
 
@@ -2105,12 +2111,14 @@ function htmlSubtotalItemCarrito(item, idx, resumen) {
   if (precio === null) return 'S/P';
 
   const subtotal = precio * item.qty;
+  const subtotalOriginal = (item.precioLista ?? precio) * item.qty;
   const lineaCodigo = resumen.promotionLines?.[idx];
-  if (!lineaCodigo || lineaCodigo.discount <= 0) return formatPrecio(subtotal);
+  const subtotalFinal = lineaCodigo ? lineaCodigo.discountedTotal : subtotal;
+  if (subtotalFinal >= subtotalOriginal) return formatPrecio(subtotalFinal);
 
-  return `<s class="ci-subtotal-anterior">${formatPrecio(subtotal)}</s>` +
-    `<strong class="ci-subtotal-con-codigo">${formatPrecio(lineaCodigo.discountedTotal)}</strong>` +
-    `<span class="ci-subtotal-etiqueta">con código</span>`;
+  return `<s class="ci-subtotal-anterior">${formatPrecio(subtotalOriginal)}</s>` +
+    `<strong class="ci-subtotal-con-descuento">${formatPrecio(subtotalFinal)}</strong>` +
+    `<span class="ci-subtotal-etiqueta">con descuento</span>`;
 }
 
 function abrirCarrito() {
@@ -2139,7 +2147,7 @@ function actualizarEstadoCodigoPromocional(mensaje, tipo) {
     estado.textContent = mensaje;
     estado.className = `codigo-promo-estado${tipo ? ` ${tipo}` : ''}`;
   } else if (codigoPromocional) {
-    estado.textContent = `${codigoPromocional.percent}% sobre productos elegibles. Confirmamos la promo por WhatsApp.`;
+    estado.textContent = `${codigoPromocional.percent}% sobre productos elegibles.`;
     estado.className = 'codigo-promo-estado ok';
   }
 }
@@ -2218,11 +2226,16 @@ function construirMensajePedido() {
     msg += `   Cantidad: ${item.qty} unidades\n`;
     if (item.precio !== null) {
       msg += `   Precio unit.: ${formatPrecio(aplica ? item.precioDto : item.precio)}\n`;
+      const subtotalOriginal = (item.precioLista ?? pEfectivo) * item.qty;
       const lineaCodigo = resumen.promotionLines?.[i];
-      if (lineaCodigo && lineaCodigo.discount > 0) {
-        msg += `   Subtotal: ~${formatPrecio(pEfectivo * item.qty)}~ → *${formatPrecio(lineaCodigo.discountedTotal)}* (código ${resumen.promotion.percent}%)\n`;
+      const subtotalFinal = lineaCodigo ? lineaCodigo.discountedTotal : pEfectivo * item.qty;
+      if (subtotalFinal < subtotalOriginal) {
+        const etiquetaCodigo = lineaCodigo && lineaCodigo.discount > 0
+          ? ` (${resumen.promotion.percent}%)`
+          : '';
+        msg += `   Subtotal: ~${formatPrecio(subtotalOriginal)}~ → *${formatPrecio(subtotalFinal)}*${etiquetaCodigo}\n`;
       } else {
-        msg += `   Subtotal: ${formatPrecio(pEfectivo * item.qty)}\n`;
+        msg += `   Subtotal: ${formatPrecio(subtotalFinal)}\n`;
       }
     } else {
       msg += `   Precio: a confirmar\n`;
@@ -2253,7 +2266,6 @@ function construirMensajePedido() {
       msg += `Descuentos por cantidad: -${formatPrecio(dtoCantidad)}\n`;
     }
     if (dtoCodigo > 0 && resumen.promotion) {
-      msg += `Código promocional: ${resumen.promotion.code} (${resumen.promotion.percent}%)\n`;
       msg += `Descuento por código: -${formatPrecio(dtoCodigo)}\n`;
     }
     if (CANAL === 'B2C') {
@@ -2261,7 +2273,6 @@ function construirMensajePedido() {
     }
     msg += `\n*TOTAL: ${formatPrecio(resumen.total)}*\n`;
     if (ahorro > 0) msg += `Estás ahorrando ${formatPrecio(ahorro)}\n`;
-    if (dtoCodigo > 0) msg += 'La promo se confirma por WhatsApp.\n';
   } else if (CANAL === 'B2C') {
     msg += 'Envío: a confirmar\n';
     msg += '\n*TOTAL: a confirmar*\n';

@@ -33,6 +33,12 @@ Campos comerciales confirmados:
 
 Para publicarse, un producto debe estar `Activo` y habilitado con `Cat B2C` o `Cat B2B`. El panel consume `admin/productos.json`, una versión reducida con los campos necesarios para búsqueda y cálculos.
 
+En la web B2C, los precios de lista, temporales, por cantidad y finales por
+código se comunican y calculan como múltiplos de $50. Se redondean al valor más
+cercano; si queda exactamente a mitad de camino, se elige el valor inferior.
+Esta normalización de presentación y compra no modifica los valores fuente de
+Sheets ni los precios B2B.
+
 ### Señales de presentación del catálogo público
 
 `Nuevo` no tiene hoy una columna ni una regla derivada en Sheets o en el JSON generado. La web lo determina mediante una lista manual de IDs de variantes en `shared/app.js`; un grupo se considera nuevo si alguna de sus variantes figura en esa lista. Esta marca es solo de presentación y no modifica datos comerciales.

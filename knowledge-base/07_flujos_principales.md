@@ -17,8 +17,8 @@
 
 1. La persona ingresa un único código en el carrito B2C.
 2. La web normaliza y consulta sólo ese código a Apps Script; se valida canal B2C, estado, porcentaje y vigencia.
-3. Si es válido, se descuenta el porcentaje sobre los productos elegibles, se recalcula el envío sobre el neto y se muestra el ahorro. Los productos con promoción temporal quedan excluidos.
-4. El código y el descuento viajan en el mensaje de WhatsApp y al transferir el carrito por QR al teléfono. El mensaje aclara que la promoción se confirma por WhatsApp.
+3. Si es válido, se descuenta el porcentaje sobre los productos elegibles, cada precio final se redondea al múltiplo de $50 más cercano y se recalcula el envío sobre el neto. Los productos con promoción temporal quedan excluidos.
+4. El mensaje de WhatsApp muestra el precio anterior y final de cada producto con descuento, más el ahorro total. El código se conserva al transferir el carrito por QR al teléfono.
 5. Al importar el pedido, el panel revalida el código. El equipo comprueba manualmente que corresponda a primera compra; si no corresponde, lo retira y se recalculan descuento, envío y total.
 6. Al guardar el pedido quedan registrados el código, su porcentaje y el descuento aplicado, independientes de cambios posteriores en la campaña.
 

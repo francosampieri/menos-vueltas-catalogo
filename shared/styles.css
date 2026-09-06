@@ -5052,7 +5052,7 @@ body.modal-abierto {
   font-size: 0.72rem;
   font-weight: 500;
 }
-.ci-subtotal-con-codigo { color: var(--accent-2); }
+.ci-subtotal-con-descuento { color: var(--accent-2); }
 .ci-subtotal-etiqueta {
   color: var(--accent);
   font-size: 0.66rem;

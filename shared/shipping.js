@@ -107,6 +107,15 @@
     return String(value || '').trim().toUpperCase();
   }
 
+  // B2C comunica importes en múltiplos de $50. En el punto medio se elige
+  // el valor inferior para que 6025 resulte 6000, no 6050.
+  function roundToNearest50(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return 0;
+    const lower = Math.floor(amount / 50) * 50;
+    return amount - lower <= 25 ? lower : lower + 50;
+  }
+
   function validAmount(value) {
     return Number.isFinite(value) && value >= 0 ? value : 0;
   }
@@ -132,29 +141,19 @@
     const productsTotal = lines.reduce((sum, line) => sum + line.originalTotal, 0);
     const eligibleTotal = lines.reduce((sum, line) => sum + (line.eligible ? line.originalTotal : 0), 0);
 
-    const discount = safePercent ? Math.round(eligibleTotal * safePercent / 100) : 0;
-    const eligibleLines = lines.filter(line => line.eligible);
-    let allocated = 0;
-
-    eligibleLines.forEach(line => {
-      const rawDiscount = line.originalTotal * safePercent / 100;
-      line.discount = Math.floor(rawDiscount);
-      allocated += line.discount;
-      line.remainder = rawDiscount - line.discount;
+    lines.forEach(line => {
+      if (!safePercent || !line.eligible) return;
+      line.discountedTotal = roundToNearest50(line.originalTotal * (100 - safePercent) / 100);
+      line.discount = line.originalTotal - line.discountedTotal;
     });
-
-    eligibleLines
-      .sort((a, b) => b.remainder - a.remainder || a.index - b.index)
-      .slice(0, discount - allocated)
-      .forEach(line => { line.discount += 1; });
-
-    lines.forEach(line => { line.discountedTotal = line.originalTotal - line.discount; });
+    const discount = lines.reduce((sum, line) => sum + line.discount, 0);
+    const discountedProductsTotal = lines.reduce((sum, line) => sum + line.discountedTotal, 0);
     return {
       productsTotal,
       eligibleTotal,
       discount,
-      discountedProductsTotal: productsTotal - discount,
-      lines: lines.map(({ index, remainder, ...line }) => line)
+      discountedProductsTotal,
+      lines: lines.map(({ index, ...line }) => line)
     };
   }
 
@@ -164,7 +163,7 @@
     calculateShipping
   });
   const admin = Object.freeze({ parseShippingFromMessage, serializeShipping, totalWithShipping });
-  const promotion = Object.freeze({ normalizeCode, calculatePromotion });
+  const promotion = Object.freeze({ normalizeCode, roundToNearest50, calculatePromotion });
 
   return Object.freeze({ policy, admin, promotion });
 });
