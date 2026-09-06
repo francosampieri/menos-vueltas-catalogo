@@ -1273,7 +1273,7 @@ function actualizarCampoCodigoPromo(t) {
     return;
   }
 
-  input.placeholder = 'Ej. 21JULIO10';
+  input.placeholder = '';
   input.value = edicion.codigoPromo || input.value;
   aviso.textContent = edicion.codigoPromo
     ? `${t.porcentajeCodigo}% aplicado sobre ${money(t.elegibleCodigo)} de productos elegibles. Confirmar primera compra manualmente.`
