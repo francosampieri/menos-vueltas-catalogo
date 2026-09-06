@@ -10,6 +10,7 @@ const HOJA_PEDIDOS = 'Pedidos';
 const HOJA_ITEMS = 'Items';
 const HOJA_CLIENTES = 'Clientes';
 const HOJA_CONTACTOS = 'Contactos';
+const HOJA_CODIGOS_PROMO = 'Codigos_Promo';
 
 // Envio queda entre Descuento y Extras. Los accesos a Pedidos se hacen por
 // encabezado: el orden soporta libros nuevos, no depende de índices rígidos y
@@ -17,7 +18,8 @@ const HOJA_CONTACTOS = 'Contactos';
 const COLS_PEDIDO = [
   'Id', 'Canal', 'Fecha_Pedido', 'Fecha_Entrega', 'Cliente_Id', 'Cliente',
   'Telefono', 'Direccion', 'Barrio', 'Estado', 'Medio_Pago', 'Subtotal',
-  'Descuento', 'Envio', 'Extras', 'Desc_Extras', 'Total', 'Costo', 'Ganancia',
+  'Descuento', 'Codigo_Promo', 'Porcentaje_Codigo', 'Descuento_Codigo', 'Envio',
+  'Extras', 'Desc_Extras', 'Total', 'Costo', 'Ganancia',
   'Notas', 'Actualizado'
 ];
 
@@ -25,6 +27,7 @@ const COLS_CLIENTE = [
   'Id', 'Canal', 'Nombre', 'Telefono', 'Direccion', 'Barrio', 'Mapa', 'Notas', 'Actualizado'
 ];
 const COLS_CONTACTO = ['Numero', 'Nombre', 'Fecha', 'Origen'];
+const COLS_CODIGO_PROMO = ['Codigo', 'Canal', 'Porcentaje', 'Activo', 'Fecha_Inicio', 'Fecha_Fin'];
 const COLS_TEXTO_CLIENTE = [3, 4, 5, 6, 7, 8];
 
 const COLS_ITEM = [
@@ -40,6 +43,13 @@ function doGet(e) {
   try {
     const accion = (e && e.parameter && e.parameter.accion) || 'listar';
     if (accion === 'clientes') return json({ ok: true, clientes: leerClientes() });
+    if (accion === 'validarCodigo') {
+      const codigo = e && e.parameter ? e.parameter.codigo : '';
+      const canal = e && e.parameter ? e.parameter.canal : '';
+      const promocion = validarCodigoPromocional(codigo, canal);
+      if (!promocion) return json({ ok: false, error: 'Código promocional inválido, inactivo o vencido.' });
+      return json({ ok: true, promocion: promocion });
+    }
     return json({ ok: true, pedidos: leerPedidos() });
   } catch (err) {
     return json({ ok: false, error: String(err) });
@@ -50,7 +60,7 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   let tomado = false;
   try {
-    lock.waitLock(25000);el app
+    lock.waitLock(25000);
     tomado = true;
     const datos = JSON.parse(e.postData.contents);
     if (datos.accion === 'guardar') return json({ ok: true, pedido: guardarPedido(datos.pedido) });
@@ -84,6 +94,9 @@ function json(obj) {
 function leerPedidos() {
   const hp = hoja(HOJA_PEDIDOS, COLS_PEDIDO);
   asegurarEncabezadosPedidos(hp);
+  // La configuración de campañas se prepara junto con la operación para que
+  // el responsable pueda cargar códigos antes de que alguien los ingrese web.
+  hoja(HOJA_CODIGOS_PROMO, COLS_CODIGO_PROMO);
   const hi = hoja(HOJA_ITEMS, COLS_ITEM);
   asegurarEncabezadosItems(hi);
 
@@ -137,6 +150,9 @@ function leerPedidos() {
       medioPago: texto(valorColumna(f, cp, 'Medio_Pago')) || 'Efectivo',
       subtotal: numero(valorColumna(f, cp, 'Subtotal')),
       descuento: numero(valorColumna(f, cp, 'Descuento')),
+      codigoPromo: texto(valorColumna(f, cp, 'Codigo_Promo')),
+      porcentajeCodigo: numero(valorColumna(f, cp, 'Porcentaje_Codigo')),
+      descuentoCodigo: numero(valorColumna(f, cp, 'Descuento_Codigo')),
       // Vacío conserva el significado de pedido histórico sin dato de envío.
       envio: esVacio(envioRaw) ? null : numero(envioRaw),
       extras: numero(valorColumna(f, cp, 'Extras')),
@@ -156,6 +172,70 @@ function porcentajePromo(raw) {
   if (typeof raw === 'number') return (raw < 1 ? Math.round(raw * 100) : Math.round(raw)) + '%';
   const textoPct = String(raw).trim();
   return /^\d+(\.\d+)?$/.test(textoPct) ? textoPct + '%' : textoPct;
+}
+
+/* ══════════════ CÓDIGOS PROMOCIONALES ══════════════ */
+
+// Devuelve únicamente la regla del código consultado. Nunca expone el listado
+// completo de campañas a la web pública.
+function validarCodigoPromocional(codigo, canal) {
+  const codigoNormalizado = normalizarCodigo(codigo);
+  const canalNormalizado = String(canal || '').trim().toUpperCase();
+  if (!codigoNormalizado || canalNormalizado !== 'B2C') return null;
+
+  const h = hoja(HOJA_CODIGOS_PROMO, COLS_CODIGO_PROMO);
+  const filas = h.getDataRange().getValues();
+  if (filas.length < 2) return null;
+  const columnas = mapaEncabezados(filas[0]);
+  const hoy = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+
+  for (let i = 1; i < filas.length; i++) {
+    const fila = filas[i];
+    if (normalizarCodigo(valorColumna(fila, columnas, 'Codigo')) !== codigoNormalizado) continue;
+    if (String(valorColumna(fila, columnas, 'Canal') || '').trim().toUpperCase() !== canalNormalizado) continue;
+    if (!codigoActivo(valorColumna(fila, columnas, 'Activo'))) continue;
+
+    const inicio = fechaIso(valorColumna(fila, columnas, 'Fecha_Inicio'));
+    const fin = fechaIso(valorColumna(fila, columnas, 'Fecha_Fin'));
+    if ((inicio && hoy < inicio) || (fin && hoy > fin)) continue;
+
+    const porcentaje = porcentajeCodigo(valorColumna(fila, columnas, 'Porcentaje'));
+    if (!porcentaje) continue;
+    return { codigo: codigoNormalizado, porcentaje: porcentaje };
+  }
+  return null;
+}
+
+function normalizarCodigo(valor) {
+  return String(valor || '').trim().toUpperCase();
+}
+
+function codigoActivo(valor) {
+  const normalizado = String(valor === true ? 'TRUE' : valor || '').trim().toUpperCase();
+  return ['ON', 'SI', 'SÍ', 'TRUE', 'ACTIVO', '1'].indexOf(normalizado) >= 0;
+}
+
+function porcentajeCodigo(valor) {
+  if (esVacio(valor)) return 0;
+  let numeroPct;
+  if (typeof valor === 'number') {
+    numeroPct = valor < 1 ? valor * 100 : valor;
+  } else {
+    const textoPct = String(valor).trim().replace('%', '').replace(',', '.');
+    numeroPct = Number(textoPct);
+  }
+  return isFinite(numeroPct) && numeroPct > 0 && numeroPct <= 100 ? numeroPct : 0;
+}
+
+function fechaIso(valor) {
+  if (esVacio(valor)) return '';
+  if (valor instanceof Date) return Utilities.formatDate(valor, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  const textoFecha = String(valor).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(textoFecha)) return textoFecha;
+  const fechaParseada = new Date(textoFecha);
+  return isNaN(fechaParseada.getTime())
+    ? ''
+    : Utilities.formatDate(fechaParseada, Session.getScriptTimeZone(), 'yyyy-MM-dd');
 }
 
 function fecha(v) {
@@ -201,6 +281,8 @@ function guardarPedido(p) {
     Cliente: p.cliente || '', Telefono: p.telefono || '', Direccion: p.direccion || '',
     Barrio: p.barrio || '', Estado: p.estado || 'Nuevo', Medio_Pago: p.medioPago || 'Efectivo',
     Subtotal: valorTotal(t, 'subtotal'), Descuento: valorTotal(t, 'descuento'),
+    Codigo_Promo: p.codigoPromo || '', Porcentaje_Codigo: numero(p.porcentajeCodigo),
+    Descuento_Codigo: numero(p.descuentoCodigo),
     Envio: envioParaGuardar(p.envio), Extras: numero(p.extras), Desc_Extras: p.descExtras || '',
     // Se respetan Total y Ganancia calculados/enviados por el panel.
     Total: valorTotal(t, 'total'), Costo: valorTotal(t, 'costo'), Ganancia: valorTotal(t, 'ganancia'),
@@ -210,7 +292,7 @@ function guardarPedido(p) {
     if (columnas[nombre] !== undefined) valores[columnas[nombre]] = datos[nombre];
   });
   hp.getRange(destino, 1, 1, encabezados.length).setValues([valores]);
-  forzarTextoPorEncabezado(hp, destino, columnas, ['Fecha_Pedido', 'Fecha_Entrega', 'Cliente', 'Telefono', 'Direccion', 'Barrio', 'Desc_Extras', 'Notas']);
+  forzarTextoPorEncabezado(hp, destino, columnas, ['Fecha_Pedido', 'Fecha_Entrega', 'Cliente', 'Telefono', 'Direccion', 'Barrio', 'Codigo_Promo', 'Desc_Extras', 'Notas']);
 
   borrarItems(hi, p.id);
   const filasItems = (p.items || []).map(function (l) {
@@ -304,21 +386,34 @@ function hoja(nombre, cols) {
 }
 
 function asegurarEncabezadosPedidos(h) {
-  const encabezados = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
-  const columnas = mapaEncabezados(encabezados);
-  if (columnas.Envio !== undefined) return;
-  // En libros existentes insertamos la nueva columna precisamente antes de
-  // Extras; no se llena ninguna celda histórica ni se altera el resto.
-  if (columnas.Extras !== undefined) {
-    const columnaExtras = columnas.Extras + 1;
-    h.insertColumnBefore(columnaExtras);
-    h.getRange(1, columnaExtras).setValue('Envio').setFontWeight('bold');
-  } else {
-    // Sólo cubre una hoja no estándar sin Extras: no es posible ubicarla antes
-    // de esa cabecera inexistente, por eso se agrega al final sin destruir datos.
-    const nueva = h.getLastColumn() + 1;
-    h.getRange(1, nueva).setValue('Envio').setFontWeight('bold');
+  let encabezados = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
+  let columnas = mapaEncabezados(encabezados);
+
+  if (columnas.Envio === undefined) {
+    // En libros existentes insertamos Envio antes de Extras; no se llena
+    // ninguna celda histórica ni se altera el resto de los valores.
+    if (columnas.Extras !== undefined) {
+      const columnaExtras = columnas.Extras + 1;
+      h.insertColumnBefore(columnaExtras);
+      h.getRange(1, columnaExtras).setValue('Envio').setFontWeight('bold');
+    } else {
+      const nueva = h.getLastColumn() + 1;
+      h.getRange(1, nueva).setValue('Envio').setFontWeight('bold');
+    }
+    encabezados = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
+    columnas = mapaEncabezados(encabezados);
   }
+
+  const camposCodigo = ['Codigo_Promo', 'Porcentaje_Codigo', 'Descuento_Codigo'];
+  const faltantes = camposCodigo.filter(function (nombre) { return columnas[nombre] === undefined; });
+  if (!faltantes.length) return;
+
+  // Los campos de promoción quedan antes de Envio. Las filas existentes se
+  // desplazan completas y mantienen sus totales históricos sin backfill.
+  const destino = columnas.Envio === undefined ? h.getLastColumn() + 1 : columnas.Envio + 1;
+  h.insertColumnsBefore(destino, faltantes.length);
+  h.getRange(1, destino, 1, faltantes.length).setValues([faltantes]);
+  h.getRange(1, destino, 1, faltantes.length).setFontWeight('bold');
 }
 
 function asegurarEncabezadosItems(h) {

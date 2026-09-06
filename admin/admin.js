@@ -125,18 +125,34 @@ function toast(msg, error) {
 // Convierte un producto del catálogo en una línea de pedido, copiando
 // todos los precios. A partir de acá el producto puede cambiar de precio
 // o darse de baja: el pedido queda intacto.
-function lineaDesdeCatalogo(prod, cantidad) {
+function redondearPrecioB2C(valor) {
+  const importe = num(valor);
+  if (typeof MenosVueltasPromotion !== 'undefined' &&
+      typeof MenosVueltasPromotion.roundToNearest50 === 'function') {
+    return MenosVueltasPromotion.roundToNearest50(importe);
+  }
+  const inferior = Math.floor(importe / 50) * 50;
+  return importe - inferior <= 25 ? inferior : inferior + 50;
+}
+
+function lineaDesdeCatalogo(prod, cantidad, canal = CANAL) {
+  const redondear = canal === 'b2c' ? redondearPrecioB2C : num;
+  const lista = num(prod.pv);
+  const promo = num(prod.pp) || lista;
+  const porCant = num(prod.pd);
+  const promoCant = num(prod.ppd) || porCant;
+
   return {
     id:       prod.id,
     nombre:   prod.n,
     cant:     cantidad || 1,
     // Precios congelados. Se guardan los cuatro para poder recalcular el
     // pedido si cambia la cantidad, con los valores del día en que se cargó.
-    lista:      num(prod.pv),                     // unitario sin promo
-    promo:      num(prod.pp) || num(prod.pv),     // unitario con promo
+    lista:      redondear(lista),                 // unitario sin promo
+    promo:      redondear(promo),                 // unitario con promo
     cantMin:    parseInt(prod.ud, 10) || 0,       // desde cuántas unidades
-    porCant:    num(prod.pd),                     // por cantidad sin promo
-    promoCant:  num(prod.ppd) || num(prod.pd),    // por cantidad con promo
+    porCant:    redondear(porCant),               // por cantidad sin promo
+    promoCant:  redondear(promoCant),             // por cantidad con promo
     pct:        (prod.pct || '').trim(),          // "10%", para mostrar
     costo:      num(prod.co)
   };
@@ -227,26 +243,55 @@ function calcularLinea(l) {
 
 // El precio efectivo de cada línea ya incorpora promoción y descuento por
 // cantidad. Esa es la única base válida para la política B2C de envío.
-function calcularEnvioPedido(p) {
+function calcularEnvioPedido(p, productosNetos) {
   if (p.canal !== 'b2c') return null;
   if (p.envioManual) return MenosVueltasAdminShipping.serializeShipping(p.envio);
 
   const resumen = MenosVueltasShipping.calculateShipping({
     channel: 'B2C',
-    items: (p.items || []).map(l => ({
-      unitPrice: precioUnitario(l),
-      quantity: l.cant
-    }))
+    items: [{ unitPrice: productosNetos, quantity: 1 }]
   });
   return resumen.shippingCost;
+}
+
+function tienePromoTemporalLinea(l) {
+  const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin && l.porCant > 0;
+  const lista = llegaAlMinimo ? l.porCant : l.lista;
+  const promo = llegaAlMinimo ? l.promoCant : l.promo;
+  return promo > 0 && lista > 0 && promo < lista;
+}
+
+function calcularPromocionCodigo(p, lineasCalculadas) {
+  const codigo = String(p.codigoPromo || '').trim();
+  const porcentaje = num(p.porcentajeCodigo);
+  const codigoAplicable = p.canal === 'b2c' && codigo &&
+    Number.isFinite(porcentaje) && porcentaje > 0 && porcentaje <= 100;
+  const items = (p.items || []).map((linea, indice) => ({
+    unitPrice: lineasCalculadas[indice].total,
+    quantity: 1,
+    hasProductPromotion: tienePromoTemporalLinea(linea)
+  }));
+  const promocion = MenosVueltasPromotion.calculatePromotion({
+    percent: codigoAplicable ? porcentaje : 0,
+    items
+  });
+
+  return {
+    ...promocion,
+    codigo: codigoAplicable ? codigo : '',
+    porcentaje: codigoAplicable ? porcentaje : 0,
+    elegibleTotal: codigoAplicable ? promocion.eligibleTotal : 0
+  };
 }
 
 function calcularPedido(p) {
   let subtotal = 0, total = 0, costo = 0, unidades = 0;
   let dtoPromo = 0, dtoCantidad = 0;
+  const lineasCalculadas = [];
 
   (p.items || []).forEach(l => {
     const c = calcularLinea(l);
+    lineasCalculadas.push(c);
     subtotal += c.subtotal;
     total    += c.total;
     costo    += c.costoTot;
@@ -261,10 +306,16 @@ function calcularPedido(p) {
     dtoPromo    += (base - c.unit) * l.cant;
   });
 
+  // El mismo motor que usa el carrito descuenta y redondea cada línea B2C
+  // por separado. Así la tabla, el total y el envío siempre muestran el
+  // mismo importe, incluso con descuentos por cantidad.
+  const codigoCalculado = calcularPromocionCodigo(p, lineasCalculadas);
+  const descuentoCodigo = Math.min(total, codigoCalculado.discount);
+  const productosNetos = codigoCalculado.discountedProductsTotal;
   const extras = Number(p.extras) || 0;
-  const envio = calcularEnvioPedido(p);
+  const envio = calcularEnvioPedido(p, productosNetos);
   const totalFinal = MenosVueltasAdminShipping.totalWithShipping({
-    productsTotal: total,
+    productsTotal: productosNetos,
     shipping: envio,
     extras
   });
@@ -274,6 +325,12 @@ function calcularPedido(p) {
     descuento: subtotal - total,
     dtoPromo,
     dtoCantidad,
+    codigoPromo: codigoCalculado.codigo,
+    porcentajeCodigo: codigoCalculado.porcentaje,
+    descuentoCodigo,
+    elegibleCodigo: codigoCalculado.eligibleTotal,
+    promotionLines: codigoCalculado.lines,
+    productosNetos,
     envio,
     extras,
     total: totalFinal,
@@ -339,6 +396,12 @@ async function llamarSheets(opciones) {
 }
 
 const API = {
+
+  async validarCodigo(codigo, canal) {
+    if (!SHEETS_URL) throw new Error('No hay conexión configurada con Sheets para validar promociones.');
+    const url = `${SHEETS_URL}?accion=validarCodigo&codigo=${encodeURIComponent(codigo)}&canal=${encodeURIComponent(canal)}`;
+    return llamarSheets({ url });
+  },
 
   async listar() {
     if (SHEETS_URL) {
@@ -457,6 +520,9 @@ function paraGuardar(p) {
   const { envioManual, ...pedido } = p;
   return {
     ...pedido,
+    codigoPromo: t.codigoPromo,
+    porcentajeCodigo: t.porcentajeCodigo,
+    descuentoCodigo: Math.round(t.descuentoCodigo),
     envio: MenosVueltasAdminShipping.serializeShipping(t.envio),
     totales: {
       subtotal:  Math.round(t.subtotal),
@@ -523,6 +589,12 @@ async function iniciar() {
 }
 
 document.addEventListener('DOMContentLoaded', iniciar);
+
+// Los cálculos se exportan sólo en Node para sus pruebas; en el navegador
+// este bloque no modifica la API ni el arranque del panel.
+if (typeof module === 'object' && module.exports) {
+  module.exports = { lineaDesdeCatalogo, calcularLinea, tienePromoTemporalLinea, calcularPedido };
+}
 
 
 /* ══════════════ ARRANQUE ══════════════ */
@@ -960,6 +1032,7 @@ function nuevoPedido() {
     estado: 'Nuevo',
     medioPago: 'Efectivo',
     envio: null, envioManual: false,
+    codigoPromo: '', porcentajeCodigo: 0, descuentoCodigo: 0,
     extras: 0, descExtras: '', notas: '',
     items: []
   };
@@ -999,6 +1072,7 @@ function abrirEditor(esNuevo) {
   actualizarBotonMapa();
   v('fMedioPago', edicion.medioPago);
   v('fEnvio', edicion.envio);
+  v('fCodigoPromo', edicion.codigoPromo || '');
   v('fExtras', edicion.extras || 0);
   v('fDescExtras', edicion.descExtras);
   v('fNotas', edicion.notas);
@@ -1060,12 +1134,16 @@ function buscarProducto() {
     return;
   }
 
+  const precioSugerido = valor => edicion.canal === 'b2c'
+    ? money(redondearPrecioB2C(valor))
+    : esc(valor);
+
   cont.innerHTML = sugerencias.map((p, i) => `
     <div class="sug-item" onclick="agregarProducto('${p.id}')" onmouseenter="sugSel=${i};marcarSugerencia()">
       <span class="sug-nombre">${esc(p.n)}</span>
-      ${parseInt(p.ud, 10) > 0 ? `<span class="sug-dto">${p.ud}+ → ${esc(p.pd)}</span>` : ''}
+      ${parseInt(p.ud, 10) > 0 ? `<span class="sug-dto">${p.ud}+ → ${precioSugerido(p.pd)}</span>` : ''}
       ${p.pct ? `<span class="sug-promo">${esc(etiquetaPromo(p.pct))}</span>` : ''}
-      <span class="sug-precio">${esc(p.pp || p.pv)}</span>
+      <span class="sug-precio">${precioSugerido(p.pp || p.pv)}</span>
     </div>`).join('');
 }
 
@@ -1089,7 +1167,7 @@ function agregarProducto(id) {
   // Si ya está en el pedido, suma una unidad en vez de duplicar la fila.
   const existente = edicion.items.find(l => l.id === id);
   if (existente) existente.cant++;
-  else edicion.items.push(lineaDesdeCatalogo(prod, 1));
+  else edicion.items.push(lineaDesdeCatalogo(prod, 1, edicion.canal));
 
   const input = document.getElementById('buscarProd');
   input.value = '';
@@ -1115,12 +1193,26 @@ function quitarItem(i) {
 
 function pintarItems() {
   const unidades = edicion.items.reduce((s, l) => s + (l.cant || 0), 0);
+  const pedido = calcularPedido(edicion);
   document.getElementById('chipItems').textContent =
     `${unidades} ${unidades === 1 ? 'item' : 'items'}`;
   document.getElementById('sinItems').hidden = edicion.items.length > 0;
 
   document.getElementById('tbodyItems').innerHTML = edicion.items.map((l, i) => {
     const c = calcularLinea(l);
+    const codigo = pedido.promotionLines[i] || {
+      discount: 0,
+      discountedTotal: c.total
+    };
+    const descuento = c.descuento + codigo.discount;
+    const ganancia = codigo.discountedTotal - c.costoTot;
+    const chips = chipsDescuento(l, l.cantMin > 0 && l.cant >= l.cantMin);
+    if (codigo.discount > 0) {
+      chips.push({ texto: `Código ${pedido.porcentajeCodigo}%`, clase: 'chip-dto--codigo' });
+    }
+    const total = codigo.discount > 0
+      ? `<span class="item-total-con-codigo"><s>${money(c.total)}</s><b>${money(codigo.discountedTotal)}</b></span>`
+      : `<b>${money(codigo.discountedTotal)}</b>`;
     return `<tr>
       <td>
         <div class="item-nombre">${esc(l.nombre)}</div>
@@ -1133,10 +1225,10 @@ function pintarItems() {
       </td>
       <td class="num">${money(c.unit)}</td>
       <td class="num">${money(c.subtotal)}</td>
-      <td class="num">${c.descuento ? '−' + money(c.descuento) : '—'}</td>
-      <td>${chipsHTML(chipsDescuento(l, l.cantMin > 0 && l.cant >= l.cantMin))}</td>
-      <td class="num"><b>${money(c.total)}</b></td>
-      <td class="num"><span class="ganancia${c.ganancia < 0 ? ' ganancia--neg' : ''}">${money(c.ganancia)}</span></td>
+      <td class="num">${descuento ? '−' + money(descuento) : '—'}</td>
+      <td>${chipsHTML(chips)}</td>
+      <td class="num">${total}</td>
+      <td class="num"><span class="ganancia${ganancia < 0 ? ' ganancia--neg' : ''}">${money(ganancia)}</span></td>
       <td>
         <button class="quitar" onclick="quitarItem(${i})" aria-label="Quitar producto">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a2 2 0 002 2h8a2 2 0 002-2l1-13M9 7V4h6v3"/></svg>
@@ -1145,6 +1237,8 @@ function pintarItems() {
     </tr>`;
   }).join('');
 
+  // El resumen también lee Extras del formulario; lo recalculamos desde el
+  // estado actual para no conservar un total anterior a la última edición.
   recalcular();
 }
 
@@ -1159,6 +1253,68 @@ function restablecerEnvioRegla() {
   if (!edicion || edicion.canal !== 'b2c') return;
   edicion.envioManual = false;
   recalcular();
+}
+
+function actualizarCampoCodigoPromo(t) {
+  const input = document.getElementById('fCodigoPromo');
+  const validar = document.getElementById('btnValidarCodigoPromo');
+  const quitar = document.getElementById('btnQuitarCodigoPromo');
+  const aviso = document.getElementById('avisoCodigoPromo');
+  if (!input || !validar || !quitar || !aviso) return;
+
+  const esB2C = edicion.canal === 'b2c';
+  input.disabled = !esB2C;
+  validar.hidden = !esB2C;
+  quitar.hidden = !esB2C || !edicion.codigoPromo;
+  if (!esB2C) {
+    input.value = '';
+    input.placeholder = 'No aplica a B2B';
+    aviso.textContent = 'Los códigos promocionales se gestionan sólo para B2C.';
+    return;
+  }
+
+  input.placeholder = '';
+  input.value = edicion.codigoPromo || input.value;
+  aviso.textContent = edicion.codigoPromo
+    ? `${t.porcentajeCodigo}% aplicado sobre ${money(t.elegibleCodigo)} de productos elegibles. Confirmar primera compra manualmente.`
+    : 'Validalo contra Sheets antes de guardar el pedido.';
+}
+
+function normalizarCodigoPromo(valor) {
+  return String(valor || '').trim().toUpperCase();
+}
+
+async function validarCodigoPromoEditor() {
+  if (!edicion || edicion.canal !== 'b2c') return;
+  const input = document.getElementById('fCodigoPromo');
+  const boton = document.getElementById('btnValidarCodigoPromo');
+  const codigo = normalizarCodigoPromo(input.value);
+  if (!codigo) { toast('Ingresá un código promocional.', true); return; }
+
+  boton.disabled = true;
+  try {
+    const respuesta = await API.validarCodigo(codigo, 'b2c');
+    const promocion = respuesta.promocion;
+    edicion.codigoPromo = normalizarCodigoPromo(promocion.codigo);
+    edicion.porcentajeCodigo = Number(promocion.porcentaje);
+    edicion.descuentoCodigo = 0;
+    pintarItems();
+    toast(`Código ${edicion.codigoPromo} validado.`);
+  } catch (error) {
+    toast(error.message || 'No se pudo validar el código.', true);
+  } finally {
+    boton.disabled = false;
+  }
+}
+
+function quitarCodigoPromoEditor() {
+  if (!edicion) return;
+  edicion.codigoPromo = '';
+  edicion.porcentajeCodigo = 0;
+  edicion.descuentoCodigo = 0;
+  document.getElementById('fCodigoPromo').value = '';
+  pintarItems();
+  toast('Código promocional quitado.');
 }
 
 function actualizarCampoEnvio(envio) {
@@ -1189,10 +1345,10 @@ function actualizarCampoEnvio(envio) {
   }
 }
 
-function recalcular() {
+function recalcular(totales) {
   if (!edicion) return;
   edicion.extras = Number(document.getElementById('fExtras').value) || 0;
-  const t = calcularPedido(edicion);
+  const t = totales || calcularPedido(edicion);
   if (!edicion.envioManual && edicion.canal === 'b2c') edicion.envio = t.envio;
   actualizarCampoEnvio(t.envio);
 
@@ -1205,6 +1361,13 @@ function recalcular() {
   const filaCant = document.getElementById('rDtoFila');
   filaCant.hidden = !t.dtoCantidad;
   document.getElementById('rDto').textContent = '−' + money(t.dtoCantidad);
+
+  const filaCodigo = document.getElementById('rCodigoPromoFila');
+  filaCodigo.hidden = !t.descuentoCodigo;
+  document.getElementById('rCodigoPromo').textContent = '−' + money(t.descuentoCodigo);
+  document.getElementById('rCodigoPromoLabel').textContent =
+    t.codigoPromo ? `Código ${t.codigoPromo} (${t.porcentajeCodigo}%)` : 'Código promocional';
+  actualizarCampoCodigoPromo(t);
   // Envío se muestra como campo editable para no mezclarlo con Extras.
   document.getElementById('rTot').textContent = money(t.total);
   document.getElementById('rCos').textContent = money(t.costo);
@@ -1588,7 +1751,11 @@ function parsearMensajeWAPorLineas(texto) {
     ? MenosVueltasAdminShipping.parseShippingFromMessage(limpio)
     : null;
 
-  return { items, totalMsg, envioMsg, tieneEnvioMsg };
+  const codigoMatch = limpio.match(/(?:^|\n)\s*c[oó]digo promocional\s*:\s*([^\n(]+?)(?:\s*\(\s*([\d.,]+)\s*%\s*\))?\s*(?:\n|$)/i);
+  const codigoPromo = codigoMatch ? normalizarCodigoPromo(codigoMatch[1]) : '';
+  const porcentajeCodigo = codigoMatch && codigoMatch[2] ? num(codigoMatch[2]) : 0;
+
+  return { items, totalMsg, envioMsg, tieneEnvioMsg, codigoPromo, porcentajeCodigo };
 }
 
 /**
@@ -1644,7 +1811,7 @@ function parsearPedidoWA() {
   const texto = document.getElementById('waTexto').value.trim();
   if (!texto) { toast('Pegá el mensaje del pedido antes.', true); return; }
 
-  const { items, totalMsg, envioMsg, tieneEnvioMsg } = parsearMensajeWAPorLineas(texto);
+  const { items, totalMsg, envioMsg, tieneEnvioMsg, codigoPromo, porcentajeCodigo } = parsearMensajeWAPorLineas(texto);
 
   if (!items.length) {
     toast('No se detectaron productos numerados en el mensaje. Asegurate de pegar el texto tal cual llega.', true);
@@ -1664,7 +1831,7 @@ function parsearPedidoWA() {
     });
   }
 
-  waParse = { items: resultados, totalMsg, envioMsg, tieneEnvioMsg };
+  waParse = { items: resultados, totalMsg, envioMsg, tieneEnvioMsg, codigoPromo, porcentajeCodigo };
   renderizarPreviewWA();
 }
 
@@ -1728,7 +1895,7 @@ function renderizarPreviewWA() {
   for (const it of waParse.items) {
     const p = it.matchId ? opcionesPorId[it.matchId] : null;
     if (!p) continue;
-    const linea = lineaDesdeCatalogo(p, it.cant);
+    const linea = lineaDesdeCatalogo(p, it.cant, edicion.canal);
     const calculada = calcularLinea(linea);
     productosCalc += calculada.total;
     itemsParaEnvio.push({ unitPrice: calculada.unit, quantity: it.cant });
@@ -1794,7 +1961,7 @@ function waCambiarMatch(i, nuevoId) {
   renderizarPreviewWA();
 }
 
-function confirmarImportarWA() {
+async function confirmarImportarWA() {
   if (!waParse) return;
   const catalogo = CATALOGO[edicion.canal] || [];
   let agregados = 0, salteados = 0;
@@ -1808,7 +1975,7 @@ function confirmarImportarWA() {
     if (existente) {
       existente.cant += it.cant;
     } else {
-      edicion.items.push(lineaDesdeCatalogo(prod, it.cant));
+      edicion.items.push(lineaDesdeCatalogo(prod, it.cant, edicion.canal));
     }
     agregados++;
   }
@@ -1820,10 +1987,26 @@ function confirmarImportarWA() {
     edicion.envioManual = true;
   }
 
+  let avisoCodigo = '';
+  if (edicion.canal === 'b2c' && waParse.codigoPromo) {
+    try {
+      const respuesta = await API.validarCodigo(waParse.codigoPromo, 'b2c');
+      edicion.codigoPromo = normalizarCodigoPromo(respuesta.promocion.codigo);
+      edicion.porcentajeCodigo = Number(respuesta.promocion.porcentaje);
+      edicion.descuentoCodigo = 0;
+    } catch (error) {
+      edicion.codigoPromo = '';
+      edicion.porcentajeCodigo = 0;
+      edicion.descuentoCodigo = 0;
+      avisoCodigo = ' El código promocional no está activo: revisalo antes de confirmarlo.';
+    }
+  }
+
   pintarItems();
   cerrarImportarWA();
 
   let msg = `Se agregaron ${agregados} productos al pedido.`;
   if (salteados) msg += ` (${salteados} salteados por falta de match)`;
+  msg += avisoCodigo;
   toast(msg);
 }

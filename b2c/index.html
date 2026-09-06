@@ -122,7 +122,7 @@
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
-<body data-hero="estandar">
+<body data-hero="estandar" data-canal="b2c">
 <!-- ═ HERO ACTIVO ═ -->
 
 <!-- ═ BARRA SUPERIOR ═ -->
@@ -765,38 +765,59 @@
 
     <div class="carrito-footer">
 
-      <!-- Desglose. Subtotal siempre a precio de lista (sin ningún descuento)
-           y cada descuento en su propia fila, para que se entienda de dónde
-           sale cada rebaja. Las filas se ocultan solas si no aplican. -->
-      <div class="carrito-resumen" id="carritoResumen">
-        <div class="cr-fila" id="crSubtotalFila">
-          <span>Subtotal</span>
-          <span id="crSubtotal">—</span>
-        </div>
-        <div class="cr-fila cr-fila--promo" id="crPromoFila" hidden>
-          <span id="crPromoLabel">Promo</span>
-          <span id="crPromo">—</span>
-        </div>
-        <div class="cr-fila cr-fila--promo" id="crCantidadFila" hidden>
-          <span>Descuentos por cantidad</span>
-          <span id="crCantidad">—</span>
-        </div>
-        <div class="cr-fila cr-fila--promo" id="crEnvioFila" hidden>
-          <span>Envío</span>
-          <span id="crEnvio">—</span>
-        </div>
-        <div class="cr-envio-progreso" id="crEnvioProgreso" hidden>
-          <span id="crEnvioProgresoTexto"></span>
-          <div class="cr-envio-progreso-pista" role="progressbar" aria-label="Progreso hacia envío gratis" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <span class="cr-envio-progreso-barra" id="crEnvioProgresoBarra"></span>
+      <!-- El total queda siempre a la vista. El detalle se abre sólo cuando
+           la persona necesita revisar descuentos y envío. -->
+      <div class="carrito-resumen-plegable">
+        <button type="button" class="carrito-resumen-toggle" id="carritoResumenToggle"
+                aria-expanded="false" aria-controls="carritoResumenDetalle"
+                onclick="alternarResumenCarrito()">
+          <span class="cr-toggle-etiqueta">Resumen del pedido</span>
+          <span class="cr-toggle-total" id="crResumenToggleTotal">—</span>
+          <span class="cr-toggle-accion" id="crResumenToggleAccion">Ver detalle</span>
+          <svg class="cr-toggle-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+
+        <div class="carrito-resumen-detalle" id="carritoResumenDetalle" aria-hidden="true" inert>
+          <div class="carrito-resumen" id="carritoResumen">
+            <div class="cr-fila" id="crSubtotalFila">
+              <span>Subtotal</span>
+              <span id="crSubtotal">—</span>
+            </div>
+            <div class="cr-fila cr-fila--promo" id="crPromoFila" hidden>
+              <span id="crPromoLabel">Promo</span>
+              <span id="crPromo">—</span>
+            </div>
+            <div class="cr-fila cr-fila--promo" id="crCantidadFila" hidden>
+              <span>Descuentos por cantidad</span>
+              <span id="crCantidad">—</span>
+            </div>
+            <div class="cr-fila cr-fila--promo" id="crCodigoPromoFila" hidden>
+              <span id="crCodigoPromoLabel">Código promocional</span>
+              <span id="crCodigoPromo">—</span>
+            </div>
+            <div class="cr-fila cr-fila--promo" id="crEnvioFila" hidden>
+              <span>Envío</span>
+              <span id="crEnvio">—</span>
+            </div>
+            <div class="cr-envio-progreso" id="crEnvioProgreso" hidden>
+              <span id="crEnvioProgresoTexto"></span>
+              <div class="cr-envio-progreso-pista" role="progressbar" aria-label="Progreso hacia envío gratis" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span class="cr-envio-progreso-barra" id="crEnvioProgresoBarra"></span>
+              </div>
+            </div>
+            <p class="cr-ahorro" id="crAhorro" hidden></p>
           </div>
         </div>
+      </div>
 
-        <div class="cr-fila cr-fila--total">
-          <span>Total</span>
-          <span class="carrito-total-valor" id="carritoTotal">—</span>
+      <div class="codigo-promo" id="codigoPromoBox">
+        <label for="codigoPromoInput">Código promocional</label>
+        <div class="codigo-promo-control">
+          <input id="codigoPromoInput" type="text" inputmode="text" autocomplete="off" autocapitalize="characters">
+          <button type="button" id="codigoPromoAplicar" onclick="aplicarCodigoPromocional()">Aplicar</button>
+          <button type="button" id="codigoPromoQuitar" onclick="quitarCodigoPromocional()" hidden>Quitar</button>
         </div>
-        <p class="cr-ahorro" id="crAhorro" hidden></p>
+        <p class="codigo-promo-estado" id="codigoPromoEstado" aria-live="polite"></p>
       </div>
 
       <div class="carrito-nota" id="carritoNota"></div>

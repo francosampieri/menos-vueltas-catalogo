@@ -6,12 +6,15 @@
  * - MenosVueltasAdminShipping.parseShippingFromMessage(text)
  * - MenosVueltasAdminShipping.serializeShipping(value)
  * - MenosVueltasAdminShipping.totalWithShipping({ productsTotal, shipping, extras })
+ * - MenosVueltasPromotion.normalizeCode(value)
+ * - MenosVueltasPromotion.calculatePromotion({ percent, items })
  */
 (function (root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.MenosVueltasShipping = api.policy;
   root.MenosVueltasAdminShipping = api.admin;
+  root.MenosVueltasPromotion = api.promotion;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   const B2C_SHIPPING_COST = 1500;
   const B2C_FREE_SHIPPING_THRESHOLD = 35000;
@@ -100,12 +103,67 @@
     return Number(productsTotal || 0) + Number(shipping || 0) + Number(extras || 0);
   }
 
+  function normalizeCode(value) {
+    return String(value || '').trim().toUpperCase();
+  }
+
+  // B2C comunica importes en múltiplos de $50. En el punto medio se elige
+  // el valor inferior para que 6025 resulte 6000, no 6050.
+  function roundToNearest50(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return 0;
+    const lower = Math.floor(amount / 50) * 50;
+    return amount - lower <= 25 ? lower : lower + 50;
+  }
+
+  function validAmount(value) {
+    return Number.isFinite(value) && value >= 0 ? value : 0;
+  }
+
+  function validQuantity(value) {
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  }
+
+  function calculatePromotion({ percent, items = [] } = {}) {
+    const safePercent = Number.isFinite(percent) && percent > 0 && percent <= 100
+      ? percent
+      : 0;
+    const lines = items.map((item, index) => {
+      const lineTotal = validAmount(item && item.unitPrice) * validQuantity(item && item.quantity);
+      return {
+        index,
+        eligible: Boolean(item) && !item.hasProductPromotion,
+        originalTotal: lineTotal,
+        discount: 0,
+        discountedTotal: lineTotal
+      };
+    });
+    const productsTotal = lines.reduce((sum, line) => sum + line.originalTotal, 0);
+    const eligibleTotal = lines.reduce((sum, line) => sum + (line.eligible ? line.originalTotal : 0), 0);
+
+    lines.forEach(line => {
+      if (!safePercent || !line.eligible) return;
+      line.discountedTotal = roundToNearest50(line.originalTotal * (100 - safePercent) / 100);
+      line.discount = line.originalTotal - line.discountedTotal;
+    });
+    const discount = lines.reduce((sum, line) => sum + line.discount, 0);
+    const discountedProductsTotal = lines.reduce((sum, line) => sum + line.discountedTotal, 0);
+    return {
+      productsTotal,
+      eligibleTotal,
+      discount,
+      discountedProductsTotal,
+      lines: lines.map(({ index, ...line }) => line)
+    };
+  }
+
   const policy = Object.freeze({
     B2C_SHIPPING_COST,
     B2C_FREE_SHIPPING_THRESHOLD,
     calculateShipping
   });
   const admin = Object.freeze({ parseShippingFromMessage, serializeShipping, totalWithShipping });
+  const promotion = Object.freeze({ normalizeCode, roundToNearest50, calculatePromotion });
 
-  return Object.freeze({ policy, admin });
+  return Object.freeze({ policy, admin, promotion });
 });

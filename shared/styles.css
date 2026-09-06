@@ -5042,21 +5042,88 @@ body.modal-abierto {
   white-space: nowrap;
   flex-shrink: 0;
   align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+.ci-subtotal-anterior {
+  color: var(--t3);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+.ci-subtotal-con-descuento { color: var(--accent-2); }
+.ci-subtotal-etiqueta {
+  color: var(--accent);
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+body[data-canal="b2c"] .ci-subtotal-etiqueta {
+  text-transform: none;
+  letter-spacing: .01em;
 }
 
 .carrito-footer {
-  /* Compacto a propósito: cada píxel que ocupa el resumen es un píxel menos
-     para ver los productos del carrito. */
   padding: var(--space-4) var(--space-6);
   border-top: 1px solid var(--line-soft);
   background: var(--surface);
   flex-shrink: 0;
 }
 
-/* Desglose del pedido: subtotal, descuento de la promo, envío y total.
-   Las filas intermedias se ocultan solas cuando no hay promo vigente, así
-   el resumen nunca muestra renglones en cero. */
-.carrito-resumen { margin-bottom: var(--space-3); }
+/* El desglose queda cerrado de entrada: el botón conserva total y una acción
+   explícita, grande y fácil de tocar. */
+.carrito-resumen-plegable { margin-bottom: var(--space-3); }
+.carrito-resumen-toggle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto 18px;
+  align-items: center;
+  width: 100%;
+  min-height: 52px;
+  gap: var(--space-2);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  background: var(--surface);
+  color: var(--t1);
+  font-family: var(--font);
+  text-align: left;
+  touch-action: manipulation;
+}
+.carrito-resumen-toggle:hover { border-color: var(--accent); background: var(--accent-bg); }
+.carrito-resumen-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cr-toggle-etiqueta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.84rem; font-weight: 600; }
+.cr-toggle-total { color: var(--accent-2); font-size: 0.95rem; font-weight: 700; white-space: nowrap; }
+.cr-toggle-accion { color: var(--t2); font-size: 0.74rem; font-weight: 600; white-space: nowrap; }
+.cr-toggle-chev { width: 16px; height: 16px; color: var(--t2); transition: transform var(--t) var(--ease); }
+.carrito-resumen-toggle[aria-expanded="true"] .cr-toggle-chev { transform: rotate(180deg); }
+.carrito-resumen-detalle {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  padding: 0 var(--space-3);
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: var(--r2);
+  background: var(--surface-2);
+  opacity: 0;
+  transition:
+    grid-template-rows 230ms var(--ease),
+    margin-top 230ms var(--ease),
+    padding 230ms var(--ease),
+    border-color 180ms var(--ease),
+    opacity 160ms var(--ease);
+}
+.carrito-resumen-detalle.abierto {
+  grid-template-rows: 1fr;
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-3) 0;
+  border-color: var(--line-soft);
+  opacity: 1;
+}
+/* Las filas intermedias se ocultan solas cuando no hay promo vigente. */
+.carrito-resumen { min-height: 0; overflow: hidden; margin-bottom: var(--space-3); }
 .cr-fila {
   display: flex;
   justify-content: space-between;
@@ -5097,15 +5164,6 @@ body.modal-abierto {
   background: var(--accent);
   transition: width 220ms var(--ease);
 }
-.cr-fila--total {
-  margin: var(--space-2) 0 0;
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--line-soft);
-  font-family: var(--font);
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--t1);
-}
 .carrito-total-valor {
   font-size: 1.35rem;
   font-weight: 700;
@@ -5123,6 +5181,71 @@ body.modal-abierto {
   color: var(--accent);
 }
 .cr-ahorro[hidden] { display: none; }
+
+/* En un teléfono la acción baja a una segunda línea: conserva texto legible
+   y un área táctil amplia sin competir con el total. */
+@media (max-width: 600px) {
+  .carrito-resumen-toggle {
+    grid-template-columns: minmax(0, 1fr) auto 18px;
+    grid-template-areas:
+      "etiqueta total flecha"
+      "accion accion flecha";
+    min-height: 58px;
+    padding: 9px 12px;
+  }
+  .cr-toggle-etiqueta { grid-area: etiqueta; }
+  .cr-toggle-total { grid-area: total; }
+  .cr-toggle-accion { grid-area: accion; }
+  .cr-toggle-chev { grid-area: flecha; }
+}
+
+.codigo-promo {
+  margin: var(--space-3) 0;
+  font-family: var(--font-body);
+}
+.codigo-promo label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--t2);
+  font-size: 0.78rem;
+}
+.codigo-promo-control {
+  display: flex;
+  gap: var(--space-2);
+}
+.codigo-promo input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--t1);
+  font: inherit;
+  font-size: 0.86rem;
+  padding: 9px 10px;
+  text-transform: uppercase;
+}
+.codigo-promo button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font: 600 0.8rem var(--font-body);
+  padding: 0 12px;
+}
+.codigo-promo button:disabled { cursor: wait; opacity: 0.65; }
+.codigo-promo #codigoPromoQuitar { background: var(--surface-2); color: var(--t2); }
+.codigo-promo-estado {
+  min-height: 1.25em;
+  margin: 5px 0 0;
+  color: var(--t2);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+.codigo-promo-estado.error { color: #a84035; }
+.codigo-promo-estado.ok { color: var(--accent); }
 
 .carrito-total-valor.sin-precios {
   font-size: 0.825rem;
