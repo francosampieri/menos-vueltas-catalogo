@@ -17,6 +17,12 @@
 - La política de envío B2C vigente es $1.500 fijo dentro de la cobertura actual y gratis desde $35.000 netos de productos, después de promociones y descuentos por cantidad. B2B no adopta esta política.
 - `Envio` es un campo monetario histórico propio del pedido: `1500` cobrado, `0` bonificado y vacío si el pedido histórico no lo registraba. El total incluye envío y extras; la ganancia visible es antes del costo logístico.
 - El Apps Script debe leer y escribir `Envio` por encabezado y no se hará backfill de pedidos anteriores.
+- Los códigos promocionales se configuran directamente en la pestaña `Codigos_Promo` de Google Sheets y aplican exclusivamente a B2C.
+- Sólo se admiten códigos porcentuales, uno por pedido; no hay descuentos fijos ni descuentos sobre el envío.
+- Los productos con promoción temporal se excluyen del código. Los descuentos por cantidad continúan siendo elegibles y pueden combinarse con él.
+- El envío se recalcula sobre el neto de productos después del código promocional.
+- La condición de primera compra se controla manualmente en WhatsApp durante esta versión. Una futura automatización sólo debería consumir el beneficio al entregar el pedido.
+- `Codigo_Promo`, `Porcentaje_Codigo` y `Descuento_Codigo` son datos históricos del pedido y permanecen separados del descuento propio de los productos.
 - El modelo actual es compra contra pedido y retiro en distribuidora, no stock propio en tiempo real.
 - La prioridad técnica es velocidad y bajo costo.
 - Entender el código e incorporar funcionalidades tiene prioridad sobre eliminar código muerto.

@@ -10,6 +10,7 @@ const CANAL = (typeof window !== 'undefined' && window.CANAL) ? window.CANAL : '
 let grupos          = {};  // id_grupo → { nombre, marca, categoria, subcategoria }
 let catalogo        = {};  // id_grupo → [productos]
 let carrito         = [];  // items del carrito
+let codigoPromocional = null; // { code, percent }, validado contra Sheets para B2C
 const rotaciones    = {};  // id_grupo → { timer, indexActual }
 
 
@@ -1771,11 +1772,37 @@ function precioEfectivo(item) {
 function resumenPedidoActual() {
   const items = carrito.map(item => ({
     unitPrice: precioEfectivo(item),
-    quantity: item.qty
+    quantity: item.qty,
+    hasProductPromotion: item.tienePromoProducto
   }));
   const policy = window.MenosVueltasShipping;
 
-  if (policy) return policy.calculateShipping({ channel: CANAL, items });
+  if (policy) {
+    const base = policy.calculateShipping({ channel: CANAL, items });
+    const promoApi = window.MenosVueltasPromotion;
+    const hayPrecio = base.status !== 'confirm';
+    const puedeAplicarCodigo = CANAL === 'B2C' && codigoPromocional && promoApi && hayPrecio;
+
+    if (!puedeAplicarCodigo) {
+      return { ...base, codeDiscount: 0, promotion: null, productsBeforeCode: base.productsTotal };
+    }
+
+    const promo = promoApi.calculatePromotion({
+      percent: codigoPromocional.percent,
+      items
+    });
+    const conCodigo = policy.calculateShipping({
+      channel: 'B2C',
+      items: [{ unitPrice: promo.discountedProductsTotal, quantity: 1 }]
+    });
+    return {
+      ...conCodigo,
+      codeDiscount: promo.discount,
+      promotion: codigoPromocional,
+      productsBeforeCode: promo.productsTotal,
+      eligibleProductsTotal: promo.eligibleTotal
+    };
+  }
 
   // B2B puede cargar shared/app.js sin el helper B2C: conserva su total
   // histórico y no recibe una política de envío por defecto.
@@ -1787,7 +1814,10 @@ function resumenPedidoActual() {
     total: productsTotal,
     amountRemaining: 0,
     progress: 0,
-    status: hasMissingPrice ? 'confirm' : 'not-applicable'
+    status: hasMissingPrice ? 'confirm' : 'not-applicable',
+    codeDiscount: 0,
+    promotion: null,
+    productsBeforeCode: productsTotal
   };
 }
 
@@ -1813,6 +1843,7 @@ function agregarAlCarrito(gid, variante, qty) {
   const precio    = pu.promo;
   const precioDto = pc.promo;
   const uniDto    = parseInt(variante['Uni Dto']) || 0;
+  const tienePromoProducto = tienePromo(variante);
   const idProd    = variante['Id'];
   const imagen    = variante['Imagen']?.trim() || '';
 
@@ -1821,7 +1852,7 @@ function agregarAlCarrito(gid, variante, qty) {
     existe.qty += qty;
   } else {
     carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto,
-                   precioLista, precioDtoLista, uniDto, qty, imagen });
+                   precioLista, precioDtoLista, uniDto, qty, imagen, tienePromoProducto });
   }
 
   actualizarUICarrito();
@@ -1890,7 +1921,7 @@ function eliminarDelCarrito(idx) {
 
 function actualizarUICarrito(rerenderItems = true) {
   const resumen    = resumenPedidoActual();
-  const total      = resumen.productsTotal || 0;
+  const total      = resumen.productsBeforeCode ?? resumen.productsTotal ?? 0;
   const totalItems = carrito.reduce((s, i) => s + i.qty, 0);
   const hayPrecio  = resumen.status !== 'confirm';
 
@@ -1956,6 +1987,12 @@ function actualizarUICarrito(rerenderItems = true) {
   escribir('crCantidad', '−' + formatPrecio(dtoCantidad));
   mostrar('crCantidadFila', hayPrecio && dtoCantidad > 0);
 
+  const dtoCodigo = resumen.codeDiscount || 0;
+  const codigo = resumen.promotion;
+  escribir('crCodigoPromoLabel', codigo ? `Código ${codigo.code} (${codigo.percent}%)` : 'Código promocional');
+  escribir('crCodigoPromo', '−' + formatPrecio(dtoCodigo));
+  mostrar('crCodigoPromoFila', hayPrecio && dtoCodigo > 0);
+
   const mostrarEnvio = carrito.length > 0 && CANAL === 'B2C';
   escribir('crEnvio', resumen.status === 'confirm'
     ? 'A confirmar'
@@ -1976,13 +2013,15 @@ function actualizarUICarrito(rerenderItems = true) {
   // Cierre del resumen: el ahorro total (promo + cantidad) en una línea
   // discreta bajo el total, sin recuadro — los dos descuentos ya están
   // detallados arriba, esto solo los suma.
-  const ahorroTotal = dtoPromo + dtoCantidad;
+  const ahorroTotal = dtoPromo + dtoCantidad + dtoCodigo;
   escribir('crAhorro', `Estás ahorrando ${formatPrecio(ahorroTotal)}`);
   mostrar('crAhorro', hayPrecio && ahorroTotal > 0);
 
   if (rerenderItems) {
     renderCarritoItems();
   }
+
+  actualizarEstadoCodigoPromocional();
 }
 
 // ══ SCROLL BOTÓN FLOTANTE CARRITO ══
@@ -2064,12 +2103,85 @@ function cerrarCarrito() {
   document.body.style.overflow = '';
 }
 
+// ══ CÓDIGO PROMOCIONAL B2C ══
+function actualizarEstadoCodigoPromocional(mensaje, tipo) {
+  const input = document.getElementById('codigoPromoInput');
+  const aplicar = document.getElementById('codigoPromoAplicar');
+  const quitar = document.getElementById('codigoPromoQuitar');
+  const estado = document.getElementById('codigoPromoEstado');
+  if (!input || !aplicar || !quitar || !estado) return;
+
+  input.value = codigoPromocional ? codigoPromocional.code : input.value;
+  input.disabled = Boolean(codigoPromocional);
+  aplicar.hidden = Boolean(codigoPromocional);
+  quitar.hidden = !codigoPromocional;
+  if (mensaje !== undefined) {
+    estado.textContent = mensaje;
+    estado.className = `codigo-promo-estado${tipo ? ` ${tipo}` : ''}`;
+  } else if (codigoPromocional) {
+    estado.textContent = `${codigoPromocional.percent}% sobre productos elegibles. Confirmamos la promo por WhatsApp.`;
+    estado.className = 'codigo-promo-estado ok';
+  }
+}
+
+function codigoNormalizado(value) {
+  const api = window.MenosVueltasPromotion;
+  return api ? api.normalizeCode(value) : String(value || '').trim().toUpperCase();
+}
+
+async function aplicarCodigoPromocional(valor) {
+  if (CANAL !== 'B2C') return;
+  const input = document.getElementById('codigoPromoInput');
+  const aplicar = document.getElementById('codigoPromoAplicar');
+  const code = codigoNormalizado(valor === undefined ? input?.value : valor);
+  if (!code) {
+    actualizarEstadoCodigoPromocional('Ingresá un código para aplicarlo.', 'error');
+    return;
+  }
+  if (!carrito.length) {
+    actualizarEstadoCodigoPromocional('Agregá productos antes de aplicar el código.', 'error');
+    return;
+  }
+
+  if (aplicar) aplicar.disabled = true;
+  actualizarEstadoCodigoPromocional('Validando código…');
+  try {
+    const url = `${SHEETS_URL_PUBLICA}?accion=validarCodigo&codigo=${encodeURIComponent(code)}&canal=b2c`;
+    const respuesta = await fetch(url);
+    const datos = await respuesta.json();
+    if (!datos.ok || !datos.promocion) throw new Error(datos.error || 'Código inválido');
+
+    codigoPromocional = {
+      code: codigoNormalizado(datos.promocion.codigo),
+      percent: Number(datos.promocion.porcentaje)
+    };
+    if (!Number.isFinite(codigoPromocional.percent) || codigoPromocional.percent <= 0) {
+      throw new Error('Código inválido');
+    }
+    actualizarUICarrito();
+  } catch (error) {
+    codigoPromocional = null;
+    actualizarUICarrito();
+    actualizarEstadoCodigoPromocional('No pudimos validar el código. Revisalo o intentá nuevamente.', 'error');
+  } finally {
+    if (aplicar) aplicar.disabled = false;
+  }
+}
+
+function quitarCodigoPromocional() {
+  codigoPromocional = null;
+  const input = document.getElementById('codigoPromoInput');
+  if (input) input.value = '';
+  actualizarUICarrito();
+  actualizarEstadoCodigoPromocional('Código quitado.');
+}
+
 // ══ WHATSAPP ══
 // Arma el texto del pedido para WhatsApp. Separado del envío porque lo usan
 // tanto el botón como el flujo del QR.
 function construirMensajePedido() {
   const resumen   = resumenPedidoActual();
-  const total     = resumen.productsTotal || 0;
+  const total     = resumen.productsBeforeCode ?? resumen.productsTotal ?? 0;
   const hayPrecio = resumen.status !== 'confirm';
 
   // Sin emojis ni caracteres decorativos fuera de Latin-1: WhatsApp Desktop
@@ -2105,7 +2217,8 @@ function construirMensajePedido() {
       if (aplica) dtoCantidad += ((i.precioLista || 0) - i.precioDtoLista) * i.qty;
     });
     const dtoPromo = (bruto - dtoCantidad) - total;
-    const ahorro   = dtoPromo + dtoCantidad;
+    const dtoCodigo = resumen.codeDiscount || 0;
+    const ahorro   = dtoPromo + dtoCantidad + dtoCodigo;
 
     msg += `Subtotal: ${formatPrecio(bruto)}\n`;
     if (dtoPromo > 0) {
@@ -2114,11 +2227,16 @@ function construirMensajePedido() {
     if (dtoCantidad > 0) {
       msg += `Descuentos por cantidad: -${formatPrecio(dtoCantidad)}\n`;
     }
+    if (dtoCodigo > 0 && resumen.promotion) {
+      msg += `Código promocional: ${resumen.promotion.code} (${resumen.promotion.percent}%)\n`;
+      msg += `Descuento por código: -${formatPrecio(dtoCodigo)}\n`;
+    }
     if (CANAL === 'B2C') {
       msg += `Envío: ${resumen.status === 'free' ? 'GRATIS' : formatPrecio(resumen.shippingCost)}\n`;
     }
     msg += `\n*TOTAL: ${formatPrecio(resumen.total)}*\n`;
     if (ahorro > 0) msg += `Estás ahorrando ${formatPrecio(ahorro)}\n`;
+    if (dtoCodigo > 0) msg += 'La promo se confirma por WhatsApp.\n';
   } else if (CANAL === 'B2C') {
     msg += 'Envío: a confirmar\n';
     msg += '\n*TOTAL: a confirmar*\n';
@@ -2141,11 +2259,13 @@ function abrirWhatsAppConPedido() {
 const PEDIDO_HASH_PREFIJO = 'P';
 
 function codificarPedido() {
-  return carrito
+  const items = carrito
     .filter(i => i.idProd)
     .map(i => `${i.idProd}X${i.qty}`)
     .join('.')
     .toUpperCase();
+  const code = codigoPromocional ? encodeURIComponent(codigoPromocional.code) : '';
+  return code ? `${items}:C${code}` : items;
 }
 
 function urlPedidoParaCelular() {
@@ -2162,10 +2282,12 @@ function urlPedidoParaCelular() {
 // Se ejecuta una sola vez y limpia el hash, para que recargar no vuelva a
 // agregar los mismos productos.
 function restaurarPedidoDesdeHash() {
-  const h = decodeURIComponent(location.hash || '').replace(/^#/, '');
+  const h = (location.hash || '').replace(/^#/, '');
   if (!h || h[0].toUpperCase() !== PEDIDO_HASH_PREFIJO) return false;
 
-  const partes = h.slice(1).split('.').filter(Boolean);
+  const contenido = h.slice(1);
+  const [itemsCodificados, codigoCodificado] = contenido.split(':C', 2);
+  const partes = itemsCodificados.split('.').filter(Boolean);
   if (!partes.length) return false;
 
   const porId = {};
@@ -2187,6 +2309,13 @@ function restaurarPedidoDesdeHash() {
   history.replaceState(null, '', location.pathname + location.search);
 
   if (!agregados) return false;
+
+  if (codigoCodificado) {
+    const codigo = decodeURIComponent(codigoCodificado);
+    const input = document.getElementById('codigoPromoInput');
+    if (input) input.value = codigo;
+    aplicarCodigoPromocional(codigo);
+  }
 
   mostrarCatalogo();
   abrirCarrito();

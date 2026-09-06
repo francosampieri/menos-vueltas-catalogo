@@ -5124,6 +5124,54 @@ body.modal-abierto {
 }
 .cr-ahorro[hidden] { display: none; }
 
+.codigo-promo {
+  margin: var(--space-3) 0;
+  font-family: var(--font-body);
+}
+.codigo-promo label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--t2);
+  font-size: 0.78rem;
+}
+.codigo-promo-control {
+  display: flex;
+  gap: var(--space-2);
+}
+.codigo-promo input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--t1);
+  font: inherit;
+  font-size: 0.86rem;
+  padding: 9px 10px;
+  text-transform: uppercase;
+}
+.codigo-promo button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font: 600 0.8rem var(--font-body);
+  padding: 0 12px;
+}
+.codigo-promo button:disabled { cursor: wait; opacity: 0.65; }
+.codigo-promo #codigoPromoQuitar { background: var(--surface-2); color: var(--t2); }
+.codigo-promo-estado {
+  min-height: 1.25em;
+  margin: 5px 0 0;
+  color: var(--t2);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+.codigo-promo-estado.error { color: #a84035; }
+.codigo-promo-estado.ok { color: var(--accent); }
+
 .carrito-total-valor.sin-precios {
   font-size: 0.825rem;
   color: var(--t3);

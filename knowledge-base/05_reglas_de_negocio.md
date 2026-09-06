@@ -20,6 +20,18 @@
 9. Las promociones no requieren fecha límite obligatoria: su inicio y finalización se definen manualmente.
 10. Ante un cambio de precio del proveedor, se respeta al cliente el precio B2C confirmado al realizar su pedido.
 
+## Códigos promocionales B2C
+
+1. Los códigos promocionales aplican sólo a B2C; no modifican precios, flujos ni pedidos B2B.
+2. Cada código se administra en `Codigos_Promo` de Google Sheets con código, canal, porcentaje, estado y vigencia. Sólo se admiten descuentos porcentuales.
+3. Se permite un único código por pedido. No existen descuentos fijos ni códigos para envío.
+4. El descuento se calcula sobre los productos sin promoción temporal. Los productos con precio por cantidad siguen siendo elegibles y el porcentaje se aplica sobre ese precio efectivo.
+5. El descuento por código se redondea una única vez sobre el total elegible y se conserva separado del descuento propio de los productos.
+6. El envío se calcula nuevamente sobre el neto de productos posterior al descuento por código.
+7. La web valida que el código esté activo, sea B2C y esté dentro de su vigencia. Si no puede validarlo, no aplica descuento.
+8. En esta etapa, el beneficio de primera compra se confirma manualmente durante la atención por WhatsApp. El equipo puede retirar el código si no corresponde y el pedido se recalcula. A futuro, una automatización podrá considerarlo consumido sólo al entregar el pedido.
+9. Al guardar el pedido, el código, porcentaje y descuento quedan congelados como historial; cambios posteriores de la campaña no alteran pedidos existentes.
+
 ## Pedido, pago y entrega
 
 1. El carrito web no es una confirmación final: deriva el pedido a WhatsApp.

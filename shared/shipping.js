@@ -6,12 +6,15 @@
  * - MenosVueltasAdminShipping.parseShippingFromMessage(text)
  * - MenosVueltasAdminShipping.serializeShipping(value)
  * - MenosVueltasAdminShipping.totalWithShipping({ productsTotal, shipping, extras })
+ * - MenosVueltasPromotion.normalizeCode(value)
+ * - MenosVueltasPromotion.calculatePromotion({ percent, items })
  */
 (function (root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.MenosVueltasShipping = api.policy;
   root.MenosVueltasAdminShipping = api.admin;
+  root.MenosVueltasPromotion = api.promotion;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   const B2C_SHIPPING_COST = 1500;
   const B2C_FREE_SHIPPING_THRESHOLD = 35000;
@@ -100,12 +103,48 @@
     return Number(productsTotal || 0) + Number(shipping || 0) + Number(extras || 0);
   }
 
+  function normalizeCode(value) {
+    return String(value || '').trim().toUpperCase();
+  }
+
+  function validAmount(value) {
+    return Number.isFinite(value) && value >= 0 ? value : 0;
+  }
+
+  function validQuantity(value) {
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  }
+
+  function calculatePromotion({ percent, items = [] } = {}) {
+    const safePercent = Number.isFinite(percent) && percent > 0 && percent <= 100
+      ? percent
+      : 0;
+    let productsTotal = 0;
+    let eligibleTotal = 0;
+
+    items.forEach(item => {
+      const lineTotal = validAmount(item && item.unitPrice) * validQuantity(item && item.quantity);
+      productsTotal += lineTotal;
+      if (!item || item.hasProductPromotion) return;
+      eligibleTotal += lineTotal;
+    });
+
+    const discount = safePercent ? Math.round(eligibleTotal * safePercent / 100) : 0;
+    return {
+      productsTotal,
+      eligibleTotal,
+      discount,
+      discountedProductsTotal: productsTotal - discount
+    };
+  }
+
   const policy = Object.freeze({
     B2C_SHIPPING_COST,
     B2C_FREE_SHIPPING_THRESHOLD,
     calculateShipping
   });
   const admin = Object.freeze({ parseShippingFromMessage, serializeShipping, totalWithShipping });
+  const promotion = Object.freeze({ normalizeCode, calculatePromotion });
 
-  return Object.freeze({ policy, admin });
+  return Object.freeze({ policy, admin, promotion });
 });

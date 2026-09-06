@@ -261,6 +261,17 @@
           <div class="fila"><span>Subtotal</span><b id="rSub">$0</b></div>
           <div class="fila" id="rPromoFila" hidden><span>Promo</span><b id="rPromo">$0</b></div>
           <div class="fila" id="rDtoFila" hidden><span>Descuentos por cantidad</span><b id="rDto">$0</b></div>
+          <div class="fila" id="rCodigoPromoFila" hidden><span id="rCodigoPromoLabel">Código promocional</span><b id="rCodigoPromo">$0</b></div>
+
+          <div class="campo campo--sep" id="fCodigoPromoBox">
+            <label for="fCodigoPromo">Código promocional</label>
+            <div class="campo-con-boton">
+              <input id="fCodigoPromo" placeholder="Ej. 21JULIO10" autocomplete="off" autocapitalize="characters">
+              <button type="button" class="btn btn--peque" id="btnValidarCodigoPromo" onclick="validarCodigoPromoEditor()">Validar</button>
+              <button type="button" class="btn btn--peque" id="btnQuitarCodigoPromo" onclick="quitarCodigoPromoEditor()" hidden>Quitar</button>
+            </div>
+            <p class="campo-ayuda" id="avisoCodigoPromo"></p>
+          </div>
 
           <div class="campo campo--sep" id="fEnvioBox">
             <label for="fEnvio">Envío</label>

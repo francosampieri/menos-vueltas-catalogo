@@ -45,8 +45,9 @@ La hoja `Pedidos` usa estos encabezados:
 
 ```text
 Id, Canal, Fecha_Pedido, Fecha_Entrega, Cliente_Id, Cliente, Telefono,
-Direccion, Barrio, Estado, Medio_Pago, Subtotal, Descuento, Envio, Extras,
-Desc_Extras, Total, Costo, Ganancia, Notas, Actualizado
+Direccion, Barrio, Estado, Medio_Pago, Subtotal, Descuento, Codigo_Promo,
+Porcentaje_Codigo, Descuento_Codigo, Envio, Extras, Desc_Extras, Total,
+Costo, Ganancia, Notas, Actualizado
 ```
 
 `Envio` es un campo monetario propio, ubicado entre `Descuento` y `Extras`. En
@@ -56,6 +57,24 @@ y `Desc_Extras` son conceptos independientes y no deben reutilizarse para
 envío. El total del pedido es productos netos + `Envio` + `Extras`. La
 ganancia que muestra el panel incluye el ingreso de envío y se interpreta como
 ganancia antes del costo logístico.
+
+`Codigo_Promo`, `Porcentaje_Codigo` y `Descuento_Codigo` preservan la campaña
+y el ahorro aplicados al guardar cada pedido. `Descuento` mantiene el descuento
+propio de los productos, separado del descuento por código. Los pedidos
+anteriores pueden conservar estas nuevas columnas vacías.
+
+## Códigos promocionales B2C
+
+La pestaña `Codigos_Promo` es la configuración editable de campañas y tiene
+estos encabezados:
+
+```text
+Codigo, Canal, Porcentaje, Activo, Fecha_Inicio, Fecha_Fin
+```
+
+Cada fila define un código porcentual para un canal. Apps Script crea la
+pestaña y sus encabezados si falta, pero no expone el listado público: la web
+consulta únicamente el código ingresado por la persona compradora.
 
 Estados presentes en el panel:
 

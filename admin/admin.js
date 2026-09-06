@@ -227,18 +227,32 @@ function calcularLinea(l) {
 
 // El precio efectivo de cada línea ya incorpora promoción y descuento por
 // cantidad. Esa es la única base válida para la política B2C de envío.
-function calcularEnvioPedido(p) {
+function calcularEnvioPedido(p, productosNetos) {
   if (p.canal !== 'b2c') return null;
   if (p.envioManual) return MenosVueltasAdminShipping.serializeShipping(p.envio);
 
   const resumen = MenosVueltasShipping.calculateShipping({
     channel: 'B2C',
-    items: (p.items || []).map(l => ({
-      unitPrice: precioUnitario(l),
-      quantity: l.cant
-    }))
+    items: [{ unitPrice: productosNetos, quantity: 1 }]
   });
   return resumen.shippingCost;
+}
+
+function tienePromoTemporalLinea(l) {
+  const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin && l.porCant > 0;
+  const lista = llegaAlMinimo ? l.porCant : l.lista;
+  const promo = llegaAlMinimo ? l.promoCant : l.promo;
+  return promo > 0 && lista > 0 && promo < lista;
+}
+
+function descuentoCodigoSobreLineas(items, porcentaje) {
+  const pct = Number(porcentaje);
+  if (!Number.isFinite(pct) || pct <= 0 || pct > 100) return { elegible: 0, descuento: 0 };
+  const elegible = (items || []).reduce((total, linea) => {
+    if (tienePromoTemporalLinea(linea)) return total;
+    return total + calcularLinea(linea).total;
+  }, 0);
+  return { elegible, descuento: Math.round(elegible * pct / 100) };
 }
 
 function calcularPedido(p) {
@@ -261,10 +275,14 @@ function calcularPedido(p) {
     dtoPromo    += (base - c.unit) * l.cant;
   });
 
+  const codigo = String(p.codigoPromo || '').trim();
+  const codigoCalculado = codigo ? descuentoCodigoSobreLineas(p.items, p.porcentajeCodigo) : { elegible: 0, descuento: 0 };
+  const descuentoCodigo = Math.min(total, codigoCalculado.descuento);
+  const productosNetos = total - descuentoCodigo;
   const extras = Number(p.extras) || 0;
-  const envio = calcularEnvioPedido(p);
+  const envio = calcularEnvioPedido(p, productosNetos);
   const totalFinal = MenosVueltasAdminShipping.totalWithShipping({
-    productsTotal: total,
+    productsTotal: productosNetos,
     shipping: envio,
     extras
   });
@@ -274,6 +292,10 @@ function calcularPedido(p) {
     descuento: subtotal - total,
     dtoPromo,
     dtoCantidad,
+    codigoPromo: codigo,
+    porcentajeCodigo: codigo ? Number(p.porcentajeCodigo) || 0 : 0,
+    descuentoCodigo,
+    elegibleCodigo: codigoCalculado.elegible,
     envio,
     extras,
     total: totalFinal,
@@ -339,6 +361,12 @@ async function llamarSheets(opciones) {
 }
 
 const API = {
+
+  async validarCodigo(codigo, canal) {
+    if (!SHEETS_URL) throw new Error('No hay conexión configurada con Sheets para validar promociones.');
+    const url = `${SHEETS_URL}?accion=validarCodigo&codigo=${encodeURIComponent(codigo)}&canal=${encodeURIComponent(canal)}`;
+    return llamarSheets({ url });
+  },
 
   async listar() {
     if (SHEETS_URL) {
@@ -457,6 +485,9 @@ function paraGuardar(p) {
   const { envioManual, ...pedido } = p;
   return {
     ...pedido,
+    codigoPromo: t.codigoPromo,
+    porcentajeCodigo: t.porcentajeCodigo,
+    descuentoCodigo: Math.round(t.descuentoCodigo),
     envio: MenosVueltasAdminShipping.serializeShipping(t.envio),
     totales: {
       subtotal:  Math.round(t.subtotal),
@@ -960,6 +991,7 @@ function nuevoPedido() {
     estado: 'Nuevo',
     medioPago: 'Efectivo',
     envio: null, envioManual: false,
+    codigoPromo: '', porcentajeCodigo: 0, descuentoCodigo: 0,
     extras: 0, descExtras: '', notas: '',
     items: []
   };
@@ -999,6 +1031,7 @@ function abrirEditor(esNuevo) {
   actualizarBotonMapa();
   v('fMedioPago', edicion.medioPago);
   v('fEnvio', edicion.envio);
+  v('fCodigoPromo', edicion.codigoPromo || '');
   v('fExtras', edicion.extras || 0);
   v('fDescExtras', edicion.descExtras);
   v('fNotas', edicion.notas);
@@ -1161,6 +1194,68 @@ function restablecerEnvioRegla() {
   recalcular();
 }
 
+function actualizarCampoCodigoPromo(t) {
+  const input = document.getElementById('fCodigoPromo');
+  const validar = document.getElementById('btnValidarCodigoPromo');
+  const quitar = document.getElementById('btnQuitarCodigoPromo');
+  const aviso = document.getElementById('avisoCodigoPromo');
+  if (!input || !validar || !quitar || !aviso) return;
+
+  const esB2C = edicion.canal === 'b2c';
+  input.disabled = !esB2C;
+  validar.hidden = !esB2C;
+  quitar.hidden = !esB2C || !edicion.codigoPromo;
+  if (!esB2C) {
+    input.value = '';
+    input.placeholder = 'No aplica a B2B';
+    aviso.textContent = 'Los códigos promocionales se gestionan sólo para B2C.';
+    return;
+  }
+
+  input.placeholder = 'Ej. 21JULIO10';
+  input.value = edicion.codigoPromo || input.value;
+  aviso.textContent = edicion.codigoPromo
+    ? `${t.porcentajeCodigo}% aplicado sobre ${money(t.elegibleCodigo)} de productos elegibles. Confirmar primera compra manualmente.`
+    : 'Validalo contra Sheets antes de guardar el pedido.';
+}
+
+function normalizarCodigoPromo(valor) {
+  return String(valor || '').trim().toUpperCase();
+}
+
+async function validarCodigoPromoEditor() {
+  if (!edicion || edicion.canal !== 'b2c') return;
+  const input = document.getElementById('fCodigoPromo');
+  const boton = document.getElementById('btnValidarCodigoPromo');
+  const codigo = normalizarCodigoPromo(input.value);
+  if (!codigo) { toast('Ingresá un código promocional.', true); return; }
+
+  boton.disabled = true;
+  try {
+    const respuesta = await API.validarCodigo(codigo, 'b2c');
+    const promocion = respuesta.promocion;
+    edicion.codigoPromo = normalizarCodigoPromo(promocion.codigo);
+    edicion.porcentajeCodigo = Number(promocion.porcentaje);
+    edicion.descuentoCodigo = 0;
+    recalcular();
+    toast(`Código ${edicion.codigoPromo} validado.`);
+  } catch (error) {
+    toast(error.message || 'No se pudo validar el código.', true);
+  } finally {
+    boton.disabled = false;
+  }
+}
+
+function quitarCodigoPromoEditor() {
+  if (!edicion) return;
+  edicion.codigoPromo = '';
+  edicion.porcentajeCodigo = 0;
+  edicion.descuentoCodigo = 0;
+  document.getElementById('fCodigoPromo').value = '';
+  recalcular();
+  toast('Código promocional quitado.');
+}
+
 function actualizarCampoEnvio(envio) {
   const input = document.getElementById('fEnvio');
   const boton = document.getElementById('btnRestablecerEnvio');
@@ -1205,6 +1300,13 @@ function recalcular() {
   const filaCant = document.getElementById('rDtoFila');
   filaCant.hidden = !t.dtoCantidad;
   document.getElementById('rDto').textContent = '−' + money(t.dtoCantidad);
+
+  const filaCodigo = document.getElementById('rCodigoPromoFila');
+  filaCodigo.hidden = !t.descuentoCodigo;
+  document.getElementById('rCodigoPromo').textContent = '−' + money(t.descuentoCodigo);
+  document.getElementById('rCodigoPromoLabel').textContent =
+    t.codigoPromo ? `Código ${t.codigoPromo} (${t.porcentajeCodigo}%)` : 'Código promocional';
+  actualizarCampoCodigoPromo(t);
   // Envío se muestra como campo editable para no mezclarlo con Extras.
   document.getElementById('rTot').textContent = money(t.total);
   document.getElementById('rCos').textContent = money(t.costo);
@@ -1588,7 +1690,11 @@ function parsearMensajeWAPorLineas(texto) {
     ? MenosVueltasAdminShipping.parseShippingFromMessage(limpio)
     : null;
 
-  return { items, totalMsg, envioMsg, tieneEnvioMsg };
+  const codigoMatch = limpio.match(/(?:^|\n)\s*c[oó]digo promocional\s*:\s*([^\n(]+?)(?:\s*\(\s*([\d.,]+)\s*%\s*\))?\s*(?:\n|$)/i);
+  const codigoPromo = codigoMatch ? normalizarCodigoPromo(codigoMatch[1]) : '';
+  const porcentajeCodigo = codigoMatch && codigoMatch[2] ? num(codigoMatch[2]) : 0;
+
+  return { items, totalMsg, envioMsg, tieneEnvioMsg, codigoPromo, porcentajeCodigo };
 }
 
 /**
@@ -1644,7 +1750,7 @@ function parsearPedidoWA() {
   const texto = document.getElementById('waTexto').value.trim();
   if (!texto) { toast('Pegá el mensaje del pedido antes.', true); return; }
 
-  const { items, totalMsg, envioMsg, tieneEnvioMsg } = parsearMensajeWAPorLineas(texto);
+  const { items, totalMsg, envioMsg, tieneEnvioMsg, codigoPromo, porcentajeCodigo } = parsearMensajeWAPorLineas(texto);
 
   if (!items.length) {
     toast('No se detectaron productos numerados en el mensaje. Asegurate de pegar el texto tal cual llega.', true);
@@ -1664,7 +1770,7 @@ function parsearPedidoWA() {
     });
   }
 
-  waParse = { items: resultados, totalMsg, envioMsg, tieneEnvioMsg };
+  waParse = { items: resultados, totalMsg, envioMsg, tieneEnvioMsg, codigoPromo, porcentajeCodigo };
   renderizarPreviewWA();
 }
 
@@ -1794,7 +1900,7 @@ function waCambiarMatch(i, nuevoId) {
   renderizarPreviewWA();
 }
 
-function confirmarImportarWA() {
+async function confirmarImportarWA() {
   if (!waParse) return;
   const catalogo = CATALOGO[edicion.canal] || [];
   let agregados = 0, salteados = 0;
@@ -1820,10 +1926,26 @@ function confirmarImportarWA() {
     edicion.envioManual = true;
   }
 
+  let avisoCodigo = '';
+  if (edicion.canal === 'b2c' && waParse.codigoPromo) {
+    try {
+      const respuesta = await API.validarCodigo(waParse.codigoPromo, 'b2c');
+      edicion.codigoPromo = normalizarCodigoPromo(respuesta.promocion.codigo);
+      edicion.porcentajeCodigo = Number(respuesta.promocion.porcentaje);
+      edicion.descuentoCodigo = 0;
+    } catch (error) {
+      edicion.codigoPromo = '';
+      edicion.porcentajeCodigo = 0;
+      edicion.descuentoCodigo = 0;
+      avisoCodigo = ' El código promocional no está activo: revisalo antes de confirmarlo.';
+    }
+  }
+
   pintarItems();
   cerrarImportarWA();
 
   let msg = `Se agregaron ${agregados} productos al pedido.`;
   if (salteados) msg += ` (${salteados} salteados por falta de match)`;
+  msg += avisoCodigo;
   toast(msg);
 }

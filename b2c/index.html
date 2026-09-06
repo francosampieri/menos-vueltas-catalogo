@@ -781,6 +781,10 @@
           <span>Descuentos por cantidad</span>
           <span id="crCantidad">—</span>
         </div>
+        <div class="cr-fila cr-fila--promo" id="crCodigoPromoFila" hidden>
+          <span id="crCodigoPromoLabel">Código promocional</span>
+          <span id="crCodigoPromo">—</span>
+        </div>
         <div class="cr-fila cr-fila--promo" id="crEnvioFila" hidden>
           <span>Envío</span>
           <span id="crEnvio">—</span>
@@ -797,6 +801,16 @@
           <span class="carrito-total-valor" id="carritoTotal">—</span>
         </div>
         <p class="cr-ahorro" id="crAhorro" hidden></p>
+      </div>
+
+      <div class="codigo-promo" id="codigoPromoBox">
+        <label for="codigoPromoInput">Código promocional</label>
+        <div class="codigo-promo-control">
+          <input id="codigoPromoInput" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" placeholder="Ej. 21JULIO10">
+          <button type="button" id="codigoPromoAplicar" onclick="aplicarCodigoPromocional()">Aplicar</button>
+          <button type="button" id="codigoPromoQuitar" onclick="quitarCodigoPromocional()" hidden>Quitar</button>
+        </div>
+        <p class="codigo-promo-estado" id="codigoPromoEstado" aria-live="polite"></p>
       </div>
 
       <div class="carrito-nota" id="carritoNota"></div>
