@@ -5099,15 +5099,31 @@ body[data-canal="b2c"] .ci-subtotal-etiqueta {
 .cr-toggle-chev { width: 16px; height: 16px; color: var(--t2); transition: transform var(--t) var(--ease); }
 .carrito-resumen-toggle[aria-expanded="true"] .cr-toggle-chev { transform: rotate(180deg); }
 .carrito-resumen-detalle {
-  margin-top: var(--space-2);
-  padding: var(--space-3) var(--space-3) 0;
-  border: 1px solid var(--line-soft);
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  padding: 0 var(--space-3);
+  overflow: hidden;
+  border: 1px solid transparent;
   border-radius: var(--r2);
   background: var(--surface-2);
+  opacity: 0;
+  transition:
+    grid-template-rows 230ms var(--ease),
+    margin-top 230ms var(--ease),
+    padding 230ms var(--ease),
+    border-color 180ms var(--ease),
+    opacity 160ms var(--ease);
 }
-.carrito-resumen-detalle[hidden] { display: none; }
+.carrito-resumen-detalle.abierto {
+  grid-template-rows: 1fr;
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-3) 0;
+  border-color: var(--line-soft);
+  opacity: 1;
+}
 /* Las filas intermedias se ocultan solas cuando no hay promo vigente. */
-.carrito-resumen { margin-bottom: var(--space-3); }
+.carrito-resumen { min-height: 0; overflow: hidden; margin-bottom: var(--space-3); }
 .cr-fila {
   display: flex;
   justify-content: space-between;

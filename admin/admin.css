@@ -547,6 +547,19 @@ input[type="date"], input[type="number"] {
   white-space: nowrap;
 }
 .chip-dto--promo { background: var(--ambar-bg); color: var(--ambar); }
+.chip-dto--codigo { background: var(--accent-bg); color: var(--accent-2); }
+.item-total-con-codigo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+.item-total-con-codigo s {
+  color: var(--t3);
+  font-size: .69rem;
+  font-weight: 500;
+}
+.item-total-con-codigo b { color: var(--accent-2); }
 
 .sug-promo {
   padding: 1px 6px;

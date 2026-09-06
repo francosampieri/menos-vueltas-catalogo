@@ -2069,7 +2069,11 @@ function alternarResumenCarrito() {
   const detalle = document.getElementById('carritoResumenDetalle');
   const accion = document.getElementById('crResumenToggleAccion');
   if (toggle) toggle.setAttribute('aria-expanded', String(resumenCarritoAbierto));
-  if (detalle) detalle.hidden = !resumenCarritoAbierto;
+  if (detalle) {
+    detalle.classList.toggle('abierto', resumenCarritoAbierto);
+    detalle.setAttribute('aria-hidden', String(!resumenCarritoAbierto));
+    detalle.inert = !resumenCarritoAbierto;
+  }
   if (accion) accion.textContent = resumenCarritoAbierto ? 'Ocultar detalle' : 'Ver detalle';
 }
 

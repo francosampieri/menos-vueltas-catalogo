@@ -125,18 +125,34 @@ function toast(msg, error) {
 // Convierte un producto del catálogo en una línea de pedido, copiando
 // todos los precios. A partir de acá el producto puede cambiar de precio
 // o darse de baja: el pedido queda intacto.
-function lineaDesdeCatalogo(prod, cantidad) {
+function redondearPrecioB2C(valor) {
+  const importe = num(valor);
+  if (typeof MenosVueltasPromotion !== 'undefined' &&
+      typeof MenosVueltasPromotion.roundToNearest50 === 'function') {
+    return MenosVueltasPromotion.roundToNearest50(importe);
+  }
+  const inferior = Math.floor(importe / 50) * 50;
+  return importe - inferior <= 25 ? inferior : inferior + 50;
+}
+
+function lineaDesdeCatalogo(prod, cantidad, canal = CANAL) {
+  const redondear = canal === 'b2c' ? redondearPrecioB2C : num;
+  const lista = num(prod.pv);
+  const promo = num(prod.pp) || lista;
+  const porCant = num(prod.pd);
+  const promoCant = num(prod.ppd) || porCant;
+
   return {
     id:       prod.id,
     nombre:   prod.n,
     cant:     cantidad || 1,
     // Precios congelados. Se guardan los cuatro para poder recalcular el
     // pedido si cambia la cantidad, con los valores del día en que se cargó.
-    lista:      num(prod.pv),                     // unitario sin promo
-    promo:      num(prod.pp) || num(prod.pv),     // unitario con promo
+    lista:      redondear(lista),                 // unitario sin promo
+    promo:      redondear(promo),                 // unitario con promo
     cantMin:    parseInt(prod.ud, 10) || 0,       // desde cuántas unidades
-    porCant:    num(prod.pd),                     // por cantidad sin promo
-    promoCant:  num(prod.ppd) || num(prod.pd),    // por cantidad con promo
+    porCant:    redondear(porCant),               // por cantidad sin promo
+    promoCant:  redondear(promoCant),             // por cantidad con promo
     pct:        (prod.pct || '').trim(),          // "10%", para mostrar
     costo:      num(prod.co)
   };
@@ -245,22 +261,37 @@ function tienePromoTemporalLinea(l) {
   return promo > 0 && lista > 0 && promo < lista;
 }
 
-function descuentoCodigoSobreLineas(items, porcentaje) {
-  const pct = Number(porcentaje);
-  if (!Number.isFinite(pct) || pct <= 0 || pct > 100) return { elegible: 0, descuento: 0 };
-  const elegible = (items || []).reduce((total, linea) => {
-    if (tienePromoTemporalLinea(linea)) return total;
-    return total + calcularLinea(linea).total;
-  }, 0);
-  return { elegible, descuento: Math.round(elegible * pct / 100) };
+function calcularPromocionCodigo(p, lineasCalculadas) {
+  const codigo = String(p.codigoPromo || '').trim();
+  const porcentaje = num(p.porcentajeCodigo);
+  const codigoAplicable = p.canal === 'b2c' && codigo &&
+    Number.isFinite(porcentaje) && porcentaje > 0 && porcentaje <= 100;
+  const items = (p.items || []).map((linea, indice) => ({
+    unitPrice: lineasCalculadas[indice].total,
+    quantity: 1,
+    hasProductPromotion: tienePromoTemporalLinea(linea)
+  }));
+  const promocion = MenosVueltasPromotion.calculatePromotion({
+    percent: codigoAplicable ? porcentaje : 0,
+    items
+  });
+
+  return {
+    ...promocion,
+    codigo: codigoAplicable ? codigo : '',
+    porcentaje: codigoAplicable ? porcentaje : 0,
+    elegibleTotal: codigoAplicable ? promocion.eligibleTotal : 0
+  };
 }
 
 function calcularPedido(p) {
   let subtotal = 0, total = 0, costo = 0, unidades = 0;
   let dtoPromo = 0, dtoCantidad = 0;
+  const lineasCalculadas = [];
 
   (p.items || []).forEach(l => {
     const c = calcularLinea(l);
+    lineasCalculadas.push(c);
     subtotal += c.subtotal;
     total    += c.total;
     costo    += c.costoTot;
@@ -275,10 +306,12 @@ function calcularPedido(p) {
     dtoPromo    += (base - c.unit) * l.cant;
   });
 
-  const codigo = String(p.codigoPromo || '').trim();
-  const codigoCalculado = codigo ? descuentoCodigoSobreLineas(p.items, p.porcentajeCodigo) : { elegible: 0, descuento: 0 };
-  const descuentoCodigo = Math.min(total, codigoCalculado.descuento);
-  const productosNetos = total - descuentoCodigo;
+  // El mismo motor que usa el carrito descuenta y redondea cada línea B2C
+  // por separado. Así la tabla, el total y el envío siempre muestran el
+  // mismo importe, incluso con descuentos por cantidad.
+  const codigoCalculado = calcularPromocionCodigo(p, lineasCalculadas);
+  const descuentoCodigo = Math.min(total, codigoCalculado.discount);
+  const productosNetos = codigoCalculado.discountedProductsTotal;
   const extras = Number(p.extras) || 0;
   const envio = calcularEnvioPedido(p, productosNetos);
   const totalFinal = MenosVueltasAdminShipping.totalWithShipping({
@@ -292,10 +325,12 @@ function calcularPedido(p) {
     descuento: subtotal - total,
     dtoPromo,
     dtoCantidad,
-    codigoPromo: codigo,
-    porcentajeCodigo: codigo ? Number(p.porcentajeCodigo) || 0 : 0,
+    codigoPromo: codigoCalculado.codigo,
+    porcentajeCodigo: codigoCalculado.porcentaje,
     descuentoCodigo,
-    elegibleCodigo: codigoCalculado.elegible,
+    elegibleCodigo: codigoCalculado.eligibleTotal,
+    promotionLines: codigoCalculado.lines,
+    productosNetos,
     envio,
     extras,
     total: totalFinal,
@@ -554,6 +589,12 @@ async function iniciar() {
 }
 
 document.addEventListener('DOMContentLoaded', iniciar);
+
+// Los cálculos se exportan sólo en Node para sus pruebas; en el navegador
+// este bloque no modifica la API ni el arranque del panel.
+if (typeof module === 'object' && module.exports) {
+  module.exports = { lineaDesdeCatalogo, calcularLinea, tienePromoTemporalLinea, calcularPedido };
+}
 
 
 /* ══════════════ ARRANQUE ══════════════ */
@@ -1093,12 +1134,16 @@ function buscarProducto() {
     return;
   }
 
+  const precioSugerido = valor => edicion.canal === 'b2c'
+    ? money(redondearPrecioB2C(valor))
+    : esc(valor);
+
   cont.innerHTML = sugerencias.map((p, i) => `
     <div class="sug-item" onclick="agregarProducto('${p.id}')" onmouseenter="sugSel=${i};marcarSugerencia()">
       <span class="sug-nombre">${esc(p.n)}</span>
-      ${parseInt(p.ud, 10) > 0 ? `<span class="sug-dto">${p.ud}+ → ${esc(p.pd)}</span>` : ''}
+      ${parseInt(p.ud, 10) > 0 ? `<span class="sug-dto">${p.ud}+ → ${precioSugerido(p.pd)}</span>` : ''}
       ${p.pct ? `<span class="sug-promo">${esc(etiquetaPromo(p.pct))}</span>` : ''}
-      <span class="sug-precio">${esc(p.pp || p.pv)}</span>
+      <span class="sug-precio">${precioSugerido(p.pp || p.pv)}</span>
     </div>`).join('');
 }
 
@@ -1122,7 +1167,7 @@ function agregarProducto(id) {
   // Si ya está en el pedido, suma una unidad en vez de duplicar la fila.
   const existente = edicion.items.find(l => l.id === id);
   if (existente) existente.cant++;
-  else edicion.items.push(lineaDesdeCatalogo(prod, 1));
+  else edicion.items.push(lineaDesdeCatalogo(prod, 1, edicion.canal));
 
   const input = document.getElementById('buscarProd');
   input.value = '';
@@ -1148,12 +1193,26 @@ function quitarItem(i) {
 
 function pintarItems() {
   const unidades = edicion.items.reduce((s, l) => s + (l.cant || 0), 0);
+  const pedido = calcularPedido(edicion);
   document.getElementById('chipItems').textContent =
     `${unidades} ${unidades === 1 ? 'item' : 'items'}`;
   document.getElementById('sinItems').hidden = edicion.items.length > 0;
 
   document.getElementById('tbodyItems').innerHTML = edicion.items.map((l, i) => {
     const c = calcularLinea(l);
+    const codigo = pedido.promotionLines[i] || {
+      discount: 0,
+      discountedTotal: c.total
+    };
+    const descuento = c.descuento + codigo.discount;
+    const ganancia = codigo.discountedTotal - c.costoTot;
+    const chips = chipsDescuento(l, l.cantMin > 0 && l.cant >= l.cantMin);
+    if (codigo.discount > 0) {
+      chips.push({ texto: `Código ${pedido.porcentajeCodigo}%`, clase: 'chip-dto--codigo' });
+    }
+    const total = codigo.discount > 0
+      ? `<span class="item-total-con-codigo"><s>${money(c.total)}</s><b>${money(codigo.discountedTotal)}</b></span>`
+      : `<b>${money(codigo.discountedTotal)}</b>`;
     return `<tr>
       <td>
         <div class="item-nombre">${esc(l.nombre)}</div>
@@ -1166,10 +1225,10 @@ function pintarItems() {
       </td>
       <td class="num">${money(c.unit)}</td>
       <td class="num">${money(c.subtotal)}</td>
-      <td class="num">${c.descuento ? '−' + money(c.descuento) : '—'}</td>
-      <td>${chipsHTML(chipsDescuento(l, l.cantMin > 0 && l.cant >= l.cantMin))}</td>
-      <td class="num"><b>${money(c.total)}</b></td>
-      <td class="num"><span class="ganancia${c.ganancia < 0 ? ' ganancia--neg' : ''}">${money(c.ganancia)}</span></td>
+      <td class="num">${descuento ? '−' + money(descuento) : '—'}</td>
+      <td>${chipsHTML(chips)}</td>
+      <td class="num">${total}</td>
+      <td class="num"><span class="ganancia${ganancia < 0 ? ' ganancia--neg' : ''}">${money(ganancia)}</span></td>
       <td>
         <button class="quitar" onclick="quitarItem(${i})" aria-label="Quitar producto">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a2 2 0 002 2h8a2 2 0 002-2l1-13M9 7V4h6v3"/></svg>
@@ -1178,6 +1237,8 @@ function pintarItems() {
     </tr>`;
   }).join('');
 
+  // El resumen también lee Extras del formulario; lo recalculamos desde el
+  // estado actual para no conservar un total anterior a la última edición.
   recalcular();
 }
 
@@ -1237,7 +1298,7 @@ async function validarCodigoPromoEditor() {
     edicion.codigoPromo = normalizarCodigoPromo(promocion.codigo);
     edicion.porcentajeCodigo = Number(promocion.porcentaje);
     edicion.descuentoCodigo = 0;
-    recalcular();
+    pintarItems();
     toast(`Código ${edicion.codigoPromo} validado.`);
   } catch (error) {
     toast(error.message || 'No se pudo validar el código.', true);
@@ -1252,7 +1313,7 @@ function quitarCodigoPromoEditor() {
   edicion.porcentajeCodigo = 0;
   edicion.descuentoCodigo = 0;
   document.getElementById('fCodigoPromo').value = '';
-  recalcular();
+  pintarItems();
   toast('Código promocional quitado.');
 }
 
@@ -1284,10 +1345,10 @@ function actualizarCampoEnvio(envio) {
   }
 }
 
-function recalcular() {
+function recalcular(totales) {
   if (!edicion) return;
   edicion.extras = Number(document.getElementById('fExtras').value) || 0;
-  const t = calcularPedido(edicion);
+  const t = totales || calcularPedido(edicion);
   if (!edicion.envioManual && edicion.canal === 'b2c') edicion.envio = t.envio;
   actualizarCampoEnvio(t.envio);
 
@@ -1834,7 +1895,7 @@ function renderizarPreviewWA() {
   for (const it of waParse.items) {
     const p = it.matchId ? opcionesPorId[it.matchId] : null;
     if (!p) continue;
-    const linea = lineaDesdeCatalogo(p, it.cant);
+    const linea = lineaDesdeCatalogo(p, it.cant, edicion.canal);
     const calculada = calcularLinea(linea);
     productosCalc += calculada.total;
     itemsParaEnvio.push({ unitPrice: calculada.unit, quantity: it.cant });
@@ -1914,7 +1975,7 @@ async function confirmarImportarWA() {
     if (existente) {
       existente.cant += it.cant;
     } else {
-      edicion.items.push(lineaDesdeCatalogo(prod, it.cant));
+      edicion.items.push(lineaDesdeCatalogo(prod, it.cant, edicion.canal));
     }
     agregados++;
   }
