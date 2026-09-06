@@ -11,6 +11,7 @@ let grupos          = {};  // id_grupo → { nombre, marca, categoria, subcatego
 let catalogo        = {};  // id_grupo → [productos]
 let carrito         = [];  // items del carrito
 let codigoPromocional = null; // { code, percent }, validado contra Sheets para B2C
+let resumenCarritoAbierto = false;
 const rotaciones    = {};  // id_grupo → { timer, indexActual }
 
 
@@ -1772,6 +1773,17 @@ function precioEfectivo(item) {
   return aplica ? item.precioDto : item.precio;
 }
 
+function porcentajeComoTexto(valor) {
+  const numero = Number(String(valor || '').replace(',', '.').replace(/[^0-9.]/g, ''));
+  if (!Number.isFinite(numero) || numero <= 0) return '';
+  return `${Number.isInteger(numero) ? numero : numero.toLocaleString('es-AR', { maximumFractionDigits: 1 })}%`;
+}
+
+function porcentajeCalculado(precioAnterior, precioFinal) {
+  if (!Number.isFinite(precioAnterior) || !Number.isFinite(precioFinal) || precioFinal >= precioAnterior) return '';
+  return `${Math.round((precioAnterior - precioFinal) * 100 / precioAnterior)}%`;
+}
+
 // El único cálculo de envío para carrito, WhatsApp y traspaso por QR.
 // shipping.js reúne la regla de envío y las utilidades del panel para evitar
 // duplicar esta regla de negocio.
@@ -1858,6 +1870,8 @@ function agregarAlCarrito(gid, variante, qty) {
   const precioDto = pc.promo;
   const uniDto    = parseInt(variante['Uni Dto']) || 0;
   const tienePromoProducto = tienePromo(variante);
+  const porcentajePromoProducto = porcentajeComoTexto(variante['promo']);
+  const porcentajeCantidad = porcentajeComoTexto(variante['Dto']);
   const idProd    = variante['Id'];
   const imagen    = variante['Imagen']?.trim() || '';
 
@@ -1865,8 +1879,12 @@ function agregarAlCarrito(gid, variante, qty) {
   if (existe) {
     existe.qty += qty;
   } else {
+    const detalleDescuentoB2C = CANAL === 'B2C'
+      ? { porcentajePromoProducto, porcentajeCantidad }
+      : {};
     carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto,
-                   precioLista, precioDtoLista, uniDto, qty, imagen, tienePromoProducto });
+                   precioLista, precioDtoLista, uniDto, qty, imagen, tienePromoProducto,
+                   ...detalleDescuentoB2C });
   }
 
   actualizarUICarrito();
@@ -1950,14 +1968,16 @@ function actualizarUICarrito(rerenderItems = true) {
     floatCountEl.classList.toggle('visible', totalItems > 0);
   }
 
+  // B2B conserva su total histórico. En B2C el mismo monto se muestra en el
+  // encabezado del resumen plegable que se actualiza más abajo.
   const totalEl = document.getElementById('carritoTotal');
   if (totalEl) {
     if (hayPrecio) {
-      totalEl.textContent  = formatPrecio(resumen.total);
-      totalEl.className    = 'carrito-total-valor';
+      totalEl.textContent = formatPrecio(resumen.total);
+      totalEl.className = 'carrito-total-valor';
     } else {
-      totalEl.textContent  = 'Precios a confirmar';
-      totalEl.className    = 'carrito-total-valor sin-precios';
+      totalEl.textContent = 'Precios a confirmar';
+      totalEl.className = 'carrito-total-valor sin-precios';
     }
   }
 
@@ -2021,6 +2041,7 @@ function actualizarUICarrito(rerenderItems = true) {
     barra.style.width = `${resumen.progress}%`;
     barra.setAttribute('aria-valuenow', String(resumen.progress));
   }
+  escribirResumenCarritoTotal(hayPrecio ? formatPrecio(resumen.total) : 'Precios a confirmar');
   mostrar('crEnvioProgreso', mostrarProgreso);
 
   // Cierre del resumen: el ahorro total (promo + cantidad) en una línea
@@ -2035,6 +2056,21 @@ function actualizarUICarrito(rerenderItems = true) {
   }
 
   actualizarEstadoCodigoPromocional();
+}
+
+function escribirResumenCarritoTotal(texto) {
+  const total = document.getElementById('crResumenToggleTotal');
+  if (total) total.textContent = texto;
+}
+
+function alternarResumenCarrito() {
+  resumenCarritoAbierto = !resumenCarritoAbierto;
+  const toggle = document.getElementById('carritoResumenToggle');
+  const detalle = document.getElementById('carritoResumenDetalle');
+  const accion = document.getElementById('crResumenToggleAccion');
+  if (toggle) toggle.setAttribute('aria-expanded', String(resumenCarritoAbierto));
+  if (detalle) detalle.hidden = !resumenCarritoAbierto;
+  if (accion) accion.textContent = resumenCarritoAbierto ? 'Ocultar detalle' : 'Ver detalle';
 }
 
 // ══ SCROLL BOTÓN FLOTANTE CARRITO ══
@@ -2116,9 +2152,26 @@ function htmlSubtotalItemCarrito(item, idx, resumen) {
   const subtotalFinal = lineaCodigo ? lineaCodigo.discountedTotal : subtotal;
   if (subtotalFinal >= subtotalOriginal) return formatPrecio(subtotalFinal);
 
+  const porcentaje = CANAL === 'B2C' ? porcentajeDescuentoLinea(item, idx, resumen) : '';
   return `<s class="ci-subtotal-anterior">${formatPrecio(subtotalOriginal)}</s>` +
     `<strong class="ci-subtotal-con-descuento">${formatPrecio(subtotalFinal)}</strong>` +
-    `<span class="ci-subtotal-etiqueta">con descuento</span>`;
+    `<span class="ci-subtotal-etiqueta">${porcentaje || 'con descuento'}</span>`;
+}
+
+function porcentajeDescuentoLinea(item, idx, resumen) {
+  const porcentajes = [];
+  const aplicaCantidad = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
+  if (item.tienePromoProducto && item.precio < item.precioLista) {
+    porcentajes.push(item.porcentajePromoProducto || porcentajeCalculado(item.precioLista, item.precio));
+  }
+  if (aplicaCantidad && item.precioDto < item.precio) {
+    porcentajes.push(item.porcentajeCantidad || porcentajeCalculado(item.precio, item.precioDto));
+  }
+  const lineaCodigo = resumen.promotionLines?.[idx];
+  if (lineaCodigo && lineaCodigo.discount > 0 && resumen.promotion) {
+    porcentajes.push(`${resumen.promotion.percent}%`);
+  }
+  return [...new Set(porcentajes.filter(Boolean))].join(' + ');
 }
 
 function abrirCarrito() {
@@ -2230,10 +2283,8 @@ function construirMensajePedido() {
       const lineaCodigo = resumen.promotionLines?.[i];
       const subtotalFinal = lineaCodigo ? lineaCodigo.discountedTotal : pEfectivo * item.qty;
       if (subtotalFinal < subtotalOriginal) {
-        const etiquetaCodigo = lineaCodigo && lineaCodigo.discount > 0
-          ? ` (${resumen.promotion.percent}%)`
-          : '';
-        msg += `   Subtotal: ~${formatPrecio(subtotalOriginal)}~ → *${formatPrecio(subtotalFinal)}*${etiquetaCodigo}\n`;
+        const porcentaje = CANAL === 'B2C' ? porcentajeDescuentoLinea(item, i, resumen) : '';
+        msg += `   Subtotal: ~${formatPrecio(subtotalOriginal)}~ → *${formatPrecio(subtotalFinal)}*${porcentaje ? ` (${porcentaje})` : ''}\n`;
       } else {
         msg += `   Subtotal: ${formatPrecio(subtotalFinal)}\n`;
       }
