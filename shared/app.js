@@ -1784,7 +1784,13 @@ function resumenPedidoActual() {
     const puedeAplicarCodigo = CANAL === 'B2C' && codigoPromocional && promoApi && hayPrecio;
 
     if (!puedeAplicarCodigo) {
-      return { ...base, codeDiscount: 0, promotion: null, productsBeforeCode: base.productsTotal };
+      return {
+        ...base,
+        codeDiscount: 0,
+        promotion: null,
+        promotionLines: null,
+        productsBeforeCode: base.productsTotal
+      };
     }
 
     const promo = promoApi.calculatePromotion({
@@ -1799,6 +1805,7 @@ function resumenPedidoActual() {
       ...conCodigo,
       codeDiscount: promo.discount,
       promotion: codigoPromocional,
+      promotionLines: promo.lines,
       productsBeforeCode: promo.productsTotal,
       eligibleProductsTotal: promo.eligibleTotal
     };
@@ -1817,6 +1824,7 @@ function resumenPedidoActual() {
     status: hasMissingPrice ? 'confirm' : 'not-applicable',
     codeDiscount: 0,
     promotion: null,
+    promotionLines: null,
     productsBeforeCode: productsTotal
   };
 }
@@ -1876,13 +1884,12 @@ function cambiarQtyCarritoInput(idx, valStr, isFinal) {
     carrito[idx].qty = n;
     actualizarUICarrito(false);
 
-    const item = carrito[idx];
-    const cont = document.getElementById('carritoItems');
+      const item = carrito[idx];
+      const cont = document.getElementById('carritoItems');
     if (cont && cont.children[idx]) {
       const itemEl = cont.children[idx];
       const aplica = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
-      const pEfectivo = precioEfectivo(item);
-      const subtotal = pEfectivo !== null ? formatPrecio(pEfectivo * item.qty) : 'S/P';
+      const resumen = resumenPedidoActual();
 
       let precioLinea = '';
       if (item.precio !== null) {
@@ -1895,7 +1902,7 @@ function cambiarQtyCarritoInput(idx, valStr, isFinal) {
       if (precioEl) precioEl.innerHTML = precioLinea;
 
       const subtotalEl = itemEl.querySelector('.ci-subtotal');
-      if (subtotalEl) subtotalEl.textContent = subtotal;
+      if (subtotalEl) subtotalEl.innerHTML = htmlSubtotalItemCarrito(item, idx, resumen);
     }
   }
 
@@ -2043,11 +2050,11 @@ function renderCarritoItems() {
     return;
   }
   cont.innerHTML = '';
+  const resumen = resumenPedidoActual();
 
   carrito.forEach((item, idx) => {
     const aplica     = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
-    const pEfectivo  = precioEfectivo(item);
-    const subtotal   = pEfectivo !== null ? formatPrecio(pEfectivo * item.qty) : 'S/P';
+    const subtotal   = htmlSubtotalItemCarrito(item, idx, resumen);
 
     let precioLinea = '';
     if (item.precio !== null) {
@@ -2091,6 +2098,19 @@ function renderCarritoItems() {
     `;
     cont.appendChild(div);
   });
+}
+
+function htmlSubtotalItemCarrito(item, idx, resumen) {
+  const precio = precioEfectivo(item);
+  if (precio === null) return 'S/P';
+
+  const subtotal = precio * item.qty;
+  const lineaCodigo = resumen.promotionLines?.[idx];
+  if (!lineaCodigo || lineaCodigo.discount <= 0) return formatPrecio(subtotal);
+
+  return `<s class="ci-subtotal-anterior">${formatPrecio(subtotal)}</s>` +
+    `<strong class="ci-subtotal-con-codigo">${formatPrecio(lineaCodigo.discountedTotal)}</strong>` +
+    `<span class="ci-subtotal-etiqueta">con código</span>`;
 }
 
 function abrirCarrito() {
@@ -2198,7 +2218,12 @@ function construirMensajePedido() {
     msg += `   Cantidad: ${item.qty} unidades\n`;
     if (item.precio !== null) {
       msg += `   Precio unit.: ${formatPrecio(aplica ? item.precioDto : item.precio)}\n`;
-      msg += `   Subtotal: ${formatPrecio(pEfectivo * item.qty)}\n`;
+      const lineaCodigo = resumen.promotionLines?.[i];
+      if (lineaCodigo && lineaCodigo.discount > 0) {
+        msg += `   Subtotal: ~${formatPrecio(pEfectivo * item.qty)}~ → *${formatPrecio(lineaCodigo.discountedTotal)}* (código ${resumen.promotion.percent}%)\n`;
+      } else {
+        msg += `   Subtotal: ${formatPrecio(pEfectivo * item.qty)}\n`;
+      }
     } else {
       msg += `   Precio: a confirmar\n`;
     }

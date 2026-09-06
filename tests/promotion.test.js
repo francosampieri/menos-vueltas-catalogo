@@ -22,7 +22,11 @@ test('applies a percentage discount only to products without a temporary promoti
     productsTotal: 4300,
     eligibleTotal: 2700,
     discount: 270,
-    discountedProductsTotal: 4030
+    discountedProductsTotal: 4030,
+    lines: [
+      { eligible: true, originalTotal: 2700, discount: 270, discountedTotal: 2430 },
+      { eligible: false, originalTotal: 1600, discount: 0, discountedTotal: 1600 }
+    ]
   });
 });
 
@@ -38,6 +42,8 @@ test('rounds the promotion once on the full eligible total', () => {
   assert.equal(result.eligibleTotal, 666);
   assert.equal(result.discount, 67);
   assert.equal(result.discountedProductsTotal, 599);
+  assert.deepEqual(result.lines.map(line => line.discount), [34, 33]);
+  assert.equal(result.lines.reduce((sum, line) => sum + line.discount, 0), result.discount);
 });
 
 test('does not apply a missing or invalid percentage promotion', () => {

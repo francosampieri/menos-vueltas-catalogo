@@ -119,22 +119,42 @@
     const safePercent = Number.isFinite(percent) && percent > 0 && percent <= 100
       ? percent
       : 0;
-    let productsTotal = 0;
-    let eligibleTotal = 0;
-
-    items.forEach(item => {
+    const lines = items.map((item, index) => {
       const lineTotal = validAmount(item && item.unitPrice) * validQuantity(item && item.quantity);
-      productsTotal += lineTotal;
-      if (!item || item.hasProductPromotion) return;
-      eligibleTotal += lineTotal;
+      return {
+        index,
+        eligible: Boolean(item) && !item.hasProductPromotion,
+        originalTotal: lineTotal,
+        discount: 0,
+        discountedTotal: lineTotal
+      };
     });
+    const productsTotal = lines.reduce((sum, line) => sum + line.originalTotal, 0);
+    const eligibleTotal = lines.reduce((sum, line) => sum + (line.eligible ? line.originalTotal : 0), 0);
 
     const discount = safePercent ? Math.round(eligibleTotal * safePercent / 100) : 0;
+    const eligibleLines = lines.filter(line => line.eligible);
+    let allocated = 0;
+
+    eligibleLines.forEach(line => {
+      const rawDiscount = line.originalTotal * safePercent / 100;
+      line.discount = Math.floor(rawDiscount);
+      allocated += line.discount;
+      line.remainder = rawDiscount - line.discount;
+    });
+
+    eligibleLines
+      .sort((a, b) => b.remainder - a.remainder || a.index - b.index)
+      .slice(0, discount - allocated)
+      .forEach(line => { line.discount += 1; });
+
+    lines.forEach(line => { line.discountedTotal = line.originalTotal - line.discount; });
     return {
       productsTotal,
       eligibleTotal,
       discount,
-      discountedProductsTotal: productsTotal - discount
+      discountedProductsTotal: productsTotal - discount,
+      lines: lines.map(({ index, remainder, ...line }) => line)
     };
   }
 
