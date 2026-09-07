@@ -9553,7 +9553,7 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/532-caseros-maple-de-huevos-extragrande-30-u.webp",
       "Tipo": "Rentable",
-      "Precio_Costo": "$4.667,00"
+      "Precio_Costo": "$5.000,00"
     },
     {
       "Id": "533",
@@ -30643,7 +30643,7 @@
       "Categoría": "Almacén",
       "Subcategoria": "Huevos",
       "Tipo": "Rentable",
-      "Precio_Costo": "$4.667,00",
+      "Precio_Costo": "$5.000,00",
       "Precio_Venta": "$6.800,00",
       "Uni Dto": "3",
       "Dto": "5%",
@@ -30651,9 +30651,9 @@
       "promo": "10%",
       "Precio_Promo": "$6.100,00",
       "Precio_Promo_Mayorista": "$5.800,00",
-      "Markup": "45,70%",
-      "Ganancia_Bruta": "$2.133,00",
-      "Strat": "45,70%"
+      "Markup": "36,00%",
+      "Ganancia_Bruta": "$1.800,00",
+      "Strat": "36,00%"
     },
     {
       "Id": "533",
@@ -39588,7 +39588,7 @@
       "Categoría": "Almacén",
       "Subcategoria": "Huevos",
       "Tipo": "Rentable",
-      "Precio_Costo": "$4.667,00",
+      "Precio_Costo": "$5.000,00",
       "Precio_Venta": "",
       "Uni Dto": "",
       "Dto": "",
@@ -39597,7 +39597,7 @@
       "Precio_Promo": "$0,00",
       "Precio_Promo_Mayorista": "0,00%",
       "Markup": "-100,00%",
-      "Ganancia_Bruta": "-$4.667,00",
+      "Ganancia_Bruta": "-$5.000,00",
       "Strat": ""
     },
     {
