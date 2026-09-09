@@ -53,7 +53,7 @@ La hoja `Pedidos` usa estos encabezados:
 Id, Canal, Fecha_Pedido, Fecha_Entrega, Cliente_Id, Cliente, Telefono,
 Direccion, Barrio, Estado, Medio_Pago, Subtotal, Descuento, Codigo_Promo,
 Porcentaje_Codigo, Descuento_Codigo, Envio, Extras, Desc_Extras, Total,
-Costo, Ganancia, Notas, Actualizado
+Costo, Ganancia, Notas, Pedido_Al_Costo, Actualizado
 ```
 
 `Envio` es un campo monetario propio, ubicado entre `Descuento` y `Extras`. En
@@ -69,6 +69,11 @@ interpreta `Envio` vacío como `$0`, sin completar ni modificar la hoja.
 y el ahorro aplicados al guardar cada pedido. `Descuento` mantiene el descuento
 propio de los productos, separado del descuento por código. Los pedidos
 anteriores pueden conservar estas nuevas columnas vacías.
+
+`Pedido_Al_Costo` es un booleano exclusivo de pedidos B2C de uso interno. Si
+está activo, identifica que el pedido se cotizó al costo y permite excluirlo de
+las métricas y estadísticas comerciales sin retirarlo de la operación. Los
+pedidos históricos sin este valor se interpretan como `false`.
 
 ## Códigos promocionales B2C
 
@@ -126,6 +131,6 @@ La planilla de Finanzas es separada y manual; es la referencia práctica de tran
 
 ## Integridad
 
-El Apps Script usa `LockService` para serializar escrituras. Lee y relaciona pedidos e ítems por `Id_Pedido`, permite guardar y eliminar pedidos y clientes, y guardar contactos. Desde el panel se evita borrar clientes con pedidos vinculados. Debe leer y escribir `Envio` por nombre de encabezado para conservar compatibilidad con pedidos históricos y no requiere completar valores anteriores. El script puede agregar encabezados faltantes de promoción a `Items` sin reordenar las columnas existentes.
+El Apps Script usa `LockService` para serializar escrituras. Lee y relaciona pedidos e ítems por `Id_Pedido`, permite guardar y eliminar pedidos y clientes, y guardar contactos. Desde el panel se evita borrar clientes con pedidos vinculados. Debe leer y escribir `Envio` y `Pedido_Al_Costo` por nombre de encabezado para conservar compatibilidad con pedidos históricos y no requiere completar valores anteriores. El script puede agregar encabezados faltantes de promoción a `Items` sin reordenar las columnas existentes y `Pedido_Al_Costo` en `Pedidos` antes de `Actualizado`, sin reordenar las columnas existentes.
 
 No cambiar nombres, orden de columnas ni relaciones sin revisar el Apps Script y el workflow de catálogo.

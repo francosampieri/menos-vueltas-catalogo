@@ -225,9 +225,13 @@ function chipsHTML(chips) {
     .join('')}</div>`;
 }
 
-function calcularLinea(l) {
-  const unit     = precioUnitario(l);
-  const subtotal = l.cant * l.lista;   // siempre a precio de lista
+function esPedidoAlCosto(p) {
+  return p?.canal === 'b2c' && p.pedidoAlCosto === true;
+}
+
+function calcularLinea(l, alCosto) {
+  const unit     = alCosto ? l.costo : precioUnitario(l);
+  const subtotal = l.cant * (alCosto ? l.costo : l.lista); // al costo no tiene rebaja sobre lista
   const total    = l.cant * unit;
   const costoTot = l.cant * l.costo;
 
@@ -296,12 +300,13 @@ function calcularPromocionCodigo(p, lineasCalculadas) {
 }
 
 function calcularPedido(p) {
+  const alCosto = esPedidoAlCosto(p);
   let subtotal = 0, total = 0, costo = 0, unidades = 0;
   let dtoPromo = 0, dtoCantidad = 0;
   const lineasCalculadas = [];
 
   (p.items || []).forEach(l => {
-    const c = calcularLinea(l);
+    const c = calcularLinea(l, alCosto);
     lineasCalculadas.push(c);
     subtotal += c.subtotal;
     total    += c.total;
@@ -311,7 +316,7 @@ function calcularPedido(p) {
     // Se separan las dos rebajas para poder mostrarlas por su nombre.
     // Primero se descuenta lo que baja por cantidad (sobre precio de lista) y
     // después la promo sobre lo que quedaba: así los dos números suman exacto.
-    const llegaAlMinimo = l.cantMin > 0 && l.cant >= l.cantMin && l.porCant > 0;
+    const llegaAlMinimo = !alCosto && l.cantMin > 0 && l.cant >= l.cantMin && l.porCant > 0;
     const base = llegaAlMinimo ? l.porCant : l.lista;
     dtoCantidad += (l.lista - base) * l.cant;
     dtoPromo    += (base - c.unit) * l.cant;
@@ -320,11 +325,12 @@ function calcularPedido(p) {
   // El mismo motor que usa el carrito descuenta y redondea cada línea B2C
   // por separado. Así la tabla, el total y el envío siempre muestran el
   // mismo importe, incluso con descuentos por cantidad.
-  const codigoCalculado = calcularPromocionCodigo(p, lineasCalculadas);
+  const codigoCalculado = calcularPromocionCodigo(alCosto
+    ? { ...p, codigoPromo: '', porcentajeCodigo: 0 } : p, lineasCalculadas);
   const descuentoCodigo = Math.min(total, codigoCalculado.discount);
   const productosNetos = codigoCalculado.discountedProductsTotal;
-  const extras = Number(p.extras) || 0;
-  const envio = calcularEnvioPedido(p, productosNetos);
+  const extras = alCosto ? 0 : Number(p.extras) || 0;
+  const envio = alCosto ? 0 : calcularEnvioPedido(p, productosNetos);
   const totalFinal = MenosVueltasAdminShipping.totalWithShipping({
     productsTotal: productosNetos,
     shipping: envio,
@@ -535,6 +541,8 @@ function paraGuardar(p) {
     porcentajeCodigo: t.porcentajeCodigo,
     descuentoCodigo: Math.round(t.descuentoCodigo),
     envio: MenosVueltasAdminShipping.serializeShipping(t.envio),
+    extras: t.extras,
+    descExtras: esPedidoAlCosto(p) ? '' : p.descExtras,
     totales: {
       subtotal:  Math.round(t.subtotal),
       descuento: Math.round(t.descuento),
@@ -544,7 +552,7 @@ function paraGuardar(p) {
       ganancia:  Math.round(t.ganancia)
     },
     items: p.items.map(l => {
-      const c = calcularLinea(l);
+      const c = calcularLinea(l, esPedidoAlCosto(p));
       return {
         ...l,
         unit:      Math.round(c.unit),
@@ -606,7 +614,8 @@ document.addEventListener('DOMContentLoaded', iniciar);
 if (typeof module === 'object' && module.exports) {
   module.exports = {
     lineaDesdeCatalogo, calcularLinea, tienePromoTemporalLinea,
-    calcularPedido, modoEnvioPedido, paraGuardar
+    calcularPedido, modoEnvioPedido, paraGuardar, esPedidoAlCosto,
+    calcularMetricas, calcularEstadisticasClientes
   };
 }
 
@@ -770,7 +779,7 @@ function pintarLista() {
       <td><b>#${p.id}</b></td>
       <td>${fechaCorta(p.fechaPedido)}</td>
       <td>${fechaCorta(p.fechaEntrega)}</td>
-      <td class="celda-cliente"><b>${esc(nombreMostrar) || '—'}</b>${telMostrar ? `<span>${esc(telMostrar)}</span>` : ''}</td>
+      <td class="celda-cliente"><b>${esc(nombreMostrar) || '—'}</b>${esPedidoAlCosto(p) ? '<span class="pedido-al-costo-etiqueta">Al costo</span>' : ''}${telMostrar ? `<span>${esc(telMostrar)}</span>` : ''}</td>
       <td><span class="estado ${claseEstado}">${p.estado}</span></td>
       <td class="num">${t.unidades}</td>
       <td class="num"><b>${money(t.total)}</b></td>
@@ -780,25 +789,14 @@ function pintarLista() {
 }
 
 function pintarKpis(pedidos) {
-  // El estado avanza en un solo sentido: Nuevo → Pedido a Distribuidora → Para entregar → Entregado.
-  // Cancelados no se tienen en cuenta para facturado/ganancia.
-  let facturado = 0, ganancia = 0;
-  const pedidosActivos = pedidos.filter(p => p.estado !== 'Cancelado');
-  pedidosActivos.forEach(p => {
-    const t = calcularPedido(p);
-    facturado += t.total;
-    ganancia  += t.ganancia;
-  });
-
-  const pendientes = pedidos.filter(p => ['Nuevo', 'Pedido a Distribuidora', 'Para entregar'].includes(p.estado)).length;
+  const { facturado, ganancia, pedidosActivos, entregados, cancelados, ticket } = calcularMetricas(pedidos);
   const margen = facturado ? ganancia / facturado * 100 : 0;
-  const ticket = pedidosActivos.length ? facturado / pedidosActivos.length : 0;
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi">
       <div class="kpi-l">Pedidos activos</div>
-      <div class="kpi-v">${pendientes}</div>
-      <div class="kpi-s">${pedidos.filter(p => p.estado === 'Entregado').length} entregados</div>
+      <div class="kpi-v">${pedidosActivos}</div>
+      <div class="kpi-s">${entregados} entregados</div>
     </div>
     <div class="kpi">
       <div class="kpi-l">Facturado</div>
@@ -812,9 +810,28 @@ function pintarKpis(pedidos) {
     </div>
     <div class="kpi">
       <div class="kpi-l">Cancelados</div>
-      <div class="kpi-v">${pedidos.filter(p => p.estado === 'Cancelado').length}</div>
+      <div class="kpi-v">${cancelados}</div>
       <div class="kpi-s">&nbsp;</div>
     </div>`;
+}
+
+function calcularMetricas(pedidos) {
+  const comerciales = pedidos.filter(p => !esPedidoAlCosto(p));
+  let facturado = 0, ganancia = 0;
+  const noCancelados = comerciales.filter(p => p.estado !== 'Cancelado');
+  noCancelados.forEach(p => {
+    const t = calcularPedido(p);
+    facturado += t.total;
+    ganancia  += t.ganancia;
+  });
+
+  return {
+    facturado, ganancia,
+    pedidosActivos: comerciales.filter(p => ['Nuevo', 'Pedido a Distribuidora', 'Para entregar'].includes(p.estado)).length,
+    entregados: comerciales.filter(p => p.estado === 'Entregado').length,
+    cancelados: comerciales.filter(p => p.estado === 'Cancelado').length,
+    ticket: noCancelados.length ? facturado / noCancelados.length : 0
+  };
 }
 
 
@@ -830,13 +847,7 @@ function pintarClientes() {
 
   // Cuántos pedidos hizo cada cliente y cuánto lleva gastado: es el dato
   // que dice quién vuelve, que es lo que importa medir.
-  const resumen = {};
-  PEDIDOS.forEach(p => {
-    if (!p.clienteId) return;
-    const r = resumen[p.clienteId] || (resumen[p.clienteId] = { n: 0, total: 0 });
-    r.n++;
-    r.total += calcularPedido(p).total;
-  });
+  const resumen = calcularEstadisticasClientes(PEDIDOS);
 
   const lista = CLIENTES
     .filter(c => (c.canal || 'b2c') === CANAL)
@@ -875,6 +886,17 @@ function pintarClientes() {
            </a>` : ''}</td>
     </tr>`;
   }).join('');
+}
+
+function calcularEstadisticasClientes(pedidos) {
+  const resumen = {};
+  pedidos.forEach(p => {
+    if (esPedidoAlCosto(p) || !p.clienteId) return;
+    const r = resumen[p.clienteId] || (resumen[p.clienteId] = { n: 0, total: 0 });
+    r.n++;
+    r.total += calcularPedido(p).total;
+  });
+  return resumen;
 }
 
 // WhatsApp necesita el número sin espacios ni guiones. Se asume Argentina
@@ -1045,6 +1067,7 @@ function nuevoPedido() {
     clienteId: null, cliente: '', telefono: '', direccion: '', barrio: '', mapa: '',
     estado: 'Nuevo',
     medioPago: 'Efectivo',
+    pedidoAlCosto: false,
     envio: null, envioModo: 'automatico',
     codigoPromo: '', porcentajeCodigo: 0, descuentoCodigo: 0,
     extras: 0, descExtras: '', notas: '',
@@ -1085,6 +1108,7 @@ function abrirEditor(esNuevo) {
   v('fBarrio', edicion.barrio);
   actualizarBotonMapa();
   v('fMedioPago', edicion.medioPago);
+  document.getElementById('fPedidoAlCosto').checked = esPedidoAlCosto(edicion);
   v('fEnvio', edicion.envio);
   v('fCodigoPromo', edicion.codigoPromo || '');
   v('fExtras', edicion.extras || 0);
@@ -1114,6 +1138,7 @@ function leerCampos() {
     barrio:       cli?.barrio    || '',
     mapa:         cli?.mapa      || '',
     medioPago:    g('fMedioPago'),
+    pedidoAlCosto: edicion.canal === 'b2c' && document.getElementById('fPedidoAlCosto').checked,
     envio:        MenosVueltasAdminShipping.serializeShipping(g('fEnvio')),
     extras:       Number(g('fExtras')) || 0,
     descExtras:   g('fDescExtras').trim(),
@@ -1213,14 +1238,15 @@ function pintarItems() {
   document.getElementById('sinItems').hidden = edicion.items.length > 0;
 
   document.getElementById('tbodyItems').innerHTML = edicion.items.map((l, i) => {
-    const c = calcularLinea(l);
+    const alCosto = esPedidoAlCosto(edicion);
+    const c = calcularLinea(l, alCosto);
     const codigo = pedido.promotionLines[i] || {
       discount: 0,
       discountedTotal: c.total
     };
     const descuento = c.descuento + codigo.discount;
     const ganancia = codigo.discountedTotal - c.costoTot;
-    const chips = chipsDescuento(l, l.cantMin > 0 && l.cant >= l.cantMin);
+    const chips = alCosto ? [] : chipsDescuento(l, l.cantMin > 0 && l.cant >= l.cantMin);
     if (codigo.discount > 0) {
       chips.push({ texto: `Código ${pedido.porcentajeCodigo}%`, clase: 'chip-dto--codigo' });
     }
@@ -1256,6 +1282,23 @@ function pintarItems() {
   recalcular();
 }
 
+function cambiarPedidoAlCosto(activado) {
+  if (!edicion || edicion.canal !== 'b2c') return;
+  edicion.pedidoAlCosto = activado;
+  if (activado) {
+    edicion.codigoPromo = '';
+    edicion.porcentajeCodigo = 0;
+    edicion.descuentoCodigo = 0;
+    edicion.extras = 0;
+    edicion.descExtras = '';
+    edicion.envio = 0;
+    document.getElementById('fCodigoPromo').value = '';
+    document.getElementById('fExtras').value = 0;
+    document.getElementById('fDescExtras').value = '';
+  }
+  pintarItems();
+}
+
 function editarEnvioManual() {
   if (!edicion || edicion.canal !== 'b2c') return;
   edicion.envioModo = 'fijado';
@@ -1277,13 +1320,21 @@ function actualizarCampoCodigoPromo(t) {
   if (!input || !validar || !quitar || !aviso) return;
 
   const esB2C = edicion.canal === 'b2c';
-  input.disabled = !esB2C;
-  validar.hidden = !esB2C;
-  quitar.hidden = !esB2C || !edicion.codigoPromo;
+  const alCosto = esPedidoAlCosto(edicion);
+  input.disabled = !esB2C || alCosto;
+  validar.hidden = !esB2C || alCosto;
+  quitar.hidden = !esB2C || alCosto || !edicion.codigoPromo;
   if (!esB2C) {
     input.value = '';
     input.placeholder = 'No aplica a B2B';
     aviso.textContent = 'Los códigos promocionales se gestionan sólo para B2C.';
+    return;
+  }
+
+  if (alCosto) {
+    input.value = '';
+    input.placeholder = 'No aplica a pedidos al costo';
+    aviso.textContent = 'Los pedidos al costo no aplican códigos ni promociones.';
     return;
   }
 
@@ -1337,13 +1388,20 @@ function actualizarCampoEnvio(envio) {
   const aviso = document.getElementById('avisoEnvio');
   const esB2C = edicion.canal === 'b2c';
 
-  input.disabled = !esB2C;
+  const alCosto = esPedidoAlCosto(edicion);
+  input.disabled = !esB2C || alCosto;
   const modo = modoEnvioPedido(edicion);
-  boton.hidden = !esB2C || modo !== 'fijado';
+  boton.hidden = !esB2C || alCosto || modo !== 'fijado';
   if (!esB2C) {
     input.value = '';
     input.placeholder = 'No aplica a B2B';
     aviso.textContent = 'B2B no tiene una política de envío definida.';
+    return;
+  }
+
+  if (alCosto) {
+    input.value = 0;
+    aviso.textContent = 'Los pedidos al costo no cobran envío.';
     return;
   }
 
@@ -1366,7 +1424,9 @@ function actualizarCampoEnvio(envio) {
 
 function recalcular(totales) {
   if (!edicion) return;
-  edicion.extras = Number(document.getElementById('fExtras').value) || 0;
+  const alCosto = esPedidoAlCosto(edicion);
+  edicion.extras = alCosto ? 0 : Number(document.getElementById('fExtras').value) || 0;
+  actualizarCamposPedidoAlCosto(alCosto);
   const t = totales || calcularPedido(edicion);
   if (modoEnvioPedido(edicion) === 'automatico' && edicion.canal === 'b2c') edicion.envio = t.envio;
   actualizarCampoEnvio(t.envio);
@@ -1393,6 +1453,22 @@ function recalcular(totales) {
   document.getElementById('rGan').textContent = money(t.ganancia);
   document.getElementById('rMar').textContent = t.total ? t.margen.toFixed(1) + '%' : '—';
   document.getElementById('rGanBox').classList.toggle('neg', t.ganancia < 0);
+}
+
+function actualizarCamposPedidoAlCosto(alCosto) {
+  const caja = document.getElementById('fPedidoAlCostoBox');
+  const check = document.getElementById('fPedidoAlCosto');
+  const extras = document.getElementById('fExtras');
+  const descExtras = document.getElementById('fDescExtras');
+  const esB2C = edicion.canal === 'b2c';
+  caja.hidden = !esB2C;
+  check.checked = alCosto;
+  extras.disabled = alCosto;
+  descExtras.disabled = alCosto;
+  if (alCosto) {
+    extras.value = 0;
+    descExtras.value = '';
+  }
 }
 
 
@@ -1505,7 +1581,7 @@ function abrirListaDistribuidora() {
       return `<label class="dist-pedido-check" data-id="${p.id}">
         <input type="checkbox" onchange="togglePedidoDist(${p.id}, this.checked)">
         <div style="flex:1; min-width:0">
-          <div class="dist-pedido-cliente">#${p.id} · ${esc(p.cliente) || 'Sin cliente'}</div>
+          <div class="dist-pedido-cliente">#${p.id} · ${esc(p.cliente) || 'Sin cliente'}${esPedidoAlCosto(p) ? ' <span class="pedido-al-costo-etiqueta">Al costo</span>' : ''}</div>
           <div class="dist-pedido-meta">${fechaCorta(p.fechaPedido)} · ${t.unidades} unidades · ${money(t.total)}</div>
         </div>
       </label>`;

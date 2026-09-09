@@ -175,6 +175,15 @@
                 <option>Otro</option>
               </select>
             </div>
+            <div class="campo campo--full" id="fPedidoAlCostoBox">
+              <label class="pedido-al-costo-control" for="fPedidoAlCosto">
+                <input type="checkbox" id="fPedidoAlCosto" onchange="cambiarPedidoAlCosto(this.checked)">
+                <span>
+                  <b>Pedido al costo</b>
+                  <small>Uso interno: no cuenta en métricas ni estadísticas.</small>
+                </span>
+              </label>
+            </div>
 
             <!-- Desde acá arranca el bloque del cliente: elegís uno y el resto
                  se autocompleta solo. Va en su propia fila (campo--fila-nueva)

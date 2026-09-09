@@ -20,7 +20,7 @@ const COLS_PEDIDO = [
   'Telefono', 'Direccion', 'Barrio', 'Estado', 'Medio_Pago', 'Subtotal',
   'Descuento', 'Codigo_Promo', 'Porcentaje_Codigo', 'Descuento_Codigo', 'Envio',
   'Extras', 'Desc_Extras', 'Total', 'Costo', 'Ganancia',
-  'Notas', 'Actualizado'
+  'Notas', 'Pedido_Al_Costo', 'Actualizado'
 ];
 
 const COLS_CLIENTE = [
@@ -148,6 +148,8 @@ function leerPedidos() {
       barrio: texto(valorColumna(f, cp, 'Barrio')),
       estado: texto(valorColumna(f, cp, 'Estado')) || 'Nuevo',
       medioPago: texto(valorColumna(f, cp, 'Medio_Pago')) || 'Efectivo',
+      pedidoAlCosto: booleano(valorColumna(f, cp, 'Pedido_Al_Costo')) &&
+        (texto(valorColumna(f, cp, 'Canal')) || 'b2c') === 'b2c',
       subtotal: numero(valorColumna(f, cp, 'Subtotal')),
       descuento: numero(valorColumna(f, cp, 'Descuento')),
       codigoPromo: texto(valorColumna(f, cp, 'Codigo_Promo')),
@@ -286,7 +288,9 @@ function guardarPedido(p) {
     Envio: envioParaGuardar(p.envio), Extras: numero(p.extras), Desc_Extras: p.descExtras || '',
     // Se respetan Total y Ganancia calculados/enviados por el panel.
     Total: valorTotal(t, 'total'), Costo: valorTotal(t, 'costo'), Ganancia: valorTotal(t, 'ganancia'),
-    Notas: p.notas || '', Actualizado: new Date()
+    Notas: p.notas || '',
+    Pedido_Al_Costo: (p.canal || 'b2c') === 'b2c' && booleano(p.pedidoAlCosto),
+    Actualizado: new Date()
   };
   Object.keys(datos).forEach(function (nombre) {
     if (columnas[nombre] !== undefined) valores[columnas[nombre]] = datos[nombre];
@@ -406,14 +410,22 @@ function asegurarEncabezadosPedidos(h) {
 
   const camposCodigo = ['Codigo_Promo', 'Porcentaje_Codigo', 'Descuento_Codigo'];
   const faltantes = camposCodigo.filter(function (nombre) { return columnas[nombre] === undefined; });
-  if (!faltantes.length) return;
+  if (faltantes.length) {
+    // Los campos de promoción quedan antes de Envio. Las filas existentes se
+    // desplazan completas y mantienen sus totales históricos sin backfill.
+    const destino = columnas.Envio === undefined ? h.getLastColumn() + 1 : columnas.Envio + 1;
+    h.insertColumnsBefore(destino, faltantes.length);
+    h.getRange(1, destino, 1, faltantes.length).setValues([faltantes]);
+    h.getRange(1, destino, 1, faltantes.length).setFontWeight('bold');
+    encabezados = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
+    columnas = mapaEncabezados(encabezados);
+  }
 
-  // Los campos de promoción quedan antes de Envio. Las filas existentes se
-  // desplazan completas y mantienen sus totales históricos sin backfill.
-  const destino = columnas.Envio === undefined ? h.getLastColumn() + 1 : columnas.Envio + 1;
-  h.insertColumnsBefore(destino, faltantes.length);
-  h.getRange(1, destino, 1, faltantes.length).setValues([faltantes]);
-  h.getRange(1, destino, 1, faltantes.length).setFontWeight('bold');
+  if (columnas.Pedido_Al_Costo === undefined) {
+    const columnaActualizado = columnas.Actualizado === undefined ? h.getLastColumn() + 1 : columnas.Actualizado + 1;
+    h.insertColumnBefore(columnaActualizado);
+    h.getRange(1, columnaActualizado).setValue('Pedido_Al_Costo').setFontWeight('bold');
+  }
 }
 
 function asegurarEncabezadosItems(h) {
@@ -481,5 +493,6 @@ function forzarTextoPorEncabezado(h, fila, columnas, nombres) {
 }
 
 function esVacio(valor) { return valor === null || valor === undefined || valor === ''; }
+function booleano(valor) { return valor === true || String(valor || '').trim().toUpperCase() === 'TRUE'; }
 function numero(valor) { return Number(valor) || 0; }
 function numeroONull(valor) { return esVacio(valor) ? null : numero(valor); }
