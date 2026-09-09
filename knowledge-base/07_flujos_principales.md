@@ -22,6 +22,14 @@
 5. Al importar el pedido, el panel revalida el código. El equipo comprueba manualmente que corresponda a primera compra; si no corresponde, lo retira y se recalculan descuento, envío y total.
 6. Al guardar el pedido quedan registrados el código, su porcentaje y el descuento aplicado, independientes de cambios posteriores en la campaña.
 
+## Flujo B2C: pedido al costo de uso interno
+
+1. El equipo crea o edita un pedido B2C en el panel y activa la marca de pedido al costo.
+2. El panel cotiza las líneas con sus costos unitarios, fija envío y extras en $0 e ignora promociones, códigos promocionales y descuentos por cantidad.
+3. Al guardar, el pedido conserva la marca `Pedido_Al_Costo` y sus valores históricos.
+4. El pedido permanece en la lista operativa y se selecciona normalmente al armar el pedido a la distribuidora.
+5. El pedido no aporta a métricas ni a estadísticas comerciales o de clientes.
+
 ## Flujo B2C: captación inicial fuera del círculo cercano
 
 1. El equipo realiza visitas puerta a puerta en una zona piloto de cobertura, actualmente 21 de Julio, y entrega una tarjeta promocional.

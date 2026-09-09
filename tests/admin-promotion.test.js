@@ -124,3 +124,54 @@ test('keeps B2B without shipping and excludes editor-only shipping mode from the
   assert.equal('envioModo' in guardado, false);
   assert.equal(restablecido.envio, 1500);
 });
+
+test('prices an internal B2C order at frozen cost and ignores every commercial adjustment', () => {
+  const line = {
+    id: 'interno', nombre: 'Producto interno', cant: 3,
+    lista: 6000, promo: 5000, cantMin: 2, porCant: 5500, promoCant: 4500,
+    pct: '10%', costo: 3200
+  };
+  const result = admin.calcularPedido({
+    canal: 'b2c', pedidoAlCosto: true, envioModo: 'fijado', envio: 1500,
+    codigoPromo: 'CODIGO10', porcentajeCodigo: 10, extras: 900, items: [line]
+  });
+  const saved = admin.paraGuardar({
+    canal: 'b2c', pedidoAlCosto: true, envioModo: 'automatico', envio: null,
+    codigoPromo: 'CODIGO10', porcentajeCodigo: 10, extras: 900, items: [line]
+  });
+
+  assert.equal(result.subtotal, 9600);
+  assert.equal(result.descuento, 0);
+  assert.equal(result.descuentoCodigo, 0);
+  assert.equal(result.envio, 0);
+  assert.equal(result.extras, 0);
+  assert.equal(result.total, 9600);
+  assert.equal(result.costo, 9600);
+  assert.equal(result.ganancia, 0);
+  assert.equal(saved.codigoPromo, '');
+  assert.equal(saved.porcentajeCodigo, 0);
+  assert.equal(saved.extras, 0);
+  assert.equal(saved.items[0].unit, 3200);
+  assert.equal(saved.items[0].ganancia, 0);
+});
+
+test('excludes internal orders from every commercial aggregate while keeping them operational', () => {
+  const commercial = {
+    canal: 'b2c', estado: 'Nuevo', clienteId: 7, extras: 0,
+    items: [lineaEnvio(20000, 5000)]
+  };
+  const internal = {
+    canal: 'b2c', pedidoAlCosto: true, estado: 'Para entregar', clienteId: 7,
+    extras: 0, items: [lineaEnvio(9000, 4000)]
+  };
+  const metrics = admin.calcularMetricas([commercial, internal]);
+  const clientes = admin.calcularEstadisticasClientes([commercial, internal]);
+
+  assert.deepEqual(metrics, {
+    facturado: 21500, ganancia: 16500, pedidosActivos: 1,
+    entregados: 0, cancelados: 0, ticket: 21500
+  });
+  assert.deepEqual(clientes[7], { n: 1, total: 21500 });
+  assert.equal(admin.esPedidoAlCosto(internal), true);
+  assert.equal(admin.esPedidoAlCosto({ canal: 'b2b', pedidoAlCosto: true }), false);
+});
