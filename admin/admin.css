@@ -562,18 +562,17 @@ input[type="date"], input[type="number"] {
 }
 
 .pedido-al-costo-control {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--s3);
-  padding: var(--s3);
-  border: 1px solid var(--ambar-bg);
-  border-radius: var(--r2);
-  background: #fdf9ef;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  margin-left: auto;
+  color: var(--t2);
   cursor: pointer;
+  font-size: .76rem;
+  font-weight: 500;
+  letter-spacing: normal;
 }
-.pedido-al-costo-control input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--ambar); }
-.pedido-al-costo-control b, .pedido-al-costo-control small { display: block; }
-.pedido-al-costo-control small { margin-top: 2px; color: var(--t2); font-size: .76rem; }
+.pedido-al-costo-control input { width: 14px; height: 14px; margin: 0; accent-color: var(--ambar); }
 .item-total-con-codigo {
   display: inline-flex;
   flex-direction: column;

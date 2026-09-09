@@ -147,7 +147,13 @@
       <div class="ed-col">
 
         <div class="panel">
-          <h2 class="panel-tit">Datos del pedido</h2>
+          <h2 class="panel-tit">
+            Datos del pedido
+            <label class="pedido-al-costo-control" id="fPedidoAlCostoBox" for="fPedidoAlCosto">
+              <input type="checkbox" id="fPedidoAlCosto" onchange="cambiarPedidoAlCosto(this.checked)">
+              <span>Pedido al costo</span>
+            </label>
+          </h2>
           <div class="campos campos--pedido">
             <div class="campo">
               <label for="fPedido">Fecha del pedido</label>
@@ -175,16 +181,6 @@
                 <option>Otro</option>
               </select>
             </div>
-            <div class="campo campo--full" id="fPedidoAlCostoBox">
-              <label class="pedido-al-costo-control" for="fPedidoAlCosto">
-                <input type="checkbox" id="fPedidoAlCosto" onchange="cambiarPedidoAlCosto(this.checked)">
-                <span>
-                  <b>Pedido al costo</b>
-                  <small>Uso interno: no cuenta en métricas ni estadísticas.</small>
-                </span>
-              </label>
-            </div>
-
             <!-- Desde acá arranca el bloque del cliente: elegís uno y el resto
                  se autocompleta solo. Va en su propia fila (campo--fila-nueva)
                  para que se lea de un vistazo qué se carga a mano y qué no. -->
