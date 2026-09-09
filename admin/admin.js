@@ -243,9 +243,20 @@ function calcularLinea(l) {
 
 // El precio efectivo de cada línea ya incorpora promoción y descuento por
 // cantidad. Esa es la única base válida para la política B2C de envío.
+function modoEnvioPedido(p) {
+  if (['automatico', 'fijado', 'historico'].includes(p.envioModo)) return p.envioModo;
+  // Los pedidos recibidos del servidor no transportan estado de interfaz.
+  // Si ya tienen Id, su importe es histórico; un borrador sin Id conserva la
+  // regla automática aunque haya quedado guardado en este navegador antes de
+  // incorporar envioModo.
+  return p.id == null ? 'automatico' : 'historico';
+}
+
 function calcularEnvioPedido(p, productosNetos) {
   if (p.canal !== 'b2c') return null;
-  if (p.envioManual) return MenosVueltasAdminShipping.serializeShipping(p.envio);
+  const modo = modoEnvioPedido(p);
+  if (modo === 'fijado') return MenosVueltasAdminShipping.serializeShipping(p.envio);
+  if (modo === 'historico') return MenosVueltasAdminShipping.serializeShipping(p.envio) ?? 0;
 
   const resumen = MenosVueltasShipping.calculateShipping({
     channel: 'B2C',
@@ -517,7 +528,7 @@ const API = {
 // solo lugar (acá), no duplicado en el script.
 function paraGuardar(p) {
   const t = calcularPedido(p);
-  const { envioManual, ...pedido } = p;
+  const { envioModo, ...pedido } = p;
   return {
     ...pedido,
     codigoPromo: t.codigoPromo,
@@ -593,7 +604,10 @@ document.addEventListener('DOMContentLoaded', iniciar);
 // Los cálculos se exportan sólo en Node para sus pruebas; en el navegador
 // este bloque no modifica la API ni el arranque del panel.
 if (typeof module === 'object' && module.exports) {
-  module.exports = { lineaDesdeCatalogo, calcularLinea, tienePromoTemporalLinea, calcularPedido };
+  module.exports = {
+    lineaDesdeCatalogo, calcularLinea, tienePromoTemporalLinea,
+    calcularPedido, modoEnvioPedido, paraGuardar
+  };
 }
 
 
@@ -1031,7 +1045,7 @@ function nuevoPedido() {
     clienteId: null, cliente: '', telefono: '', direccion: '', barrio: '', mapa: '',
     estado: 'Nuevo',
     medioPago: 'Efectivo',
-    envio: null, envioManual: false,
+    envio: null, envioModo: 'automatico',
     codigoPromo: '', porcentajeCodigo: 0, descuentoCodigo: 0,
     extras: 0, descExtras: '', notas: '',
     items: []
@@ -1047,7 +1061,7 @@ function abrirPedido(id) {
   edicion = JSON.parse(JSON.stringify(p));
   // Los pedidos guardados conservan el importe (o vacío histórico) con el
   // que fueron registrados; abrirlos nunca vuelve a aplicar una regla nueva.
-  edicion.envioManual = true;
+  edicion.envioModo = 'historico';
   abrirEditor(false);
 }
 
@@ -1244,14 +1258,14 @@ function pintarItems() {
 
 function editarEnvioManual() {
   if (!edicion || edicion.canal !== 'b2c') return;
-  edicion.envioManual = true;
+  edicion.envioModo = 'fijado';
   edicion.envio = MenosVueltasAdminShipping.serializeShipping(document.getElementById('fEnvio').value);
   recalcular();
 }
 
 function restablecerEnvioRegla() {
   if (!edicion || edicion.canal !== 'b2c') return;
-  edicion.envioManual = false;
+  edicion.envioModo = 'automatico';
   recalcular();
 }
 
@@ -1324,7 +1338,8 @@ function actualizarCampoEnvio(envio) {
   const esB2C = edicion.canal === 'b2c';
 
   input.disabled = !esB2C;
-  boton.hidden = !esB2C || !edicion.envioManual;
+  const modo = modoEnvioPedido(edicion);
+  boton.hidden = !esB2C || modo !== 'fijado';
   if (!esB2C) {
     input.value = '';
     input.placeholder = 'No aplica a B2B';
@@ -1334,7 +1349,11 @@ function actualizarCampoEnvio(envio) {
 
   input.placeholder = 'A confirmar';
   input.value = envio == null ? '' : envio;
-  if (edicion.envioManual) {
+  if (modo === 'historico') {
+    aviso.textContent = edicion.envio == null
+      ? 'Pedido histórico sin envío registrado; se contabiliza como $0.'
+      : 'Importe histórico guardado para este pedido.';
+  } else if (modo === 'fijado') {
     aviso.textContent = envio == null
       ? 'Envío a confirmar. Este valor queda fijado para este pedido.'
       : 'Valor manual fijado para este pedido.';
@@ -1349,7 +1368,7 @@ function recalcular(totales) {
   if (!edicion) return;
   edicion.extras = Number(document.getElementById('fExtras').value) || 0;
   const t = totales || calcularPedido(edicion);
-  if (!edicion.envioManual && edicion.canal === 'b2c') edicion.envio = t.envio;
+  if (modoEnvioPedido(edicion) === 'automatico' && edicion.canal === 'b2c') edicion.envio = t.envio;
   actualizarCampoEnvio(t.envio);
 
   document.getElementById('rSub').textContent = money(t.subtotal);
@@ -1392,10 +1411,13 @@ async function guardarPedido() {
   btn.textContent = 'Guardando…';
 
   try {
-    const guardado = await API.guardar(paraGuardar(edicion));
+    const pedidoParaGuardar = paraGuardar(edicion);
+    const guardado = await API.guardar(pedidoParaGuardar);
     // El servidor devuelve el pedido con su Id definitivo.
     const id = guardado?.id || edicion.id;
     edicion.id = id;
+    edicion.envio = pedidoParaGuardar.envio;
+    edicion.envioModo = 'historico';
 
     const i = PEDIDOS.findIndex(p => p.id === id);
     if (i >= 0) PEDIDOS[i] = edicion; else PEDIDOS.push(edicion);
@@ -1984,7 +2006,7 @@ async function confirmarImportarWA() {
   // este pedido en vez de reemplazarlo al cambiar productos o precios.
   if (edicion.canal === 'b2c' && waParse.tieneEnvioMsg) {
     edicion.envio = waParse.envioMsg;
-    edicion.envioManual = true;
+    edicion.envioModo = 'fijado';
   }
 
   let avisoCodigo = '';

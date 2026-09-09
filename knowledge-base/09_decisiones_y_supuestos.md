@@ -15,7 +15,7 @@
 - La primera campaña de adquisición fuera del círculo cercano se prueba mediante visitas puerta a puerta en 21 de Julio. Busca captar contactos B2C interesados por WhatsApp; el seguimiento es manual y los contactos inactivos durante tres o cuatro semanas pueden retirarse de la lista o recibir comunicaciones con menor frecuencia.
 - El beneficio de bienvenida de la campaña en 21 de Julio es 10% de descuento y no incluye envío gratis.
 - La política de envío B2C vigente es $1.500 fijo dentro de la cobertura actual y gratis desde $35.000 netos de productos, después de promociones y descuentos por cantidad. B2B no adopta esta política.
-- `Envio` es un campo monetario histórico propio del pedido: `1500` cobrado, `0` bonificado y vacío si el pedido histórico no lo registraba. El total incluye envío y extras; la ganancia visible es antes del costo logístico.
+- `Envio` es un campo monetario histórico propio del pedido: `1500` cobrado, `0` bonificado y vacío si el pedido histórico no lo registraba. Al calcular el panel, ese vacío equivale a `$0` sin backfill; el total incluye envío y extras, y la ganancia visible es antes del costo logístico.
 - El Apps Script debe leer y escribir `Envio` por encabezado y no se hará backfill de pedidos anteriores.
 - Los códigos promocionales se configuran directamente en la pestaña `Codigos_Promo` de Google Sheets y aplican exclusivamente a B2C.
 - Sólo se admiten códigos porcentuales, uno por pedido; no hay descuentos fijos ni descuentos sobre el envío.

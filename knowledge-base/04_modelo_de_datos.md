@@ -62,7 +62,8 @@ vacío preserva que un pedido histórico no registraba esta información. `Extra
 y `Desc_Extras` son conceptos independientes y no deben reutilizarse para
 envío. El total del pedido es productos netos + `Envio` + `Extras`. La
 ganancia que muestra el panel incluye el ingreso de envío y se interpreta como
-ganancia antes del costo logístico.
+ganancia antes del costo logístico. Al calcular pedidos históricos, el panel
+interpreta `Envio` vacío como `$0`, sin completar ni modificar la hoja.
 
 `Codigo_Promo`, `Porcentaje_Codigo` y `Descuento_Codigo` preservan la campaña
 y el ahorro aplicados al guardar cada pedido. `Descuento` mantiene el descuento

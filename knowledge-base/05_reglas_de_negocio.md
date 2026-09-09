@@ -47,7 +47,7 @@
 10. Para B2C, dentro de la cobertura vigente, el envío cuesta $1.500 por pedido sin importar la zona. Es gratis cuando el neto de productos, luego de promociones y descuentos por cantidad, es igual o superior a $35.000. El cálculo no incluye envío ni extras.
 11. La cobertura se confirma por WhatsApp; esta regla no extiende las zonas atendidas. El viaje a la distribuidora tiene costo operativo aunque la entrega local sea cercana.
 12. B2B no tiene aún política de envío, por lo que no debe heredar ni mostrar la regla B2C.
-13. En un pedido B2C, el total es productos netos + envío + extras. El envío se conserva como dato histórico independiente y la ganancia expuesta por el panel es previa al costo logístico.
+13. En un pedido B2C, el total es productos netos + envío + extras. El envío se conserva como dato histórico independiente y la ganancia expuesta por el panel es previa al costo logístico. Si un pedido histórico tiene `Envio` vacío, el panel lo calcula como `$0` sin modificar la Sheet ni aplicarle la regla B2C vigente.
 14. Si una falta o sustitución se detecta con tiempo antes del retiro, se consulta al cliente por WhatsApp. Si se detecta al retirar el pedido y no hay tiempo de consultar, el equipo puede elegir una alternativa razonablemente equivalente; al entregar debe explicar el cambio y el cliente puede rechazarla, en cuyo caso se elimina ese producto del pedido.
 15. Si no existe una alternativa clara, se elimina el producto faltante y se informa la situación al cliente. Las pequeñas diferencias de precio pueden absorberse para evitar perjuicio al cliente; no es una regla automática para todos los casos.
 
