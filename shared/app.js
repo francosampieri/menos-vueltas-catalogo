@@ -2302,7 +2302,6 @@ function porcentajeDescuentoLinea(item, idx, resumen) {
 
 function abrirCarrito(disparador = document.activeElement) {
   if (document.getElementById('carritoOverlay').classList.contains('open')) return;
-  cerrarBusquedaMovil();
   actualizarHistorialUiActual();
   document.getElementById('carritoOverlay').classList.add('open');
   bloquearScrollFondo(true);
@@ -2860,7 +2859,6 @@ function inicializarHistorialUi() {
 
 // ══ NAVEGACIÓN ══
 function mostrarLanding(opciones = {}) {
-  cerrarBusquedaMovil();
   const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
   if (estabaEnCatalogo && !opciones.desdeHistorial) actualizarHistorialUiActual();
   document.getElementById('vista-landing').classList.remove('oculta');
@@ -2910,22 +2908,8 @@ function mostrarCatalogoCompleto() {
 
 // Acciones de la barra inferior móvil: reutilizan la navegación existente
 // para conservar filtros, foco e historial interno de SPEC A.
-function cerrarBusquedaMovil({ devolverFoco = false } = {}) {
-  document.body.classList.remove('busqueda-movil-activa');
-  if (devolverFoco) document.getElementById('mobileSearchButton')?.focus({ preventScroll: true });
-}
-
 function abrirCatalogoDesdeBarra() {
-  cerrarBusquedaMovil();
   mostrarCatalogo('Todos');
-}
-
-function abrirBusquedaDesdeBarra() {
-  document.body.classList.add('busqueda-movil-activa');
-  mostrarCatalogo();
-  requestAnimationFrame(() => {
-    document.getElementById('buscador')?.focus({ preventScroll: true });
-  });
 }
 
 function mostrarCatalogoEspecial(tipo, gid) {
@@ -3073,14 +3057,6 @@ document.getElementById('buscador').addEventListener('input', function() {
     document.getElementById('catalogo-titulo-label').textContent = `Resultados para "${busquedaActiva}"`;
   }
   renderGrupos();
-});
-
-document.getElementById('buscador').addEventListener('keydown', event => {
-  if (event.key === 'Escape') cerrarBusquedaMovil({ devolverFoco: true });
-});
-
-document.getElementById('buscador').addEventListener('blur', () => {
-  if (window.matchMedia('(max-width: 600px)').matches) cerrarBusquedaMovil();
 });
 
 // En pantallas chicas el placeholder completo no se alcanza a leer,

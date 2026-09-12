@@ -6000,8 +6000,8 @@ body.modal-abierto .cartel-novedades {
 
 /* ══════════════════════════════════════════════════════
    BARRA INFERIOR + CABECERA MÓVIL
-   La reserva izquierda de la cabecera queda vacía para la futura sección
-   de Novedades. Catálogo, búsqueda y pedido viven en la barra inferior.
+   El buscador conserva su lugar en la cabecera; Inicio, Catálogo y pedido
+   viven en la barra inferior.
 ══════════════════════════════════════════════════════ */
 .mobile-bottom-nav { display: none; }
 .facebook-trigger-b2b { display: none; }
@@ -6009,58 +6009,7 @@ body.modal-abierto .cartel-novedades {
 @media (max-width: 600px) {
   :root { --mobile-bottom-nav-height: 76px; }
 
-  .topbar { height: 60px; }
-  .topbar-inner {
-    position: relative;
-    display: block;
-    padding: 0 var(--space-3);
-  }
-  .topbar-middle,
   .cart-trigger { display: none; }
-  .busqueda-movil-activa .topbar-middle {
-    position: fixed;
-    top: 60px;
-    right: 0;
-    left: 0;
-    z-index: 110;
-    display: block;
-    padding: 9px var(--space-3) 10px;
-    background: rgba(251, 250, 245, .98);
-    border-bottom: 1px solid var(--line-soft);
-    box-shadow: 0 8px 16px rgba(47, 52, 48, .07);
-  }
-  .busqueda-movil-activa .search-wrap { display: block; max-width: none; }
-  .busqueda-movil-activa .search-wrap input {
-    width: 100%;
-    height: 44px;
-    padding-left: 34px;
-    background: var(--surface);
-    font-size: 16px;
-  }
-  .brand {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-  }
-  .brand-logo { height: 30px; }
-  .topbar-actions {
-    position: absolute;
-    top: 50%;
-    right: var(--space-3);
-    transform: translateY(-50%);
-    margin: 0;
-    gap: 4px;
-    z-index: 2;
-  }
-  .topbar-actions .whatsapp-trigger,
-  .topbar-actions .facebook-trigger {
-    position: relative;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-  }
   .topbar-actions .facebook-trigger-b2b { display: flex; }
   .topbar-actions .whatsapp-trigger::after,
   .topbar-actions .facebook-trigger::after {
@@ -6171,10 +6120,6 @@ body.modal-abierto .cartel-novedades {
 }
 
 @media (max-width: 380px) {
-  .brand-logo { height: 27px; }
-  .topbar-actions { right: var(--space-2); }
-  .topbar-actions .whatsapp-trigger,
-  .topbar-actions .facebook-trigger { width: 36px; height: 36px; }
   .mobile-bottom-nav { padding-right: 7px; padding-left: 7px; }
   .mobile-bottom-nav-action { font-size: .72rem; }
 }
