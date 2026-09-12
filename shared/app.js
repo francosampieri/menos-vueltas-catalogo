@@ -14,6 +14,56 @@ let codigoPromocional = null; // { code, percent }, validado contra Sheets para 
 let resumenCarritoAbierto = false;
 const rotaciones    = {};  // id_grupo → { timer, indexActual }
 
+// El carrito dura solo lo que la pestaña. Guardamos referencias, nunca datos
+// comerciales, para reconstruirlo siempre contra el catálogo recién cargado.
+const CARRITO_SESION_VERSION = 1;
+const claveCarritoSesion = `mv_carrito_v${CARRITO_SESION_VERSION}_${CANAL.toLowerCase()}`;
+
+function leerCarritoSesion() {
+  try {
+    const datos = JSON.parse(sessionStorage.getItem(claveCarritoSesion));
+    if (!datos || datos.version !== CARRITO_SESION_VERSION || datos.channel !== CANAL || !Array.isArray(datos.items)) {
+      if (datos) sessionStorage.removeItem(claveCarritoSesion);
+      return null;
+    }
+    const items = datos.items
+      .map(item => ({ productId: String(item?.productId || ''), quantity: Number(item?.quantity) }))
+      .filter(item => item.productId && Number.isInteger(item.quantity) && item.quantity > 0);
+    if (!items.length) {
+      sessionStorage.removeItem(claveCarritoSesion);
+      return null;
+    }
+    return {
+      items,
+      promoCode: CANAL === 'B2C' && typeof datos.promoCode === 'string' ? codigoNormalizado(datos.promoCode) : null
+    };
+  } catch (e) {
+    return null;
+  }
+}
+
+function guardarCarritoSesion() {
+  try {
+    if (!carrito.length) {
+      sessionStorage.removeItem(claveCarritoSesion);
+      return;
+    }
+    const datos = {
+      version: CARRITO_SESION_VERSION,
+      channel: CANAL,
+      items: carrito.map(item => ({ productId: String(item.idProd), quantity: item.qty }))
+    };
+    if (CANAL === 'B2C' && codigoPromocional?.code) datos.promoCode = codigoNormalizado(codigoPromocional.code);
+    sessionStorage.setItem(claveCarritoSesion, JSON.stringify(datos));
+  } catch (e) {
+    // sessionStorage es una mejora opcional: el carrito en memoria sigue vivo.
+  }
+}
+
+function limpiarCarritoSesion() {
+  try { sessionStorage.removeItem(claveCarritoSesion); } catch (e) {}
+}
+
 
 
 // Productos nuevos (a nivel VARIANTE individual, no grupo): muestran la
@@ -290,9 +340,9 @@ function renderCatalogo() {
   renderGrupos();
   renderNuevosIngresos();
 
-  // Si la página se abrió desde el QR de otra pantalla, el pedido viaja en
-  // el hash. Se restaura recién acá porque necesita el catálogo cargado.
-  restaurarPedidoDesdeHash();
+  // El QR tiene prioridad sobre cualquier estado temporal de esta pestaña.
+  // Ambos flujos esperan al catálogo actual y no restauran navegación ni capas.
+  if (!restaurarPedidoDesdeHash()) restaurarCarritoDesdeSesion();
 }
 
 // Sección "Nuevos ingresos" de la landing. Solo muestra una selección breve:
@@ -1876,7 +1926,7 @@ function resumenPedidoActual() {
   };
 }
 
-function agregarAlCarrito(gid, variante, qty) {
+function agregarAlCarrito(gid, variante, qty, opciones = {}) {
   const g      = grupos[gid] || {};
   const nombre = g.nombre    || variante['Producto'] || '';
   const marca  = g.marca     || variante['Marca']    || '';
@@ -1917,6 +1967,8 @@ function agregarAlCarrito(gid, variante, qty) {
   }
 
   actualizarUICarrito();
+  if (opciones.persistir !== false) guardarCarritoSesion();
+  if (opciones.manual !== false) registrarPrimerAgregadoManual();
 
   // Mostrar ícono de carrito tanto en la card del catálogo como en el modal
   // si está abierto para este mismo producto.
@@ -1929,6 +1981,7 @@ function agregarAlCarrito(gid, variante, qty) {
 function cambiarQtyCarrito(idx, delta) {
   carrito[idx].qty = Math.max(1, carrito[idx].qty + delta);
   actualizarUICarrito();
+  guardarCarritoSesion();
 }
 
 function cambiarQtyCarritoInput(idx, valStr, isFinal) {
@@ -1936,6 +1989,7 @@ function cambiarQtyCarritoInput(idx, valStr, isFinal) {
   if (!isNaN(n) && n >= 1) {
     carrito[idx].qty = n;
     actualizarUICarrito(false);
+    guardarCarritoSesion();
 
       const item = carrito[idx];
       const cont = document.getElementById('carritoItems');
@@ -1964,6 +2018,7 @@ function cambiarQtyCarritoInput(idx, valStr, isFinal) {
       carrito[idx].qty = 1;
     }
     actualizarUICarrito(true);
+    guardarCarritoSesion();
   }
 }
 
@@ -1977,6 +2032,38 @@ function eliminarDelCarrito(idx) {
     if (badgeModal) badgeModal.classList.remove('visible');
   }
   actualizarUICarrito();
+  guardarCarritoSesion();
+}
+
+function referenciasCatalogoPorId() {
+  const porId = {};
+  Object.entries(catalogo).forEach(([gid, vars]) => {
+    vars.forEach(v => { if (v['Id']) porId[String(v['Id'])] = { gid, v }; });
+  });
+  return porId;
+}
+
+function reconstruirCarritoDesdeReferencias(items) {
+  carrito = [];
+  const porId = referenciasCatalogoPorId();
+  items.forEach(({ productId, quantity }) => {
+    const ref = porId[String(productId)];
+    if (ref) agregarAlCarrito(ref.gid, ref.v, quantity, { manual: false, persistir: false });
+  });
+  actualizarUICarrito();
+  return carrito.length > 0;
+}
+
+function restaurarCarritoDesdeSesion() {
+  const datos = leerCarritoSesion();
+  if (!datos) return false;
+  if (!reconstruirCarritoDesdeReferencias(datos.items)) {
+    limpiarCarritoSesion();
+    return false;
+  }
+  guardarCarritoSesion();
+  if (datos.promoCode) aplicarCodigoPromocional(datos.promoCode);
+  return true;
 }
 
 function actualizarUICarrito(rerenderItems = true) {
@@ -2279,9 +2366,11 @@ async function aplicarCodigoPromocional(valor) {
       throw new Error('Código inválido');
     }
     actualizarUICarrito();
+    guardarCarritoSesion();
   } catch (error) {
     codigoPromocional = null;
     actualizarUICarrito();
+    guardarCarritoSesion();
     actualizarEstadoCodigoPromocional('No pudimos validar el código. Revisalo o intentá nuevamente.', 'error');
   } finally {
     if (aplicar) aplicar.disabled = false;
@@ -2293,6 +2382,7 @@ function quitarCodigoPromocional() {
   const input = document.getElementById('codigoPromoInput');
   if (input) input.value = '';
   actualizarUICarrito();
+  guardarCarritoSesion();
   actualizarEstadoCodigoPromocional('Código quitado.');
 }
 
@@ -2390,7 +2480,7 @@ function codificarPedido() {
     .map(i => `${i.idProd}X${i.qty}`)
     .join('.')
     .toUpperCase();
-  const code = codigoPromocional ? encodeURIComponent(codigoPromocional.code) : '';
+  const code = CANAL === 'B2C' && codigoPromocional ? encodeURIComponent(codigoPromocional.code) : '';
   return code ? `${items}:C${code}` : items;
 }
 
@@ -2415,32 +2505,34 @@ function restaurarPedidoDesdeHash() {
   const [itemsCodificados, codigoCodificado] = contenido.split(':C', 2);
   const partes = itemsCodificados.split('.').filter(Boolean);
   if (!partes.length) return false;
-
-  const porId = {};
-  Object.entries(catalogo).forEach(([gid, vars]) => {
-    vars.forEach(v => { if (v['Id']) porId[String(v['Id'])] = { gid, v }; });
-  });
-
-  let agregados = 0;
+  const items = [];
   partes.forEach(par => {
     const [id, qty] = par.toUpperCase().split('X');
-    const ref = porId[id];
     const n = parseInt(qty, 10);
-    if (!ref || isNaN(n) || n < 1) return;
-    agregarAlCarrito(ref.gid, ref.v, n);
-    agregados++;
+    if (id && !isNaN(n) && n > 0) items.push({ productId: id, quantity: n });
   });
 
   // Sacar el hash sin recargar ni dejar entrada en el historial.
   history.replaceState(history.state, '', location.pathname + location.search);
 
-  if (!agregados) return false;
+  // El QR reemplaza por completo el estado previo de este canal.
+  codigoPromocional = null;
+  limpiarCarritoSesion();
+  const agregados = reconstruirCarritoDesdeReferencias(items);
+  if (!agregados) {
+    limpiarCarritoSesion();
+    return false;
+  }
+  guardarCarritoSesion();
 
-  if (codigoCodificado) {
-    const codigo = decodeURIComponent(codigoCodificado);
-    const input = document.getElementById('codigoPromoInput');
-    if (input) input.value = codigo;
-    aplicarCodigoPromocional(codigo);
+  if (CANAL === 'B2C' && codigoCodificado) {
+    let codigo = '';
+    try { codigo = decodeURIComponent(codigoCodificado); } catch (e) {}
+    if (codigo) {
+      const input = document.getElementById('codigoPromoInput');
+      if (input) input.value = codigo;
+      aplicarCodigoPromocional(codigo);
+    }
   }
 
   mostrarCatalogo();
@@ -3164,13 +3256,67 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-/* ══════════════ CARTEL NOVEDADES ══════════════
-   Aparece 40 segundos despues de que el usuario entra al sitio, solo
-   si no lo cerro antes y no se anoto ya. Guarda el numero en Sheets.
-══════════════════════════════════════════════════════ */
+/* ══════════════ CARTEL NOVEDADES ══════════════ */
 const NOVEDADES_INSCRIPTO_KEY = 'mv_contacto_novedades';
-const NOVEDADES_ESPERA_MS = 35 * 1000; // 35 segundos antes de mostrar el cartel
+const NOVEDADES_SESION_KEY = 'mv_novedades_intencion_v1_b2c';
+const NOVEDADES_ESPERA_MS = 30 * 1000;
 let cartelTimer = null;
+let estadoNovedadesEnMemoria = null;
+
+function leerEstadoNovedades() {
+  if (estadoNovedadesEnMemoria) return estadoNovedadesEnMemoria;
+  try {
+    const estado = JSON.parse(sessionStorage.getItem(NOVEDADES_SESION_KEY));
+    if (estado && ['shown', 'closed'].includes(estado.state)) {
+      estadoNovedadesEnMemoria = estado;
+      return estado;
+    }
+    if (estado?.state === 'scheduled' && Number.isFinite(estado.firstAddedAt)) {
+      estadoNovedadesEnMemoria = estado;
+      return estado;
+    }
+  } catch (e) {}
+  return null;
+}
+
+function guardarEstadoNovedades(estado) {
+  estadoNovedadesEnMemoria = estado;
+  try { sessionStorage.setItem(NOVEDADES_SESION_KEY, JSON.stringify(estado)); } catch (e) {}
+}
+
+function esperarCierreProductoParaNovedades() {
+  const observer = new MutationObserver(() => {
+    if (!document.getElementById('productoModal')) {
+      observer.disconnect();
+      intentarMostrarCartelNovedades();
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+function intentarMostrarCartelNovedades() {
+  const estado = leerEstadoNovedades();
+  if (!estado || estado.state !== 'scheduled') return;
+  if (document.getElementById('productoModal')) {
+    esperarCierreProductoParaNovedades();
+    return;
+  }
+  mostrarCartelNovedades();
+}
+
+function programarCartelNovedades() {
+  const estado = leerEstadoNovedades();
+  if (!estado || estado.state !== 'scheduled') return;
+  clearTimeout(cartelTimer);
+  const restante = Math.max(0, estado.firstAddedAt + NOVEDADES_ESPERA_MS - Date.now());
+  cartelTimer = setTimeout(intentarMostrarCartelNovedades, restante);
+}
+
+function registrarPrimerAgregadoManual() {
+  if (!document.getElementById('cartelNovedades') || leerEstadoNovedades()) return;
+  guardarEstadoNovedades({ state: 'scheduled', firstAddedAt: Date.now() });
+  programarCartelNovedades();
+}
 
 function initCartelNovedades() {
   if (!document.getElementById('cartelNovedades')) return;
@@ -3178,36 +3324,17 @@ function initCartelNovedades() {
   let yaInscripto = false;
   try { yaInscripto = localStorage.getItem(NOVEDADES_INSCRIPTO_KEY) === '1'; } catch(e) {}
   if (yaInscripto) return;
-
-  cartelTimer = setTimeout(() => {
-    // No mostrar el cartel si hay un modal de producto abierto o si esta en la landing
-    if (document.body.classList.contains('modal-abierto')) {
-      // Esperamos a que se cierre el modal para mostrarlo luego
-      const observer = new MutationObserver(() => {
-        if (!document.body.classList.contains('modal-abierto')) {
-          setTimeout(mostrarCartelNovedades, 1000);
-          observer.disconnect();
-        }
-      });
-      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-      return;
-    }
-    mostrarCartelNovedades();
-  }, NOVEDADES_ESPERA_MS);
-
-  // Si el usuario scrollea hasta el final de la pagina, mostrarlo antes
-  window.addEventListener('scroll', () => {
-    if (cartelTimer) return; // ya se mostro o ya esta programado
-    if (window.scrollY > document.body.scrollHeight - window.innerHeight - 300 && !document.body.classList.contains('modal-abierto')) {
-      clearTimeout(cartelTimer);
-      mostrarCartelNovedades();
-    }
-  }, { once: true });
+  programarCartelNovedades();
 }
 
 function mostrarCartelNovedades() {
   const cartel = document.getElementById('cartelNovedades');
   if (!cartel) return;
+  const estado = leerEstadoNovedades();
+  if (!estado || estado.state !== 'scheduled') return;
+  guardarEstadoNovedades({ ...estado, state: 'shown' });
+  clearTimeout(cartelTimer);
+  cartelTimer = null;
   cartel.hidden = false;
   // Ocultamos el onboarding toast para que no se superponga
   const onb = document.querySelector('.onb-toast');
@@ -3242,8 +3369,10 @@ function cerrarCartelNovedades() {
   // Volvemos a mostrar el onboarding si lo habiamos ocultado
   const onb = document.querySelector('.onb-toast');
   if (onb && sessionStorage.getItem('onbCerrado') !== '1') onb.hidden = false;
-  // Si dice que no, solo no le mostramos en ESTA sesion, cuando recargue puede volver a aparecer
+  const estado = leerEstadoNovedades();
+  if (estado) guardarEstadoNovedades({ ...estado, state: 'closed' });
   if (cartelTimer) clearTimeout(cartelTimer);
+  cartelTimer = null;
 }
 
 function abrirFormularioNovedades() {
