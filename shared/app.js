@@ -2592,6 +2592,7 @@ function dibujarQrPedido(cont) {
 // modifica datos comerciales; al recargar se vuelve siempre al hero.
 const MARCA_HISTORIAL_UI = 'menosVueltasUi';
 let restaurandoHistorialUi = false;
+let suspendiendoActualizacionHistorialUi = false;
 let estadoHistorialUiActual = null;
 let temporizadorHistorialScroll = null;
 
@@ -2632,7 +2633,7 @@ function esEstadoUi(state) {
 }
 
 function reemplazarEstadoHistorialUi() {
-  if (restaurandoHistorialUi || !esEstadoUi(history.state)) return;
+  if (restaurandoHistorialUi || suspendiendoActualizacionHistorialUi || !esEstadoUi(history.state)) return;
   const foco = history.state.foco || null;
   estadoHistorialUiActual = estadoUiActual(capaUiActual(), foco);
   history.replaceState(estadoHistorialUiActual, '', location.href);
@@ -2766,7 +2767,12 @@ function mostrarLanding(opciones = {}) {
 
 function mostrarCatalogo(cat, sub, opciones = {}) {
   const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
-  if (!estabaEnCatalogo && !opciones.desdeHistorial) actualizarHistorialUiActual();
+  const creaEntrada = !estabaEnCatalogo && !opciones.desdeHistorial;
+  if (creaEntrada) actualizarHistorialUiActual();
+  // Al elegir una categoría, sus helpers actualizan filtros. Durante la
+  // transición landing → catálogo todavía estamos parados sobre la entrada
+  // de landing, por lo que esas actualizaciones no deben reemplazarla.
+  if (creaEntrada) suspendiendoActualizacionHistorialUi = true;
   document.getElementById('vista-landing').classList.add('oculta');
   document.getElementById('vista-catalogo').classList.add('visible');
   window.scrollTo({ top: 0 });
@@ -2787,7 +2793,8 @@ function mostrarCatalogo(cat, sub, opciones = {}) {
   construirSidebar();
 
   mostrarOnboardingToast();
-  if (!estabaEnCatalogo && !opciones.desdeHistorial) crearEntradaHistorialUi(null);
+  if (creaEntrada) suspendiendoActualizacionHistorialUi = false;
+  if (creaEntrada) crearEntradaHistorialUi(null);
   else actualizarHistorialUiActual();
 }
 
