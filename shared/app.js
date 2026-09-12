@@ -394,6 +394,7 @@ function setFiltroCategoria(cat, btn) {
   actualizarEstadoFiltros();
   renderSubfiltros();
   renderGrupos();
+  actualizarHistorialUiActual();
 }
 
 function setFiltroEspecial(tipo, btn) {
@@ -406,6 +407,7 @@ function setFiltroEspecial(tipo, btn) {
   actualizarEstadoFiltros();
   renderSubfiltros();
   renderGrupos();
+  actualizarHistorialUiActual();
 }
 
 function actualizarEstadoFiltros() {
@@ -466,6 +468,7 @@ function setFiltroSubcat(sub) {
   actualizarEstadoFiltros();
   renderSubfiltros();
   renderGrupos();
+  actualizarHistorialUiActual();
 }
 
 function getGruposFiltrados() {
@@ -974,6 +977,9 @@ function crearCard(gid, vars) {
   const card = document.createElement('div');
   card.className = 'card';
   card.id = `card-${gid}`;
+  card.tabIndex = 0;
+  card.setAttribute('role', 'button');
+  card.setAttribute('aria-label', `Ver detalle de ${nombre}`);
 
   // ── Imagen ──
   const imgWrap = document.createElement('div');
@@ -1065,7 +1071,13 @@ function crearCard(gid, vars) {
 
   // Click: abre el detalle en una ventana centrada (modal). Antes la card
   // se expandía en el lugar, lo que en mobile descolocaba todo el catálogo.
-  card.addEventListener('click', () => abrirModalProducto(gid, vars));
+  const abrirDetalle = event => abrirModalProducto(gid, vars, 0, event.currentTarget);
+  card.addEventListener('click', abrirDetalle);
+  card.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    abrirDetalle(event);
+  });
 
   return card;
 }
@@ -1251,7 +1263,7 @@ function sincronizarYReanudarRotacion(gid) {
 //  desenfocado, en vez de expandir la card dentro del catálogo (que en
 //  mobile desacomodaba el riel y dejaba al usuario perdido).
 // ══════════════════════════════════════════════════════
-function abrirModalProducto(gid, vars, indiceInicial = 0) {
+function abrirModalProducto(gid, vars, indiceInicial = 0, disparador = document.activeElement, opciones = {}) {
   cerrarModalProducto(true);
 
   const indice = Math.max(0, Math.min(indiceInicial, vars.length - 1));
@@ -1269,6 +1281,7 @@ function abrirModalProducto(gid, vars, indiceInicial = 0) {
   overlay.className = 'pm-overlay';
   overlay.id = 'productoModal';
   overlay.dataset.gid = gid;
+  overlay.dataset.varianteId = varianteInicial['Id'] || '';
 
   // Estructura en dos columnas: en desktop la foto va a la izquierda y toda
   // la información a la derecha (modal apaisado que entra sin scroll); en
@@ -1359,9 +1372,14 @@ function abrirModalProducto(gid, vars, indiceInicial = 0) {
   // Cambio de variante: flechas al costado de la foto (desktop y mobile) y
   // deslizando sobre la imagen (mobile).
   if (vars.length > 1 && api && api.irAVariante) {
-    overlay.querySelector('.pm-nav-prev').addEventListener('click', e => { e.stopPropagation(); api.irAVariante(-1); });
-    overlay.querySelector('.pm-nav-next').addEventListener('click', e => { e.stopPropagation(); api.irAVariante(1); });
-    attachSwipeModal(media, api.irAVariante);
+    const cambiarVariante = dir => {
+      api.irAVariante(dir);
+      overlay.dataset.varianteId = api.varianteActual()?.['Id'] || '';
+      actualizarHistorialUiActual();
+    };
+    overlay.querySelector('.pm-nav-prev').addEventListener('click', e => { e.stopPropagation(); cambiarVariante(-1); });
+    overlay.querySelector('.pm-nav-next').addEventListener('click', e => { e.stopPropagation(); cambiarVariante(1); });
+    attachSwipeModal(media, cambiarVariante);
   }
 
   // Cerrar: la X, tocar fuera del panel o Escape.
@@ -1370,7 +1388,11 @@ function abrirModalProducto(gid, vars, indiceInicial = 0) {
   panel.addEventListener('click', e => e.stopPropagation());
   document.addEventListener('keydown', escCerrarModal);
 
-  requestAnimationFrame(() => overlay.classList.add('visible'));
+  requestAnimationFrame(() => {
+    overlay.classList.add('visible');
+    enfocarCapaActiva('producto');
+  });
+  if (!opciones.desdeHistorial) crearEntradaHistorialUi('producto', disparador);
 }
 
 // Deslizar horizontalmente sobre la foto del modal para pasar de una
@@ -1410,12 +1432,15 @@ function attachSwipeModal(zona, irAVariante) {
 // Bloquea el scroll de la página de fondo mientras hay un modal abierto,
 // conservando la posición (en iOS no alcanza con overflow:hidden).
 let scrollGuardado = 0;
+let bloqueosDeScroll = 0;
 function bloquearScrollFondo(activar) {
   if (activar) {
+    if (bloqueosDeScroll++) return;
     scrollGuardado = window.scrollY || window.pageYOffset || 0;
     document.body.style.top = `-${scrollGuardado}px`;
     document.body.classList.add('modal-abierto');
   } else {
+    if (!bloqueosDeScroll || --bloqueosDeScroll) return;
     document.body.classList.remove('modal-abierto');
     document.body.style.top = '';
     // Restaurar la posición. Se hace en el frame siguiente porque, al sacar
@@ -1433,11 +1458,12 @@ function escCerrarModal(e) {
   if (e.key === 'Escape') cerrarModalProducto();
 }
 
-function cerrarModalProducto(inmediato = false) {
+function cerrarModalProducto(inmediato = false, desdeHistorial = false) {
   const overlay = document.getElementById('productoModal');
   if (!overlay) return;
+  if (!inmediato && !desdeHistorial && volverEnHistorialUi('producto')) return;
   document.removeEventListener('keydown', escCerrarModal);
-  bloquearScrollFondo(false);
+  if (!inmediato) bloquearScrollFondo(false);
 
   const gid = overlay.dataset.gid;
   const quitar = () => {
@@ -1755,6 +1781,9 @@ function renderDetalleProducto(gid, vars, refs, indiceInicial = 0) {
   // las flechas laterales o deslizando sobre la foto, manteniendo los chips
   // sincronizados con lo que se ve.
   return {
+    varianteActual() {
+      return getVarianteSeleccionada();
+    },
     irAVariante(dir) {
       if (vars.length < 2) return;
       const actual = getVarianteSeleccionada() || vars[0];
@@ -2178,14 +2207,20 @@ function porcentajeDescuentoLinea(item, idx, resumen) {
   return [...new Set(porcentajes.filter(Boolean))].join(' + ');
 }
 
-function abrirCarrito() {
+function abrirCarrito(disparador = document.activeElement) {
+  if (document.getElementById('carritoOverlay').classList.contains('open')) return;
+  actualizarHistorialUiActual();
   document.getElementById('carritoOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  bloquearScrollFondo(true);
+  enfocarCapaActiva('carrito');
+  crearEntradaHistorialUi('carrito', disparador);
 }
 
-function cerrarCarrito() {
+function cerrarCarrito(desdeHistorial = false) {
+  if (!document.getElementById('carritoOverlay').classList.contains('open')) return;
+  if (!desdeHistorial && volverEnHistorialUi('carrito')) return;
   document.getElementById('carritoOverlay').classList.remove('open');
-  document.body.style.overflow = '';
+  bloquearScrollFondo(false);
 }
 
 // ══ CÓDIGO PROMOCIONAL B2C ══
@@ -2397,7 +2432,7 @@ function restaurarPedidoDesdeHash() {
   });
 
   // Sacar el hash sin recargar ni dejar entrada en el historial.
-  history.replaceState(null, '', location.pathname + location.search);
+  history.replaceState(history.state, '', location.pathname + location.search);
 
   if (!agregados) return false;
 
@@ -2425,8 +2460,9 @@ function enviarWhatsApp() {
   abrirModalEnvio();
 }
 
-function abrirModalEnvio() {
+function abrirModalEnvio(disparador = document.activeElement, opciones = {}) {
   cerrarModalEnvio();
+  actualizarHistorialUiActual();
 
   const ov = document.createElement('div');
   ov.className = 'env-overlay';
@@ -2496,16 +2532,21 @@ function abrirModalEnvio() {
   ov.addEventListener('click', e => { if (e.target === ov) cerrarModalEnvio(); });
   document.addEventListener('keydown', escCerrarEnvio);
 
-  requestAnimationFrame(() => ov.classList.add('visible'));
+  requestAnimationFrame(() => {
+    ov.classList.add('visible');
+    enfocarCapaActiva('envio');
+  });
+  if (!opciones.desdeHistorial) crearEntradaHistorialUi('envio', disparador);
 }
 
 function escCerrarEnvio(e) {
   if (e.key === 'Escape') cerrarModalEnvio();
 }
 
-function cerrarModalEnvio(silencioso) {
+function cerrarModalEnvio(silencioso = false, desdeHistorial = false) {
   const ov = document.getElementById('envioModal');
   if (!ov) return;
+  if (!silencioso && !desdeHistorial && volverEnHistorialUi('envio')) return;
   document.removeEventListener('keydown', escCerrarEnvio);
   ov.remove();
   if (!silencioso) bloquearScrollFondo(false);
@@ -2546,14 +2587,186 @@ function dibujarQrPedido(cont) {
   document.head.appendChild(sc);
 }
 
-// ══ NAVEGACIÓN ══
-function mostrarLanding() {
-  document.getElementById('vista-landing').classList.remove('oculta');
-  document.getElementById('vista-catalogo').classList.remove('visible');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+// ══ HISTORIAL INTERNO DE INTERFAZ ══
+// Solo guarda navegación efímera de esta página. No persiste el carrito ni
+// modifica datos comerciales; al recargar se vuelve siempre al hero.
+const MARCA_HISTORIAL_UI = 'menosVueltasUi';
+let restaurandoHistorialUi = false;
+let estadoHistorialUiActual = null;
+let temporizadorHistorialScroll = null;
+
+function capaUiActual() {
+  const producto = document.getElementById('productoModal');
+  if (producto) return { tipo: 'producto', productoId: producto.dataset.gid, varianteId: producto.dataset.varianteId || null };
+  if (document.getElementById('envioModal')) return { tipo: 'envio' };
+  if (document.getElementById('carritoOverlay')?.classList.contains('open')) return { tipo: 'carrito' };
+  return null;
 }
 
-function mostrarCatalogo(cat, sub) {
+function selectorDeFocoUi(elemento, capa) {
+  if (elemento?.id) return `#${CSS.escape(elemento.id)}`;
+  if (capa === 'producto' && elemento?.closest?.('[id^="card-"]')) return `#${CSS.escape(elemento.closest('[id^="card-"]').id)}`;
+  if (capa === 'carrito') return elemento?.classList?.contains('cart-floating-btn') ? '#cartFloatingBtn' : '.cart-trigger';
+  return null;
+}
+
+function estadoUiActual(capa = capaUiActual(), foco = null) {
+  const catalogoVisible = document.getElementById('vista-catalogo')?.classList.contains('visible');
+  return {
+    [MARCA_HISTORIAL_UI]: true,
+    vista: catalogoVisible ? 'catalogo' : 'landing',
+    catalogo: {
+      categoria: filtroActivo,
+      subcategoria: filtroSubcat,
+      filtroEspecial,
+      busqueda: busquedaActiva,
+      scrollY: document.body.classList.contains('modal-abierto') ? scrollGuardado : window.scrollY
+    },
+    capa,
+    foco
+  };
+}
+
+function esEstadoUi(state) {
+  return Boolean(state?.[MARCA_HISTORIAL_UI]);
+}
+
+function reemplazarEstadoHistorialUi() {
+  if (restaurandoHistorialUi || !esEstadoUi(history.state)) return;
+  const foco = history.state.foco || null;
+  estadoHistorialUiActual = estadoUiActual(capaUiActual(), foco);
+  history.replaceState(estadoHistorialUiActual, '', location.href);
+}
+
+function actualizarHistorialUiActual() {
+  reemplazarEstadoHistorialUi();
+}
+
+function crearEntradaHistorialUi(tipo, disparador = document.activeElement) {
+  if (restaurandoHistorialUi) return;
+  estadoHistorialUiActual = estadoUiActual(capaUiActual(), selectorDeFocoUi(disparador, tipo));
+  history.pushState(estadoHistorialUiActual, '', location.href);
+}
+
+function volverEnHistorialUi(tipo) {
+  if (!esEstadoUi(history.state) || history.state.capa?.tipo !== tipo) return false;
+  history.back();
+  return true;
+}
+
+function enfocarCapaActiva(tipo) {
+  const destino = tipo === 'producto'
+    ? document.querySelector('#productoModal .pm-close')
+    : tipo === 'envio'
+      ? document.querySelector('#envioModal .env-close')
+      : document.querySelector('#carritoOverlay .carrito-close');
+  destino?.focus({ preventScroll: true });
+}
+
+function restaurarFocoUi(estadoSaliente) {
+  const selector = estadoSaliente?.foco;
+  if (!selector) return;
+  requestAnimationFrame(() => document.querySelector(selector)?.focus({ preventScroll: true }));
+}
+
+function cerrarCapasParaHistorialUi() {
+  document.removeEventListener('keydown', escCerrarModal);
+  document.removeEventListener('keydown', escCerrarEnvio);
+  document.getElementById('productoModal')?.remove();
+  document.getElementById('envioModal')?.remove();
+  document.getElementById('carritoOverlay')?.classList.remove('open');
+  bloqueosDeScroll = 0;
+  document.body.classList.remove('modal-abierto');
+  document.body.style.top = '';
+}
+
+function restaurarEstadoHistorialUi(estado, estadoSaliente) {
+  if (!esEstadoUi(estado)) return;
+  restaurandoHistorialUi = true;
+  cerrarCapasParaHistorialUi();
+
+  const esCatalogo = estado.vista === 'catalogo';
+  document.getElementById('vista-landing').classList.toggle('oculta', esCatalogo);
+  document.getElementById('vista-catalogo').classList.toggle('visible', esCatalogo);
+
+  if (esCatalogo) {
+    const contexto = estado.catalogo || {};
+    filtroActivo = contexto.categoria || 'Todos';
+    filtroSubcat = contexto.subcategoria || null;
+    filtroEspecial = contexto.filtroEspecial || null;
+    busquedaActiva = contexto.busqueda || '';
+    const buscador = document.getElementById('buscador');
+    if (buscador) buscador.value = busquedaActiva;
+    catsAbiertas.clear();
+    if (filtroActivo !== 'Todos') catsAbiertas.add(filtroActivo);
+    actualizarEstadoFiltros();
+    renderSubfiltros();
+    renderGrupos();
+    construirSidebar();
+    const etiqueta = busquedaActiva || filtroEspecial
+      ? (busquedaActiva ? `Resultados para "${busquedaActiva}"` : FILTROS_ESPECIALES[filtroEspecial]?.titulo)
+      : (filtroSubcat || (filtroActivo !== 'Todos' ? filtroActivo : 'Catálogo completo'));
+    document.getElementById('catalogo-titulo-label').textContent = etiqueta;
+  }
+
+  const y = estado.catalogo?.scrollY || 0;
+  window.scrollTo({ top: y, behavior: 'instant' });
+
+  const capa = estado.capa;
+  if (capa?.tipo === 'producto') {
+    const vars = catalogo[capa.productoId];
+    if (vars?.length) {
+      const indice = Math.max(0, vars.findIndex(v => String(v['Id']) === String(capa.varianteId)));
+      abrirModalProducto(capa.productoId, vars, indice, null, { desdeHistorial: true });
+    }
+  } else if (capa?.tipo === 'carrito') {
+    abrirCarritoDesdeHistorialUi();
+  } else if (capa?.tipo === 'envio') {
+    abrirCarritoDesdeHistorialUi();
+    abrirModalEnvio(null, { desdeHistorial: true });
+  }
+
+  restaurandoHistorialUi = false;
+  estadoHistorialUiActual = estado;
+  restaurarFocoUi(estadoSaliente);
+}
+
+function abrirCarritoDesdeHistorialUi() {
+  const overlay = document.getElementById('carritoOverlay');
+  if (!overlay?.classList.contains('open')) {
+    overlay?.classList.add('open');
+    bloquearScrollFondo(true);
+  }
+}
+
+function inicializarHistorialUi() {
+  history.scrollRestoration = 'manual';
+  estadoHistorialUiActual = estadoUiActual();
+  history.replaceState(estadoHistorialUiActual, '', location.href);
+  window.addEventListener('popstate', event => {
+    const estadoSaliente = estadoHistorialUiActual;
+    if (!esEstadoUi(event.state)) return;
+    restaurarEstadoHistorialUi(event.state, estadoSaliente);
+  });
+  window.addEventListener('scroll', () => {
+    clearTimeout(temporizadorHistorialScroll);
+    temporizadorHistorialScroll = setTimeout(actualizarHistorialUiActual, 120);
+  }, { passive: true });
+}
+
+// ══ NAVEGACIÓN ══
+function mostrarLanding(opciones = {}) {
+  const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
+  if (estabaEnCatalogo && !opciones.desdeHistorial) actualizarHistorialUiActual();
+  document.getElementById('vista-landing').classList.remove('oculta');
+  document.getElementById('vista-catalogo').classList.remove('visible');
+  window.scrollTo({ top: 0, behavior: opciones.instantaneo ? 'instant' : 'smooth' });
+  if (estabaEnCatalogo && !opciones.desdeHistorial) crearEntradaHistorialUi(null);
+}
+
+function mostrarCatalogo(cat, sub, opciones = {}) {
+  const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
+  if (!estabaEnCatalogo && !opciones.desdeHistorial) actualizarHistorialUiActual();
   document.getElementById('vista-landing').classList.add('oculta');
   document.getElementById('vista-catalogo').classList.add('visible');
   window.scrollTo({ top: 0 });
@@ -2574,6 +2787,8 @@ function mostrarCatalogo(cat, sub) {
   construirSidebar();
 
   mostrarOnboardingToast();
+  if (!estabaEnCatalogo && !opciones.desdeHistorial) crearEntradaHistorialUi(null);
+  else actualizarHistorialUiActual();
 }
 
 // Los CTAs principales de la landing siempre inician una exploración nueva,
@@ -2586,9 +2801,7 @@ function mostrarCatalogoEspecial(tipo, gid) {
   const filtro = FILTROS_ESPECIALES[tipo];
   if (!filtro) return;
 
-  document.getElementById('vista-landing').classList.add('oculta');
-  document.getElementById('vista-catalogo').classList.add('visible');
-  window.scrollTo({ top: 0 });
+  mostrarCatalogo();
 
   setFiltroEspecial(tipo);
   document.getElementById('catalogo-titulo-label').textContent = filtro.titulo;
@@ -2744,6 +2957,7 @@ document.getElementById('buscador').addEventListener('input', function() {
 })();
 
 // ══ INIT ══
+inicializarHistorialUi();
 cargarDatos();
 
 // ══════════════════════════════════════════════════════
