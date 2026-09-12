@@ -24,6 +24,9 @@
 - Los precios comunicados y calculados en B2C son múltiplos de $50, incluso con promoción temporal, descuento por cantidad o código. Se redondean al valor más cercano y, en empate, hacia abajo; B2B conserva sus precios propios.
 - La condición de primera compra se controla manualmente en WhatsApp durante esta versión. Una futura automatización sólo debería consumir el beneficio al entregar el pedido.
 - `Codigo_Promo`, `Porcentaje_Codigo` y `Descuento_Codigo` son datos históricos del pedido y permanecen separados del descuento propio de los productos.
+- El carrito web es temporal: se guarda por pestaña y por canal mediante `sessionStorage`, únicamente con identificadores y cantidades. No persiste entre sesiones ni almacena datos personales, precios o condiciones calculadas.
+- Al restaurar o importar un carrito por QR, la web usa el catálogo vigente y revalida el código promocional B2C antes de aplicarlo; un QR reemplaza el estado temporal previo del canal.
+- La invitación B2C a recibir novedades se muestra una sola vez por sesión, 30 segundos después del primer agregado manual al carrito. No se considera una señal de intención la restauración, el QR ni el scroll; la invitación no debe impedir interactuar fuera de su panel y en móvil se puede descartar mediante arrastre.
 - El modelo actual es compra contra pedido y retiro en distribuidora, no stock propio en tiempo real.
 - La prioridad técnica es velocidad y bajo costo.
 - Entender el código e incorporar funcionalidades tiene prioridad sobre eliminar código muerto.

@@ -22,6 +22,13 @@
 5. Al importar el pedido, el panel revalida el código. El equipo comprueba manualmente que corresponda a primera compra; si no corresponde, lo retira y se recalculan descuento, envío y total.
 6. Al guardar el pedido quedan registrados el código, su porcentaje y el descuento aplicado, independientes de cambios posteriores en la campaña.
 
+## Flujo de carrito temporal y QR
+
+1. Al agregar un producto manualmente, la web guarda únicamente sus identificadores y cantidades en el almacenamiento temporal de la pestaña y del canal actual; B2C y B2B no comparten ese estado.
+2. Al recargar, la web restaura el carrito sin abrirlo y lo reconstruye con el catálogo vigente. Si hay un código promocional B2C, lo revalida antes de recalcular el pedido.
+3. Al abrir un QR, el contenido recibido reemplaza el carrito temporal existente del canal correspondiente. Los productos se reconstruyen desde el catálogo actual y cualquier código B2C se revalida.
+4. Treinta segundos después del primer agregado manual B2C de la sesión, la web muestra la invitación de novedades una sola vez. Si hay un modal de producto abierto, espera a que se cierre; la restauración, el QR y el scroll no la disparan.
+
 ## Flujo B2C: pedido al costo de uso interno
 
 1. El equipo crea o edita un pedido B2C en el panel y activa la marca de pedido al costo.

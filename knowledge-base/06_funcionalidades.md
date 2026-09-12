@@ -14,8 +14,15 @@
 ### Carrito y pedido
 
 - Agregar productos al carrito y preparar el resumen.
+- Conservar temporalmente, por pestaña y de forma separada entre B2C y B2B, los productos y cantidades del carrito. Al restaurarlo, consultar el catálogo vigente para recalcular disponibilidad, precios y condiciones; en B2C, revalidar también el código promocional.
+- Permitir transferir el carrito mediante QR: el contenido recibido reemplaza el carrito temporal del destino y, si incluye un código B2C, este se revalida antes de aplicarse.
 - Derivar o facilitar el envío del pedido a WhatsApp.
 - Mantener coordinación humana posterior por WhatsApp: dirección, fecha, horario, faltantes y condiciones operativas.
+
+### Novedades
+
+- Mostrar una invitación a recibir novedades una única vez por sesión, 30 segundos después del primer agregado manual al carrito. No se activa por restaurar el carrito, importar un QR ni navegar por la página, y espera el cierre de un modal de producto si hay uno abierto.
+- La invitación no debe bloquear la interacción con el resto de la página; en móvil puede descartarse arrastrándola desde su manija superior.
 
 ## Administración — activa
 
