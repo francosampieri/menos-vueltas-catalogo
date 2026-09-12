@@ -5997,3 +5997,208 @@ body.modal-abierto .cartel-novedades {
     font-size: 0.76rem;
   }
 }
+
+/* ══════════════════════════════════════════════════════
+   BARRA INFERIOR + CABECERA MÓVIL
+   La reserva izquierda de la cabecera queda vacía para la futura sección
+   de Novedades. Catálogo, búsqueda y pedido viven en la barra inferior.
+══════════════════════════════════════════════════════ */
+.mobile-bottom-nav { display: none; }
+.facebook-trigger-b2b { display: none; }
+
+@media (max-width: 600px) {
+  :root { --mobile-bottom-nav-height: 76px; }
+
+  .topbar { height: 60px; }
+  .topbar-inner {
+    position: relative;
+    display: block;
+    padding: 0 var(--space-3);
+  }
+  .topbar-middle,
+  .cart-trigger { display: none; }
+  .busqueda-movil-activa .topbar-middle {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    left: 0;
+    z-index: 110;
+    display: block;
+    padding: 9px var(--space-3) 10px;
+    background: rgba(251, 250, 245, .98);
+    border-bottom: 1px solid var(--line-soft);
+    box-shadow: 0 8px 16px rgba(47, 52, 48, .07);
+  }
+  .busqueda-movil-activa .search-wrap { display: block; max-width: none; }
+  .busqueda-movil-activa .search-wrap input {
+    width: 100%;
+    height: 44px;
+    padding-left: 34px;
+    background: var(--surface);
+    font-size: 16px;
+  }
+  .brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+  .brand-logo { height: 30px; }
+  .topbar-actions {
+    position: absolute;
+    top: 50%;
+    right: var(--space-3);
+    transform: translateY(-50%);
+    margin: 0;
+    gap: 4px;
+    z-index: 2;
+  }
+  .topbar-actions .whatsapp-trigger,
+  .topbar-actions .facebook-trigger {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  .topbar-actions .facebook-trigger-b2b { display: flex; }
+  .topbar-actions .whatsapp-trigger::after,
+  .topbar-actions .facebook-trigger::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+
+  #vista-landing { padding-bottom: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px)); }
+  .catalogo-main {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  }
+  .cart-floating-btn { display: none !important; }
+  .onb-toast,
+  .mv-toast-notif {
+    bottom: calc(var(--mobile-bottom-nav-height) + 12px + env(safe-area-inset-bottom, 0px));
+  }
+  .cartel-novedades {
+    bottom: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 280;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    min-height: var(--mobile-bottom-nav-height);
+    padding: 7px 10px calc(7px + env(safe-area-inset-bottom, 0px));
+    background: rgba(251, 250, 245, .96);
+    border-top: 1px solid var(--line-soft);
+    box-shadow: 0 -4px 18px rgba(47, 52, 48, .06);
+    backdrop-filter: saturate(145%) blur(12px);
+    -webkit-backdrop-filter: saturate(145%) blur(12px);
+  }
+  .mobile-bottom-nav-action {
+    position: relative;
+    min-width: 0;
+    min-height: 54px;
+    padding: 5px 4px;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    background: transparent;
+    color: var(--t2);
+    font-family: var(--font);
+    font-size: .76rem;
+    font-weight: 600;
+    line-height: 1.1;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 180ms var(--ease), background 180ms var(--ease), border-color 180ms var(--ease), transform 150ms var(--ease), box-shadow 180ms var(--ease);
+  }
+  .mobile-bottom-nav-action svg {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    transition: transform 150ms var(--ease);
+  }
+  .mobile-bottom-nav-action.is-active {
+    background: linear-gradient(135deg, rgba(112, 130, 85, .14), rgba(112, 130, 85, .07));
+    border-color: rgba(112, 130, 85, .08);
+    color: var(--accent-2);
+  }
+  .mobile-bottom-nav-action:focus-visible,
+  .topbar-actions .whatsapp-trigger:focus-visible,
+  .topbar-actions .facebook-trigger:focus-visible {
+    outline: 3px solid rgba(61, 107, 79, .28);
+    outline-offset: 2px;
+  }
+  .mobile-bottom-nav-action:active {
+    transform: scale(.96);
+  }
+  .mobile-bottom-nav-action:active svg,
+  .topbar-actions .whatsapp-trigger:active svg,
+  .topbar-actions .facebook-trigger:active svg {
+    transform: scale(.9);
+  }
+  .mobile-bottom-nav-badge {
+    position: absolute;
+    top: 3px;
+    left: calc(50% + 4px);
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border: 2px solid var(--surface);
+    border-radius: 999px;
+    background: var(--accent);
+    color: white;
+    font-size: .66rem;
+    font-weight: 700;
+    line-height: 14px;
+    opacity: 0;
+    transform: scale(.65);
+    transition: opacity 160ms var(--ease), transform 160ms var(--ease);
+  }
+  .mobile-bottom-nav-badge.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-logo { height: 27px; }
+  .topbar-actions { right: var(--space-2); }
+  .topbar-actions .whatsapp-trigger,
+  .topbar-actions .facebook-trigger { width: 36px; height: 36px; }
+  .mobile-bottom-nav { padding-right: 7px; padding-left: 7px; }
+  .mobile-bottom-nav-action { font-size: .72rem; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mobile-bottom-nav-action:hover {
+    background: rgba(112, 130, 85, .08);
+    color: var(--accent-2);
+  }
+  .mobile-bottom-nav-action.is-active:hover {
+    background: rgba(112, 130, 85, .19);
+    box-shadow: inset 0 0 0 1px rgba(112, 130, 85, .08);
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-bottom-nav-action,
+  .mobile-bottom-nav-action svg,
+  .mobile-bottom-nav-badge,
+  .topbar-actions .whatsapp-trigger,
+  .topbar-actions .facebook-trigger,
+  .topbar-actions .whatsapp-trigger svg,
+  .topbar-actions .facebook-trigger svg {
+    transition: none;
+  }
+}

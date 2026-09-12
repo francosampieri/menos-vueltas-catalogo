@@ -2084,6 +2084,12 @@ function actualizarUICarrito(rerenderItems = true) {
     floatCountEl.classList.toggle('visible', totalItems > 0);
   }
 
+  const mobileCountEl = document.getElementById('mobileCartCount');
+  if (mobileCountEl) {
+    mobileCountEl.textContent = totalItems;
+    mobileCountEl.classList.toggle('visible', totalItems > 0);
+  }
+
   // B2B conserva su total histórico. En B2C el mismo monto se muestra en el
   // encabezado del resumen plegable que se actualiza más abajo.
   const totalEl = document.getElementById('carritoTotal');
@@ -2296,6 +2302,7 @@ function porcentajeDescuentoLinea(item, idx, resumen) {
 
 function abrirCarrito(disparador = document.activeElement) {
   if (document.getElementById('carritoOverlay').classList.contains('open')) return;
+  cerrarBusquedaMovil();
   actualizarHistorialUiActual();
   document.getElementById('carritoOverlay').classList.add('open');
   bloquearScrollFondo(true);
@@ -2699,7 +2706,11 @@ function capaUiActual() {
 function selectorDeFocoUi(elemento, capa) {
   if (elemento?.id) return `#${CSS.escape(elemento.id)}`;
   if (capa === 'producto' && elemento?.closest?.('[id^="card-"]')) return `#${CSS.escape(elemento.closest('[id^="card-"]').id)}`;
-  if (capa === 'carrito') return elemento?.classList?.contains('cart-floating-btn') ? '#cartFloatingBtn' : '.cart-trigger';
+  if (capa === 'carrito') {
+    if (elemento?.classList?.contains('cart-floating-btn')) return '#cartFloatingBtn';
+    if (elemento?.classList?.contains('mobile-bottom-nav-action--cart')) return '#mobileCartButton';
+    return '.cart-trigger';
+  }
   return null;
 }
 
@@ -2849,6 +2860,7 @@ function inicializarHistorialUi() {
 
 // ══ NAVEGACIÓN ══
 function mostrarLanding(opciones = {}) {
+  cerrarBusquedaMovil();
   const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
   if (estabaEnCatalogo && !opciones.desdeHistorial) actualizarHistorialUiActual();
   document.getElementById('vista-landing').classList.remove('oculta');
@@ -2894,6 +2906,26 @@ function mostrarCatalogo(cat, sub, opciones = {}) {
 // sin heredar filtros o una búsqueda de una visita anterior al catálogo.
 function mostrarCatalogoCompleto() {
   mostrarCatalogo('Todos');
+}
+
+// Acciones de la barra inferior móvil: reutilizan la navegación existente
+// para conservar filtros, foco e historial interno de SPEC A.
+function cerrarBusquedaMovil({ devolverFoco = false } = {}) {
+  document.body.classList.remove('busqueda-movil-activa');
+  if (devolverFoco) document.getElementById('mobileSearchButton')?.focus({ preventScroll: true });
+}
+
+function abrirCatalogoDesdeBarra() {
+  cerrarBusquedaMovil();
+  mostrarCatalogo('Todos');
+}
+
+function abrirBusquedaDesdeBarra() {
+  document.body.classList.add('busqueda-movil-activa');
+  mostrarCatalogo();
+  requestAnimationFrame(() => {
+    document.getElementById('buscador')?.focus({ preventScroll: true });
+  });
 }
 
 function mostrarCatalogoEspecial(tipo, gid) {
@@ -3041,6 +3073,14 @@ document.getElementById('buscador').addEventListener('input', function() {
     document.getElementById('catalogo-titulo-label').textContent = `Resultados para "${busquedaActiva}"`;
   }
   renderGrupos();
+});
+
+document.getElementById('buscador').addEventListener('keydown', event => {
+  if (event.key === 'Escape') cerrarBusquedaMovil({ devolverFoco: true });
+});
+
+document.getElementById('buscador').addEventListener('blur', () => {
+  if (window.matchMedia('(max-width: 600px)').matches) cerrarBusquedaMovil();
 });
 
 // En pantallas chicas el placeholder completo no se alcanza a leer,
