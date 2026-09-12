@@ -5690,6 +5690,9 @@ body[data-canal="b2c"] .ci-subtotal-etiqueta {
   display: flex;
   justify-content: center;
   animation: slideUpCartel 0.4s cubic-bezier(.16,1,.3,1) forwards;
+  /* La capa ocupa todo el ancho: fuera del cartel visible no debe bloquear
+     enlaces ni controles de la página. */
+  pointer-events: none;
 }
 .cartel-novedades[hidden] { display: none !important; }
 
@@ -5706,9 +5709,19 @@ body.modal-abierto .cartel-novedades {
   box-shadow: 0 -4px 24px rgba(47,52,48,.18);
   padding: 28px 20px 20px;
   position: relative;
+  pointer-events: auto;
 }
-/* El "handle" superior para arrastrar/cerrar */
-.cartel-novedades-inner::before {
+/* El handle es un elemento real para poder escuchar el gesto en móvil. */
+.cartel-novedades-handle {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72px;
+  height: 24px;
+}
+.cartel-novedades-handle::before {
   content: '';
   position: absolute;
   top: 10px;
@@ -5959,10 +5972,15 @@ body.modal-abierto .cartel-novedades {
     max-width: 340px;
     border-radius: 16px;
   }
-  .cartel-novedades-inner::before { display: none; }
 }
 
 @media (max-width: 768px) {
+  .cartel-novedades-handle {
+    display: block;
+    touch-action: none;
+    cursor: grab;
+  }
+  .cartel-novedades-handle:active { cursor: grabbing; }
   .cart-floating-btn {
     bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     right: 18px;

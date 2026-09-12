@@ -3262,6 +3262,69 @@ const NOVEDADES_SESION_KEY = 'mv_novedades_intencion_v1_b2c';
 const NOVEDADES_ESPERA_MS = 30 * 1000;
 let cartelTimer = null;
 let estadoNovedadesEnMemoria = null;
+let arrastreCartelNovedades = null;
+
+function resetearArrastreCartelNovedades() {
+  const inner = document.querySelector('#cartelNovedades .cartel-novedades-inner');
+  if (!inner) return;
+  inner.style.transition = '';
+  inner.style.transform = '';
+}
+
+function initArrastreCartelNovedades() {
+  const handle = document.querySelector('#cartelNovedades .cartel-novedades-handle');
+  const inner = document.querySelector('#cartelNovedades .cartel-novedades-inner');
+  if (!handle || !inner || !window.PointerEvent) return;
+
+  const terminarArrastre = (event, cancelado = false) => {
+    const arrastre = arrastreCartelNovedades;
+    if (!arrastre || event.pointerId !== arrastre.pointerId) return;
+    arrastreCartelNovedades = null;
+    if (handle.hasPointerCapture(event.pointerId)) handle.releasePointerCapture(event.pointerId);
+
+    const distancia = Math.max(0, event.clientY - arrastre.inicioY);
+    const duracion = Math.max(1, event.timeStamp - arrastre.inicioTiempo);
+    const velocidad = distancia / duracion;
+    const altura = inner.getBoundingClientRect().height;
+    const debeCerrar = !cancelado && (
+      distancia >= altura * 0.25 ||
+      distancia >= 100 ||
+      (distancia >= 32 && velocidad >= 0.7)
+    );
+
+    if (debeCerrar) {
+      cerrarCartelNovedades();
+      return;
+    }
+
+    inner.style.transition = 'transform 220ms cubic-bezier(.2,.8,.2,1)';
+    inner.style.transform = '';
+    inner.addEventListener('transitionend', resetearArrastreCartelNovedades, { once: true });
+  };
+
+  handle.addEventListener('pointerdown', event => {
+    if (window.innerWidth > 768 || !event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    arrastreCartelNovedades = {
+      pointerId: event.pointerId,
+      inicioY: event.clientY,
+      inicioTiempo: event.timeStamp
+    };
+    inner.style.transition = 'none';
+    handle.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+
+  handle.addEventListener('pointermove', event => {
+    const arrastre = arrastreCartelNovedades;
+    if (!arrastre || event.pointerId !== arrastre.pointerId) return;
+    const distancia = Math.max(0, event.clientY - arrastre.inicioY);
+    inner.style.transform = `translateY(${distancia}px)`;
+    event.preventDefault();
+  });
+
+  handle.addEventListener('pointerup', event => terminarArrastre(event));
+  handle.addEventListener('pointercancel', event => terminarArrastre(event, true));
+}
 
 function leerEstadoNovedades() {
   if (estadoNovedadesEnMemoria) return estadoNovedadesEnMemoria;
@@ -3320,6 +3383,7 @@ function registrarPrimerAgregadoManual() {
 
 function initCartelNovedades() {
   if (!document.getElementById('cartelNovedades')) return;
+  initArrastreCartelNovedades();
   // Si ya se inscripto, nunca mas le mostramos el cartel
   let yaInscripto = false;
   try { yaInscripto = localStorage.getItem(NOVEDADES_INSCRIPTO_KEY) === '1'; } catch(e) {}
@@ -3335,6 +3399,7 @@ function mostrarCartelNovedades() {
   guardarEstadoNovedades({ ...estado, state: 'shown' });
   clearTimeout(cartelTimer);
   cartelTimer = null;
+  resetearArrastreCartelNovedades();
   cartel.hidden = false;
   // Ocultamos el onboarding toast para que no se superponga
   const onb = document.querySelector('.onb-toast');
@@ -3364,6 +3429,8 @@ function mostrarCartelNovedades() {
 function cerrarCartelNovedades() {
   const cartel = document.getElementById('cartelNovedades');
   if (!cartel) return;
+  arrastreCartelNovedades = null;
+  resetearArrastreCartelNovedades();
   cartel.hidden = true;
   document.body.style.paddingBottom = '';
   // Volvemos a mostrar el onboarding si lo habiamos ocultado
