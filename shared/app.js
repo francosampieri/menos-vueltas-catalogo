@@ -2084,6 +2084,12 @@ function actualizarUICarrito(rerenderItems = true) {
     floatCountEl.classList.toggle('visible', totalItems > 0);
   }
 
+  const mobileCountEl = document.getElementById('mobileCartCount');
+  if (mobileCountEl) {
+    mobileCountEl.textContent = totalItems;
+    mobileCountEl.classList.toggle('visible', totalItems > 0);
+  }
+
   // B2B conserva su total histórico. En B2C el mismo monto se muestra en el
   // encabezado del resumen plegable que se actualiza más abajo.
   const totalEl = document.getElementById('carritoTotal');
@@ -2699,7 +2705,11 @@ function capaUiActual() {
 function selectorDeFocoUi(elemento, capa) {
   if (elemento?.id) return `#${CSS.escape(elemento.id)}`;
   if (capa === 'producto' && elemento?.closest?.('[id^="card-"]')) return `#${CSS.escape(elemento.closest('[id^="card-"]').id)}`;
-  if (capa === 'carrito') return elemento?.classList?.contains('cart-floating-btn') ? '#cartFloatingBtn' : '.cart-trigger';
+  if (capa === 'carrito') {
+    if (elemento?.classList?.contains('cart-floating-btn')) return '#cartFloatingBtn';
+    if (elemento?.classList?.contains('mobile-bottom-nav-action--cart')) return '#mobileCartButton';
+    return '.cart-trigger';
+  }
   return null;
 }
 
@@ -2781,6 +2791,7 @@ function restaurarEstadoHistorialUi(estado, estadoSaliente) {
   const esCatalogo = estado.vista === 'catalogo';
   document.getElementById('vista-landing').classList.toggle('oculta', esCatalogo);
   document.getElementById('vista-catalogo').classList.toggle('visible', esCatalogo);
+  actualizarEstadoBarraMovil(esCatalogo ? 'catalogo' : 'landing');
 
   if (esCatalogo) {
     const contexto = estado.catalogo || {};
@@ -2848,11 +2859,21 @@ function inicializarHistorialUi() {
 }
 
 // ══ NAVEGACIÓN ══
+function actualizarEstadoBarraMovil(vista) {
+  document.querySelectorAll('.mobile-bottom-nav-action[data-mobile-nav-vista]').forEach((boton) => {
+    const estaActivo = boton.dataset.mobileNavVista === vista;
+    boton.classList.toggle('is-active', estaActivo);
+    if (estaActivo) boton.setAttribute('aria-current', 'page');
+    else boton.removeAttribute('aria-current');
+  });
+}
+
 function mostrarLanding(opciones = {}) {
   const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
   if (estabaEnCatalogo && !opciones.desdeHistorial) actualizarHistorialUiActual();
   document.getElementById('vista-landing').classList.remove('oculta');
   document.getElementById('vista-catalogo').classList.remove('visible');
+  actualizarEstadoBarraMovil('landing');
   window.scrollTo({ top: 0, behavior: opciones.instantaneo ? 'instant' : 'smooth' });
   if (estabaEnCatalogo && !opciones.desdeHistorial) crearEntradaHistorialUi(null);
 }
@@ -2867,6 +2888,7 @@ function mostrarCatalogo(cat, sub, opciones = {}) {
   if (creaEntrada) suspendiendoActualizacionHistorialUi = true;
   document.getElementById('vista-landing').classList.add('oculta');
   document.getElementById('vista-catalogo').classList.add('visible');
+  actualizarEstadoBarraMovil('catalogo');
   window.scrollTo({ top: 0 });
 
   if (cat) {
@@ -2893,6 +2915,12 @@ function mostrarCatalogo(cat, sub, opciones = {}) {
 // Los CTAs principales de la landing siempre inician una exploración nueva,
 // sin heredar filtros o una búsqueda de una visita anterior al catálogo.
 function mostrarCatalogoCompleto() {
+  mostrarCatalogo('Todos');
+}
+
+// Acciones de la barra inferior móvil: reutilizan la navegación existente
+// para conservar filtros, foco e historial interno de SPEC A.
+function abrirCatalogoDesdeBarra() {
   mostrarCatalogo('Todos');
 }
 
