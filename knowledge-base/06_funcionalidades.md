@@ -10,6 +10,7 @@
 - Ofrecer filtros especiales de `Nuevos` y `Descuentos`, además de categorías y subcategorías. `Nuevos` usa la marca manual de variantes definida en el frontend y `Descuentos` muestra variantes con una rebaja real en el precio del canal actual.
 - Ordenar visualmente las categorías y subcategorías alfabéticamente, sin depender del orden de inserción del JSON; el orden interno de productos conserva el orden alfabético vigente por nombre y marca.
 - Mostrar en la landing una franja de `Nuevos ingresos`: carrusel de hasta cinco productos y una acción para ver todos los nuevos. Al elegir un producto, se abre primero el catálogo con el filtro Nuevos y luego su detalle; la acción general abre ese catálogo filtrado.
+- En móvil, B2C y B2B comparten una barra inferior fija con `Inicio`, `Catálogo` y `Tu pedido`: Inicio vuelve al hero, Catálogo abre el catálogo propio del canal y Tu pedido abre el carrito. El indicador activo representa la vista subyacente —Inicio o Catálogo— y no cambia al abrir el carrito. La cabecera conserva el buscador y los accesos a redes.
 
 ### Carrito y pedido
 
