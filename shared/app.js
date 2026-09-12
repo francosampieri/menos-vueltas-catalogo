@@ -2791,6 +2791,7 @@ function restaurarEstadoHistorialUi(estado, estadoSaliente) {
   const esCatalogo = estado.vista === 'catalogo';
   document.getElementById('vista-landing').classList.toggle('oculta', esCatalogo);
   document.getElementById('vista-catalogo').classList.toggle('visible', esCatalogo);
+  actualizarEstadoBarraMovil(esCatalogo ? 'catalogo' : 'landing');
 
   if (esCatalogo) {
     const contexto = estado.catalogo || {};
@@ -2858,11 +2859,21 @@ function inicializarHistorialUi() {
 }
 
 // ══ NAVEGACIÓN ══
+function actualizarEstadoBarraMovil(vista) {
+  document.querySelectorAll('.mobile-bottom-nav-action[data-mobile-nav-vista]').forEach((boton) => {
+    const estaActivo = boton.dataset.mobileNavVista === vista;
+    boton.classList.toggle('is-active', estaActivo);
+    if (estaActivo) boton.setAttribute('aria-current', 'page');
+    else boton.removeAttribute('aria-current');
+  });
+}
+
 function mostrarLanding(opciones = {}) {
   const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
   if (estabaEnCatalogo && !opciones.desdeHistorial) actualizarHistorialUiActual();
   document.getElementById('vista-landing').classList.remove('oculta');
   document.getElementById('vista-catalogo').classList.remove('visible');
+  actualizarEstadoBarraMovil('landing');
   window.scrollTo({ top: 0, behavior: opciones.instantaneo ? 'instant' : 'smooth' });
   if (estabaEnCatalogo && !opciones.desdeHistorial) crearEntradaHistorialUi(null);
 }
@@ -2877,6 +2888,7 @@ function mostrarCatalogo(cat, sub, opciones = {}) {
   if (creaEntrada) suspendiendoActualizacionHistorialUi = true;
   document.getElementById('vista-landing').classList.add('oculta');
   document.getElementById('vista-catalogo').classList.add('visible');
+  actualizarEstadoBarraMovil('catalogo');
   window.scrollTo({ top: 0 });
 
   if (cat) {

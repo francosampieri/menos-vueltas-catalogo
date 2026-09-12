@@ -6011,12 +6011,6 @@ body.modal-abierto .cartel-novedades {
 
   .cart-trigger { display: none; }
   .topbar-actions .facebook-trigger-b2b { display: flex; }
-  .topbar-actions .whatsapp-trigger::after,
-  .topbar-actions .facebook-trigger::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-  }
 
   #vista-landing { padding-bottom: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px)); }
   .catalogo-main {

@@ -728,11 +728,11 @@
 
 <!-- ═ BARRA INFERIOR MÓVIL ═ -->
 <nav class="mobile-bottom-nav" aria-label="Acciones del catálogo">
-  <button class="mobile-bottom-nav-action" type="button" onclick="mostrarLanding()">
+  <button class="mobile-bottom-nav-action is-active" type="button" data-mobile-nav-vista="landing" aria-current="page" onclick="mostrarLanding()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21v-7h6v7"/></svg>
     <span>Inicio</span>
   </button>
-  <button class="mobile-bottom-nav-action is-active" type="button" onclick="abrirCatalogoDesdeBarra()">
+  <button class="mobile-bottom-nav-action" type="button" data-mobile-nav-vista="catalogo" onclick="abrirCatalogoDesdeBarra()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.3"/><rect x="14" y="3" width="7" height="7" rx="1.3"/><rect x="3" y="14" width="7" height="7" rx="1.3"/><rect x="14" y="14" width="7" height="7" rx="1.3"/></svg>
     <span>Catálogo</span>
   </button>
