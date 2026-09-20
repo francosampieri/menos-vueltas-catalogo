@@ -6,6 +6,19 @@ const SHEETS_URL_PUBLICA = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDX
 // ANTES de cargar este archivo. Fallback a B2C por seguridad si no se definió.
 const CANAL = (typeof window !== 'undefined' && window.CANAL) ? window.CANAL : 'B2C';
 
+// La disponibilidad pública es una decisión manual publicada con el catálogo.
+// No se deriva de saldo ni de ningún otro dato interno.
+const DisponibilidadPublica = (() => {
+  const message = 'Este producto no está disponible.';
+  const isUnavailable = producto => producto?.['Sin_Stock'] === true;
+  const hasUnavailableItems = items => items.some(item => item.unavailable === true);
+  return Object.freeze({ message, isUnavailable, hasUnavailableItems });
+})();
+
+function productoNoDisponible(producto) {
+  return DisponibilidadPublica.isUnavailable(producto);
+}
+
 // ══ ESTADO GLOBAL ══
 let grupos          = {};  // id_grupo → { nombre, marca, categoria, subcategoria }
 let catalogo        = {};  // id_grupo → [productos]
@@ -992,6 +1005,13 @@ function crearCardNuevo(gid, vars) {
 
   body.append(marcaEl, nombreEl, vlabelEl, vprecioEl);
 
+  if (productoNoDisponible(v)) {
+    const disponibilidadEl = document.createElement('p');
+    disponibilidadEl.className = 'producto-no-disponible';
+    disponibilidadEl.textContent = DisponibilidadPublica.message;
+    body.appendChild(disponibilidadEl);
+  }
+
   if (hayDto) {
     const vprecioDtoEl = document.createElement('div');
     vprecioDtoEl.className = 'card-precio-dto';
@@ -1091,7 +1111,13 @@ function crearCard(gid, vars) {
   vprecioDtoEl.id = `vprecio-dto-${gid}`;
   vprecioDtoEl.style.display = 'none';
 
-  body.append(marcaEl, nombreEl, vlabelEl, vprecioEl, vprecioDtoEl);
+  const disponibilidadEl = document.createElement('p');
+  disponibilidadEl.className = 'producto-no-disponible';
+  disponibilidadEl.id = `vdisponible-${gid}`;
+  disponibilidadEl.hidden = !productoNoDisponible(vars[0]);
+  disponibilidadEl.textContent = DisponibilidadPublica.message;
+
+  body.append(marcaEl, nombreEl, vlabelEl, vprecioEl, vprecioDtoEl, disponibilidadEl);
 
   card.append(imgWrap, body);
 
@@ -1178,6 +1204,9 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vpre
         vprecioDtoEl.style.display = 'none';
       }
     }
+
+    const disponibilidadEl = document.getElementById(`vdisponible-${gid}`);
+    if (disponibilidadEl) disponibilidadEl.hidden = !productoNoDisponible(v);
 
     // Imagen + placeholder + dots sincronizados
     if (imgEl) {
@@ -1666,6 +1695,14 @@ function renderDetalleProducto(gid, vars, refs, indiceInicial = 0) {
       expanded.appendChild(dtoDiv);
     }
 
+    if (varSel && productoNoDisponible(varSel)) {
+      const aviso = document.createElement('p');
+      aviso.className = 'producto-no-disponible producto-no-disponible--detalle';
+      aviso.textContent = DisponibilidadPublica.message;
+      expanded.appendChild(aviso);
+      return;
+    }
+
     // (La imagen ya se actualiza junto con label y precio arriba, con animación)
 
     function resaltarOpciones() {
@@ -1927,6 +1964,7 @@ function resumenPedidoActual() {
 }
 
 function agregarAlCarrito(gid, variante, qty, opciones = {}) {
+  if (productoNoDisponible(variante) && !opciones.permitirNoDisponible) return false;
   const g      = grupos[gid] || {};
   const nombre = g.nombre    || variante['Producto'] || '';
   const marca  = g.marca     || variante['Marca']    || '';
@@ -1976,15 +2014,18 @@ function agregarAlCarrito(gid, variante, qty, opciones = {}) {
   if (badge) badge.classList.add('visible');
   const badgeModal = document.getElementById(`badge-modal-${gid}`);
   if (badgeModal) badgeModal.classList.add('visible');
+  return true;
 }
 
 function cambiarQtyCarrito(idx, delta) {
+  if (itemNoDisponible(carrito[idx])) return;
   carrito[idx].qty = Math.max(1, carrito[idx].qty + delta);
   actualizarUICarrito();
   guardarCarritoSesion();
 }
 
 function cambiarQtyCarritoInput(idx, valStr, isFinal) {
+  if (itemNoDisponible(carrito[idx])) return;
   let n = parseInt(valStr, 10);
   if (!isNaN(n) && n >= 1) {
     carrito[idx].qty = n;
@@ -2043,12 +2084,27 @@ function referenciasCatalogoPorId() {
   return porId;
 }
 
+function itemNoDisponible(item) {
+  const actual = referenciasCatalogoPorId()[String(item.idProd)]?.v;
+  return productoNoDisponible(actual);
+}
+
+function carritoTieneProductosNoDisponibles() {
+  return DisponibilidadPublica.hasUnavailableItems(
+    carrito.map(item => ({ unavailable: itemNoDisponible(item) }))
+  );
+}
+
 function reconstruirCarritoDesdeReferencias(items) {
   carrito = [];
   const porId = referenciasCatalogoPorId();
   items.forEach(({ productId, quantity }) => {
     const ref = porId[String(productId)];
-    if (ref) agregarAlCarrito(ref.gid, ref.v, quantity, { manual: false, persistir: false });
+    if (ref) agregarAlCarrito(ref.gid, ref.v, quantity, {
+      manual: false,
+      persistir: false,
+      permitirNoDisponible: true
+    });
   });
   actualizarUICarrito();
   return carrito.length > 0;
@@ -2177,6 +2233,14 @@ function actualizarUICarrito(rerenderItems = true) {
     renderCarritoItems();
   }
 
+  const hayNoDisponibles = carritoTieneProductosNoDisponibles();
+  const nota = document.getElementById('carritoNota');
+  if (nota) nota.textContent = hayNoDisponibles ? DisponibilidadPublica.message : '';
+  document.querySelectorAll('.whatsapp-btn').forEach(btn => {
+    btn.disabled = hayNoDisponibles;
+    btn.setAttribute('aria-disabled', String(hayNoDisponibles));
+  });
+
   actualizarEstadoCodigoPromocional();
 }
 
@@ -2221,6 +2285,7 @@ function renderCarritoItems() {
   const resumen = resumenPedidoActual();
 
   carrito.forEach((item, idx) => {
+    const noDisponible = itemNoDisponible(item);
     const aplica     = item.uniDto > 0 && item.qty >= item.uniDto && item.precioDto !== null;
     const subtotal   = htmlSubtotalItemCarrito(item, idx, resumen);
 
@@ -2245,7 +2310,7 @@ function renderCarritoItems() {
         <div class="ci-nombre">${item.marca} ${item.nombre}</div>
         ${item.varLabel ? `<div class="ci-variante">${item.varLabel}</div>` : ''}
         <div class="ci-precio">${precioLinea}</div>
-        <div class="ci-qty-row">
+        ${noDisponible ? `<p class="producto-no-disponible producto-no-disponible--carrito">${DisponibilidadPublica.message}</p>` : `<div class="ci-qty-row">
           <button class="ci-qty-btn" onclick="cambiarQtyCarrito(${idx}, -1)">−</button>
           <div class="ci-qty-wrap" title="Tocá para escribir la cantidad">
             <input type="number" min="1" inputmode="numeric" pattern="[0-9]*" class="ci-qty-num" value="${item.qty}"
@@ -2257,7 +2322,7 @@ function renderCarritoItems() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ci-qty-edit-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></svg>
           </div>
           <button class="ci-qty-btn" onclick="cambiarQtyCarrito(${idx}, 1)">+</button>
-        </div>
+        </div>`}
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
         <button class="ci-eliminar" onclick="eliminarDelCarrito(${idx})" aria-label="Quitar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a2 2 0 002 2h8a2 2 0 002-2l1-13M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg></button>
@@ -2468,6 +2533,7 @@ function construirMensajePedido() {
 }
 
 function abrirWhatsAppConPedido() {
+  if (carritoTieneProductosNoDisponibles()) return;
   const url = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(construirMensajePedido())}`;
   window.open(url, '_blank');
 }
@@ -2481,6 +2547,7 @@ function abrirWhatsAppConPedido() {
 const PEDIDO_HASH_PREFIJO = 'P';
 
 function codificarPedido() {
+  if (carritoTieneProductosNoDisponibles()) return '';
   const items = carrito
     .filter(i => i.idProd)
     .map(i => `${i.idProd}X${i.qty}`)
@@ -2491,6 +2558,7 @@ function codificarPedido() {
 }
 
 function urlPedidoParaCelular() {
+  if (carritoTieneProductosNoDisponibles()) return null;
   // El host va en MAYÚSCULA (los dominios no distinguen mayúsculas y así el
   // QR usa su modo alfanumérico, que ocupa casi la mitad). El path se deja
   // tal cual: ahí sí importan las mayúsculas y cambiarlo daría 404.
@@ -2553,12 +2621,13 @@ function restaurarPedidoDesdeHash() {
 // WhatsApp Web (que exige tener el teléfono vinculado, el paso donde más
 // gente abandona) o pasar el pedido al celular con un QR.
 function enviarWhatsApp() {
-  if (!carrito.length) return;
+  if (!carrito.length || carritoTieneProductosNoDisponibles()) return;
   if (MQ_MOBILE.matches) { abrirWhatsAppConPedido(); return; }
   abrirModalEnvio();
 }
 
 function abrirModalEnvio(disparador = document.activeElement, opciones = {}) {
+  if (carritoTieneProductosNoDisponibles()) return;
   cerrarModalEnvio();
   actualizarHistorialUiActual();
 
@@ -2655,6 +2724,7 @@ function cerrarModalEnvio(silencioso = false, desdeHistorial = false) {
 function dibujarQrPedido(cont) {
   if (!cont || cont.dataset.listo) return;
   const url = urlPedidoParaCelular();
+  if (!url) return;
 
   const pintar = () => {
     cont.innerHTML = '';

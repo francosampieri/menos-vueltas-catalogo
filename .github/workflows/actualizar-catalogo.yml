@@ -19,6 +19,7 @@ jobs:
         run: |
           python3 - <<'EOF'
           import urllib.request, csv, json, io
+          from scripts.catalog_privacy import filtrar_catalogo_publico
 
           URL_PRODUCTOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=1666631008&single=true&output=csv"
           URL_GRUPOS    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRj27LolH-UVxxXUBSF2JWHe1E6ZaIESYYa0QLrICgveXHh3ZXXrZBSX7X8DzLMFtws8wF1N-a-qVil/pub?gid=2138230487&single=true&output=csv"
@@ -100,12 +101,12 @@ jobs:
           grupos    = leer_csv(URL_GRUPOS)
           precios_b2c, precios_b2b = leer_precios(URL_PRECIOS)
 
-          resultado = {
+          resultado = filtrar_catalogo_publico({
               "productos": productos,
               "grupos": grupos,
               "precios_b2c": precios_b2c,
               "precios_b2b": precios_b2b
-          }
+          })
 
           import os
           os.makedirs("shared", exist_ok=True)

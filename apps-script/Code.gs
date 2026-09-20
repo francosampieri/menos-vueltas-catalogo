@@ -11,6 +11,18 @@ const HOJA_ITEMS = 'Items';
 const HOJA_CLIENTES = 'Clientes';
 const HOJA_CONTACTOS = 'Contactos';
 const HOJA_CODIGOS_PROMO = 'Codigos_Promo';
+const HOJA_PROVEEDORES = 'Proveedores';
+const HOJA_MOVIMIENTOS_STOCK = 'Movimientos_Stock';
+const HOJA_PRODUCTOS = '⬛Productos';
+const PROPIEDAD_PLANILLA_CATALOGO = 'CATALOG_SPREADSHEET_ID';
+
+const COLS_PROVEEDOR = ['Id_Proveedor', 'Nombre', 'Telefono', 'Direccion', 'Activo', 'Notas'];
+const COLS_MOVIMIENTO = [
+  'Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario',
+  'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia'
+];
+const MODALIDADES_ABASTECIMIENTO = ['CONTRA_PEDIDO', 'CONSIGNACION', 'STOCK_PROPIO'];
+const TIPOS_MOVIMIENTO = ['INGRESO', 'VENTA', 'CONSUMO_PROPIO', 'ROTURA_MERMA', 'CORRECCION'];
 
 // Envio queda entre Descuento y Extras. Los accesos a Pedidos se hacen por
 // encabezado: el orden soporta libros nuevos, no depende de índices rígidos y
@@ -34,7 +46,8 @@ const COLS_ITEM = [
   'Id_Pedido', 'Canal', 'Fecha_Pedido', 'Id_Producto', 'Producto', 'Cantidad',
   'Precio_Lista', 'Precio_Unitario', 'Costo_Unitario', 'Cant_Min', 'Precio_Cantidad',
   'Subtotal', 'Descuento', 'Total', 'Costo', 'Ganancia',
-  'Precio_Promo', 'Precio_Promo_Cantidad', 'Porcentaje_Promo'
+  'Precio_Promo', 'Precio_Promo_Cantidad', 'Porcentaje_Promo',
+  'Item_Id', 'Id_Proveedor', 'Modalidad_Abastecimiento', 'Gestiona_Stock'
 ];
 
 /* ══════════════ ENTRADA ══════════════ */
@@ -43,6 +56,9 @@ function doGet(e) {
   try {
     const accion = (e && e.parameter && e.parameter.accion) || 'listar';
     if (accion === 'clientes') return json({ ok: true, clientes: leerClientes() });
+    if (accion === 'listarProveedores') return json({ ok: true, proveedores: listarProveedores() });
+    if (accion === 'resumenStock') return json({ ok: true, productos: resumenStock() });
+    if (accion === 'listarMovimientos') return json({ ok: true, movimientos: listarMovimientos(e.parameter) });
     if (accion === 'validarCodigo') {
       const codigo = e && e.parameter ? e.parameter.codigo : '';
       const canal = e && e.parameter ? e.parameter.canal : '';
@@ -63,7 +79,7 @@ function doPost(e) {
     lock.waitLock(25000);
     tomado = true;
     const datos = JSON.parse(e.postData.contents);
-    if (datos.accion === 'guardar') return json({ ok: true, pedido: guardarPedido(datos.pedido) });
+    if (datos.accion === 'guardar') return json({ ok: true, pedido: guardarPedidoSinLock(datos.pedido) });
     if (datos.accion === 'eliminar') {
       eliminarPedido(Number(datos.id));
       return json({ ok: true });
@@ -77,6 +93,10 @@ function doPost(e) {
       guardarContacto(datos.contacto);
       return json({ ok: true });
     }
+    if (datos.accion === 'crearProveedor') return json({ ok: true, proveedor: crearProveedorSinLock(datos.proveedor) });
+    if (datos.accion === 'actualizarProveedor') return json({ ok: true, proveedor: actualizarProveedorSinLock(datos.proveedor) });
+    if (datos.accion === 'clasificarProducto') return json({ ok: true, clasificacion: clasificarProductoSinLock(datos.clasificacion) });
+    if (datos.accion === 'registrarMovimiento') return json({ ok: true, movimiento: registrarMovimientoSinLock(datos.movimiento) });
     return json({ ok: false, error: 'Acción desconocida: ' + datos.accion });
   } catch (err) {
     return json({ ok: false, error: String(err) });
@@ -104,30 +124,39 @@ function leerPedidos() {
   const filasI = hi.getDataRange().getValues();
   if (filasP.length < 2) return [];
   const cp = mapaEncabezados(filasP[0]);
+  const ci = mapaEncabezados(filasI[0]);
   const itemsPorPedido = {};
 
   for (let i = 1; i < filasI.length; i++) {
     const f = filasI[i];
-    if (!f[0]) continue;
-    const id = String(f[0]);
+    const idPedido = valorColumna(f, ci, 'Id_Pedido');
+    if (!idPedido) continue;
+    const id = String(idPedido);
     if (!itemsPorPedido[id]) itemsPorPedido[id] = [];
-    const lista = Number(f[6]) || 0;
-    const unit = Number(f[7]) || 0;
-    const costo = Number(f[8]) || 0;
-    const cantMin = Number(f[9]) || 0;
-    const porCant = Number(f[10]) || 0;
-    const cant = Number(f[5]) || 1;
+    const lista = numero(valorColumna(f, ci, 'Precio_Lista'));
+    const unit = numero(valorColumna(f, ci, 'Precio_Unitario'));
+    const costo = numero(valorColumna(f, ci, 'Costo_Unitario'));
+    const cantMin = numero(valorColumna(f, ci, 'Cant_Min'));
+    const porCant = numero(valorColumna(f, ci, 'Precio_Cantidad'));
+    const cant = numero(valorColumna(f, ci, 'Cantidad')) || 1;
     const alcanzaMin = cantMin > 0 && cant >= cantMin && porCant > 0;
-    const promo = Number(f[16]) || 0;
-    const promoCant = Number(f[17]) || 0;
+    const promo = numero(valorColumna(f, ci, 'Precio_Promo'));
+    const promoCant = numero(valorColumna(f, ci, 'Precio_Promo_Cantidad'));
     itemsPorPedido[id].push({
-      id: String(f[3]), nombre: texto(f[4]), cant: cant, lista: lista, costo: costo,
+      id: texto(valorColumna(f, ci, 'Id_Producto')), nombre: texto(valorColumna(f, ci, 'Producto')), cant: cant, lista: lista, costo: costo,
       cantMin: cantMin, porCant: porCant,
       promo: promo || (alcanzaMin ? porCant : (unit || lista)),
       promoCant: promoCant || (alcanzaMin ? unit : 0),
-      pct: porcentajePromo(f[18]), unit: unit, subtotal: Number(f[11]) || 0,
-      descuento: Number(f[12]) || 0, total: Number(f[13]) || 0,
-      costoTot: Number(f[14]) || 0, ganancia: Number(f[15]) || 0
+      pct: porcentajePromo(valorColumna(f, ci, 'Porcentaje_Promo')), unit: unit,
+      subtotal: numero(valorColumna(f, ci, 'Subtotal')),
+      descuento: numero(valorColumna(f, ci, 'Descuento')),
+      total: numero(valorColumna(f, ci, 'Total')),
+      costoTot: numero(valorColumna(f, ci, 'Costo')),
+      ganancia: numero(valorColumna(f, ci, 'Ganancia')),
+      itemId: textoSimple(valorColumna(f, ci, 'Item_Id')),
+      idProveedor: textoSimple(valorColumna(f, ci, 'Id_Proveedor')),
+      modalidadAbastecimiento: textoSimple(valorColumna(f, ci, 'Modalidad_Abastecimiento')),
+      gestionaStock: booleano(valorColumna(f, ci, 'Gestiona_Stock'))
     });
   }
 
@@ -261,6 +290,11 @@ function texto(v) {
 /* ══════════════ ESCRITURA ══════════════ */
 
 function guardarPedido(p) {
+  return ejecutarConLockEscritura(function () { return guardarPedidoSinLock(p); });
+}
+
+function guardarPedidoSinLock(p) {
+  p = p || {};
   const hp = hoja(HOJA_PEDIDOS, COLS_PEDIDO);
   asegurarEncabezadosPedidos(hp);
   const hi = hoja(HOJA_ITEMS, COLS_ITEM);
@@ -268,6 +302,23 @@ function guardarPedido(p) {
   if (!p.id) p.id = proximoId(hp);
 
   const fila = buscarFila(hp, p.id);
+  const estadoAnterior = fila > 0
+    ? textoSimple(valorColumna(hp.getRange(fila, 1, 1, hp.getLastColumn()).getValues()[0], mapaEncabezados(hp.getRange(1, 1, 1, hp.getLastColumn()).getValues()[0]), 'Estado')) || 'Nuevo'
+    : 'Nuevo';
+  const estadoNuevo = textoSimple(p.estado) || 'Nuevo';
+  if (estadoAnterior === 'Entregado') throw new Error('Un pedido Entregado no admite cambios directos.');
+  if (fila < 0 && estadoNuevo === 'Entregado') {
+    throw new Error('Un pedido debe guardarse pendiente antes de pasar a Entregado.');
+  }
+  const itemsExistentes = leerItemsExistentes(hi, p.id);
+  if (itemsExistentes.hayHistoricos) {
+    throw new Error('Los ítems históricos sin snapshot no se pueden re-guardar automáticamente.');
+  }
+  const itemsParaGuardar = prepararItemsParaGuardar(p, itemsExistentes.porId);
+  protegerRecuperacionParcialSinLock(p.id, itemsParaGuardar, itemsExistentes.porId);
+  const esTransicionAEntregado = estadoAnterior !== 'Entregado' && estadoNuevo === 'Entregado';
+  if (esTransicionAEntregado) aplicarVentasDePedidoSinLock(p.id, itemsParaGuardar);
+
   const destino = fila > 0 ? fila : hp.getLastRow() + 1;
   const encabezados = hp.getRange(1, 1, 1, hp.getLastColumn()).getValues()[0];
   const columnas = mapaEncabezados(encabezados);
@@ -281,7 +332,7 @@ function guardarPedido(p) {
     Id: p.id, Canal: p.canal || 'b2c', Fecha_Pedido: p.fechaPedido || '',
     Fecha_Entrega: p.fechaEntrega || '', Cliente_Id: p.clienteId || '',
     Cliente: p.cliente || '', Telefono: p.telefono || '', Direccion: p.direccion || '',
-    Barrio: p.barrio || '', Estado: p.estado || 'Nuevo', Medio_Pago: p.medioPago || 'Efectivo',
+    Barrio: p.barrio || '', Estado: estadoNuevo, Medio_Pago: p.medioPago || 'Efectivo',
     Subtotal: valorTotal(t, 'subtotal'), Descuento: valorTotal(t, 'descuento'),
     Codigo_Promo: p.codigoPromo || '', Porcentaje_Codigo: numero(p.porcentajeCodigo),
     Descuento_Codigo: numero(p.descuentoCodigo),
@@ -299,18 +350,159 @@ function guardarPedido(p) {
   forzarTextoPorEncabezado(hp, destino, columnas, ['Fecha_Pedido', 'Fecha_Entrega', 'Cliente', 'Telefono', 'Direccion', 'Barrio', 'Codigo_Promo', 'Desc_Extras', 'Notas']);
 
   borrarItems(hi, p.id);
-  const filasItems = (p.items || []).map(function (l) {
-    return [p.id, p.canal || 'b2c', p.fechaPedido || '', l.id, l.nombre || '', l.cant,
-      l.lista || 0, l.unit || 0, l.costo || 0, l.cantMin || 0, l.porCant || 0,
-      l.subtotal || 0, l.descuento || 0, l.total || 0, l.costoTot || 0, l.ganancia || 0,
-      l.promo || 0, l.promoCant || 0, l.pct || ''];
+  const encabezadosItems = hi.getRange(1, 1, 1, hi.getLastColumn()).getValues()[0];
+  const columnasItems = mapaEncabezados(encabezadosItems);
+  const filasItems = itemsParaGuardar.map(function (item) {
+    return construirFilaItem(p, item, encabezadosItems, columnasItems);
   });
   if (filasItems.length) {
     const inicio = hi.getLastRow() + 1;
-    hi.getRange(inicio, 1, filasItems.length, COLS_ITEM.length).setValues(filasItems);
-    forzarTexto(hi, inicio, filasItems.length, [19]);
+    hi.getRange(inicio, 1, filasItems.length, encabezadosItems.length).setValues(filasItems);
+    forzarTextoPorEncabezado(hi, inicio, columnasItems, ['Porcentaje_Promo', 'Item_Id', 'Id_Proveedor', 'Modalidad_Abastecimiento']);
   }
+  p.estado = estadoNuevo;
+  p.items = itemsParaGuardar.map(function (item) { return item.linea; });
   return p;
+}
+
+function leerItemsExistentes(hi, idPedido) {
+  const filas = hi.getDataRange().getValues();
+  const columnas = mapaEncabezados(filas[0]);
+  const porId = {};
+  let hayHistoricos = false;
+  for (let i = 1; i < filas.length; i++) {
+    const fila = filas[i];
+    if (textoSimple(valorColumna(fila, columnas, 'Id_Pedido')) !== textoSimple(idPedido)) continue;
+    const itemId = textoSimple(valorColumna(fila, columnas, 'Item_Id'));
+    if (!itemId) {
+      hayHistoricos = true;
+      continue;
+    }
+    if (porId[itemId]) throw new Error('Item_Id duplicado en Items.');
+    porId[itemId] = {
+      fila: fila.slice(),
+      Item_Id: itemId,
+      Id_Producto: textoSimple(valorColumna(fila, columnas, 'Id_Producto')),
+      Cantidad: valorColumna(fila, columnas, 'Cantidad'),
+      Id_Proveedor: valorColumna(fila, columnas, 'Id_Proveedor'),
+      Modalidad_Abastecimiento: valorColumna(fila, columnas, 'Modalidad_Abastecimiento'),
+      Gestiona_Stock: valorColumna(fila, columnas, 'Gestiona_Stock')
+    };
+  }
+  return { porId: porId, hayHistoricos: hayHistoricos };
+}
+
+function prepararItemsParaGuardar(p, existentesPorId) {
+  const recibidos = {};
+  return (p.items || []).map(function (linea) {
+    linea = linea || {};
+    const itemIdRecibido = textoSimple(linea.itemId || linea.Item_Id);
+    let snapshot;
+    if (itemIdRecibido && existentesPorId[itemIdRecibido]) {
+      if (recibidos[itemIdRecibido]) throw new Error('Item_Id repetido en el pedido.');
+      recibidos[itemIdRecibido] = true;
+      snapshot = existentesPorId[itemIdRecibido];
+    } else {
+      snapshot = crearSnapshotDeItem(linea);
+    }
+    linea.itemId = snapshot.Item_Id;
+    linea.idProveedor = textoSimple(snapshot.Id_Proveedor);
+    linea.modalidadAbastecimiento = textoSimple(snapshot.Modalidad_Abastecimiento);
+    linea.gestionaStock = booleano(snapshot.Gestiona_Stock);
+    return { linea: linea, snapshot: snapshot };
+  });
+}
+
+function crearSnapshotDeItem(linea) {
+  const producto = obtenerProductoClasificado(linea.id);
+  return {
+    Item_Id: 'ITEM-' + Utilities.getUuid(),
+    Id_Proveedor: producto.Id_Proveedor,
+    Modalidad_Abastecimiento: producto.Modalidad_Abastecimiento,
+    Gestiona_Stock: producto.Gestiona_Stock
+  };
+}
+
+function construirFilaItem(p, item, encabezados, columnas) {
+  const valores = item.snapshot.fila ? item.snapshot.fila.slice() : Array(encabezados.length).fill('');
+  const l = item.linea;
+  const datos = {
+    Id_Pedido: p.id, Canal: p.canal || 'b2c', Fecha_Pedido: p.fechaPedido || '',
+    Id_Producto: l.id, Producto: l.nombre || '', Cantidad: l.cant,
+    Precio_Lista: l.lista || 0, Precio_Unitario: l.unit || 0, Costo_Unitario: l.costo || 0,
+    Cant_Min: l.cantMin || 0, Precio_Cantidad: l.porCant || 0, Subtotal: l.subtotal || 0,
+    Descuento: l.descuento || 0, Total: l.total || 0, Costo: l.costoTot || 0,
+    Ganancia: l.ganancia || 0, Precio_Promo: l.promo || 0,
+    Precio_Promo_Cantidad: l.promoCant || 0, Porcentaje_Promo: l.pct || '',
+    Item_Id: item.snapshot.Item_Id, Id_Proveedor: item.snapshot.Id_Proveedor,
+    Modalidad_Abastecimiento: item.snapshot.Modalidad_Abastecimiento,
+    Gestiona_Stock: item.snapshot.Gestiona_Stock
+  };
+  escribirObjetoEnFila(valores, columnas, datos);
+  return valores;
+}
+
+function aplicarVentasDePedidoSinLock(idPedido, itemsParaGuardar) {
+  itemsParaGuardar.forEach(function (item) {
+    if (!booleano(item.snapshot.Gestiona_Stock)) return;
+    const cantidad = numeroFinitoEstricto(item.linea.cant, 'Cantidad del ítem');
+    if (cantidad <= 0) throw new Error('Cantidad del ítem debe ser positiva para Entregado.');
+    registrarVentaInternaSinLock({
+      Id_Producto: item.linea.id,
+      Cantidad: -cantidad,
+      Id_Pedido: idPedido,
+      Item_Id: item.snapshot.Item_Id,
+      Gestiona_Stock_Snapshot: true
+    });
+  });
+}
+
+function protegerRecuperacionParcialSinLock(idPedido, itemsParaGuardar, existentesPorId) {
+  const ventas = ventasAsentadasDePedidoSinLock(idPedido);
+  if (!ventas.length) return;
+
+  const existentesIds = Object.keys(existentesPorId);
+  const candidatosPorId = {};
+  if (itemsParaGuardar.length !== existentesIds.length) {
+    throw new Error('La recuperación parcial exige reintentar el mismo pedido pendiente.');
+  }
+  itemsParaGuardar.forEach(function (item) {
+    const itemId = textoSimple(item.snapshot.Item_Id);
+    const existente = existentesPorId[itemId];
+    if (!itemId || !existente || candidatosPorId[itemId]) {
+      throw new Error('La recuperación parcial exige reintentar el mismo pedido pendiente.');
+    }
+    if (textoSimple(item.linea.id) !== existente.Id_Producto ||
+        numeroFinitoEstricto(item.linea.cant, 'Cantidad del ítem') !==
+          numeroFinitoEstricto(existente.Cantidad, 'Cantidad existente del ítem')) {
+      throw new Error('La recuperación parcial exige reintentar el mismo pedido pendiente.');
+    }
+    candidatosPorId[itemId] = item;
+  });
+  existentesIds.forEach(function (itemId) {
+    if (!candidatosPorId[itemId]) {
+      throw new Error('La recuperación parcial exige reintentar el mismo pedido pendiente.');
+    }
+  });
+  ventas.forEach(function (venta) {
+    const existente = existentesPorId[venta.Item_Id];
+    if (!existente || venta.Id_Producto !== existente.Id_Producto ||
+        venta.Cantidad !== -numeroFinitoEstricto(existente.Cantidad, 'Cantidad existente del ítem')) {
+      throw new Error('La recuperación parcial exige reintentar el mismo pedido pendiente.');
+    }
+  });
+}
+
+function ventasAsentadasDePedidoSinLock(idPedido) {
+  const h = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_MOVIMIENTOS_STOCK);
+  if (!h || h.getLastRow() < 2) return [];
+  const filas = h.getDataRange().getValues();
+  const columnas = validarEncabezados(filas[0], COLS_MOVIMIENTO, HOJA_MOVIMIENTOS_STOCK);
+  const pedido = textoSimple(idPedido);
+  return validarFilasMovimientos(filas, columnas, false).lista.filter(function (movimiento) {
+    return movimiento.Tipo === 'VENTA' && movimiento.Id_Pedido === pedido &&
+      movimiento.Clave_Idempotencia === 'VENTA:' + pedido + ':' + movimiento.Item_Id;
+  });
 }
 
 function envioParaGuardar(valor) {
@@ -327,6 +519,13 @@ function eliminarPedido(id) {
   asegurarEncabezadosPedidos(hp);
   const hi = hoja(HOJA_ITEMS, COLS_ITEM);
   const fila = buscarFila(hp, id);
+  if (fila > 0) {
+    const encabezados = hp.getRange(1, 1, 1, hp.getLastColumn()).getValues()[0];
+    const pedido = hp.getRange(fila, 1, 1, hp.getLastColumn()).getValues()[0];
+    if (textoSimple(valorColumna(pedido, mapaEncabezados(encabezados), 'Estado')) === 'Entregado') {
+      throw new Error('Un pedido Entregado no se puede eliminar.');
+    }
+  }
   if (fila > 0) hp.deleteRow(fila);
   borrarItems(hi, id);
 }
@@ -373,6 +572,463 @@ function eliminarCliente(id) {
   const h = hoja(HOJA_CLIENTES, COLS_CLIENTE);
   const n = buscarFila(h, id);
   if (n > 0) h.deleteRow(n);
+}
+
+/* ══════════════ ABASTECIMIENTO E INVENTARIO (C-02) ══════════════ */
+
+// Estas acciones están orientadas al admin sobre el deployment existente. El
+// nivel de protección deliberadamente no cambia en C-02 y no debe confundirse
+// con autenticación fuerte ni con una garantía de confidencialidad.
+function listarProveedores() {
+  const h = hojaExistente(HOJA_PROVEEDORES);
+  const filas = h.getDataRange().getValues();
+  const columnas = validarEncabezados(filas[0], COLS_PROVEEDOR, HOJA_PROVEEDORES);
+  const vistos = {};
+  return filas.slice(1).filter(function (fila) {
+    return !esVacio(valorColumna(fila, columnas, 'Id_Proveedor'));
+  }).map(function (fila) {
+    const id = textoSimple(valorColumna(fila, columnas, 'Id_Proveedor'));
+    if (vistos[id]) throw new Error('Id_Proveedor duplicado en Proveedores.');
+    vistos[id] = true;
+    const activoProveedor = normalizarActivoProveedor(valorColumna(fila, columnas, 'Activo'));
+    const nombre = textoSimple(valorColumna(fila, columnas, 'Nombre'));
+    if (!nombre) throw new Error('Nombre vacío en Proveedores.');
+    return {
+      Id_Proveedor: id,
+      Nombre: nombre,
+      Telefono: textoSimple(valorColumna(fila, columnas, 'Telefono')),
+      Direccion: textoSimple(valorColumna(fila, columnas, 'Direccion')),
+      Activo: activoProveedor,
+      Notas: textoSimple(valorColumna(fila, columnas, 'Notas'))
+    };
+  });
+}
+
+function normalizarActivoProveedor(valor) {
+  if (typeof valor === 'boolean') return valor;
+  const texto = textoSimple(valor).toUpperCase();
+  if (texto === 'SI' || texto === 'SÍ' || texto === 'TRUE') return true;
+  if (texto === 'NO' || texto === 'FALSE') return false;
+  throw new Error('Activo debe ser booleano en Proveedores.');
+}
+
+function validarProveedorPayload(proveedor, requiereOriginal) {
+  proveedor = proveedor || {};
+  const original = textoSimple(proveedor.Id_Proveedor_Original);
+  const id = textoSimple(proveedor.Id_Proveedor || original);
+  if (requiereOriginal && !original) throw new Error('Id_Proveedor_Original es obligatorio.');
+  if (!id) throw new Error('Id_Proveedor es obligatorio.');
+  if (requiereOriginal && id !== original) throw new Error('Id_Proveedor es inmutable.');
+  const nombre = textoSimple(proveedor.Nombre);
+  if (!nombre) throw new Error('Nombre es obligatorio.');
+  if (typeof proveedor.Activo !== 'boolean') throw new Error('Activo debe ser booleano.');
+  return {
+    Id_Proveedor: id, Nombre: nombre,
+    Telefono: textoSimple(proveedor.Telefono), Direccion: textoSimple(proveedor.Direccion),
+    Activo: proveedor.Activo, Notas: textoSimple(proveedor.Notas)
+  };
+}
+
+function crearProveedor(proveedor) {
+  return ejecutarConLockEscritura(function () { return crearProveedorSinLock(proveedor); });
+}
+
+function crearProveedorSinLock(proveedor) {
+  const datos = validarProveedorPayload(proveedor, false);
+  const h = hojaExistente(HOJA_PROVEEDORES);
+  const filas = h.getDataRange().getValues();
+  const columnas = validarEncabezados(filas[0], COLS_PROVEEDOR, HOJA_PROVEEDORES);
+  validarIdsUnicos(filas, columnas, 'Id_Proveedor', HOJA_PROVEEDORES);
+  if (buscarFilaPorTexto(filas, columnas, 'Id_Proveedor', datos.Id_Proveedor) >= 0) {
+    throw new Error('Ya existe el Id_Proveedor.');
+  }
+  const fila = Array(filas[0].length).fill('');
+  escribirObjetoEnFila(fila, columnas, datos);
+  h.appendRow(fila);
+  return datos;
+}
+
+function actualizarProveedor(proveedor) {
+  return ejecutarConLockEscritura(function () { return actualizarProveedorSinLock(proveedor); });
+}
+
+function actualizarProveedorSinLock(proveedor) {
+  const datos = validarProveedorPayload(proveedor, true);
+  const h = hojaExistente(HOJA_PROVEEDORES);
+  const filas = h.getDataRange().getValues();
+  const columnas = validarEncabezados(filas[0], COLS_PROVEEDOR, HOJA_PROVEEDORES);
+  validarIdsUnicos(filas, columnas, 'Id_Proveedor', HOJA_PROVEEDORES);
+  const indice = buscarFilaPorTexto(filas, columnas, 'Id_Proveedor', datos.Id_Proveedor);
+  if (indice < 1) throw new Error('No existe el proveedor solicitado.');
+  const fila = filas[indice].slice();
+  escribirObjetoEnFila(fila, columnas, datos);
+  h.getRange(indice + 1, 1, 1, fila.length).setValues([fila]);
+  return datos;
+}
+
+function clasificarProducto(clasificacion) {
+  return ejecutarConLockEscritura(function () { return clasificarProductoSinLock(clasificacion); });
+}
+
+function clasificarProductoSinLock(clasificacion) {
+  clasificacion = clasificacion || {};
+  const idProducto = textoSimple(clasificacion.Id_Producto);
+  const idProveedor = textoSimple(clasificacion.Id_Proveedor);
+  const modalidad = textoSimple(clasificacion.Modalidad_Abastecimiento).toUpperCase();
+  if (!idProducto) throw new Error('Id_Producto es obligatorio.');
+  if (!idProveedor) throw new Error('Id_Proveedor es obligatorio.');
+  if (MODALIDADES_ABASTECIMIENTO.indexOf(modalidad) < 0) throw new Error('Modalidad_Abastecimiento inválida.');
+  if (typeof clasificacion.Sin_Stock !== 'boolean') throw new Error('Sin_Stock debe ser booleano.');
+  const proveedor = listarProveedores().filter(function (p) { return p.Id_Proveedor === idProveedor; })[0];
+  if (!proveedor || !proveedor.Activo) throw new Error('El proveedor debe existir y estar activo.');
+
+  const h = hojaProductosCatalogo();
+  let encabezados = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
+  const previos = mapaEncabezados(encabezados);
+  // C-01 debe haber liberado Id_Proveedor preservando el código legacy bajo
+  // Codigo_Proveedor. La evidencia archivada acredita el valor anterior; este
+  // guard comprueba únicamente el estado materializado antes de escribir.
+  if (previos.Codigo_Proveedor === undefined) {
+    throw new Error('Precondición C-01 incumplida: falta Codigo_Proveedor.');
+  }
+  const filasPrevias = h.getDataRange().getValues();
+  const indicePrevio = buscarFilaPorTexto(filasPrevias, previos, 'Id', idProducto);
+  if (indicePrevio < 1) throw new Error('No existe el producto solicitado.');
+  const nuevos = ['Id_Proveedor', 'Modalidad_Abastecimiento', 'Sin_Stock'];
+  const faltantes = nuevos.filter(function (nombre) { return previos[nombre] === undefined; });
+  if (faltantes.length) {
+    const inicio = h.getLastColumn() + 1;
+    h.getRange(1, inicio, 1, faltantes.length).setValues([faltantes]);
+    h.getRange(1, inicio, 1, faltantes.length).setFontWeight('bold');
+    encabezados = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
+  }
+  const columnas = validarEncabezados(encabezados, ['Id', 'Codigo_Proveedor'].concat(nuevos), HOJA_PRODUCTOS);
+  const filas = h.getDataRange().getValues();
+  const indice = buscarFilaPorTexto(filas, columnas, 'Id', idProducto);
+  const fila = filas[indice].slice();
+  const datos = { Id_Proveedor: idProveedor, Modalidad_Abastecimiento: modalidad, Sin_Stock: clasificacion.Sin_Stock };
+  escribirObjetoEnFila(fila, columnas, datos);
+  h.getRange(indice + 1, 1, 1, encabezados.length).setValues([fila]);
+  return { Id_Producto: idProducto, Id_Proveedor: idProveedor, Modalidad_Abastecimiento: modalidad, Sin_Stock: clasificacion.Sin_Stock };
+}
+
+function registrarMovimiento(movimiento) {
+  return ejecutarConLockEscritura(function () { return registrarMovimientoSinLock(movimiento); });
+}
+
+function registrarMovimientoSinLock(movimiento) {
+  return agregarMovimientoValidado(movimiento, false);
+}
+
+function registrarVentaInterna(movimiento) {
+  return ejecutarConLockEscritura(function () { return registrarVentaInternaSinLock(movimiento); });
+}
+
+function registrarVentaInternaSinLock(movimiento) {
+  return agregarMovimientoValidado(movimiento, true, booleano(movimiento && movimiento.Gestiona_Stock_Snapshot));
+}
+
+function ejecutarConLockEscritura(escritura) {
+  const lock = LockService.getScriptLock();
+  let tomado = false;
+  try {
+    lock.waitLock(25000);
+    tomado = true;
+    return escritura();
+  } finally {
+    if (tomado) lock.releaseLock();
+  }
+}
+
+function agregarMovimientoValidado(movimiento, ventaInterna, gestionaStockSnapshot) {
+  movimiento = movimiento || {};
+  const producto = obtenerProductoClasificado(movimiento.Id_Producto);
+  if (!producto.Gestiona_Stock && !(ventaInterna && gestionaStockSnapshot)) {
+    throw new Error('El producto no gestiona stock.');
+  }
+  const tipo = ventaInterna ? 'VENTA' : textoSimple(movimiento.Tipo).toUpperCase();
+  if (!ventaInterna && tipo === 'VENTA') throw new Error('VENTA está reservada al escritor interno.');
+  if (TIPOS_MOVIMIENTO.indexOf(tipo) < 0) throw new Error('Tipo de movimiento inválido.');
+  const cantidad = numeroFinitoEstricto(movimiento.Cantidad, 'Cantidad');
+  if (tipo === 'INGRESO' && cantidad <= 0) throw new Error('INGRESO requiere cantidad positiva.');
+  if ((tipo === 'VENTA' || tipo === 'CONSUMO_PROPIO' || tipo === 'ROTURA_MERMA') && cantidad >= 0) {
+    throw new Error(tipo + ' requiere cantidad negativa.');
+  }
+  if (tipo === 'CORRECCION' && cantidad === 0) throw new Error('CORRECCION requiere cantidad distinta de cero.');
+  let costo = '';
+  if (tipo === 'INGRESO') {
+    costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario');
+    if (costo < 0) throw new Error('Costo_Unitario no puede ser negativo.');
+  } else if (!esVacio(movimiento.Costo_Unitario)) {
+    throw new Error('Costo_Unitario sólo corresponde a INGRESO.');
+  }
+  const referencia = textoSimple(movimiento.Referencia);
+  const nota = textoSimple(movimiento.Nota);
+  if (tipo === 'CORRECCION' && (!nota || !referencia)) throw new Error('CORRECCION requiere Nota y Referencia.');
+  const idPedido = textoSimple(movimiento.Id_Pedido);
+  const itemId = textoSimple(movimiento.Item_Id);
+  let clave = textoSimple(movimiento.Clave_Idempotencia);
+  if (ventaInterna) {
+    if (!idPedido || !itemId) throw new Error('VENTA requiere Id_Pedido e Item_Id.');
+    const esperada = 'VENTA:' + idPedido + ':' + itemId;
+    if (clave && clave !== esperada) throw new Error('Clave de idempotencia inválida.');
+    clave = esperada;
+  } else {
+    if (clave.indexOf('VENTA:') === 0) throw new Error('El namespace VENTA: está reservado al escritor interno.');
+    if (idPedido || itemId) throw new Error('Id_Pedido e Item_Id están reservados al escritor interno de VENTA.');
+  }
+
+  const hExistente = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_MOVIMIENTOS_STOCK);
+  let existentes = { lista: [], porId: {}, porClave: {} };
+  if (hExistente) {
+    const filas = hExistente.getDataRange().getValues();
+    const columnas = validarEncabezados(filas[0], COLS_MOVIMIENTO, HOJA_MOVIMIENTOS_STOCK);
+    existentes = validarFilasMovimientos(filas, columnas, false);
+  }
+  if (tipo === 'CORRECCION') {
+    const antecedente = existentes.porId[referencia];
+    if (!antecedente || antecedente.Id_Producto !== producto.Id_Producto) {
+      throw new Error('Referencia de CORRECCION inexistente o de otro producto.');
+    }
+  }
+  if (clave && existentes.porClave[clave]) {
+    const anterior = existentes.porClave[clave];
+    const candidato = {
+      Id_Producto: producto.Id_Producto, Tipo: tipo, Cantidad: cantidad,
+      Costo_Unitario: costo, Referencia: referencia, Nota: nota,
+      Id_Pedido: idPedido, Item_Id: itemId, Clave_Idempotencia: clave
+    };
+    if (contenidoMovimientoIgual(anterior, candidato)) {
+      return anterior;
+    }
+    throw new Error('Colisión incompatible de idempotencia.');
+  }
+  const registro = {
+    Movimiento_Id: Utilities.getUuid(), Fecha: new Date(), Id_Producto: producto.Id_Producto,
+    Tipo: tipo, Cantidad: cantidad, Costo_Unitario: costo, Referencia: referencia,
+    Nota: nota, Id_Pedido: idPedido, Item_Id: itemId, Clave_Idempotencia: clave
+  };
+  const fila = COLS_MOVIMIENTO.map(function (nombre) { return registro[nombre]; });
+  const h = hExistente || hojaMovimientos();
+  h.appendRow(fila);
+  return registro;
+}
+
+function contenidoMovimientoIgual(anterior, candidato) {
+  return ['Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota',
+    'Id_Pedido', 'Item_Id', 'Clave_Idempotencia'].every(function (campo) {
+    return anterior[campo] === candidato[campo];
+  });
+}
+
+function resumenStock() {
+  const productos = listarProductosClasificados();
+  const h = hojaMovimientosExistente();
+  const filas = h.getDataRange().getValues();
+  const columnas = validarEncabezados(filas[0], COLS_MOVIMIENTO, HOJA_MOVIMIENTOS_STOCK);
+  const ledger = validarFilasMovimientos(filas, columnas, true).lista;
+  const saldos = {};
+  ledger.forEach(function (movimiento) {
+    saldos[movimiento.Id_Producto] = (saldos[movimiento.Id_Producto] || 0) + movimiento.Cantidad;
+  });
+  return productos.map(function (producto) {
+    return {
+      Id_Producto: producto.Id_Producto,
+      Id_Proveedor: producto.Id_Proveedor,
+      Modalidad_Abastecimiento: producto.Modalidad_Abastecimiento,
+      Gestiona_Stock: producto.Gestiona_Stock,
+      Sin_Stock: producto.Sin_Stock,
+      Saldo: producto.Gestiona_Stock ? (saldos[producto.Id_Producto] || 0) : null
+    };
+  });
+}
+
+// Esta lectura no inicializa el libro ni resuelve referencias contra pedidos,
+// clientes, contactos, proveedores o Finanzas. El historial de inventario
+// conserva sólo la evidencia operativa inmutable que ya vive en el ledger.
+function listarMovimientos(filtros) {
+  filtros = filtros || {};
+  const idProducto = textoSimple(filtros.Id_Producto);
+  const tipo = textoSimple(filtros.Tipo).toUpperCase();
+  if (tipo && TIPOS_MOVIMIENTO.indexOf(tipo) < 0) throw new Error('Tipo de movimiento inválido.');
+
+  const h = hojaMovimientosExistente();
+  const filas = h.getDataRange().getValues();
+  const columnas = validarEncabezados(filas[0], COLS_MOVIMIENTO, HOJA_MOVIMIENTOS_STOCK);
+  return validarFilasMovimientos(filas, columnas, false).lista
+    .filter(function (movimiento) {
+      return (!idProducto || movimiento.Id_Producto === idProducto) && (!tipo || movimiento.Tipo === tipo);
+    })
+    .sort(function (a, b) { return new Date(b.Fecha).getTime() - new Date(a.Fecha).getTime(); })
+    .map(proyectarMovimientoHistorial);
+}
+
+function proyectarMovimientoHistorial(movimiento) {
+  const resultado = {
+    Movimiento_Id: movimiento.Movimiento_Id,
+    Fecha: movimiento.Fecha,
+    Id_Producto: movimiento.Id_Producto,
+    Tipo: movimiento.Tipo,
+    Cantidad: movimiento.Cantidad,
+    Nota: movimiento.Nota,
+    Referencia: movimiento.Referencia
+  };
+  if (movimiento.Tipo === 'INGRESO') resultado.Costo_Unitario = movimiento.Costo_Unitario;
+  if (movimiento.Id_Pedido) resultado.Id_Pedido = movimiento.Id_Pedido;
+  if (movimiento.Item_Id) resultado.Item_Id = movimiento.Item_Id;
+  return resultado;
+}
+
+function validarFilasMovimientos(filas, columnas, validarProductos) {
+  const lista = [];
+  const porId = {};
+  const porClave = {};
+  for (let i = 1; i < filas.length; i++) {
+    const fila = filas[i];
+    if (fila.every(esVacio)) continue;
+    const movimiento = {};
+    COLS_MOVIMIENTO.forEach(function (nombre) { movimiento[nombre] = valorColumna(fila, columnas, nombre); });
+    movimiento.Movimiento_Id = textoSimple(movimiento.Movimiento_Id);
+    movimiento.Id_Producto = textoSimple(movimiento.Id_Producto);
+    movimiento.Tipo = textoSimple(movimiento.Tipo).toUpperCase();
+    movimiento.Cantidad = numeroFinitoEstricto(movimiento.Cantidad, 'Cantidad');
+    movimiento.Referencia = textoSimple(movimiento.Referencia);
+    movimiento.Nota = textoSimple(movimiento.Nota);
+    movimiento.Id_Pedido = textoSimple(movimiento.Id_Pedido);
+    movimiento.Item_Id = textoSimple(movimiento.Item_Id);
+    movimiento.Clave_Idempotencia = textoSimple(movimiento.Clave_Idempotencia);
+    if (!movimiento.Movimiento_Id || porId[movimiento.Movimiento_Id]) throw new Error('Movimiento_Id vacío o duplicado.');
+    if (esVacio(movimiento.Fecha)) throw new Error('Fecha de movimiento obligatoria.');
+    if (!movimiento.Id_Producto) throw new Error('Id_Producto de movimiento obligatorio.');
+    if (TIPOS_MOVIMIENTO.indexOf(movimiento.Tipo) < 0) throw new Error('Tipo de movimiento inválido.');
+    if (movimiento.Tipo === 'INGRESO') {
+      if (movimiento.Cantidad <= 0) throw new Error('INGRESO malformado.');
+      const costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario');
+      if (costo < 0) throw new Error('Costo_Unitario inválido.');
+      movimiento.Costo_Unitario = costo;
+    } else if (movimiento.Tipo === 'CORRECCION') {
+      if (!movimiento.Cantidad || !movimiento.Nota || !movimiento.Referencia ||
+          !porId[movimiento.Referencia] || porId[movimiento.Referencia].Id_Producto !== movimiento.Id_Producto) {
+        throw new Error('CORRECCION malformada o con antecedente inválido.');
+      }
+    } else if (movimiento.Cantidad >= 0) {
+      throw new Error('Salida de stock malformada.');
+    }
+    if (movimiento.Tipo === 'VENTA') {
+      const esperada = 'VENTA:' + movimiento.Id_Pedido + ':' + movimiento.Item_Id;
+      if (!movimiento.Id_Pedido || !movimiento.Item_Id || movimiento.Clave_Idempotencia !== esperada) {
+        throw new Error('VENTA con idempotencia inválida.');
+      }
+    }
+    if (movimiento.Clave_Idempotencia) {
+      if (porClave[movimiento.Clave_Idempotencia]) throw new Error('Clave_Idempotencia duplicada.');
+      porClave[movimiento.Clave_Idempotencia] = movimiento;
+    }
+    // Una VENTA ya asentada puede corresponder a un snapshot histórico de
+    // C-03 aunque el catálogo se haya reclasificado después. Las demás
+    // salidas conservan la validación de clasificación vigente de C-02.
+    if (validarProductos && movimiento.Tipo !== 'VENTA' && !obtenerProductoClasificado(movimiento.Id_Producto).Gestiona_Stock) {
+      throw new Error('Movimiento para producto sin stock gestionado.');
+    }
+    porId[movimiento.Movimiento_Id] = movimiento;
+    lista.push(movimiento);
+  }
+  return { lista: lista, porId: porId, porClave: porClave };
+}
+
+function listarProductosClasificados() {
+  const h = hojaProductosCatalogo();
+  const filas = h.getDataRange().getValues();
+  const columnas = validarEncabezados(filas[0], ['Id', 'Codigo_Proveedor'], HOJA_PRODUCTOS);
+  return filas.slice(1).filter(function (fila) {
+    return !esVacio(valorColumna(fila, columnas, 'Id'));
+  }).map(function (fila) {
+    const modalidadRaw = textoSimple(valorColumna(fila, columnas, 'Modalidad_Abastecimiento')).toUpperCase();
+    const modalidad = modalidadRaw || 'CONTRA_PEDIDO';
+    if (MODALIDADES_ABASTECIMIENTO.indexOf(modalidad) < 0) throw new Error('Modalidad_Abastecimiento inválida en Productos.');
+    const sinStockRaw = valorColumna(fila, columnas, 'Sin_Stock');
+    if (!esVacio(sinStockRaw) && typeof sinStockRaw !== 'boolean') throw new Error('Sin_Stock inválido en Productos.');
+    return {
+      Id_Producto: textoSimple(valorColumna(fila, columnas, 'Id')),
+      Id_Proveedor: textoSimple(valorColumna(fila, columnas, 'Id_Proveedor')),
+      Modalidad_Abastecimiento: modalidad,
+      Gestiona_Stock: modalidad === 'CONSIGNACION' || modalidad === 'STOCK_PROPIO',
+      Sin_Stock: esVacio(sinStockRaw) ? false : sinStockRaw
+    };
+  });
+}
+
+function obtenerProductoClasificado(idProducto) {
+  const id = textoSimple(idProducto);
+  const producto = listarProductosClasificados().filter(function (p) { return p.Id_Producto === id; })[0];
+  if (!producto) throw new Error('No existe el producto solicitado.');
+  return producto;
+}
+
+function hojaProductosCatalogo() {
+  const id = PropertiesService.getScriptProperties().getProperty(PROPIEDAD_PLANILLA_CATALOGO);
+  if (!id) throw new Error('Falta configurar la planilla de catálogo.');
+  const h = SpreadsheetApp.openById(id).getSheetByName(HOJA_PRODUCTOS);
+  if (!h) throw new Error('No existe la hoja ' + HOJA_PRODUCTOS + ' en la planilla de catálogo.');
+  return h;
+}
+
+function hojaMovimientos() {
+  return hoja(HOJA_MOVIMIENTOS_STOCK, COLS_MOVIMIENTO);
+}
+
+function hojaMovimientosExistente() {
+  const h = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_MOVIMIENTOS_STOCK);
+  if (!h) throw new Error('No existe la hoja requerida: ' + HOJA_MOVIMIENTOS_STOCK + '.');
+  return h;
+}
+
+function hojaExistente(nombre) {
+  const h = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(nombre);
+  if (!h) throw new Error('No existe la hoja requerida: ' + nombre);
+  return h;
+}
+
+function validarEncabezados(encabezados, requeridos, nombreHoja) {
+  const columnas = mapaEncabezados(encabezados || []);
+  requeridos.forEach(function (nombre) {
+    if (columnas[nombre] === undefined) throw new Error('Falta el encabezado ' + nombre + ' en ' + nombreHoja + '.');
+  });
+  return columnas;
+}
+
+function validarIdsUnicos(filas, columnas, campo, nombreHoja) {
+  const vistos = {};
+  filas.slice(1).forEach(function (fila) {
+    const id = textoSimple(valorColumna(fila, columnas, campo));
+    if (!id) return;
+    if (vistos[id]) throw new Error(campo + ' duplicado en ' + nombreHoja + '.');
+    vistos[id] = true;
+  });
+}
+
+function buscarFilaPorTexto(filas, columnas, campo, valor) {
+  for (let i = 1; i < filas.length; i++) {
+    if (textoSimple(valorColumna(filas[i], columnas, campo)) === textoSimple(valor)) return i;
+  }
+  return -1;
+}
+
+function escribirObjetoEnFila(fila, columnas, objeto) {
+  Object.keys(objeto).forEach(function (nombre) {
+    if (columnas[nombre] !== undefined) fila[columnas[nombre]] = objeto[nombre];
+  });
+}
+
+function textoSimple(valor) {
+  return esVacio(valor) ? '' : String(valor).trim();
+}
+
+function numeroFinitoEstricto(valor, campo) {
+  if (esVacio(valor) || typeof valor === 'boolean') throw new Error(campo + ' debe ser numérico.');
+  const n = Number(valor);
+  if (!isFinite(n)) throw new Error(campo + ' debe ser finito.');
+  return n;
 }
 
 /* ══════════════ AYUDANTES DE HOJAS ══════════════ */
@@ -477,7 +1133,8 @@ function indiceColumna(h, nombre) {
 function borrarItems(hi, idPedido) {
   const ultima = hi.getLastRow();
   if (ultima < 2) return;
-  const ids = hi.getRange(2, 1, ultima - 1, 1).getValues();
+  const columnaIdPedido = indiceColumna(hi, 'Id_Pedido');
+  const ids = hi.getRange(2, columnaIdPedido, ultima - 1, 1).getValues();
   for (let i = ids.length - 1; i >= 0; i--) if (Number(ids[i][0]) === Number(idPedido)) hi.deleteRow(i + 2);
 }
 

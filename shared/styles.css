@@ -4071,6 +4071,18 @@ button.catalogo-crumb-paso:hover { color: var(--accent); text-decoration: underl
   color: var(--t3);
   font-weight: 400;
 }
+.producto-no-disponible {
+  margin: var(--space-2) 0 0;
+  color: var(--t2);
+  font-size: .72rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.producto-no-disponible--detalle {
+  margin-top: var(--space-3);
+  font-size: .82rem;
+}
+.producto-no-disponible--carrito { margin-bottom: 0; }
 
 /* Precio con descuento por cantidad, debajo del precio normal.
    El texto en general queda gris; solo el precio (strong) resalta. */
@@ -5282,6 +5294,7 @@ body[data-canal="b2c"] .ci-subtotal-etiqueta {
 .whatsapp-btn:hover { background: #157032; transform: translateY(-1px); }
 .whatsapp-btn:active { transform: translateY(0); }
 .whatsapp-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.whatsapp-btn:disabled { background: var(--surface-3); color: var(--t3); cursor: not-allowed; transform: none; }
 
 
 /* ══════════════════════════════════════════════════════
