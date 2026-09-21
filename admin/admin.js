@@ -233,6 +233,13 @@ function resumenInventarioDelCanal(resumen, productosCanal) {
     .map(producto => ({ ...producto }));
 }
 
+function filtrarResumenStock(filas, filtro = 'gestionado') {
+  const resumen = (filas || []).map(fila => ({ ...fila }));
+  return filtro === 'todos'
+    ? resumen
+    : resumen.filter(fila => fila.Gestiona_Stock === true);
+}
+
 function construirMovimientoManual(campos, clave) {
   campos = campos || {};
   const idProducto = textoOperativo(campos.Id_Producto);
@@ -885,7 +892,7 @@ if (typeof module === 'object' && module.exports) {
     calcularPedido, modoEnvioPedido, paraGuardar, esPedidoAlCosto,
     calcularMetricas, calcularEstadisticasClientes, incorporarPedidoGuardado,
     actualizarPedidoTrasGuardado, construirProveedorParaGuardar,
-    construirClasificacionProducto, resumenInventarioDelCanal,
+    construirClasificacionProducto, resumenInventarioDelCanal, filtrarResumenStock,
     construirMovimientoManual, prepararIntentoMovimientoManual,
     crearErrorRechazoConcluyente, resolverFalloMovimientoPendiente,
     productosConStockGestionado, filasHistorialOperativo,
@@ -970,18 +977,22 @@ function avisarCatalogoFallido(err) {
 function irASeccion(nombre) {
   const esPedidos = nombre === 'pedidos';
   const esClientes = nombre === 'clientes';
+  const esProveedores = nombre === 'proveedores';
   const esInventario = nombre === 'inventario';
   document.getElementById('navPedidos').classList.toggle('on', esPedidos);
   document.getElementById('navClientes').classList.toggle('on', esClientes);
+  document.getElementById('navProveedores').classList.toggle('on', esProveedores);
   document.getElementById('navInventario').classList.toggle('on', esInventario);
   document.getElementById('vistaClientes').hidden = !esClientes;
+  document.getElementById('vistaProveedores').hidden = !esProveedores;
   document.getElementById('vistaLista').hidden = !esPedidos;
   document.getElementById('vistaInventario').hidden = !esInventario;
   document.getElementById('vistaEditor').hidden = true;
 
   if (esPedidos) pintarLista();
   else if (esClientes) pintarClientes();
-  else recargarInventario();
+  else if (esProveedores) recargarProveedores();
+  else if (esInventario) recargarInventario();
 }
 
 function setCanal(canal) {
@@ -989,6 +1000,7 @@ function setCanal(canal) {
   document.getElementById('canalB2C').classList.toggle('on', canal === 'b2c');
   document.getElementById('canalB2B').classList.toggle('on', canal === 'b2b');
   if (document.getElementById('navInventario').classList.contains('on')) recargarInventario();
+  else if (document.getElementById('navProveedores').classList.contains('on')) pintarProveedores();
   else if (document.getElementById('navClientes').classList.contains('on')) irASeccion('clientes');
   else verLista();
 }
@@ -997,9 +1009,11 @@ function verLista() {
   document.getElementById('vistaLista').hidden = false;
   document.getElementById('vistaEditor').hidden = true;
   document.getElementById('vistaClientes').hidden = true;
+  document.getElementById('vistaProveedores').hidden = true;
   document.getElementById('vistaInventario').hidden = true;
   document.getElementById('navPedidos').classList.add('on');
   document.getElementById('navClientes').classList.remove('on');
+  document.getElementById('navProveedores').classList.remove('on');
   document.getElementById('navInventario').classList.remove('on');
   edicion = null;
   pintarLista();
@@ -1086,7 +1100,8 @@ function pintarProveedores() {
   const proveedores = PROVEEDORES.slice().sort((a, b) => String(a.Nombre).localeCompare(String(b.Nombre)));
   cuerpo.innerHTML = proveedores.map(proveedor => {
     const idCodificado = encodeURIComponent(proveedor.Id_Proveedor);
-    return `<tr><td><b>${esc(proveedor.Nombre)}</b><small>${esc(proveedor.Id_Proveedor)}</small></td>` +
+    return `<tr><td><b>${esc(proveedor.Nombre)}</b></td>` +
+      `<td>${esc(proveedor.Id_Proveedor)}</td>` +
       `<td>${proveedor.Activo ? 'Activo' : 'Inactivo'}</td>` +
       `<td><button class="btn btn--peque" type="button" onclick="editarProveedorCodificado('${idCodificado}')">Editar</button></td></tr>`;
   }).join('');
@@ -1110,6 +1125,16 @@ function editarProveedor(idProveedor) {
   document.getElementById('proveedorNotas').value = proveedor.Notas || '';
   document.getElementById('proveedorActivo').checked = proveedor.Activo === true;
   document.getElementById('proveedorGuardar').textContent = 'Guardar cambios';
+  document.getElementById('modalProveedorTitulo').textContent = 'Editar proveedor';
+  document.getElementById('modalProveedor').hidden = false;
+  document.getElementById('proveedorNombre').focus();
+}
+
+function nuevoProveedor() {
+  cancelarEdicionProveedor();
+  document.getElementById('modalProveedorTitulo').textContent = 'Nuevo proveedor';
+  document.getElementById('modalProveedor').hidden = false;
+  document.getElementById('proveedorId').focus();
 }
 
 function cancelarEdicionProveedor() {
@@ -1119,6 +1144,11 @@ function cancelarEdicionProveedor() {
   document.getElementById('proveedorId').readOnly = false;
   document.getElementById('proveedorActivo').checked = true;
   document.getElementById('proveedorGuardar').textContent = 'Guardar proveedor';
+}
+
+function cerrarModalProveedor() {
+  cancelarEdicionProveedor();
+  document.getElementById('modalProveedor').hidden = true;
 }
 
 async function guardarProveedorDesdeForm(evento) {
@@ -1136,8 +1166,8 @@ async function guardarProveedorDesdeForm(evento) {
     if (original && proveedor.Activo === false && proveedorEnEdicion && proveedorEnEdicion.Activo === true &&
         !confirm('El proveedor quedará inactivo. Sus referencias históricas se conservarán. ¿Continuar?')) return;
     if (original) await API.actualizarProveedor(proveedor); else await API.crearProveedor(proveedor);
-    cancelarEdicionProveedor();
-    await recargarInventario();
+    cerrarModalProveedor();
+    await recargarProveedores();
     toast('Proveedor guardado.');
   } catch (error) {
     toast('No se pudo guardar el proveedor: ' + error.message, true);
@@ -1190,7 +1220,8 @@ function pintarStock() {
   const cuerpo = document.getElementById('stockTbody');
   const vacio = document.getElementById('stockVacio');
   const productos = productosCanalActual();
-  const filas = resumenInventarioDelCanal(RESUMEN_STOCK, productos);
+  const filtro = document.getElementById('filtroStock').value;
+  const filas = filtrarResumenStock(resumenInventarioDelCanal(RESUMEN_STOCK, productos), filtro);
   cuerpo.innerHTML = filas.map(fila => {
     const producto = productoOperativoPorId(fila.Id_Producto, productos);
     return `<tr><td>${esc(producto?.n || fila.Id_Producto)}</td>` +
@@ -1201,6 +1232,37 @@ function pintarStock() {
       `<td>${fila.Sin_Stock ? 'Sí (manual)' : 'No'}</td></tr>`;
   }).join('');
   vacio.hidden = filas.length !== 0;
+}
+
+function abrirModalClasificacion() {
+  pintarSelectoresInventario();
+  document.getElementById('modalClasificacion').hidden = false;
+  document.getElementById('clasificacionProducto').focus();
+}
+
+function cerrarModalClasificacion() {
+  document.getElementById('modalClasificacion').hidden = true;
+}
+
+function abrirModalMovimiento() {
+  pintarSelectoresInventario();
+  document.getElementById('modalMovimiento').hidden = false;
+  document.getElementById('movimientoProducto').focus();
+}
+
+function cerrarModalMovimiento() {
+  document.getElementById('modalMovimiento').hidden = true;
+}
+
+function abrirModalHistorial() {
+  pintarSelectoresInventario();
+  pintarHistorial();
+  document.getElementById('modalHistorial').hidden = false;
+  document.getElementById('historialProducto').focus();
+}
+
+function cerrarModalHistorial() {
+  document.getElementById('modalHistorial').hidden = true;
 }
 
 function actualizarCamposMovimiento() {
@@ -1300,6 +1362,17 @@ function filtrarHistorial(evento) {
     Tipo: document.getElementById('historialTipo').value
   });
   pintarHistorial();
+}
+
+async function recargarProveedores() {
+  try {
+    PROVEEDORES = await API.listarProveedores();
+    pintarProveedores();
+  } catch (error) {
+    PROVEEDORES = [];
+    pintarProveedores();
+    toast('No se pudo cargar proveedores: ' + error.message, true);
+  }
 }
 
 async function recargarInventario() {
@@ -1692,6 +1765,7 @@ function abrirPedido(id) {
 function abrirEditor(esNuevo) {
   document.getElementById('vistaLista').hidden = true;
   document.getElementById('vistaClientes').hidden = true;
+  document.getElementById('vistaProveedores').hidden = true;
   document.getElementById('vistaInventario').hidden = true;
   document.getElementById('vistaEditor').hidden = false;
   document.getElementById('btnEliminar').hidden = esNuevo;

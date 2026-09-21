@@ -24,6 +24,44 @@ test('el panel presenta Pedir a Proveedor sin alterar la acción de copiar lista
   assert.match(script, /onclick="copiarListaAbastecimiento\(\$\{indice\}\)"[^>]*>Copiar lista/);
 });
 
+test('admin separates suppliers and keeps inventory actions in read-only-opening modals', () => {
+  const markup = fs.readFileSync(path.join(__dirname, '..', 'admin', 'index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.js'), 'utf8');
+
+  assert.match(markup, /id="navProveedores" onclick="irASeccion\('proveedores'\)"[^>]*>Proveedores/);
+  assert.match(markup, /id="vistaProveedores"[\s\S]*?Nuevo proveedor[\s\S]*?<th>ID<\/th>[\s\S]*?<th>Estado<\/th>/);
+  assert.match(markup, /id="filtroStock"[\s\S]*?<option value="gestionado" selected>Stock gestionado<\/option>[\s\S]*?<option value="todos">Todos los productos<\/option>/);
+  assert.match(markup, /onclick="abrirModalClasificacion\(\)"[^>]*>Clasificar producto/);
+  assert.match(markup, /onclick="abrirModalMovimiento\(\)"[^>]*>Registrar movimiento/);
+  assert.match(markup, /onclick="abrirModalHistorial\(\)"[^>]*>Ver historial/);
+  assert.match(markup, /id="modalProveedor"[\s\S]*?id="proveedorForm"/);
+  assert.match(markup, /id="modalClasificacion"[\s\S]*?guardarClasificacionDesdeForm/);
+  assert.match(markup, /id="modalMovimiento"[\s\S]*?guardarMovimientoDesdeForm/);
+  assert.match(markup, /id="modalHistorial"[\s\S]*?filtrarHistorial/);
+  for (const nombre of ['abrirModalClasificacion', 'abrirModalMovimiento', 'abrirModalHistorial']) {
+    const apertura = script.match(new RegExp(`function ${nombre}\\(\\) \\{([\\s\\S]*?)\\n\\}`));
+    assert.ok(apertura, `${nombre} debe existir`);
+    assert.doesNotMatch(apertura[1], /API\./, `${nombre} no debe escribir al abrir`);
+  }
+});
+
+test('inventory stock filter keeps zero and negative managed balances, while all includes contra pedido', () => {
+  const filas = [
+    { Id_Producto: 'P-0', Gestiona_Stock: true, Saldo: 0 },
+    { Id_Producto: 'P-N', Gestiona_Stock: true, Saldo: -3 },
+    { Id_Producto: 'P-CP', Gestiona_Stock: false, Modalidad_Abastecimiento: 'CONTRA_PEDIDO', Saldo: null }
+  ];
+
+  assert.deepEqual(
+    admin.filtrarResumenStock(filas, 'gestionado').map(fila => fila.Id_Producto),
+    ['P-0', 'P-N']
+  );
+  assert.deepEqual(
+    admin.filtrarResumenStock(filas, 'todos').map(fila => fila.Id_Producto),
+    ['P-0', 'P-N', 'P-CP']
+  );
+});
+
 test('B2C rounds catalog prices and applies the code discount line by line', () => {
   const quantityDiscount = admin.lineaDesdeCatalogo({
     id: 'regular', n: 'Producto regular', pv: '6.025', pp: '6.025',

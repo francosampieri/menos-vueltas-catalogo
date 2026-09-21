@@ -413,6 +413,28 @@ button { cursor: pointer; background: none; border: none; }
 .inventario-acciones { display: flex; gap: var(--s2); flex-wrap: wrap; }
 .inventario-estado { min-height: 1.2em; color: var(--accent-2); font-size: .84rem; }
 .inventario-estado.error { color: var(--rojo); }
+.panel-tit--con-control { justify-content: space-between; }
+.panel-tit--con-control h2 { margin: 0; font: inherit; }
+.inventario-filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--t2);
+  font-family: var(--font-body);
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.inventario-filtro select {
+  min-height: 34px;
+  padding: 0 28px 0 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r2);
+  background: var(--surface-2);
+  color: var(--t1);
+  font: inherit;
+}
 .control-check {
   align-self: end;
   margin: 0;
@@ -430,9 +452,12 @@ button { cursor: pointer; background: none; border: none; }
    dentro de la grilla y el desplazamiento queda contenido en su wrapper, sin
    ensanchar la página en desktop ni en móvil. */
 #vistaInventario,
+#vistaProveedores,
 #vistaInventario .inventario-grid,
 #vistaInventario .inventario-grid > .panel { min-width: 0; }
-#vistaInventario .tabla-wrap {
+#vistaInventario .tabla-wrap,
+#vistaProveedores .tabla-wrap,
+.modal .tabla-wrap {
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1239,9 +1264,12 @@ input[type="date"], input[type="number"] {
 @media (max-width: 720px) {
   .ad-top-inner { height: auto; padding: var(--s3) var(--s4); flex-wrap: wrap; gap: var(--s2); }
   .ad-sep, .ad-seccion { display: none; }
+  .ad-nav { flex-wrap: wrap; }
   .ad-nav button { padding: 6px 11px; font-size: .8rem; }
   .ad-canal { margin-left: auto; }
   .modal-caja { padding: var(--s4); }
+  .panel-tit--con-control { align-items: flex-start; flex-direction: column; }
+  .inventario-filtro { width: 100%; justify-content: space-between; }
   .campo-con-boton { flex-direction: column; }
   .btn--mapa { width: 100%; justify-content: center; }
   .ad-wrap { padding: var(--s4); }
