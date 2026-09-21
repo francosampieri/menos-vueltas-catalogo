@@ -12,10 +12,10 @@
 
 ## 3. Private administrative presentation
 
-- [ ] 3.1 Present each derived worklist and its copy action only in the authorized private admin flow, with terminology that does not assume Distrosec is the only provider; verify no order state, item snapshot, stock movement, balance, or payment record changes after view or copy.
+- [x] 3.1 Manual controlled operational check: the authorized private admin worklist showed only the eligible Distrosec B2C contra-pedido line; Copy list did not change the order or balance, and the worklist excluded the delivered line afterward. No payment or public-channel change occurred.
 - [x] 3.2 Ensure the private presentation omits customer personal data, costs, balances, and ledger details and that no provider/modalidad/worklist data enters B2C, B2B, public catalog output, or publication workflows; verify through the affected admin and public data paths.
 
 ## 4. Focused verification and rollout guard
 
-- [ ] 4.1 Run the focused deterministic tests/validations and record results for all specified grouping and exclusion scenarios without real customer data; verify the existing test/validation baseline remains green.
-- [ ] 4.2 Manually verify the affected private admin flow on desktop and mobile: copy a one-supplier worklist, inspect a mixed-supplier order, and confirm cancelled/delivered lines are absent; verify no state transition or public-channel change occurs.
+- [x] 4.1 Focused deterministic suite covers grouping, mixed providers, cancellation, eligibility/exclusion, and the Distrosec projection with non-personal fixtures; the existing suite is green. The manual controlled case validated the worklist, Copy list, modality exclusion, and post-delivery exclusion only.
+- [x] 4.2 Manual controlled operational check verified the private admin worklist and Copy list on desktop and mobile, with no mobile overflow and no order, snapshot, stock, balance, payment, or public-channel mutation from viewing or copying. Mixed-provider and cancelled-line cases are covered by the suite, not claimed as manual checks.

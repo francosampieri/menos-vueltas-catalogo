@@ -38,7 +38,7 @@
 
 1. El carrito web no es una confirmación final: deriva el pedido a WhatsApp.
 2. Por WhatsApp se solicita o confirma dirección y se acuerda el día y horario de entrega.
-3. La compra al proveedor se realiza contra pedido; no existe stock propio como regla general.
+3. Cada producto se clasifica operativamente como `CONTRA_PEDIDO`, `CONSIGNACION` o `STOCK_PROPIO`. La modalidad define su abastecimiento; B2C y B2B mantienen su separación comercial.
 4. Los pedidos B2C se entregan actualmente los viernes. Se aceptan pedidos todos los días y se recomienda realizarlos entre martes y miércoles; los ingresados hasta el jueves a las 16 h pueden incluirse en la entrega de ese viernes. Los posteriores al corte del jueves pueden incluirse sólo si es viable; los pedidos ingresados el viernes pasan a la semana siguiente y se informa al cliente.
 5. Los pedidos se agrupan y se retiran de la distribuidora el día previo o el mismo día de entrega, normalmente en una visita semanal.
 6. El cobro ocurre al entregar el pedido, en efectivo o transferencia.
@@ -52,6 +52,17 @@
 14. Si una falta o sustitución se detecta con tiempo antes del retiro, se consulta al cliente por WhatsApp. Si se detecta al retirar el pedido y no hay tiempo de consultar, el equipo puede elegir una alternativa razonablemente equivalente; al entregar debe explicar el cambio y el cliente puede rechazarla, en cuyo caso se elimina ese producto del pedido.
 15. Si no existe una alternativa clara, se elimina el producto faltante y se informa la situación al cliente. Las pequeñas diferencias de precio pueden absorberse para evitar perjuicio al cliente; no es una regla automática para todos los casos.
 16. Un pedido al costo no cobra envío ni extras. Permanece en la lista operativa y puede incluirse al armar el pedido a la distribuidora, pero no aporta a métricas ni a estadísticas comerciales o de clientes.
+17. `Sin_Stock` es una marca manual, global y pública de disponibilidad. Si vale `true`, el producto puede verse pero no iniciar nuevas compras en B2C ni B2B; si vale `false`, un saldo físico cero no bloquea por sí solo la venta.
+18. El saldo físico de consignación y stock propio deriva únicamente del libro mayor de movimientos. No es una señal automática de disponibilidad pública, reserva ni reposición.
+19. Al pasar efectivamente a `Entregado`, cada línea cuyo snapshot gestiona stock registra una `VENTA` negativa e idempotente. Las líneas contra pedido no generan ese movimiento. La entrega no equivale a un cobro ni modifica Finanzas.
+20. Un movimiento de stock confirmado no se edita ni se borra. Todo ajuste se registra como una `CORRECCION` nueva y relacionada.
+
+## Abastecimiento por proveedor
+
+1. Las listas de abastecimiento son proyecciones privadas y de sólo lectura para preparar compras contra pedido. Se derivan sólo de snapshots completos de ítems de pedidos activos.
+2. Agrupan cantidades por canal, proveedor habitual y modalidad, sin mezclar B2C con B2B, proveedores ni modalidades. La proyección de Distrosec conserva el formato agregado y copiable de producto y cantidad.
+3. Se excluyen consignación, stock propio, pedidos cancelados o entregados e ítems históricos sin snapshot completo. No se infiere ni completa un snapshot desde el catálogo, el ledger ni datos actuales del proveedor.
+4. Consultar o copiar una lista no altera pedidos, ítems, saldos, movimientos, cobros ni estados. `Sin_Stock` y el saldo físico no agregan, eliminan, reservan ni priorizan automáticamente ítems de estas listas.
 
 ## Cobertura y datos personales
 

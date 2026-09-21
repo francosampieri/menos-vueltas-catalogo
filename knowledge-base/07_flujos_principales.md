@@ -4,7 +4,7 @@
 
 1. El cliente visita la web B2C o, si tiene dificultades para usarla, envía una lista escrita por WhatsApp para que el equipo arme el pedido de forma asistida.
 2. Explora catálogo, precios, promociones y condiciones de compra por cantidad.
-3. Agrega productos al carrito; este calcula el neto de productos, el envío B2C y el total. Si el neto alcanza $35.000, el envío es gratis; de lo contrario es $1.500.
+3. Agrega productos disponibles al carrito; este calcula el neto de productos, el envío B2C y el total. Si el neto alcanza $35.000, el envío es gratis; de lo contrario es $1.500. Un producto marcado manualmente `Sin_Stock` se mantiene visible, pero no se puede agregar ni confirmar por carrito, QR o WhatsApp.
 4. Envía a WhatsApp un resumen que incluye productos, envío y total. El equipo recibe el pedido, solicita o confirma dirección y acuerda día y horario dentro de la cobertura vigente.
 5. La entrega B2C se organiza actualmente para los viernes. Los pedidos ingresados hasta el jueves a las 16 h pueden entrar en esa tanda; se recomienda realizar el pedido entre martes y miércoles. Los posteriores al corte sólo entran si sigue siendo viable; los pedidos del viernes pasan a la semana siguiente, previa comunicación al cliente.
 6. Los pedidos acordados se agrupan para enviar a la distribuidora.
@@ -66,6 +66,21 @@
 1. Un pedido puede estar considerado por el panel antes de concretarse.
 2. Si se cancela, debe dejar de aportar a sus conteos.
 3. El control financiero definitivo se realiza contra los cobros registrados en Finanzas.
+
+## Flujo de entrega y stock gestionado
+
+1. Al guardar una línea nueva del pedido, se le asigna un `Item_Id` y se congela su proveedor habitual, modalidad y condición de gestión de stock.
+2. Al marcar el pedido como `Entregado`, las líneas de consignación o stock propio generan su movimiento `VENTA` negativo; las de contra pedido no descuentan saldo.
+3. La operación es idempotente: un reintento reconoce las ventas ya registradas y sólo completa las faltantes. Durante una recuperación parcial se conserva el conjunto de líneas y snapshots, sin altas, bajas, sustituciones ni cambios de cantidad.
+4. Entregado es el hito de salida física y no acredita ni verifica un cobro. Finanzas continúa siendo el registro operativo de cobros reales.
+5. Si hace falta rectificar una entrada, venta, consumo propio o merma, el equipo agrega una corrección al historial; no reescribe el movimiento original.
+
+## Flujo de lista de abastecimiento
+
+1. El panel deriva listas privadas y de sólo lectura desde ítems con snapshot completo de pedidos activos.
+2. Incluye únicamente líneas `CONTRA_PEDIDO`, agrupadas por canal, proveedor habitual y modalidad, y agrega producto y cantidad dentro de cada grupo.
+3. Excluye líneas de consignación o stock propio, pedidos cancelados o entregados e históricos incompletos. No completa datos ausentes con el catálogo actual.
+4. El equipo puede consultar o copiar la lista para comprar; esa acción no cambia la operación ni el inventario. Distrosec conserva su proyección agregada compatible.
 
 ## Flujo B2B — objetivo en preparación
 

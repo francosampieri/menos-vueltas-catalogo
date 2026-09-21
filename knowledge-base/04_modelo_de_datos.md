@@ -33,6 +33,16 @@ Campos comerciales confirmados:
 
 Para publicarse, un producto debe estar `Activo` y habilitado con `Cat B2C` o `Cat B2B`. El panel consume `admin/productos.json`, una versión reducida con los campos necesarios para búsqueda y cálculos.
 
+### Abastecimiento e inventario operativos
+
+La planilla operativa privada contiene la entidad `Proveedores`. Su clave estable es `Id_Proveedor`; conserva nombre, estado activo y, cuando corresponde, datos operativos de contacto y notas. No se publica en CSV, JSON, B2C ni B2B.
+
+`Productos` conserva una FK privada `Id_Proveedor` hacia el proveedor habitual y los metadatos `Modalidad_Abastecimiento` y `Sin_Stock`. Las modalidades admitidas son `CONTRA_PEDIDO`, `CONSIGNACION` y `STOCK_PROPIO`. Los códigos legacy de proveedor se preservan como `Codigo_Proveedor` y no representan la identidad del proveedor habitual. Los productos históricos sin clasificación siguen legibles sin backfill: se interpretan como contra pedido, sin stock gestionado y con `Sin_Stock = false` hasta una clasificación explícita.
+
+`Movimientos_Stock` es el libro mayor privado y append-only del saldo físico para productos con stock gestionado. Cada movimiento tiene una identidad, fecha-hora, producto, tipo, cantidad firmada, referencia y nota; puede referenciar pedido e ítem y llevar una clave de idempotencia. Los tipos son `INGRESO`, `VENTA`, `CONSUMO_PROPIO`, `ROTURA_MERMA` y `CORRECCION`. Las correcciones se expresan como un nuevo movimiento relacionado: un movimiento confirmado no se edita ni se elimina.
+
+`Sin_Stock` es una decisión manual global, independiente del saldo físico. Es el único dato de este dominio que se publica al catálogo como booleano; los campos privados de proveedor, modalidad, costos y movimientos permanecen excluidos.
+
 En la web B2C, los precios de lista, temporales, por cantidad y finales por
 código se comunican y calculan como múltiplos de $50. Se redondean al valor más
 cercano; si queda exactamente a mitad de camino, se elige el valor inferior.
@@ -104,10 +114,11 @@ La hoja `Items` usa estos encabezados:
 Id_Pedido, Canal, Fecha_Pedido, Id_Producto, Producto, Cantidad,
 Precio_Lista, Precio_Unitario, Costo_Unitario, Cant_Min, Precio_Cantidad,
 Subtotal, Descuento, Total, Costo, Ganancia, Precio_Promo,
-Precio_Promo_Cantidad, Porcentaje_Promo
+Precio_Promo_Cantidad, Porcentaje_Promo, Item_Id, Id_Proveedor,
+Modalidad_Abastecimiento, Gestiona_Stock
 ```
 
-Al incorporar un producto a un pedido se congelan precios, costo, mínimo de cantidad y reglas de promoción. Así, un pedido histórico conserva sus valores aun cuando cambie el catálogo. El Apps Script mantiene compatibilidad con pedidos previos que no contengan los tres campos finales de promoción.
+Al incorporar un producto a un pedido se congelan precios, costo, mínimo de cantidad y reglas de promoción. Así, un pedido histórico conserva sus valores aun cuando cambie el catálogo. Cada línea nueva también recibe un `Item_Id` estable y congela su proveedor habitual, modalidad y si gestiona stock; cambios posteriores del catálogo no reinterpretan ese snapshot. Los ítems históricos sin snapshot se conservan legibles, sin backfill ni movimientos retrospectivos. El Apps Script mantiene compatibilidad con pedidos previos que no contengan los campos finales de promoción o abastecimiento.
 
 ## Clientes, contactos y finanzas
 
@@ -131,6 +142,6 @@ La planilla de Finanzas es separada y manual; es la referencia práctica de tran
 
 ## Integridad
 
-El Apps Script usa `LockService` para serializar escrituras. Lee y relaciona pedidos e ítems por `Id_Pedido`, permite guardar y eliminar pedidos y clientes, y guardar contactos. Desde el panel se evita borrar clientes con pedidos vinculados. Debe leer y escribir `Envio` y `Pedido_Al_Costo` por nombre de encabezado para conservar compatibilidad con pedidos históricos y no requiere completar valores anteriores. El script puede agregar encabezados faltantes de promoción a `Items` sin reordenar las columnas existentes y `Pedido_Al_Costo` en `Pedidos` antes de `Actualizado`, sin reordenar las columnas existentes.
+El Apps Script usa `LockService` para serializar escrituras. Lee y relaciona pedidos e ítems por `Id_Pedido`, permite guardar y eliminar pedidos y clientes, y guardar contactos. Desde el panel se evita borrar clientes con pedidos vinculados. Debe leer y escribir `Envio` y `Pedido_Al_Costo` por nombre de encabezado para conservar compatibilidad con pedidos históricos y no requiere completar valores anteriores. El script puede agregar encabezados faltantes de promoción a `Items` sin reordenar las columnas existentes y `Pedido_Al_Costo` en `Pedidos` antes de `Actualizado`, sin reordenar las columnas existentes. La escritura de movimientos se protege con clave de idempotencia para que un reintento no duplique una operación.
 
 No cambiar nombres, orden de columnas ni relaciones sin revisar el Apps Script y el workflow de catálogo.

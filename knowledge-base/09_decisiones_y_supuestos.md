@@ -28,6 +28,13 @@
 - Al restaurar o importar un carrito por QR, la web usa el catálogo vigente y revalida el código promocional B2C antes de aplicarlo; un QR reemplaza el estado temporal previo del canal.
 - La invitación B2C a recibir novedades se muestra una sola vez por sesión, 30 segundos después del primer agregado manual al carrito. No se considera una señal de intención la restauración, el QR ni el scroll; la invitación no debe impedir interactuar fuera de su panel y en móvil se puede descartar mediante arrastre.
 - El modelo actual es compra contra pedido y retiro en distribuidora, no stock propio en tiempo real.
+- La planilla operativa privada contiene `Proveedores`; `Productos.Id_Proveedor` es una FK privada hacia el proveedor habitual. Los códigos legacy se conservan como `Codigo_Proveedor`, sin reinterpretarlos como proveedores.
+- Las modalidades de abastecimiento admitidas son exactamente `CONTRA_PEDIDO`, `CONSIGNACION` y `STOCK_PROPIO`. Los históricos no clasificados continúan sin backfill y se interpretan de forma compatible como contra pedido, sin stock gestionado y con `Sin_Stock = false`.
+- `Movimientos_Stock` es un ledger privado append-only. Sus movimientos relevantes son ingreso, venta, consumo propio, rotura/merma y corrección; la idempotencia evita duplicar operaciones en reintentos y una corrección agrega un movimiento nuevo, sin editar el antecedente.
+- `Sin_Stock` es una decisión manual global, independiente del saldo. Se publica únicamente como booleano, con `false` por defecto; conserva el producto visible pero impide nuevas compras en ambos canales.
+- Cada línea nueva de pedido conserva un `Item_Id` y snapshot de proveedor, modalidad y gestión de stock. Los cambios de catálogo no reinterpretan ese snapshot y los históricos sin él no reciben backfill ni movimientos retrospectivos.
+- La transición a `Entregado` genera ventas negativas sólo para las líneas cuyo snapshot gestiona stock. Es un hito de entrega física, no de cobro; Finanzas conserva el registro de cobros reales.
+- Las listas privadas de abastecimiento son de sólo lectura: usan únicamente snapshots completos de pedidos activos `CONTRA_PEDIDO`, agrupados por canal, proveedor habitual y modalidad. Excluyen consignación, stock propio, cancelados, entregados e históricos incompletos, sin inferir ni completar datos. Distrosec conserva una proyección agregada compatible.
 - La prioridad técnica es velocidad y bajo costo.
 - Entender el código e incorporar funcionalidades tiene prioridad sobre eliminar código muerto.
 - Una futura reescritura con buenas prácticas es deseable, pero no inmediata.

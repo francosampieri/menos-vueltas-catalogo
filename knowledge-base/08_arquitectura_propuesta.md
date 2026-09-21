@@ -12,7 +12,7 @@ Google Sheets (fuente de verdad)
   │                   ├─ B2C: menosvueltas.com.ar
   │                   ├─ B2B: mayorista.menosvueltas.com.ar
   │                   └─ Admin estático
-  └─ Pedidos + Items + Clientes + Contactos
+  └─ Pedidos + Items + Clientes + Contactos + Proveedores + Movimientos_Stock
        └─ Google Apps Script como aplicación web
             └─ panel admin y captura de contactos desde la web
 ```
@@ -32,9 +32,11 @@ B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. La polí
 
 `.github/workflows/actualizar-catalogo.yml` se ejecuta cada 30 minutos y puede iniciarse manualmente. Descarga los CSV públicos de Productos, Grupos y Precios; produce el catálogo completo y una versión reducida para el panel; valida que no exista una proporción anormal de productos B2C activos sin precio; y hace commit y push de los JSON cuando detecta cambios.
 
+La publicación aplica una allowlist: del dominio de abastecimiento sólo puede llegar `Sin_Stock` como booleano, con `false` por defecto. La entidad privada `Proveedores`, su FK, modalidad, costos, saldos y ledger no se publican ni se incluyen en los artefactos públicos.
+
 ### Panel administrativo
 
-El panel estático carga pedidos y clientes desde Apps Script, consume `admin/productos.json` para buscar y calcular, y permite gestionar pedidos y fichas de clientes. Para B2C, conserva `Envio` como componente propio del pedido y totaliza productos netos + envío + extras; el importador de WhatsApp debe reconocer ese componente. El Apps Script debe resolver la columna por encabezado, preservando registros históricos sin valor y sin backfill. Incluye preparación de lista agregada para el proveedor, importación de mensajes de WhatsApp y recuperación local de borradores. No reemplaza la planilla de Finanzas como registro de cobros reales.
+El panel estático carga pedidos y clientes desde Apps Script, consume `admin/productos.json` para buscar y calcular, y permite gestionar pedidos y fichas de clientes. Para B2C, conserva `Envio` como componente propio del pedido y totaliza productos netos + envío + extras; el importador de WhatsApp debe reconocer ese componente. El Apps Script debe resolver la columna por encabezado, preservando registros históricos sin valor y sin backfill. El admin privado gestiona proveedores, clasificación de abastecimiento, consulta de historial y movimientos manuales; sus listas de abastecimiento son proyecciones de sólo lectura. Incluye importación de mensajes de WhatsApp y recuperación local de borradores. No reemplaza la planilla de Finanzas como registro de cobros reales.
 
 ## Seguridad actual: estado conocido
 
@@ -42,12 +44,12 @@ La seguridad actual es básica y debe considerarse un riesgo conocido, no una so
 
 - El acceso administrativo usa una comprobación en navegador basada en un hash expuesto en `admin/admin.js`.
 - El propio HTML advierte que esa medida no protege datos sensibles.
-- El Apps Script se publica como endpoint web y su URL está en el frontend.
+- El Apps Script se publica como endpoint web y su URL está en el frontend; se trata como integración operativa existente, no como una API pública de datos.
 - El workflow consume CSV públicos de catálogo.
 - `noindex, nofollow` en admin no es control de acceso.
 - El catálogo generado contiene información comercial que no fue diseñada necesariamente como privada.
 
-No incluir PII real en documentación, issues, ejemplos, pruebas, capturas ni commits. Todo cambio que aumente la exposición de teléfonos, direcciones, pedidos, clientes o credenciales requiere consulta previa.
+No incluir PII real en documentación, issues, ejemplos, pruebas, capturas ni commits. El modelo actual no persigue seguridad fuerte a esta escala, pero no habilita a publicar o ampliar la exposición de teléfonos, direcciones, pedidos, clientes o credenciales; cualquier cambio que la aumente requiere consulta previa.
 
 ## Decisiones para el presente
 
