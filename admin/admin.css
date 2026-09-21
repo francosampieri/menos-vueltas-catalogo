@@ -446,6 +446,12 @@ button { cursor: pointer; background: none; border: none; }
 .control-check input { margin-right: 6px; accent-color: var(--accent); }
 .tabla--inventario { min-width: 700px; }
 .tabla--inventario td small { display: block; margin-top: 2px; color: var(--t3); font-size: .72rem; }
+.tabla--proveedores { min-width: 620px; }
+.tabla--proveedores .tabla-accion {
+  width: 1%;
+  text-align: right;
+  white-space: nowrap;
+}
 .tabla-wrap--compacta { max-height: 245px; overflow: auto; }
 
 /* Las tablas de C-04 son deliberadamente anchas. Cada panel puede encogerse

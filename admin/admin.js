@@ -892,7 +892,7 @@ if (typeof module === 'object' && module.exports) {
     calcularPedido, modoEnvioPedido, paraGuardar, esPedidoAlCosto,
     calcularMetricas, calcularEstadisticasClientes, incorporarPedidoGuardado,
     actualizarPedidoTrasGuardado, construirProveedorParaGuardar,
-    construirClasificacionProducto, resumenInventarioDelCanal, filtrarResumenStock,
+    construirClasificacionProducto, resumenInventarioDelCanal, filtrarResumenStock, filaProveedor,
     construirMovimientoManual, prepararIntentoMovimientoManual,
     crearErrorRechazoConcluyente, resolverFalloMovimientoPendiente,
     productosConStockGestionado, filasHistorialOperativo,
@@ -1094,17 +1094,20 @@ function nombreProveedor(idProveedor) {
   return proveedor.Nombre + (proveedor.Activo ? '' : ' (inactivo)');
 }
 
+function filaProveedor(proveedor) {
+  const idCodificado = encodeURIComponent(proveedor.Id_Proveedor);
+  return `<tr><td><b>${esc(proveedor.Nombre)}</b></td>` +
+    `<td>${esc(proveedor.Id_Proveedor)}</td>` +
+    `<td>${esc(textoOperativo(proveedor.Telefono) || '—')}</td>` +
+    `<td>${proveedor.Activo ? 'Activo' : 'Inactivo'}</td>` +
+    `<td class="tabla-accion"><button class="btn btn--peque" type="button" onclick="editarProveedorCodificado('${idCodificado}')">Editar</button></td></tr>`;
+}
+
 function pintarProveedores() {
   const cuerpo = document.getElementById('proveedoresTbody');
   const vacio = document.getElementById('proveedoresVacio');
   const proveedores = PROVEEDORES.slice().sort((a, b) => String(a.Nombre).localeCompare(String(b.Nombre)));
-  cuerpo.innerHTML = proveedores.map(proveedor => {
-    const idCodificado = encodeURIComponent(proveedor.Id_Proveedor);
-    return `<tr><td><b>${esc(proveedor.Nombre)}</b></td>` +
-      `<td>${esc(proveedor.Id_Proveedor)}</td>` +
-      `<td>${proveedor.Activo ? 'Activo' : 'Inactivo'}</td>` +
-      `<td><button class="btn btn--peque" type="button" onclick="editarProveedorCodificado('${idCodificado}')">Editar</button></td></tr>`;
-  }).join('');
+  cuerpo.innerHTML = proveedores.map(filaProveedor).join('');
   vacio.hidden = proveedores.length !== 0;
 }
 
@@ -1396,8 +1399,8 @@ async function recargarInventario() {
     pintarSelectoresInventario();
     pintarStock();
     pintarHistorial();
-    mostrarEstadoMovimiento('No se pudo leer inventario: ' + error.message, true);
-    toast('No se pudo cargar inventario: ' + error.message, true);
+    mostrarEstadoMovimiento('No se pudo leer stock: ' + error.message, true);
+    toast('No se pudo cargar stock: ' + error.message, true);
   }
 }
 

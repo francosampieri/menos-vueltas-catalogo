@@ -29,7 +29,10 @@ test('admin separates suppliers and keeps inventory actions in read-only-opening
   const script = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.js'), 'utf8');
 
   assert.match(markup, /id="navProveedores" onclick="irASeccion\('proveedores'\)"[^>]*>Proveedores/);
-  assert.match(markup, /id="vistaProveedores"[\s\S]*?Nuevo proveedor[\s\S]*?<th>ID<\/th>[\s\S]*?<th>Estado<\/th>/);
+  assert.match(markup, /id="navInventario" onclick="irASeccion\('inventario'\)"[^>]*>Stock/);
+  assert.match(markup, /id="vistaInventario"[\s\S]*?<h1 class="ad-titulo">Stock operativo<\/h1>/);
+  assert.doesNotMatch(markup, /onclick="recargarInventario\(\)"[^>]*>Actualizar/);
+  assert.match(markup, /id="vistaProveedores"[\s\S]*?Nuevo proveedor[\s\S]*?<th>Nombre<\/th>[\s\S]*?<th>ID<\/th>[\s\S]*?<th>Teléfono<\/th>[\s\S]*?<th>Estado<\/th>[\s\S]*?<th class="tabla-accion"><\/th>/);
   assert.match(markup, /id="filtroStock"[\s\S]*?<option value="gestionado" selected>Stock gestionado<\/option>[\s\S]*?<option value="todos">Todos los productos<\/option>/);
   assert.match(markup, /onclick="abrirModalClasificacion\(\)"[^>]*>Clasificar producto/);
   assert.match(markup, /onclick="abrirModalMovimiento\(\)"[^>]*>Registrar movimiento/);
@@ -43,6 +46,8 @@ test('admin separates suppliers and keeps inventory actions in read-only-opening
     assert.ok(apertura, `${nombre} debe existir`);
     assert.doesNotMatch(apertura[1], /API\./, `${nombre} no debe escribir al abrir`);
   }
+
+  assert.match(script, /function filaProveedor\(proveedor\)[\s\S]*?esc\(textoOperativo\(proveedor\.Telefono\) \|\| '—'\)[\s\S]*?class="tabla-accion"[\s\S]*?Editar/);
 });
 
 test('inventory stock filter keeps zero and negative managed balances, while all includes contra pedido', () => {
@@ -60,6 +65,18 @@ test('inventory stock filter keeps zero and negative managed balances, while all
     admin.filtrarResumenStock(filas, 'todos').map(fila => fila.Id_Producto),
     ['P-0', 'P-N', 'P-CP']
   );
+});
+
+test('supplier rows show the phone or a safe fallback before the rightmost edit action', () => {
+  const conTelefono = admin.filaProveedor({
+    Nombre: 'Proveedor de prueba', Id_Proveedor: 'PRV-TEST', Telefono: 'tel-prueba', Activo: true
+  });
+  const sinTelefono = admin.filaProveedor({
+    Nombre: 'Proveedor sin contacto', Id_Proveedor: 'PRV-SIN-TEL', Telefono: '   ', Activo: false
+  });
+
+  assert.match(conTelefono, /<td>tel-prueba<\/td><td>Activo<\/td><td class="tabla-accion">[\s\S]*?Editar/);
+  assert.match(sinTelefono, /<td>—<\/td><td>Inactivo<\/td><td class="tabla-accion">[\s\S]*?Editar/);
 });
 
 test('B2C rounds catalog prices and applies the code discount line by line', () => {

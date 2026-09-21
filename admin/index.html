@@ -47,7 +47,7 @@
       <button id="navPedidos" class="on" onclick="irASeccion('pedidos')">Pedidos</button>
       <button id="navClientes" onclick="irASeccion('clientes')">Clientes</button>
       <button id="navProveedores" onclick="irASeccion('proveedores')">Proveedores</button>
-      <button id="navInventario" onclick="irASeccion('inventario')">Inventario</button>
+      <button id="navInventario" onclick="irASeccion('inventario')">Stock</button>
     </nav>
 
     <!-- Cada canal tiene su catálogo, sus precios y sus pedidos.
@@ -114,18 +114,17 @@
     </div>
   </section>
 
-  <!-- ═══════════ VISTA: INVENTARIO OPERATIVO ═══════════ -->
+  <!-- ═══════════ VISTA: STOCK OPERATIVO ═══════════ -->
   <section id="vistaInventario" hidden>
     <div class="ad-barra">
       <div>
-        <h1 class="ad-titulo">Inventario operativo</h1>
+        <h1 class="ad-titulo">Stock operativo</h1>
         <p class="inventario-ayuda">Saldos del libro mayor y metadatos privados. El saldo no cambia la disponibilidad pública.</p>
       </div>
       <div class="inventario-acciones">
         <button class="btn" type="button" onclick="abrirModalClasificacion()">Clasificar producto</button>
         <button class="btn" type="button" onclick="abrirModalMovimiento()">Registrar movimiento</button>
         <button class="btn" type="button" onclick="abrirModalHistorial()">Ver historial</button>
-        <button class="btn" type="button" onclick="recargarInventario()">Actualizar</button>
       </div>
     </div>
 
@@ -156,8 +155,8 @@
       <button class="btn btn--pri" type="button" onclick="nuevoProveedor()">Nuevo proveedor</button>
     </div>
     <div class="tabla-wrap">
-      <table class="tabla tabla--inventario">
-        <thead><tr><th>Nombre</th><th>ID</th><th>Estado</th><th></th></tr></thead>
+      <table class="tabla tabla--proveedores">
+        <thead><tr><th>Nombre</th><th>ID</th><th>Teléfono</th><th>Estado</th><th class="tabla-accion"></th></tr></thead>
         <tbody id="proveedoresTbody"></tbody>
       </table>
     </div>
