@@ -58,7 +58,7 @@
       "Label_Tamaño": "1,5 L",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/3-natura-aceite-girasol-1-5-l.webp",
       "Tipo": "Ancla",
-      "Sin_Stock": true
+      "Sin_Stock": false
     },
     {
       "Id": "4",
@@ -4678,7 +4678,7 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/253-franz-dulce-de-leche-400-g.webp",
       "Tipo": "Ancla",
-      "Sin_Stock": false
+      "Sin_Stock": true
     },
     {
       "Id": "254",
@@ -18108,13 +18108,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Huevos",
       "Tipo": "Rentable",
-      "Precio_Venta": "$6.800,00",
+      "Precio_Venta": "$7.000,00",
       "Uni Dto": "3",
       "Dto": "5%",
-      "Precio_Mayorista": "$6.450,00",
-      "promo": "10%",
-      "Precio_Promo": "$6.100,00",
-      "Precio_Promo_Mayorista": "$5.800,00"
+      "Precio_Mayorista": "$6.650,00",
+      "promo": "",
+      "Precio_Promo": "$7.000,00",
+      "Precio_Promo_Mayorista": "$6.650,00"
     },
     {
       "Id": "533",
