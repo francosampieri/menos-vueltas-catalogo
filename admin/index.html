@@ -46,7 +46,8 @@
     <nav class="ad-nav">
       <button id="navPedidos" class="on" onclick="irASeccion('pedidos')">Pedidos</button>
       <button id="navClientes" onclick="irASeccion('clientes')">Clientes</button>
-      <button id="navInventario" onclick="irASeccion('inventario')">Inventario</button>
+      <button id="navProveedores" onclick="irASeccion('proveedores')">Proveedores</button>
+      <button id="navInventario" onclick="irASeccion('inventario')">Stock</button>
     </nav>
 
     <!-- Cada canal tiene su catálogo, sus precios y sus pedidos.
@@ -86,7 +87,7 @@
       </select>
       <button class="btn" onclick="abrirListasAbastecimiento()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-        Ver listas de abastecimiento
+        Pedir a Proveedor
       </button>
       <button class="btn btn--pri" onclick="nuevoPedido()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
@@ -113,120 +114,53 @@
     </div>
   </section>
 
-  <!-- ═══════════ VISTA: INVENTARIO OPERATIVO ═══════════ -->
+  <!-- ═══════════ VISTA: STOCK OPERATIVO ═══════════ -->
   <section id="vistaInventario" hidden>
     <div class="ad-barra">
       <div>
-        <h1 class="ad-titulo">Inventario operativo</h1>
+        <h1 class="ad-titulo">Stock operativo</h1>
         <p class="inventario-ayuda">Saldos del libro mayor y metadatos privados. El saldo no cambia la disponibilidad pública.</p>
       </div>
-      <button class="btn" type="button" onclick="recargarInventario()">Actualizar</button>
-    </div>
-
-    <div class="inventario-grid">
-      <section class="panel">
-        <h2 class="panel-tit">Proveedores <span class="panel-chip">privado</span></h2>
-        <div class="tabla-wrap tabla-wrap--compacta">
-          <table class="tabla tabla--inventario">
-            <thead><tr><th>Proveedor</th><th>Estado</th><th></th></tr></thead>
-            <tbody id="proveedoresTbody"></tbody>
-          </table>
-        </div>
-        <p class="vacio" id="proveedoresVacio" hidden>No hay proveedores para mostrar.</p>
-
-        <form id="proveedorForm" class="campos inventario-form" onsubmit="guardarProveedorDesdeForm(event)">
-          <input type="hidden" id="proveedorOriginal">
-          <div class="campo"><label for="proveedorId">Identificador</label><input id="proveedorId" required></div>
-          <div class="campo"><label for="proveedorNombre">Nombre</label><input id="proveedorNombre" required></div>
-          <div class="campo"><label for="proveedorTelefono">Teléfono</label><input id="proveedorTelefono"></div>
-          <div class="campo"><label for="proveedorDireccion">Dirección</label><input id="proveedorDireccion"></div>
-          <div class="campo campo--full"><label for="proveedorNotas">Notas</label><textarea id="proveedorNotas"></textarea></div>
-          <label class="control-check"><input type="checkbox" id="proveedorActivo" checked> Activo</label>
-          <div class="inventario-acciones campo--full">
-            <button class="btn" type="button" onclick="cancelarEdicionProveedor()">Cancelar</button>
-            <button class="btn btn--pri" type="submit" id="proveedorGuardar">Guardar proveedor</button>
-          </div>
-        </form>
-      </section>
-
-      <section class="panel">
-        <h2 class="panel-tit">Clasificación de producto <span class="panel-chip">privada</span></h2>
-        <p class="inventario-ayuda">El proveedor habitual y la modalidad no modifican precios, pedidos ni canales.</p>
-        <form class="campos inventario-form" onsubmit="guardarClasificacionDesdeForm(event)">
-          <div class="campo campo--full"><label for="clasificacionProducto">Producto del canal actual</label><select id="clasificacionProducto" required></select></div>
-          <div class="campo"><label for="clasificacionProveedor">Proveedor habitual</label><select id="clasificacionProveedor" required></select></div>
-          <div class="campo"><label for="clasificacionModalidad">Modalidad</label>
-            <select id="clasificacionModalidad" required>
-              <option value="CONTRA_PEDIDO">Contra pedido</option>
-              <option value="CONSIGNACION">Consignación</option>
-              <option value="STOCK_PROPIO">Stock propio</option>
-            </select>
-          </div>
-          <label class="control-check campo--full"><input type="checkbox" id="clasificacionSinStock"> Sin stock (decisión manual)</label>
-          <div class="inventario-acciones campo--full"><button class="btn btn--pri" type="submit">Guardar clasificación</button></div>
-        </form>
-      </section>
+      <div class="inventario-acciones">
+        <button class="btn" type="button" onclick="abrirModalClasificacion()">Clasificar producto</button>
+        <button class="btn" type="button" onclick="abrirModalMovimiento()">Registrar movimiento</button>
+        <button class="btn" type="button" onclick="abrirModalHistorial()">Ver historial</button>
+      </div>
     </div>
 
     <section class="panel">
-      <h2 class="panel-tit">Saldo por producto</h2>
+      <div class="panel-tit panel-tit--con-control">
+        <h2>Saldo por producto</h2>
+        <label class="inventario-filtro" for="filtroStock">Mostrar
+          <select id="filtroStock" onchange="pintarStock()">
+            <option value="gestionado" selected>Stock gestionado</option>
+            <option value="todos">Todos los productos</option>
+          </select>
+        </label>
+      </div>
       <div class="tabla-wrap">
         <table class="tabla tabla--inventario">
           <thead><tr><th>Producto</th><th>Proveedor habitual</th><th>Modalidad</th><th>Gestiona stock</th><th class="num">Saldo</th><th>Sin stock</th></tr></thead>
           <tbody id="stockTbody"></tbody>
         </table>
       </div>
-      <p class="vacio" id="stockVacio" hidden>No hay productos de este canal en el resumen privado.</p>
+      <p class="vacio" id="stockVacio" hidden>No hay productos para mostrar con este filtro.</p>
     </section>
+  </section>
 
-    <div class="inventario-grid">
-      <section class="panel">
-        <h2 class="panel-tit">Registrar movimiento</h2>
-        <p class="inventario-ayuda">Las ventas se registran sólo al entregar un pedido. Esta pantalla no crea ventas manuales.</p>
-        <form id="movimientoForm" class="campos inventario-form" onsubmit="guardarMovimientoDesdeForm(event)">
-          <div class="campo campo--full"><label for="movimientoProducto">Producto con stock gestionado</label><select id="movimientoProducto" required></select></div>
-          <div class="campo"><label for="movimientoTipo">Tipo</label>
-            <select id="movimientoTipo" onchange="actualizarCamposMovimiento()" required>
-              <option value="INGRESO">Ingreso</option>
-              <option value="CONSUMO_PROPIO">Consumo propio</option>
-              <option value="ROTURA_MERMA">Rotura / merma</option>
-              <option value="CORRECCION">Corrección</option>
-            </select>
-          </div>
-          <div class="campo"><label for="movimientoCantidad" id="movimientoCantidadLabel">Cantidad</label><input id="movimientoCantidad" type="number" step="any" required></div>
-          <div class="campo" id="movimientoCostoCampo"><label for="movimientoCosto">Costo unitario</label><input id="movimientoCosto" type="number" min="0" step="any"></div>
-          <div class="campo" id="movimientoReferenciaCampo" hidden><label for="movimientoReferencia">Movimiento antecedente</label><select id="movimientoReferencia"></select></div>
-          <div class="campo campo--full"><label for="movimientoNota">Nota <span id="movimientoNotaRequerida" hidden>(obligatoria para corrección)</span></label><textarea id="movimientoNota"></textarea></div>
-          <div class="inventario-acciones campo--full">
-            <button class="btn btn--pri" type="submit" id="movimientoGuardar">Registrar movimiento</button>
-            <button class="btn" type="button" id="movimientoReintentar" onclick="reintentarMovimientoPendiente()" hidden>Reintentar mismo movimiento</button>
-          </div>
-          <p class="inventario-estado campo--full" id="movimientoEstado" role="status" aria-live="polite"></p>
-        </form>
-      </section>
-
-      <section class="panel">
-        <h2 class="panel-tit">Historial de movimientos</h2>
-        <form class="campos inventario-form" onsubmit="filtrarHistorial(event)">
-          <div class="campo"><label for="historialProducto">Producto</label><select id="historialProducto"></select></div>
-          <div class="campo"><label for="historialTipo">Tipo</label>
-            <select id="historialTipo">
-              <option value="">Todos los tipos</option><option value="INGRESO">Ingreso</option>
-              <option value="CONSUMO_PROPIO">Consumo propio</option><option value="ROTURA_MERMA">Rotura / merma</option>
-              <option value="CORRECCION">Corrección</option><option value="VENTA">Venta automática</option>
-            </select>
-          </div>
-          <div class="inventario-acciones campo--full"><button class="btn" type="submit">Aplicar filtros</button></div>
-        </form>
-        <div class="tabla-wrap">
-          <table class="tabla tabla--inventario">
-            <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="num">Cantidad</th><th class="num">Costo unit.</th><th>Referencia operativa</th><th>Nota</th></tr></thead>
-            <tbody id="historialTbody"></tbody>
-          </table>
-        </div>
-        <p class="vacio" id="historialVacio" hidden>No hay movimientos con esos filtros.</p>
-      </section>
+  <!-- ═══════════ VISTA: PROVEEDORES ═══════════ -->
+  <section id="vistaProveedores" hidden>
+    <div class="ad-barra">
+      <h1 class="ad-titulo">Proveedores</h1>
+      <button class="btn btn--pri" type="button" onclick="nuevoProveedor()">Nuevo proveedor</button>
     </div>
+    <div class="tabla-wrap">
+      <table class="tabla tabla--proveedores">
+        <thead><tr><th>Nombre</th><th>ID</th><th>Teléfono</th><th>Estado</th><th class="tabla-accion"></th></tr></thead>
+        <tbody id="proveedoresTbody"></tbody>
+      </table>
+    </div>
+    <p class="vacio" id="proveedoresVacio" hidden>No hay proveedores para mostrar.</p>
   </section>
 
   <!-- ═══════════ VISTA: EDITOR DE PEDIDO ═══════════ -->
@@ -515,6 +449,118 @@
   </form>
 </div>
 
+<!-- ═══════════ MODAL: ALTA / EDICIÓN DE PROVEEDOR ═══════════ -->
+<div class="modal" id="modalProveedor" hidden>
+  <form class="modal-caja" id="proveedorForm" onsubmit="guardarProveedorDesdeForm(event)" autocomplete="off">
+    <button type="button" class="modal-x" onclick="cerrarModalProveedor()" aria-label="Cerrar">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2 id="modalProveedorTitulo">Nuevo proveedor</h2>
+    <input type="hidden" id="proveedorOriginal">
+    <div class="campos">
+      <div class="campo"><label for="proveedorId">Identificador</label><input id="proveedorId" required></div>
+      <div class="campo"><label for="proveedorNombre">Nombre</label><input id="proveedorNombre" required></div>
+      <div class="campo"><label for="proveedorTelefono">Teléfono</label><input id="proveedorTelefono"></div>
+      <div class="campo"><label for="proveedorDireccion">Dirección</label><input id="proveedorDireccion"></div>
+      <div class="campo campo--full"><label for="proveedorNotas">Notas</label><textarea id="proveedorNotas"></textarea></div>
+      <label class="control-check campo--full"><input type="checkbox" id="proveedorActivo" checked> Activo</label>
+    </div>
+    <div class="modal-acciones">
+      <button class="btn" type="button" onclick="cerrarModalProveedor()">Cancelar</button>
+      <button class="btn btn--pri" type="submit" id="proveedorGuardar">Guardar proveedor</button>
+    </div>
+  </form>
+</div>
+
+<!-- ═══════════ MODAL: CLASIFICACIÓN DE PRODUCTO ═══════════ -->
+<div class="modal" id="modalClasificacion" hidden>
+  <form class="modal-caja" onsubmit="guardarClasificacionDesdeForm(event)" autocomplete="off">
+    <button type="button" class="modal-x" onclick="cerrarModalClasificacion()" aria-label="Cerrar">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2>Clasificar producto</h2>
+    <p class="modal-descripcion">El proveedor habitual y la modalidad no modifican precios, pedidos ni canales.</p>
+    <div class="campos">
+      <div class="campo campo--full"><label for="clasificacionProducto">Producto del canal actual</label><select id="clasificacionProducto" required></select></div>
+      <div class="campo"><label for="clasificacionProveedor">Proveedor habitual</label><select id="clasificacionProveedor" required></select></div>
+      <div class="campo"><label for="clasificacionModalidad">Modalidad</label>
+        <select id="clasificacionModalidad" required>
+          <option value="CONTRA_PEDIDO">Contra pedido</option>
+          <option value="CONSIGNACION">Consignación</option>
+          <option value="STOCK_PROPIO">Stock propio</option>
+        </select>
+      </div>
+      <label class="control-check campo--full"><input type="checkbox" id="clasificacionSinStock"> Sin stock (decisión manual)</label>
+    </div>
+    <div class="modal-acciones">
+      <button class="btn" type="button" onclick="cerrarModalClasificacion()">Cancelar</button>
+      <button class="btn btn--pri" type="submit">Guardar clasificación</button>
+    </div>
+  </form>
+</div>
+
+<!-- ═══════════ MODAL: MOVIMIENTO DE STOCK ═══════════ -->
+<div class="modal" id="modalMovimiento" hidden>
+  <form class="modal-caja" id="movimientoForm" onsubmit="guardarMovimientoDesdeForm(event)" autocomplete="off">
+    <button type="button" class="modal-x" onclick="cerrarModalMovimiento()" aria-label="Cerrar">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2>Registrar movimiento</h2>
+    <p class="modal-descripcion">Las ventas se registran sólo al entregar un pedido. Esta pantalla no crea ventas manuales.</p>
+    <div class="campos">
+      <div class="campo campo--full"><label for="movimientoProducto">Producto con stock gestionado</label><select id="movimientoProducto" required></select></div>
+      <div class="campo"><label for="movimientoTipo">Tipo</label>
+        <select id="movimientoTipo" onchange="actualizarCamposMovimiento()" required>
+          <option value="INGRESO">Ingreso</option>
+          <option value="CONSUMO_PROPIO">Consumo propio</option>
+          <option value="ROTURA_MERMA">Rotura / merma</option>
+          <option value="CORRECCION">Corrección</option>
+        </select>
+      </div>
+      <div class="campo"><label for="movimientoCantidad" id="movimientoCantidadLabel">Cantidad</label><input id="movimientoCantidad" type="number" step="any" required></div>
+      <div class="campo" id="movimientoCostoCampo"><label for="movimientoCosto">Costo unitario</label><input id="movimientoCosto" type="number" min="0" step="any"></div>
+      <div class="campo" id="movimientoReferenciaCampo" hidden><label for="movimientoReferencia">Movimiento antecedente</label><select id="movimientoReferencia"></select></div>
+      <div class="campo campo--full"><label for="movimientoNota">Nota <span id="movimientoNotaRequerida" hidden>(obligatoria para corrección)</span></label><textarea id="movimientoNota"></textarea></div>
+    </div>
+    <div class="modal-acciones">
+      <button class="btn" type="button" onclick="cerrarModalMovimiento()">Cerrar</button>
+      <button class="btn" type="button" id="movimientoReintentar" onclick="reintentarMovimientoPendiente()" hidden>Reintentar mismo movimiento</button>
+      <button class="btn btn--pri" type="submit" id="movimientoGuardar">Registrar movimiento</button>
+    </div>
+    <p class="inventario-estado" id="movimientoEstado" role="status" aria-live="polite"></p>
+  </form>
+</div>
+
+<!-- ═══════════ MODAL: HISTORIAL DE STOCK ═══════════ -->
+<div class="modal" id="modalHistorial" hidden>
+  <div class="modal-caja modal-caja--ancha">
+    <button type="button" class="modal-x" onclick="cerrarModalHistorial()" aria-label="Cerrar">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2>Historial de movimientos</h2>
+    <p class="modal-descripcion">Consulta de sólo lectura. Los movimientos confirmados no se editan ni se eliminan.</p>
+    <form class="campos" onsubmit="filtrarHistorial(event)">
+      <div class="campo"><label for="historialProducto">Producto</label><select id="historialProducto"></select></div>
+      <div class="campo"><label for="historialTipo">Tipo</label>
+        <select id="historialTipo">
+          <option value="">Todos los tipos</option><option value="INGRESO">Ingreso</option>
+          <option value="CONSUMO_PROPIO">Consumo propio</option><option value="ROTURA_MERMA">Rotura / merma</option>
+          <option value="CORRECCION">Corrección</option><option value="VENTA">Venta automática</option>
+        </select>
+      </div>
+      <div class="inventario-acciones campo--full"><button class="btn" type="submit">Aplicar filtros</button></div>
+    </form>
+    <div class="tabla-wrap">
+      <table class="tabla tabla--inventario">
+        <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="num">Cantidad</th><th class="num">Costo unit.</th><th>Referencia operativa</th><th>Nota</th></tr></thead>
+        <tbody id="historialTbody"></tbody>
+      </table>
+    </div>
+    <p class="vacio" id="historialVacio" hidden>No hay movimientos con esos filtros.</p>
+    <div class="modal-acciones"><button type="button" class="btn" onclick="cerrarModalHistorial()">Cerrar</button></div>
+  </div>
+</div>
+
 
 <!-- ═══════════ MODAL: LISTAS DE ABASTECIMIENTO ═══════════ -->
 <div class="modal" id="modalDistribuidora" hidden>
@@ -522,8 +568,7 @@
     <button type="button" class="modal-x" onclick="cerrarModalDistribuidora()" aria-label="Cerrar">
       <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
     </button>
-    <h2>Listas de abastecimiento</h2>
-    <p class="modal-descripcion">Las líneas activas contra pedido se agrupan por canal, proveedor habitual y modalidad. Copiar no modifica pedidos ni inventario.</p>
+    <h2>Pedir a Proveedor</h2>
 
     <div id="distWorklists"></div>
 
