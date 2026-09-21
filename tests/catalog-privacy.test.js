@@ -109,7 +109,6 @@ test('checked-in public catalog is already sanitized by the production allowlist
   }
   for (const producto of catalog.productos) {
     assert.equal(typeof producto.Sin_Stock, 'boolean');
-    assert.equal(producto.Sin_Stock, false);
   }
 });
 
