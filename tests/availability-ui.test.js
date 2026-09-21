@@ -17,7 +17,7 @@ function availability() {
 test('uses only the explicit boolean Sin_Stock flag for public availability', () => {
   const api = availability();
 
-  assert.equal(api.message, 'Este producto no está disponible.');
+  assert.equal(api.message, 'Producto sin stock.');
   assert.equal(api.isUnavailable({ Sin_Stock: true, Saldo: 12 }), true);
   assert.equal(api.isUnavailable({ Sin_Stock: false, Saldo: 0 }), false);
   assert.equal(api.isUnavailable({ Saldo: 0 }), false);

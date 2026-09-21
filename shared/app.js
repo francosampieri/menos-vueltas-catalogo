@@ -9,7 +9,7 @@ const CANAL = (typeof window !== 'undefined' && window.CANAL) ? window.CANAL : '
 // La disponibilidad pública es una decisión manual publicada con el catálogo.
 // No se deriva de saldo ni de ningún otro dato interno.
 const DisponibilidadPublica = (() => {
-  const message = 'Este producto no está disponible.';
+  const message = 'Producto sin stock.';
   const isUnavailable = producto => producto?.['Sin_Stock'] === true;
   const hasUnavailableItems = items => items.some(item => item.unavailable === true);
   return Object.freeze({ message, isUnavailable, hasUnavailableItems });

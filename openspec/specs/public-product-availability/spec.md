@@ -34,7 +34,7 @@ Los sitios públicos MUST usar `Sin_Stock` como una señal booleana global por p
 - **THEN** el sitio lo presenta como no disponible para una nueva compra sin mostrar saldo, proveedor, costo u otro dato operativo
 
 ### Requirement: Producto sin stock visible y no agregable en cada canal público
-En B2C y B2B, un producto con `Sin_Stock = true` MUST permanecer visible en los resultados de búsqueda, en sus tarjetas y en su detalle, con el texto exacto `Este producto no está disponible.` y sin un control que permita agregarlo al carrito. Cada canal MUST aplicar el estado sobre su propio catálogo, precios, mensajes y carrito; MUST NOT reutilizar precios, reglas comerciales, clientes, métricas ni estado de carrito del otro canal.
+En B2C y B2B, un producto con `Sin_Stock = true` MUST permanecer visible en los resultados de búsqueda, en sus tarjetas y en su detalle, con el texto exacto `Producto sin stock.` y sin un control que permita agregarlo al carrito. Cada canal MUST aplicar el estado sobre su propio catálogo, precios, mensajes y carrito; MUST NOT reutilizar precios, reglas comerciales, clientes, métricas ni estado de carrito del otro canal.
 
 #### Scenario: Resultado de búsqueda y tarjeta no disponibles
 - **WHEN** una persona busca o navega un producto con `Sin_Stock = true` en B2C o en B2B
@@ -49,7 +49,7 @@ En B2C y B2B, un producto con `Sin_Stock = true` MUST permanecer visible en los 
 - **THEN** el flujo conserva la posibilidad existente de agregarlo sin heredar reglas ni precios del otro canal
 
 ### Requirement: Carrito restaurado conserva ítems no disponibles y bloquea una nueva confirmación
-Al restaurar un carrito, cada canal MUST contrastar sus ítems con la señal publicada actualmente de `Sin_Stock`. Si un ítem pasó a `Sin_Stock = true`, el carrito MUST conservarlo identificable junto con el texto exacto `Este producto no está disponible.`, MUST ofrecer una acción simple para eliminarlo o revisar el carrito y MUST bloquear la generación, apertura o envío de una nueva confirmación por WhatsApp mientras ese ítem permanezca. El sitio MUST NOT eliminarlo automáticamente, reservarlo ni modificar cantidades como sustitución.
+Al restaurar un carrito, cada canal MUST contrastar sus ítems con la señal publicada actualmente de `Sin_Stock`. Si un ítem pasó a `Sin_Stock = true`, el carrito MUST conservarlo identificable junto con el texto exacto `Producto sin stock.`, MUST ofrecer una acción simple para eliminarlo o revisar el carrito y MUST bloquear la generación, apertura o envío de una nueva confirmación por WhatsApp mientras ese ítem permanezca. El sitio MUST NOT eliminarlo automáticamente, reservarlo ni modificar cantidades como sustitución.
 
 #### Scenario: Carrito restaurado con ítem recién no disponible
 - **WHEN** se restaura un carrito que contiene un producto que ahora tiene `Sin_Stock = true`
@@ -60,7 +60,7 @@ Al restaurar un carrito, cada canal MUST contrastar sus ítems con la señal pub
 - **THEN** el flujo de confirmación por WhatsApp conserva el comportamiento existente del canal
 
 ### Requirement: Accesos QR respetan la disponibilidad actual
-Todo acceso por QR que dirija a un producto o preconfigure una intención de compra MUST aplicar la señal publicada actualmente de `Sin_Stock` antes de agregar el producto o habilitar una nueva confirmación. Si el producto está no disponible, el acceso MUST mantenerlo identificable en la superficie correspondiente, informar con el texto exacto `Este producto no está disponible.` y ofrecer revisar o eliminar el ítem cuando exista carrito; MUST NOT crear una reserva ni habilitar el envío de WhatsApp para ese producto.
+Todo acceso por QR que dirija a un producto o preconfigure una intención de compra MUST aplicar la señal publicada actualmente de `Sin_Stock` antes de agregar el producto o habilitar una nueva confirmación. Si el producto está no disponible, el acceso MUST mantenerlo identificable en la superficie correspondiente, informar con el texto exacto `Producto sin stock.` y ofrecer revisar o eliminar el ítem cuando exista carrito; MUST NOT crear una reserva ni habilitar el envío de WhatsApp para ese producto.
 
 #### Scenario: QR de producto no disponible sin carrito previo
 - **WHEN** una persona abre un QR de un producto con `Sin_Stock = true` y no tiene un carrito previo

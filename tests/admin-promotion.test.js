@@ -1,5 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 // admin.js sólo registra el arranque del navegador al cargarse. Para probar
 // sus cálculos puros en Node, alcanza con una versión inerte de document.
@@ -11,6 +13,16 @@ global.MenosVueltasAdminShipping = adminShipping;
 global.MenosVueltasPromotion = promotion;
 
 const admin = require('../admin/admin.js');
+
+test('el panel presenta Pedir a Proveedor sin alterar la acción de copiar lista', () => {
+  const markup = fs.readFileSync(path.join(__dirname, '..', 'admin', 'index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.js'), 'utf8');
+
+  assert.match(markup, /onclick="abrirListasAbastecimiento\(\)"[^>]*>[\s\S]*?Pedir a Proveedor/);
+  assert.match(markup, /id="modalDistribuidora"[\s\S]*?<h2>Pedir a Proveedor<\/h2>/);
+  assert.doesNotMatch(markup, /Las líneas activas contra pedido se agrupan por canal, proveedor habitual y modalidad\. Copiar no modifica pedidos ni inventario\./);
+  assert.match(script, /onclick="copiarListaAbastecimiento\(\$\{indice\}\)"[^>]*>Copiar lista/);
+});
 
 test('B2C rounds catalog prices and applies the code discount line by line', () => {
   const quantityDiscount = admin.lineaDesdeCatalogo({
