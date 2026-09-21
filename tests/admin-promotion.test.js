@@ -429,3 +429,74 @@ test('C-04 prepares inventory rows and history without client or supplier contac
   }]);
   assert.equal(JSON.stringify(filas).includes('No debe mostrarse'), false);
 });
+
+test('C-05 derives read-only contra-pedido worklists from complete active snapshots', () => {
+  const pedidos = [
+    {
+      id: 71, canal: 'b2c', estado: 'Nuevo',
+      items: [
+        { itemId: 'ITEM-71-1', id: 'P-MATE', nombre: 'Mate sintético', cant: 2, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false },
+        { itemId: 'ITEM-71-2', id: 'P-GALLETAS', nombre: 'Galletas sintéticas', cant: 1, idProveedor: 'PROCAKE', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false },
+        { itemId: 'ITEM-71-3', id: 'P-HUEVOS', nombre: 'Huevos sintéticos', cant: 3, idProveedor: 'HUEVOS', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false, sinStock: true, saldo: 0 },
+        { itemId: 'ITEM-71-4', id: 'P-CONS', nombre: 'Consignación sintética', cant: 4, idProveedor: 'PROCAKE', modalidadAbastecimiento: 'CONSIGNACION' },
+        { itemId: 'ITEM-71-5', id: 'P-STOCK', nombre: 'Stock sintético', cant: 5, idProveedor: 'HUEVOS', modalidadAbastecimiento: 'STOCK_PROPIO' },
+        { itemId: 'ITEM-71-6', id: 'P-INCOMP', nombre: 'Snapshot incompleto', cant: 6, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: true },
+        { id: 'P-HIST', nombre: 'Histórico sin snapshot', cant: 6, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO' }
+      ]
+    },
+    {
+      id: 72, canal: 'b2c', estado: 'Cancelado',
+      items: [{ itemId: 'ITEM-72-1', id: 'P-CANCELADO', nombre: 'Cancelado sintético', cant: 9, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO' }]
+    },
+    {
+      id: 73, canal: 'b2c', estado: 'Entregado',
+      items: [{ itemId: 'ITEM-73-1', id: 'P-ENTREGADO', nombre: 'Entregado sintético', cant: 8, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO' }]
+    },
+    {
+      id: 74, canal: 'b2b', estado: 'Pedido a Distribuidora',
+      items: [{ itemId: 'ITEM-74-1', id: 'P-MATE', nombre: 'Mate sintético', cant: 7, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false }]
+    }
+  ];
+
+  assert.deepEqual(admin.construirListasAbastecimiento(pedidos), [
+    {
+      canal: 'b2b', idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO',
+      productos: [{ id: 'P-MATE', nombre: 'Mate sintético', cantidad: 7 }]
+    },
+    {
+      canal: 'b2c', idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO',
+      productos: [{ id: 'P-MATE', nombre: 'Mate sintético', cantidad: 2 }]
+    },
+    {
+      canal: 'b2c', idProveedor: 'HUEVOS', modalidadAbastecimiento: 'CONTRA_PEDIDO',
+      productos: [{ id: 'P-HUEVOS', nombre: 'Huevos sintéticos', cantidad: 3 }]
+    },
+    {
+      canal: 'b2c', idProveedor: 'PROCAKE', modalidadAbastecimiento: 'CONTRA_PEDIDO',
+      productos: [{ id: 'P-GALLETAS', nombre: 'Galletas sintéticas', cantidad: 1 }]
+    }
+  ]);
+});
+
+test('C-05 keeps the Distrosec copy projection inside its matching channel group', () => {
+  const listas = admin.construirListasAbastecimiento([
+    {
+      canal: 'b2c', estado: 'Para entregar',
+      items: [
+        { itemId: 'ITEM-81-1', id: 'P-1', nombre: 'Producto uno', cant: 2, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false },
+        { itemId: 'ITEM-81-2', id: 'P-1', nombre: 'Producto uno', cant: 4, idProveedor: 'PROCAKE', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false },
+        { itemId: 'ITEM-81-3', id: 'P-2', nombre: 'Producto dos', cant: 1, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false }
+      ]
+    }
+  ]);
+
+  const distrosec = admin.proyeccionListaDistrosec(listas, 'b2c');
+  assert.deepEqual(distrosec, {
+    canal: 'b2c', idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO',
+    productos: [
+      { id: 'P-2', nombre: 'Producto dos', cantidad: 1 },
+      { id: 'P-1', nombre: 'Producto uno', cantidad: 2 }
+    ]
+  });
+  assert.equal(admin.textoListaAbastecimiento(distrosec), '🛒 Pedido:\n- 1x Producto dos\n- 2x Producto uno');
+});

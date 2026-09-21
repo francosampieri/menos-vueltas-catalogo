@@ -84,9 +84,9 @@
         <option>Entregado</option>
         <option>Cancelado</option>
       </select>
-      <button class="btn" onclick="abrirListaDistribuidora()">
+      <button class="btn" onclick="abrirListasAbastecimiento()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-        Armar pedido a distribuidora
+        Ver listas de abastecimiento
       </button>
       <button class="btn btn--pri" onclick="nuevoPedido()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
@@ -516,52 +516,19 @@
 </div>
 
 
-<!-- ═══════════ MODAL: PEDIDO A DISTRIBUIDORA ═══════════ -->
+<!-- ═══════════ MODAL: LISTAS DE ABASTECIMIENTO ═══════════ -->
 <div class="modal" id="modalDistribuidora" hidden>
   <div class="modal-caja modal-caja--ancha">
     <button type="button" class="modal-x" onclick="cerrarModalDistribuidora()" aria-label="Cerrar">
       <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
     </button>
-    <h2>Pedido a distribuidora</h2>
-    <p class="modal-descripcion">Seleccioná los pedidos que querés incluir, se suman las cantidades automáticamente y podés copiar la lista lista para mandar por WhatsApp.</p>
+    <h2>Listas de abastecimiento</h2>
+    <p class="modal-descripcion">Las líneas activas contra pedido se agrupan por canal, proveedor habitual y modalidad. Copiar no modifica pedidos ni inventario.</p>
 
-    <div class="dist-seccion">
-      <h3 class="dist-subtit">1. Pedidos a incluir</h3>
-      <div class="dist-lista-pedidos" id="distListaPedidos"></div>
-    </div>
-
-    <div class="dist-seccion">
-      <h3 class="dist-subtit">2. Productos agrupados</h3>
-      <div class="tabla-wrap">
-        <table class="tabla">
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th class="num">Cantidad total</th>
-              <th class="num">Costo unitario</th>
-              <th class="num">Total costo</th>
-            </tr>
-          </thead>
-          <tbody id="distTbodyProductos"></tbody>
-        </table>
-      </div>
-      <p class="vacio" id="distSinProductos">Seleccioná al menos un pedido para ver la lista.</p>
-    </div>
-
-    <div class="dist-resumen" id="distResumen" hidden>
-      <div class="fila"><span>Pedidos incluidos</span><b id="distCantPedidos">0</b></div>
-      <div class="fila"><span>Unidades totales</span><b id="distCantUnidades">0</b></div>
-      <div class="fila"><span>Total a pagar a distribuidora</span><b id="distTotalCosto">$0</b></div>
-      <div class="fila"><span>Total venta</span><b id="distTotalVenta">$0</b></div>
-      <div class="fila fila--ganancia"><span>Ganancia bruta de la tanda</span><b id="distGanancia">$0</b></div>
-    </div>
+    <div id="distWorklists"></div>
 
     <div class="modal-acciones">
       <button type="button" class="btn" onclick="cerrarModalDistribuidora()">Cerrar</button>
-      <button type="button" class="btn btn--pri" id="btnCopiarDist" onclick="copiarListaDistribuidora()" disabled>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        Copiar lista para WhatsApp
-      </button>
     </div>
   </div>
 </div>

@@ -119,6 +119,81 @@ function esc(s) {
 
 function textoOperativo(valor) { return String(valor ?? '').trim(); }
 
+// C-05: estas listas son una proyección de lectura de los snapshots que ya
+// viven en los pedidos. No consultan catálogo, proveedores, saldo ni ledger,
+// para no reinterpretar una compra histórica ni producir efectos operativos.
+function esLineaAbastecimientoElegible(pedido, item) {
+  const estado = textoOperativo(pedido && pedido.estado);
+  const modalidad = textoOperativo(item && item.modalidadAbastecimiento).toUpperCase();
+  const cantidad = Number(item && item.cant);
+  return !['Cancelado', 'Entregado'].includes(estado) &&
+    textoOperativo(pedido && pedido.canal) &&
+    textoOperativo(item && item.itemId) &&
+    textoOperativo(item && item.id) &&
+    textoOperativo(item && item.nombre) &&
+    textoOperativo(item && item.idProveedor) &&
+    modalidad === 'CONTRA_PEDIDO' &&
+    item && item.gestionaStock === false &&
+    Number.isFinite(cantidad) && cantidad > 0;
+}
+
+function construirListasAbastecimiento(pedidos) {
+  const porGrupo = new Map();
+
+  (pedidos || []).forEach(pedido => {
+    (pedido.items || []).forEach(item => {
+      if (!esLineaAbastecimientoElegible(pedido, item)) return;
+
+      const canal = textoOperativo(pedido.canal);
+      const idProveedor = textoOperativo(item.idProveedor);
+      const modalidadAbastecimiento = textoOperativo(item.modalidadAbastecimiento).toUpperCase();
+      const claveGrupo = [canal, idProveedor, modalidadAbastecimiento].join('\u0000');
+      let grupo = porGrupo.get(claveGrupo);
+      if (!grupo) {
+        grupo = { canal, idProveedor, modalidadAbastecimiento, productos: new Map() };
+        porGrupo.set(claveGrupo, grupo);
+      }
+
+      // El nombre también integra la identidad de la línea: dos snapshots de
+      // un mismo ID con etiquetas históricas distintas no se reinterpretan.
+      const id = textoOperativo(item.id);
+      const nombre = textoOperativo(item.nombre);
+      const claveProducto = [id, nombre].join('\u0000');
+      const producto = grupo.productos.get(claveProducto) || { id, nombre, cantidad: 0 };
+      producto.cantidad += Number(item.cant);
+      grupo.productos.set(claveProducto, producto);
+    });
+  });
+
+  return [...porGrupo.values()]
+    .map(grupo => ({
+      canal: grupo.canal,
+      idProveedor: grupo.idProveedor,
+      modalidadAbastecimiento: grupo.modalidadAbastecimiento,
+      productos: [...grupo.productos.values()].sort((a, b) =>
+        a.nombre.localeCompare(b.nombre, 'es') || a.id.localeCompare(b.id, 'es'))
+    }))
+    .sort((a, b) => a.canal.localeCompare(b.canal, 'es') ||
+      a.idProveedor.localeCompare(b.idProveedor, 'es') ||
+      a.modalidadAbastecimiento.localeCompare(b.modalidadAbastecimiento, 'es'));
+}
+
+function proyeccionListaDistrosec(listas, canal) {
+  const grupo = (listas || []).find(lista =>
+    lista.canal === canal &&
+    textoOperativo(lista.idProveedor).toUpperCase() === 'DISTROSEC' &&
+    lista.modalidadAbastecimiento === 'CONTRA_PEDIDO');
+  if (!grupo) return null;
+  return { ...grupo, productos: grupo.productos.map(producto => ({ ...producto })) };
+}
+
+function textoListaAbastecimiento(lista) {
+  if (!lista) return '';
+  return '🛒 Pedido:\n' + lista.productos
+    .map(producto => `- ${producto.cantidad}x ${producto.nombre}`)
+    .join('\n');
+}
+
 function construirProveedorParaGuardar(campos, idOriginal = '') {
   campos = campos || {};
   const id = textoOperativo(campos.Id_Proveedor);
@@ -814,7 +889,9 @@ if (typeof module === 'object' && module.exports) {
     construirMovimientoManual, prepararIntentoMovimientoManual,
     crearErrorRechazoConcluyente, resolverFalloMovimientoPendiente,
     productosConStockGestionado, filasHistorialOperativo,
-    filtrarMovimientosHistorial, movimientosAntecedentesCorreccion
+    filtrarMovimientosHistorial, movimientosAntecedentesCorreccion,
+    construirListasAbastecimiento, proyeccionListaDistrosec,
+    textoListaAbastecimiento
   };
 }
 
@@ -2085,33 +2162,31 @@ function recuperarBorrador() {
 }
 
 
-/* ══════════════ LISTA PARA DISTRIBUIDORA ══════════════ */
-let pedidosSeleccionadosDist = new Set();
+/* ══════════════ LISTAS DE ABASTECIMIENTO ══════════════ */
+let listasAbastecimientoActuales = [];
 
-function abrirListaDistribuidora() {
-  // Solo se pueden agregar pedidos activos (no cancelados ni ya entregados)
-  const pedidosDisponibles = PEDIDOS
-    .filter(p => p.canal === CANAL && !['Cancelado', 'Entregado'].includes(p.estado))
-    .sort((a, b) => fechaISO(b.fechaPedido).localeCompare(fechaISO(a.fechaPedido)) || b.id - a.id);
-
-  const contenedor = document.getElementById('distListaPedidos');
-  if (!pedidosDisponibles.length) {
-    contenedor.innerHTML = '<p class="vacio" style="padding: 16px">No hay pedidos activos para incluir.</p>';
+function abrirListasAbastecimiento() {
+  // La vista se recalcula desde los snapshots activos al abrirse: no conserva
+  // selecciones ni realiza lecturas de stock, catálogo o movimientos.
+  listasAbastecimientoActuales = construirListasAbastecimiento(PEDIDOS);
+  const contenedor = document.getElementById('distWorklists');
+  if (!listasAbastecimientoActuales.length) {
+    contenedor.innerHTML = '<p class="vacio">No hay líneas activas contra pedido con snapshot completo.</p>';
   } else {
-    contenedor.innerHTML = pedidosDisponibles.map(p => {
-      const t = calcularPedido(p);
-      return `<label class="dist-pedido-check" data-id="${p.id}">
-        <input type="checkbox" onchange="togglePedidoDist(${p.id}, this.checked)">
-        <div style="flex:1; min-width:0">
-          <div class="dist-pedido-cliente">#${p.id} · ${esc(p.cliente) || 'Sin cliente'}${esPedidoAlCosto(p) ? ' <span class="pedido-al-costo-etiqueta">Al costo</span>' : ''}</div>
-          <div class="dist-pedido-meta">${fechaCorta(p.fechaPedido)} · ${t.unidades} unidades · ${money(t.total)}</div>
+    contenedor.innerHTML = listasAbastecimientoActuales.map((lista, indice) => `
+      <section class="dist-seccion" data-worklist="${indice}">
+        <h3 class="dist-subtit">${esc(lista.idProveedor)} · ${esc(lista.canal.toUpperCase())} · ${esc(lista.modalidadAbastecimiento)}</h3>
+        <div class="tabla-wrap">
+          <table class="tabla">
+            <thead><tr><th>Producto</th><th class="num">Cantidad</th></tr></thead>
+            <tbody>${lista.productos.map(producto => `<tr><td>${esc(producto.nombre)}</td><td class="num">${producto.cantidad}</td></tr>`).join('')}</tbody>
+          </table>
         </div>
-      </label>`;
-    }).join('');
+        <div class="modal-acciones">
+          <button type="button" class="btn btn--pri" onclick="copiarListaAbastecimiento(${indice})">Copiar lista</button>
+        </div>
+      </section>`).join('');
   }
-
-  pedidosSeleccionadosDist = new Set();
-  actualizarListaDist();
   document.getElementById('modalDistribuidora').hidden = false;
 }
 
@@ -2119,100 +2194,19 @@ function cerrarModalDistribuidora() {
   document.getElementById('modalDistribuidora').hidden = true;
 }
 
-function togglePedidoDist(id, checked) {
-  const card = document.querySelector(`.dist-pedido-check[data-id="${id}"]`);
-  if (checked) {
-    pedidosSeleccionadosDist.add(id);
-    card.classList.add('seleccionado');
-  } else {
-    pedidosSeleccionadosDist.delete(id);
-    card.classList.remove('seleccionado');
-  }
-  actualizarListaDist();
-}
-
-function actualizarListaDist() {
-  const tbody = document.getElementById('distTbodyProductos');
-  const sinProductos = document.getElementById('distSinProductos');
-  const resumen = document.getElementById('distResumen');
-  const btnCopiar = document.getElementById('btnCopiarDist');
-
-  const pedidosElegidos = [...pedidosSeleccionadosDist].map(id => PEDIDOS.find(p => p.id === id)).filter(Boolean);
-
-  if (!pedidosElegidos.length) {
-    tbody.innerHTML = '';
-    sinProductos.hidden = false;
-    resumen.hidden = true;
-    btnCopiar.disabled = true;
-    return;
-  }
-
-  sinProductos.hidden = true;
-  resumen.hidden = false;
-  btnCopiar.disabled = false;
-
-  // Agrupar productos por id, sumar cantidades
-  const productosAgrupados = {};
-  let totalUnidades = 0, totalCosto = 0, totalVenta = 0;
-
-  pedidosElegidos.forEach(p => {
-    const t = calcularPedido(p);
-    totalVenta += t.total;
-    p.items.forEach(item => {
-      totalUnidades += item.cant;
-      totalCosto += item.cant * item.costo;
-      if (!productosAgrupados[item.id]) {
-        productosAgrupados[item.id] = {
-          nombre: item.nombre,
-          cantidad: 0,
-          costoUnit: item.costo
-        };
-      }
-      productosAgrupados[item.id].cantidad += item.cant;
-    });
-  });
-
-  // Ordenar productos por nombre alfabeticamente
-  const listaOrdenada = Object.values(productosAgrupados).sort((a,b) => a.nombre.localeCompare(b.nombre));
-
-  tbody.innerHTML = listaOrdenada.map(prod => `
-    <tr>
-      <td>${esc(prod.nombre)}</td>
-      <td class="num">${prod.cantidad}</td>
-      <td class="num">${money(prod.costoUnit)}</td>
-      <td class="num">${money(prod.cantidad * prod.costoUnit)}</td>
-    </tr>
-  `).join('');
-
-  document.getElementById('distCantPedidos').textContent = pedidosElegidos.length;
-  document.getElementById('distCantUnidades').textContent = totalUnidades;
-  document.getElementById('distTotalCosto').textContent = money(totalCosto);
-  document.getElementById('distTotalVenta').textContent = money(totalVenta);
-  const ganancia = totalVenta - totalCosto;
-  const elGanancia = document.getElementById('distGanancia');
-  elGanancia.textContent = money(ganancia);
-  elGanancia.parentElement.classList.toggle('neg', ganancia < 0);
-}
-
-async function copiarListaDistribuidora() {
-  const pedidosElegidos = [...pedidosSeleccionadosDist].map(id => PEDIDOS.find(p => p.id === id)).filter(Boolean);
-  const productosAgrupados = {};
-  pedidosElegidos.forEach(p => {
-    p.items.forEach(item => {
-      if (!productosAgrupados[item.nombre]) productosAgrupados[item.nombre] = 0;
-      productosAgrupados[item.nombre] += item.cant;
-    });
-  });
-
-  const lineas = Object.entries(productosAgrupados)
-    .sort((a,b) => a[0].localeCompare(b[0]))
-    .map(([nombre, cant]) => `- ${cant}x ${nombre}`);
-
-  const texto = `🛒 Pedido (${pedidosElegidos.length} pedidos):\n` + lineas.join('\n');
+async function copiarListaAbastecimiento(indice) {
+  const lista = listasAbastecimientoActuales[indice];
+  if (!lista) return;
+  // Distrosec conserva el formato de copia histórico, pero siempre como
+  // proyección de su grupo y su canal, nunca como una ruta agregada aparte.
+  const paraCopiar = textoOperativo(lista.idProveedor).toUpperCase() === 'DISTROSEC'
+    ? proyeccionListaDistrosec(listasAbastecimientoActuales, lista.canal)
+    : lista;
+  const texto = textoListaAbastecimiento(paraCopiar);
 
   try {
     await navigator.clipboard.writeText(texto);
-    toast('Lista copiada al portapapeles, lista para pegar en WhatsApp!');
+    toast('Lista copiada al portapapeles, lista para pegar en WhatsApp.');
   } catch (e) {
     // Fallback si el navegador no deja copiar
     prompt('Copia la lista seleccionando todo el texto:', texto);
