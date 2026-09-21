@@ -175,3 +175,257 @@ test('excludes internal orders from every commercial aggregate while keeping the
   assert.equal(admin.esPedidoAlCosto(internal), true);
   assert.equal(admin.esPedidoAlCosto({ canal: 'b2b', pedidoAlCosto: true }), false);
 });
+
+test('adopts server-returned Item_Id snapshots so a pending order can be saved again without remapping lines', () => {
+  const draft = {
+    id: 44, canal: 'b2c', estado: 'Nuevo', envioModo: 'fijado', envio: 1500,
+    items: [{ id: 'P-1', nombre: 'Producto sintético', cant: 2, unit: 10 }]
+  };
+  const sent = { ...draft, envioModo: undefined, envio: 1500, items: [...draft.items] };
+  const server = {
+    ...sent,
+    items: [{
+      ...sent.items[0], itemId: 'ITEM-44-1', idProveedor: 'PRV-A',
+      modalidadAbastecimiento: 'STOCK_PROPIO', gestionaStock: true
+    }]
+  };
+
+  const adopted = admin.incorporarPedidoGuardado(draft, server, sent);
+  assert.equal(adopted.envioModo, 'historico');
+  assert.deepEqual(adopted.items, server.items);
+  assert.equal(adopted.items[0].itemId, 'ITEM-44-1');
+  assert.equal(adopted.items[0].modalidadAbastecimiento, 'STOCK_PROPIO');
+});
+
+test('keeps server Item_Id snapshots in edicion and PEDIDOS for the second pending save', () => {
+  const draft = {
+    id: 45, canal: 'b2c', estado: 'Nuevo', envioModo: 'fijado', envio: 1500,
+    items: [{ id: 'P-1', nombre: 'Producto sintético', cant: 2, unit: 10 }]
+  };
+  const sent = admin.paraGuardar(draft);
+  const server = {
+    ...sent,
+    items: [{
+      ...sent.items[0], itemId: 'ITEM-45-1', idProveedor: 'PRV-A',
+      modalidadAbastecimiento: 'STOCK_PROPIO', gestionaStock: true
+    }]
+  };
+
+  const actualizados = admin.actualizarPedidoTrasGuardado([draft], draft, server, sent);
+  actualizados.edicion.items[0].cant = 3;
+  const segundoEnvio = admin.paraGuardar(actualizados.edicion);
+  const snapshotEsperado = {
+    itemId: 'ITEM-45-1', idProveedor: 'PRV-A',
+    modalidadAbastecimiento: 'STOCK_PROPIO', gestionaStock: true
+  };
+
+  assert.deepEqual(
+    actualizados.edicion.items.map(({ itemId, idProveedor, modalidadAbastecimiento, gestionaStock }) =>
+      ({ itemId, idProveedor, modalidadAbastecimiento, gestionaStock })),
+    [snapshotEsperado]
+  );
+  assert.deepEqual(
+    actualizados.pedidos[0].items.map(({ itemId, idProveedor, modalidadAbastecimiento, gestionaStock }) =>
+      ({ itemId, idProveedor, modalidadAbastecimiento, gestionaStock })),
+    [snapshotEsperado]
+  );
+  assert.deepEqual(
+    segundoEnvio.items.map(({ itemId, idProveedor, modalidadAbastecimiento, gestionaStock }) =>
+      ({ itemId, idProveedor, modalidadAbastecimiento, gestionaStock })),
+    [snapshotEsperado]
+  );
+  assert.equal(segundoEnvio.items[0].cant, 3);
+});
+
+test('adds a newly saved pending order with distinct server snapshots for repeated SKU lines', () => {
+  const draft = {
+    canal: 'b2c', estado: 'Nuevo', envioModo: 'automatico', envio: 1500,
+    items: [
+      { id: 'P-1', nombre: 'Producto sintético', cant: 1, unit: 10 },
+      { id: 'P-1', nombre: 'Producto sintético', cant: 2, unit: 10 }
+    ]
+  };
+  const sent = admin.paraGuardar(draft);
+  const server = {
+    ...sent,
+    id: 46,
+    items: [
+      { ...sent.items[0], itemId: 'ITEM-46-1', idProveedor: 'PRV-A', modalidadAbastecimiento: 'STOCK_PROPIO', gestionaStock: true },
+      { ...sent.items[1], itemId: 'ITEM-46-2', idProveedor: 'PRV-B', modalidadAbastecimiento: 'CONSIGNACION', gestionaStock: true }
+    ]
+  };
+
+  const actualizados = admin.actualizarPedidoTrasGuardado([], draft, server, sent);
+  const segundoEnvio = admin.paraGuardar(actualizados.edicion);
+
+  assert.equal(actualizados.pedidos.length, 1);
+  assert.equal(actualizados.pedidos[0].id, 46);
+  assert.deepEqual(
+    segundoEnvio.items.map(({ itemId, idProveedor, modalidadAbastecimiento, gestionaStock }) =>
+      ({ itemId, idProveedor, modalidadAbastecimiento, gestionaStock })),
+    [
+      { itemId: 'ITEM-46-1', idProveedor: 'PRV-A', modalidadAbastecimiento: 'STOCK_PROPIO', gestionaStock: true },
+      { itemId: 'ITEM-46-2', idProveedor: 'PRV-B', modalidadAbastecimiento: 'CONSIGNACION', gestionaStock: true }
+    ]
+  );
+});
+
+test('C-04 builds private supplier and classification payloads without mutating identifiers', () => {
+  const nuevo = admin.construirProveedorParaGuardar({
+    Id_Proveedor: 'PRV-OPERATIVO', Nombre: 'Proveedor operativo',
+    Telefono: '', Direccion: '', Notas: '', Activo: true
+  });
+  assert.deepEqual(nuevo, {
+    Id_Proveedor: 'PRV-OPERATIVO', Nombre: 'Proveedor operativo',
+    Telefono: '', Direccion: '', Notas: '', Activo: true
+  });
+  assert.deepEqual(admin.construirProveedorParaGuardar({
+    Id_Proveedor: 'PRV-OPERATIVO', Nombre: 'Actualizado', Activo: false
+  }, 'PRV-OPERATIVO'), {
+    Id_Proveedor_Original: 'PRV-OPERATIVO', Id_Proveedor: 'PRV-OPERATIVO',
+    Nombre: 'Actualizado', Telefono: '', Direccion: '', Notas: '', Activo: false
+  });
+  assert.throws(() => admin.construirProveedorParaGuardar({
+    Id_Proveedor: 'OTRO', Nombre: 'Actualizado', Activo: true
+  }, 'PRV-OPERATIVO'), /inmutable/);
+
+  const clasificacion = admin.construirClasificacionProducto({
+    Id_Producto: 'P-1', Id_Proveedor: 'PRV-OPERATIVO',
+    Modalidad_Abastecimiento: 'CONSIGNACION', Sin_Stock: false
+  }, [{ Id_Proveedor: 'PRV-OPERATIVO', Activo: true }]);
+  assert.deepEqual(clasificacion, {
+    Id_Producto: 'P-1', Id_Proveedor: 'PRV-OPERATIVO',
+    Modalidad_Abastecimiento: 'CONSIGNACION', Sin_Stock: false
+  });
+  assert.throws(() => admin.construirClasificacionProducto({
+    Id_Producto: 'P-1', Id_Proveedor: 'PRV-OPERATIVO',
+    Modalidad_Abastecimiento: 'OTRA', Sin_Stock: false
+  }, [{ Id_Proveedor: 'PRV-OPERATIVO', Activo: true }]), /Modalidad/);
+  assert.throws(() => admin.construirClasificacionProducto({
+    Id_Producto: 'P-1', Id_Proveedor: 'PRV-OPERATIVO',
+    Modalidad_Abastecimiento: 'STOCK_PROPIO', Sin_Stock: true
+  }, [{ Id_Proveedor: 'PRV-OPERATIVO', Activo: false }]), /activo/);
+});
+
+test('C-04 keeps physical balance separate from manual availability and channel context', () => {
+  const resumen = admin.resumenInventarioDelCanal([
+    { Id_Producto: 'P-1', Saldo: 0, Sin_Stock: false, Gestiona_Stock: true },
+    { Id_Producto: 'P-2', Saldo: null, Sin_Stock: false, Gestiona_Stock: false },
+    { Id_Producto: 'P-3', Saldo: -2, Sin_Stock: true, Gestiona_Stock: true }
+  ], [{ id: 'P-1' }, { id: 'P-2' }]);
+  assert.deepEqual(resumen, [
+    { Id_Producto: 'P-1', Saldo: 0, Sin_Stock: false, Gestiona_Stock: true },
+    { Id_Producto: 'P-2', Saldo: null, Sin_Stock: false, Gestiona_Stock: false }
+  ]);
+  assert.equal(resumen[0].Sin_Stock, false);
+  assert.equal(resumen[1].Saldo, null);
+});
+
+test('C-04 freezes a manual movement intent and reserves sales for delivered orders', () => {
+  const ingreso = admin.construirMovimientoManual({
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: 'Ingreso'
+  }, 'MANUAL:uno');
+  assert.deepEqual(ingreso, {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 3, Costo_Unitario: 4,
+    Referencia: '', Nota: 'Ingreso', Clave_Idempotencia: 'MANUAL:uno'
+  });
+  assert.equal(admin.construirMovimientoManual({
+    Id_Producto: 'P-1', Tipo: 'CONSUMO_PROPIO', Cantidad: '2', Nota: ''
+  }, 'MANUAL:dos').Cantidad, -2);
+  assert.equal(admin.construirMovimientoManual({
+    Id_Producto: 'P-1', Tipo: 'ROTURA_MERMA', Cantidad: '1', Nota: ''
+  }, 'MANUAL:tres').Cantidad, -1);
+  assert.equal(admin.construirMovimientoManual({
+    Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: '-2', Nota: 'Ajuste', Referencia: 'MOV-1'
+  }, 'MANUAL:cuatro').Cantidad, -2);
+  assert.throws(() => admin.construirMovimientoManual({
+    Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: '1'
+  }, 'MANUAL:venta'), /VENTA/);
+
+  const primero = admin.prepararIntentoMovimientoManual(null, {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+  }, () => 'uno');
+  const reintento = admin.prepararIntentoMovimientoManual(primero, {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '99', Costo_Unitario: '99', Nota: 'Cambiado'
+  }, () => 'dos');
+  const nuevaIntencion = admin.prepararIntentoMovimientoManual(null, {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+  }, () => 'tres');
+  assert.strictEqual(reintento, primero);
+  assert.equal(primero.payload.Clave_Idempotencia, 'MANUAL:uno');
+  assert.equal(primero.payload.Cantidad, 3);
+  assert.equal(nuevaIntencion.payload.Clave_Idempotencia, 'MANUAL:tres');
+  assert.ok(Object.isFrozen(primero.payload));
+});
+
+test('C-04 releases a manual intent after an explicit Apps Script rejection', () => {
+  const pendiente = admin.prepararIntentoMovimientoManual(null, {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+  }, () => 'original');
+  const rechazo = admin.crearErrorRechazoConcluyente('El saldo no permite el movimiento.');
+
+  assert.equal(rechazo.rechazoConcluyente, true);
+  assert.equal(admin.resolverFalloMovimientoPendiente(pendiente, rechazo), null);
+
+  const corregido = admin.prepararIntentoMovimientoManual(
+    admin.resolverFalloMovimientoPendiente(pendiente, rechazo),
+    { Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '2', Costo_Unitario: '4', Nota: 'Corregido' },
+    () => 'corregido'
+  );
+  assert.equal(corregido.payload.Clave_Idempotencia, 'MANUAL:corregido');
+  assert.equal(corregido.payload.Cantidad, 2);
+});
+
+test('C-04 retains the exact manual payload and key after an uncertain failure', () => {
+  const pendiente = admin.prepararIntentoMovimientoManual(null, {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+  }, () => 'original');
+
+  const trasTimeout = admin.resolverFalloMovimientoPendiente(
+    pendiente, new Error('El Sheets tardó demasiado en responder.')
+  );
+  const sinRespuesta = admin.resolverFalloMovimientoPendiente(
+    pendiente, new Error('El Sheets respondió algo inesperado.')
+  );
+
+  assert.strictEqual(trasTimeout, pendiente);
+  assert.strictEqual(sinRespuesta, pendiente);
+  assert.equal(sinRespuesta.payload.Clave_Idempotencia, 'MANUAL:original');
+  assert.equal(sinRespuesta.payload.Cantidad, 3);
+});
+
+test('C-04 filters only the history view and retains the full ledger for a correction antecedent', () => {
+  const ledgerCompleto = [
+    { Movimiento_Id: 'MOV-1', Id_Producto: 'P-1', Tipo: 'INGRESO' },
+    { Movimiento_Id: 'MOV-2', Id_Producto: 'P-2', Tipo: 'CONSUMO_PROPIO' }
+  ];
+  const vistaFiltrada = admin.filtrarMovimientosHistorial(ledgerCompleto, { Id_Producto: 'P-1' });
+
+  assert.deepEqual(vistaFiltrada.map(movimiento => movimiento.Movimiento_Id), ['MOV-1']);
+  assert.deepEqual(ledgerCompleto.map(movimiento => movimiento.Movimiento_Id), ['MOV-1', 'MOV-2']);
+  assert.deepEqual(
+    admin.movimientosAntecedentesCorreccion(ledgerCompleto, 'P-2').map(movimiento => movimiento.Movimiento_Id),
+    ['MOV-2']
+  );
+});
+
+test('C-04 prepares inventory rows and history without client or supplier contact fields', () => {
+  const productos = [{ id: 'P-1', n: 'Producto uno' }, { id: 'P-2', n: 'Producto dos' }];
+  const resumen = [
+    { Id_Producto: 'P-1', Gestiona_Stock: true, Saldo: 0, Sin_Stock: false },
+    { Id_Producto: 'P-2', Gestiona_Stock: false, Saldo: null, Sin_Stock: false }
+  ];
+  assert.deepEqual(admin.productosConStockGestionado(resumen, productos), [{ id: 'P-1', n: 'Producto uno' }]);
+
+  const filas = admin.filasHistorialOperativo([{
+    Fecha: '2026-09-20T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -2,
+    Nota: '', Referencia: '', Id_Pedido: 'PEDIDO-1', Item_Id: 'ITEM-1',
+    Cliente: 'No debe mostrarse', Telefono: 'No debe mostrarse', Direccion: 'No debe mostrarse',
+    Telefono_Proveedor: 'No debe mostrarse', Notas_Proveedor: 'No debe mostrarse'
+  }], productos);
+  assert.deepEqual(filas, [{
+    fecha: '20/09/2026', producto: 'Producto uno', tipo: 'VENTA', cantidad: -2,
+    costo: null, referencia: 'Pedido PEDIDO-1 · ítem ITEM-1', nota: ''
+  }]);
+  assert.equal(JSON.stringify(filas).includes('No debe mostrarse'), false);
+});

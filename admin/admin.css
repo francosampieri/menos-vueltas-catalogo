@@ -394,6 +394,52 @@ button { cursor: pointer; background: none; border: none; }
 }
 .campo--full { grid-column: 1 / -1; }
 
+/* ── Inventario operativo ── */
+.inventario-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s4);
+  margin-bottom: var(--s4);
+}
+.inventario-grid .panel { margin-bottom: 0; }
+.inventario-ayuda {
+  color: var(--t2);
+  font-family: var(--font-body);
+  font-size: .9rem;
+  line-height: 1.35;
+  margin-top: 4px;
+}
+.inventario-form { margin-top: var(--s4); }
+.inventario-acciones { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.inventario-estado { min-height: 1.2em; color: var(--accent-2); font-size: .84rem; }
+.inventario-estado.error { color: var(--rojo); }
+.control-check {
+  align-self: end;
+  margin: 0;
+  font-size: .76rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--t2);
+}
+.control-check input { margin-right: 6px; accent-color: var(--accent); }
+.tabla--inventario { min-width: 700px; }
+.tabla--inventario td small { display: block; margin-top: 2px; color: var(--t3); font-size: .72rem; }
+.tabla-wrap--compacta { max-height: 245px; overflow: auto; }
+
+/* Las tablas de C-04 son deliberadamente anchas. Cada panel puede encogerse
+   dentro de la grilla y el desplazamiento queda contenido en su wrapper, sin
+   ensanchar la página en desktop ni en móvil. */
+#vistaInventario,
+#vistaInventario .inventario-grid,
+#vistaInventario .inventario-grid > .panel { min-width: 0; }
+#vistaInventario .tabla-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+}
+#vistaInventario .tabla-wrap--compacta { overflow-y: auto; }
+
 /* En el editor de pedidos la grilla es de 4 columnas fijas, no auto-fit: los
    campos están agrupados por quién los completa (arriba vos, abajo el cliente)
    y con auto-fit el corte de fila cambiaba según el ancho, mezclando los dos
@@ -1183,6 +1229,7 @@ input[type="date"], input[type="number"] {
 @media (max-width: 900px) {
   .campos--pedido { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .campos--pedido .campo--fila-nueva { grid-column: 1 / -1; }
+  .inventario-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {

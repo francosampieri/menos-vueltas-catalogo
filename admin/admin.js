@@ -49,6 +49,16 @@ let edicion  = null;   // copia del pedido abierto; el original no se toca
 let sugerencias = [];
 let sugSel   = -1;
 let guardando = false;
+let PROVEEDORES = [];
+let RESUMEN_STOCK = [];
+let MOVIMIENTOS_STOCK = [];
+let MOVIMIENTOS_STOCK_VISTA = [];
+let proveedorEnEdicion = null;
+let movimientoPendiente = null;
+let enviandoMovimiento = false;
+
+const MODALIDADES_ABASTECIMIENTO = ['CONTRA_PEDIDO', 'CONSIGNACION', 'STOCK_PROPIO'];
+const TIPOS_MOVIMIENTO_MANUAL = ['INGRESO', 'CONSUMO_PROPIO', 'ROTURA_MERMA', 'CORRECCION'];
 
 
 /* ══════════════ UTILIDADES ══════════════ */
@@ -105,6 +115,109 @@ function fechaCorta(v) {
 function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function textoOperativo(valor) { return String(valor ?? '').trim(); }
+
+function construirProveedorParaGuardar(campos, idOriginal = '') {
+  campos = campos || {};
+  const id = textoOperativo(campos.Id_Proveedor);
+  const original = textoOperativo(idOriginal);
+  const nombre = textoOperativo(campos.Nombre);
+  if (!id) throw new Error('El identificador del proveedor es obligatorio.');
+  if (original && id !== original) throw new Error('El identificador del proveedor es inmutable.');
+  if (!nombre) throw new Error('El nombre del proveedor es obligatorio.');
+  if (typeof campos.Activo !== 'boolean') throw new Error('El estado Activo debe ser booleano.');
+  const proveedor = {
+    Id_Proveedor: id, Nombre: nombre,
+    Telefono: textoOperativo(campos.Telefono), Direccion: textoOperativo(campos.Direccion),
+    Notas: textoOperativo(campos.Notas), Activo: campos.Activo
+  };
+  return original ? { Id_Proveedor_Original: original, ...proveedor } : proveedor;
+}
+
+function construirClasificacionProducto(campos, proveedores) {
+  campos = campos || {};
+  const idProducto = textoOperativo(campos.Id_Producto);
+  const idProveedor = textoOperativo(campos.Id_Proveedor);
+  const modalidad = textoOperativo(campos.Modalidad_Abastecimiento).toUpperCase();
+  if (!idProducto || !idProveedor) throw new Error('Producto y proveedor son obligatorios.');
+  if (MODALIDADES_ABASTECIMIENTO.indexOf(modalidad) < 0) throw new Error('Modalidad de abastecimiento inválida.');
+  if (typeof campos.Sin_Stock !== 'boolean') throw new Error('Sin_Stock debe ser booleano.');
+  const proveedor = (proveedores || []).find(p => p.Id_Proveedor === idProveedor);
+  if (!proveedor || !proveedor.Activo) throw new Error('El proveedor habitual debe estar activo.');
+  return {
+    Id_Producto: idProducto, Id_Proveedor: idProveedor,
+    Modalidad_Abastecimiento: modalidad, Sin_Stock: campos.Sin_Stock
+  };
+}
+
+function resumenInventarioDelCanal(resumen, productosCanal) {
+  const ids = new Set((productosCanal || []).map(producto => String(producto.id || '')));
+  return (resumen || []).filter(producto => ids.has(String(producto.Id_Producto || '')))
+    .map(producto => ({ ...producto }));
+}
+
+function construirMovimientoManual(campos, clave) {
+  campos = campos || {};
+  const idProducto = textoOperativo(campos.Id_Producto);
+  const tipo = textoOperativo(campos.Tipo).toUpperCase();
+  const claveIdempotencia = textoOperativo(clave);
+  const cantidadIngresada = Number(campos.Cantidad);
+  if (!idProducto) throw new Error('El producto es obligatorio.');
+  if (tipo === 'VENTA') throw new Error('VENTA se registra únicamente al entregar un pedido.');
+  if (TIPOS_MOVIMIENTO_MANUAL.indexOf(tipo) < 0) throw new Error('Tipo de movimiento inválido.');
+  if (!claveIdempotencia || !claveIdempotencia.startsWith('MANUAL:')) throw new Error('La clave manual es inválida.');
+  if (!Number.isFinite(cantidadIngresada)) throw new Error('La cantidad es obligatoria.');
+
+  let cantidad = cantidadIngresada;
+  if (tipo === 'INGRESO') {
+    if (cantidad <= 0) throw new Error('El ingreso requiere una cantidad positiva.');
+  } else if (tipo === 'CONSUMO_PROPIO' || tipo === 'ROTURA_MERMA') {
+    if (cantidad <= 0) throw new Error('La salida requiere una magnitud positiva.');
+    cantidad = -cantidad;
+  } else if (cantidad === 0) {
+    throw new Error('La corrección requiere una cantidad distinta de cero.');
+  }
+
+  const resultado = {
+    Id_Producto: idProducto, Tipo: tipo, Cantidad: cantidad,
+    Referencia: textoOperativo(campos.Referencia), Nota: textoOperativo(campos.Nota),
+    Clave_Idempotencia: claveIdempotencia
+  };
+  if (tipo === 'INGRESO') {
+    if (textoOperativo(campos.Costo_Unitario) === '') throw new Error('El ingreso requiere costo unitario.');
+    const costo = Number(campos.Costo_Unitario);
+    if (!Number.isFinite(costo) || costo < 0) throw new Error('El costo unitario debe ser finito y no negativo.');
+    resultado.Costo_Unitario = costo;
+    const { Costo_Unitario, ...conCostoOrdenado } = resultado;
+    return Object.freeze({ ...conCostoOrdenado, Costo_Unitario: costo, Referencia: resultado.Referencia, Nota: resultado.Nota, Clave_Idempotencia: resultado.Clave_Idempotencia });
+  }
+  if (tipo === 'CORRECCION' && (!resultado.Nota || !resultado.Referencia)) {
+    throw new Error('La corrección requiere nota y movimiento antecedente.');
+  }
+  return Object.freeze(resultado);
+}
+
+function prepararIntentoMovimientoManual(pendiente, campos, generarId) {
+  if (pendiente) return pendiente;
+  const clave = 'MANUAL:' + generarId();
+  return Object.freeze({ clave, payload: construirMovimientoManual(campos, clave) });
+}
+
+function crearErrorRechazoConcluyente(mensaje) {
+  const error = new Error(mensaje || 'error del servidor');
+  error.rechazoConcluyente = true;
+  return error;
+}
+
+function resolverFalloMovimientoPendiente(pendiente, error) {
+  return error && error.rechazoConcluyente === true ? null : pendiente;
+}
+
+function generarIdMovimientoManual() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
 }
 
 function toast(msg, error) {
@@ -408,7 +521,7 @@ async function llamarSheets(opciones) {
     throw new Error('El Sheets respondió algo inesperado. Revisá que la ' +
                     'implementación tenga acceso "Cualquier usuario".');
   }
-  if (!d.ok) throw new Error(d.error || 'error del servidor');
+  if (!d.ok) throw crearErrorRechazoConcluyente(d.error || 'error del servidor');
   return d;
 }
 
@@ -526,6 +639,63 @@ const API = {
     }
     const lista = (await this.listarClientes()).filter(c => c.id !== id);
     localStorage.setItem(LS_CLIENTES, JSON.stringify(lista));
+  },
+
+  // Inventario y proveedores son exclusivamente operativos: no tienen modo
+  // local ni se copian al catálogo reducido que acompaña al panel.
+  async leerOperativo(accion, parametros = {}) {
+    if (!SHEETS_URL) throw new Error('La operación de inventario requiere la conexión con Apps Script.');
+    const consulta = Object.entries({ accion, ...parametros })
+      .filter(([, valor]) => valor !== '' && valor !== null && valor !== undefined)
+      .map(([clave, valor]) => `${encodeURIComponent(clave)}=${encodeURIComponent(valor)}`).join('&');
+    return llamarSheets({ url: `${SHEETS_URL}?${consulta}` });
+  },
+
+  async escribirOperativo(accion, datos) {
+    if (!SHEETS_URL) throw new Error('La operación de inventario requiere la conexión con Apps Script.');
+    return llamarSheets({
+      url: SHEETS_URL,
+      init: {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ accion, ...datos })
+      }
+    });
+  },
+
+  async listarProveedores() {
+    const respuesta = await this.leerOperativo('listarProveedores');
+    return respuesta.proveedores || [];
+  },
+
+  async crearProveedor(proveedor) {
+    const respuesta = await this.escribirOperativo('crearProveedor', { proveedor });
+    return respuesta.proveedor;
+  },
+
+  async actualizarProveedor(proveedor) {
+    const respuesta = await this.escribirOperativo('actualizarProveedor', { proveedor });
+    return respuesta.proveedor;
+  },
+
+  async clasificarProducto(clasificacion) {
+    const respuesta = await this.escribirOperativo('clasificarProducto', { clasificacion });
+    return respuesta.clasificacion;
+  },
+
+  async resumenStock() {
+    const respuesta = await this.leerOperativo('resumenStock');
+    return respuesta.productos || [];
+  },
+
+  async registrarMovimiento(movimiento) {
+    const respuesta = await this.escribirOperativo('registrarMovimiento', { movimiento });
+    return respuesta.movimiento;
+  },
+
+  async listarMovimientos(filtros = {}) {
+    const respuesta = await this.leerOperativo('listarMovimientos', filtros);
+    return respuesta.movimientos || [];
   }
 };
 
@@ -564,6 +734,29 @@ function paraGuardar(p) {
       };
     })
   };
+}
+
+// El servidor completa los snapshots operativos de cada línea. Adoptar la
+// respuesta evita perder Item_Id al editar luego un pedido pendiente; el modo
+// de envío sigue siendo exclusivamente estado de interfaz del panel.
+function incorporarPedidoGuardado(actual, guardado, enviado) {
+  const respuesta = guardado || {};
+  return {
+    ...actual,
+    ...respuesta,
+    items: Array.isArray(respuesta.items) ? respuesta.items : actual.items,
+    envio: enviado.envio,
+    envioModo: 'historico'
+  };
+}
+
+function actualizarPedidoTrasGuardado(pedidos, actual, guardado, enviado) {
+  const edicionActualizada = incorporarPedidoGuardado(actual, guardado, enviado);
+  const pedidosActualizados = pedidos.slice();
+  const indice = pedidosActualizados.findIndex(p => p.id === edicionActualizada.id);
+  if (indice >= 0) pedidosActualizados[indice] = edicionActualizada;
+  else pedidosActualizados.push(edicionActualizada);
+  return { edicion: edicionActualizada, pedidos: pedidosActualizados };
 }
 
 
@@ -615,7 +808,13 @@ if (typeof module === 'object' && module.exports) {
   module.exports = {
     lineaDesdeCatalogo, calcularLinea, tienePromoTemporalLinea,
     calcularPedido, modoEnvioPedido, paraGuardar, esPedidoAlCosto,
-    calcularMetricas, calcularEstadisticasClientes
+    calcularMetricas, calcularEstadisticasClientes, incorporarPedidoGuardado,
+    actualizarPedidoTrasGuardado, construirProveedorParaGuardar,
+    construirClasificacionProducto, resumenInventarioDelCanal,
+    construirMovimientoManual, prepararIntentoMovimientoManual,
+    crearErrorRechazoConcluyente, resolverFalloMovimientoPendiente,
+    productosConStockGestionado, filasHistorialOperativo,
+    filtrarMovimientosHistorial, movimientosAntecedentesCorreccion
   };
 }
 
@@ -693,39 +892,364 @@ function avisarCatalogoFallido(err) {
 
 function irASeccion(nombre) {
   const esPedidos = nombre === 'pedidos';
+  const esClientes = nombre === 'clientes';
+  const esInventario = nombre === 'inventario';
   document.getElementById('navPedidos').classList.toggle('on', esPedidos);
-  document.getElementById('navClientes').classList.toggle('on', !esPedidos);
-  // El canal aplica a las dos secciones: los clientes B2C y B2B se manejan
-  // por separado, no tienen nada que ver entre sí.
-
-  document.getElementById('vistaClientes').hidden = esPedidos;
+  document.getElementById('navClientes').classList.toggle('on', esClientes);
+  document.getElementById('navInventario').classList.toggle('on', esInventario);
+  document.getElementById('vistaClientes').hidden = !esClientes;
   document.getElementById('vistaLista').hidden = !esPedidos;
+  document.getElementById('vistaInventario').hidden = !esInventario;
   document.getElementById('vistaEditor').hidden = true;
 
-  if (esPedidos) pintarLista(); else pintarClientes();
+  if (esPedidos) pintarLista();
+  else if (esClientes) pintarClientes();
+  else recargarInventario();
 }
 
 function setCanal(canal) {
   CANAL = canal;
   document.getElementById('canalB2C').classList.toggle('on', canal === 'b2c');
   document.getElementById('canalB2B').classList.toggle('on', canal === 'b2b');
-  // Se vuelve a la lista de la sección en la que se esté: cambiar de canal
-  // no debería sacarte de Clientes.
-  const enClientes = !document.getElementById('navClientes').classList.contains('on');
-  if (enClientes) verLista(); else irASeccion('clientes');
+  if (document.getElementById('navInventario').classList.contains('on')) recargarInventario();
+  else if (document.getElementById('navClientes').classList.contains('on')) irASeccion('clientes');
+  else verLista();
 }
 
 function verLista() {
   document.getElementById('vistaLista').hidden = false;
   document.getElementById('vistaEditor').hidden = true;
   document.getElementById('vistaClientes').hidden = true;
+  document.getElementById('vistaInventario').hidden = true;
   document.getElementById('navPedidos').classList.add('on');
   document.getElementById('navClientes').classList.remove('on');
+  document.getElementById('navInventario').classList.remove('on');
   edicion = null;
   pintarLista();
 }
 
 function volverALista() { verLista(); }
+
+
+/* ══════════════ INVENTARIO OPERATIVO ══════════════ */
+
+function productosCanalActual() {
+  return Array.isArray(CATALOGO[CANAL]) ? CATALOGO[CANAL] : [];
+}
+
+function productoOperativoPorId(idProducto, productos = productosCanalActual()) {
+  return (productos || []).find(producto => String(producto.id) === String(idProducto));
+}
+
+function productosConStockGestionado(resumen, productos) {
+  return (productos || []).filter(producto => (resumen || []).some(fila =>
+    String(fila.Id_Producto) === String(producto.id) && fila.Gestiona_Stock === true));
+}
+
+function referenciaHistorialOperativa(movimiento) {
+  const referencias = [];
+  if (movimiento.Referencia) referencias.push(String(movimiento.Referencia));
+  if (movimiento.Id_Pedido) referencias.push('Pedido ' + movimiento.Id_Pedido);
+  if (movimiento.Item_Id) referencias.push('ítem ' + movimiento.Item_Id);
+  return referencias.join(' · ');
+}
+
+function filasHistorialOperativo(movimientos, productos) {
+  return (movimientos || []).map(movimiento => {
+    const producto = productoOperativoPorId(movimiento.Id_Producto, productos);
+    return {
+      fecha: fechaCorta(movimiento.Fecha),
+      producto: producto ? producto.n : String(movimiento.Id_Producto || '—'),
+      tipo: String(movimiento.Tipo || ''),
+      cantidad: Number(movimiento.Cantidad),
+      costo: Object.prototype.hasOwnProperty.call(movimiento, 'Costo_Unitario')
+        ? Number(movimiento.Costo_Unitario) : null,
+      referencia: referenciaHistorialOperativa(movimiento),
+      nota: String(movimiento.Nota || '')
+    };
+  });
+}
+
+function filtrarMovimientosHistorial(movimientos, filtros = {}) {
+  const idProducto = textoOperativo(filtros.Id_Producto);
+  const tipo = textoOperativo(filtros.Tipo).toUpperCase();
+  return (movimientos || []).filter(movimiento =>
+    (!idProducto || String(movimiento.Id_Producto) === idProducto) &&
+    (!tipo || String(movimiento.Tipo).toUpperCase() === tipo)
+  );
+}
+
+function movimientosAntecedentesCorreccion(movimientos, idProducto) {
+  return filtrarMovimientosHistorial(movimientos, { Id_Producto: idProducto });
+}
+
+function opcionesProductos(productos, textoInicial) {
+  return `<option value="">${esc(textoInicial)}</option>` + (productos || []).map(producto =>
+    `<option value="${esc(producto.id)}">${esc(producto.n || producto.id)}</option>`
+  ).join('');
+}
+
+function opcionesProveedores(proveedores, textoInicial) {
+  return `<option value="">${esc(textoInicial)}</option>` + (proveedores || [])
+    .filter(proveedor => proveedor.Activo === true)
+    .map(proveedor => `<option value="${esc(proveedor.Id_Proveedor)}">${esc(proveedor.Nombre)} · ${esc(proveedor.Id_Proveedor)}</option>`)
+    .join('');
+}
+
+function nombreProveedor(idProveedor) {
+  const proveedor = PROVEEDORES.find(item => item.Id_Proveedor === idProveedor);
+  if (!idProveedor) return 'Sin clasificar';
+  if (!proveedor) return String(idProveedor);
+  return proveedor.Nombre + (proveedor.Activo ? '' : ' (inactivo)');
+}
+
+function pintarProveedores() {
+  const cuerpo = document.getElementById('proveedoresTbody');
+  const vacio = document.getElementById('proveedoresVacio');
+  const proveedores = PROVEEDORES.slice().sort((a, b) => String(a.Nombre).localeCompare(String(b.Nombre)));
+  cuerpo.innerHTML = proveedores.map(proveedor => {
+    const idCodificado = encodeURIComponent(proveedor.Id_Proveedor);
+    return `<tr><td><b>${esc(proveedor.Nombre)}</b><small>${esc(proveedor.Id_Proveedor)}</small></td>` +
+      `<td>${proveedor.Activo ? 'Activo' : 'Inactivo'}</td>` +
+      `<td><button class="btn btn--peque" type="button" onclick="editarProveedorCodificado('${idCodificado}')">Editar</button></td></tr>`;
+  }).join('');
+  vacio.hidden = proveedores.length !== 0;
+}
+
+function editarProveedorCodificado(idCodificado) {
+  editarProveedor(decodeURIComponent(idCodificado));
+}
+
+function editarProveedor(idProveedor) {
+  const proveedor = PROVEEDORES.find(item => item.Id_Proveedor === idProveedor);
+  if (!proveedor) return;
+  proveedorEnEdicion = proveedor;
+  document.getElementById('proveedorOriginal').value = proveedor.Id_Proveedor;
+  document.getElementById('proveedorId').value = proveedor.Id_Proveedor;
+  document.getElementById('proveedorId').readOnly = true;
+  document.getElementById('proveedorNombre').value = proveedor.Nombre || '';
+  document.getElementById('proveedorTelefono').value = proveedor.Telefono || '';
+  document.getElementById('proveedorDireccion').value = proveedor.Direccion || '';
+  document.getElementById('proveedorNotas').value = proveedor.Notas || '';
+  document.getElementById('proveedorActivo').checked = proveedor.Activo === true;
+  document.getElementById('proveedorGuardar').textContent = 'Guardar cambios';
+}
+
+function cancelarEdicionProveedor() {
+  proveedorEnEdicion = null;
+  document.getElementById('proveedorForm').reset();
+  document.getElementById('proveedorOriginal').value = '';
+  document.getElementById('proveedorId').readOnly = false;
+  document.getElementById('proveedorActivo').checked = true;
+  document.getElementById('proveedorGuardar').textContent = 'Guardar proveedor';
+}
+
+async function guardarProveedorDesdeForm(evento) {
+  evento.preventDefault();
+  const original = document.getElementById('proveedorOriginal').value;
+  try {
+    const proveedor = construirProveedorParaGuardar({
+      Id_Proveedor: document.getElementById('proveedorId').value,
+      Nombre: document.getElementById('proveedorNombre').value,
+      Telefono: document.getElementById('proveedorTelefono').value,
+      Direccion: document.getElementById('proveedorDireccion').value,
+      Notas: document.getElementById('proveedorNotas').value,
+      Activo: document.getElementById('proveedorActivo').checked
+    }, original);
+    if (original && proveedor.Activo === false && proveedorEnEdicion && proveedorEnEdicion.Activo === true &&
+        !confirm('El proveedor quedará inactivo. Sus referencias históricas se conservarán. ¿Continuar?')) return;
+    if (original) await API.actualizarProveedor(proveedor); else await API.crearProveedor(proveedor);
+    cancelarEdicionProveedor();
+    await recargarInventario();
+    toast('Proveedor guardado.');
+  } catch (error) {
+    toast('No se pudo guardar el proveedor: ' + error.message, true);
+  }
+}
+
+function cargarClasificacionProducto() {
+  const idProducto = document.getElementById('clasificacionProducto').value;
+  const actual = RESUMEN_STOCK.find(fila => String(fila.Id_Producto) === String(idProducto));
+  document.getElementById('clasificacionProveedor').value = actual?.Id_Proveedor || '';
+  document.getElementById('clasificacionModalidad').value = actual?.Modalidad_Abastecimiento || 'CONTRA_PEDIDO';
+  document.getElementById('clasificacionSinStock').checked = actual?.Sin_Stock === true;
+}
+
+function pintarSelectoresInventario() {
+  const productos = productosCanalActual();
+  const clasificacionProducto = document.getElementById('clasificacionProducto');
+  const movimientoProducto = document.getElementById('movimientoProducto');
+  const historialProducto = document.getElementById('historialProducto');
+  const seleccionado = clasificacionProducto.value;
+  clasificacionProducto.innerHTML = opcionesProductos(productos, '— Elegí un producto —');
+  clasificacionProducto.value = seleccionado;
+  clasificacionProducto.onchange = cargarClasificacionProducto;
+  document.getElementById('clasificacionProveedor').innerHTML = opcionesProveedores(PROVEEDORES, '— Elegí proveedor activo —');
+  movimientoProducto.innerHTML = opcionesProductos(productosConStockGestionado(RESUMEN_STOCK, productos), '— Elegí un producto gestionado —');
+  movimientoProducto.onchange = actualizarCamposMovimiento;
+  historialProducto.innerHTML = opcionesProductos(productos, 'Todos los productos');
+  cargarClasificacionProducto();
+  actualizarCamposMovimiento();
+}
+
+async function guardarClasificacionDesdeForm(evento) {
+  evento.preventDefault();
+  try {
+    const clasificacion = construirClasificacionProducto({
+      Id_Producto: document.getElementById('clasificacionProducto').value,
+      Id_Proveedor: document.getElementById('clasificacionProveedor').value,
+      Modalidad_Abastecimiento: document.getElementById('clasificacionModalidad').value,
+      Sin_Stock: document.getElementById('clasificacionSinStock').checked
+    }, PROVEEDORES);
+    await API.clasificarProducto(clasificacion);
+    await recargarInventario();
+    toast('Clasificación guardada.');
+  } catch (error) {
+    toast('No se pudo guardar la clasificación: ' + error.message, true);
+  }
+}
+
+function pintarStock() {
+  const cuerpo = document.getElementById('stockTbody');
+  const vacio = document.getElementById('stockVacio');
+  const productos = productosCanalActual();
+  const filas = resumenInventarioDelCanal(RESUMEN_STOCK, productos);
+  cuerpo.innerHTML = filas.map(fila => {
+    const producto = productoOperativoPorId(fila.Id_Producto, productos);
+    return `<tr><td>${esc(producto?.n || fila.Id_Producto)}</td>` +
+      `<td>${esc(nombreProveedor(fila.Id_Proveedor))}</td>` +
+      `<td>${esc(fila.Modalidad_Abastecimiento || 'CONTRA_PEDIDO')}</td>` +
+      `<td>${fila.Gestiona_Stock ? 'Sí' : 'No'}</td>` +
+      `<td class="num">${fila.Saldo === null ? 'No aplica' : esc(fila.Saldo)}</td>` +
+      `<td>${fila.Sin_Stock ? 'Sí (manual)' : 'No'}</td></tr>`;
+  }).join('');
+  vacio.hidden = filas.length !== 0;
+}
+
+function actualizarCamposMovimiento() {
+  const tipo = document.getElementById('movimientoTipo').value;
+  const producto = document.getElementById('movimientoProducto').value;
+  const esIngreso = tipo === 'INGRESO';
+  const esCorreccion = tipo === 'CORRECCION';
+  document.getElementById('movimientoCostoCampo').hidden = !esIngreso;
+  document.getElementById('movimientoCosto').required = esIngreso;
+  document.getElementById('movimientoReferenciaCampo').hidden = !esCorreccion;
+  document.getElementById('movimientoReferencia').required = esCorreccion;
+  document.getElementById('movimientoNotaRequerida').hidden = !esCorreccion;
+  document.getElementById('movimientoNota').required = esCorreccion;
+  document.getElementById('movimientoCantidadLabel').textContent =
+    esCorreccion ? 'Corrección (+ o -)' : esIngreso ? 'Cantidad ingresada' : 'Unidades retiradas';
+  const referencias = movimientosAntecedentesCorreccion(MOVIMIENTOS_STOCK, producto);
+  document.getElementById('movimientoReferencia').innerHTML = opcionesProductos(
+    referencias.map(movimiento => ({ id: movimiento.Movimiento_Id, n: `${movimiento.Tipo} · ${movimiento.Movimiento_Id}` })),
+    '— Elegí antecedente —'
+  );
+}
+
+function camposMovimientoDesdeForm() {
+  return {
+    Id_Producto: document.getElementById('movimientoProducto').value,
+    Tipo: document.getElementById('movimientoTipo').value,
+    Cantidad: document.getElementById('movimientoCantidad').value,
+    Costo_Unitario: document.getElementById('movimientoCosto').value,
+    Referencia: document.getElementById('movimientoReferencia').value,
+    Nota: document.getElementById('movimientoNota').value
+  };
+}
+
+function mostrarEstadoMovimiento(mensaje, esError) {
+  const estado = document.getElementById('movimientoEstado');
+  estado.textContent = mensaje;
+  estado.classList.toggle('error', !!esError);
+}
+
+async function enviarMovimientoPendiente() {
+  if (!movimientoPendiente || enviandoMovimiento) return;
+  enviandoMovimiento = true;
+  document.getElementById('movimientoGuardar').disabled = true;
+  document.getElementById('movimientoReintentar').hidden = true;
+  mostrarEstadoMovimiento('Guardando movimiento…', false);
+  try {
+    await API.registrarMovimiento(movimientoPendiente.payload);
+    movimientoPendiente = null;
+    document.getElementById('movimientoForm').reset();
+    mostrarEstadoMovimiento('Movimiento confirmado.', false);
+    await recargarInventario();
+  } catch (error) {
+    movimientoPendiente = resolverFalloMovimientoPendiente(movimientoPendiente, error);
+    if (movimientoPendiente) {
+      mostrarEstadoMovimiento('No se confirmó el movimiento: ' + error.message, true);
+      document.getElementById('movimientoReintentar').hidden = false;
+    } else {
+      mostrarEstadoMovimiento('El servidor rechazó el movimiento: ' + error.message +
+        '. Corregí el formulario y volvé a guardarlo.', true);
+    }
+  } finally {
+    enviandoMovimiento = false;
+    document.getElementById('movimientoGuardar').disabled = false;
+  }
+}
+
+async function guardarMovimientoDesdeForm(evento) {
+  evento.preventDefault();
+  try {
+    movimientoPendiente = prepararIntentoMovimientoManual(movimientoPendiente, camposMovimientoDesdeForm(), generarIdMovimientoManual);
+    await enviarMovimientoPendiente();
+  } catch (error) {
+    movimientoPendiente = null;
+    mostrarEstadoMovimiento(error.message, true);
+  }
+}
+
+async function reintentarMovimientoPendiente() {
+  await enviarMovimientoPendiente();
+}
+
+function pintarHistorial() {
+  const cuerpo = document.getElementById('historialTbody');
+  const vacio = document.getElementById('historialVacio');
+  const filas = filasHistorialOperativo(MOVIMIENTOS_STOCK_VISTA, productosCanalActual());
+  cuerpo.innerHTML = filas.map(fila => `<tr><td>${esc(fila.fecha)}</td><td>${esc(fila.producto)}</td>` +
+    `<td>${esc(fila.tipo)}</td><td class="num">${esc(fila.cantidad)}</td>` +
+    `<td class="num">${fila.costo === null ? '—' : money(fila.costo)}</td>` +
+    `<td>${esc(fila.referencia || '—')}</td><td>${esc(fila.nota || '—')}</td></tr>`).join('');
+  vacio.hidden = filas.length !== 0;
+}
+
+function filtrarHistorial(evento) {
+  evento.preventDefault();
+  MOVIMIENTOS_STOCK_VISTA = filtrarMovimientosHistorial(MOVIMIENTOS_STOCK, {
+    Id_Producto: document.getElementById('historialProducto').value,
+    Tipo: document.getElementById('historialTipo').value
+  });
+  pintarHistorial();
+}
+
+async function recargarInventario() {
+  try {
+    const [proveedores, resumen, movimientos] = await Promise.all([
+      API.listarProveedores(), API.resumenStock(), API.listarMovimientos()
+    ]);
+    PROVEEDORES = proveedores;
+    RESUMEN_STOCK = resumen;
+    MOVIMIENTOS_STOCK = movimientos;
+    MOVIMIENTOS_STOCK_VISTA = movimientos;
+    pintarProveedores();
+    pintarSelectoresInventario();
+    pintarStock();
+    pintarHistorial();
+  } catch (error) {
+    RESUMEN_STOCK = [];
+    MOVIMIENTOS_STOCK = [];
+    MOVIMIENTOS_STOCK_VISTA = [];
+    pintarProveedores();
+    pintarSelectoresInventario();
+    pintarStock();
+    pintarHistorial();
+    mostrarEstadoMovimiento('No se pudo leer inventario: ' + error.message, true);
+    toast('No se pudo cargar inventario: ' + error.message, true);
+  }
+}
 
 
 /* ══════════════ LISTA ══════════════ */
@@ -1091,6 +1615,7 @@ function abrirPedido(id) {
 function abrirEditor(esNuevo) {
   document.getElementById('vistaLista').hidden = true;
   document.getElementById('vistaClientes').hidden = true;
+  document.getElementById('vistaInventario').hidden = true;
   document.getElementById('vistaEditor').hidden = false;
   document.getElementById('btnEliminar').hidden = esNuevo;
 
@@ -1489,14 +2014,11 @@ async function guardarPedido() {
   try {
     const pedidoParaGuardar = paraGuardar(edicion);
     const guardado = await API.guardar(pedidoParaGuardar);
-    // El servidor devuelve el pedido con su Id definitivo.
-    const id = guardado?.id || edicion.id;
-    edicion.id = id;
-    edicion.envio = pedidoParaGuardar.envio;
-    edicion.envioModo = 'historico';
-
-    const i = PEDIDOS.findIndex(p => p.id === id);
-    if (i >= 0) PEDIDOS[i] = edicion; else PEDIDOS.push(edicion);
+    // El servidor devuelve el Id definitivo y los snapshots de cada línea.
+    const actualizados = actualizarPedidoTrasGuardado(PEDIDOS, edicion, guardado, pedidoParaGuardar);
+    edicion = actualizados.edicion;
+    PEDIDOS = actualizados.pedidos;
+    const id = edicion.id;
 
     localStorage.removeItem(BORRADOR_KEY);
     toast(`Pedido #${id} guardado`);

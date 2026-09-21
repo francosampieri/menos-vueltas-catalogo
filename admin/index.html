@@ -46,6 +46,7 @@
     <nav class="ad-nav">
       <button id="navPedidos" class="on" onclick="irASeccion('pedidos')">Pedidos</button>
       <button id="navClientes" onclick="irASeccion('clientes')">Clientes</button>
+      <button id="navInventario" onclick="irASeccion('inventario')">Inventario</button>
     </nav>
 
     <!-- Cada canal tiene su catálogo, sus precios y sus pedidos.
@@ -109,6 +110,122 @@
         </thead>
         <tbody id="tbodyPedidos"></tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ VISTA: INVENTARIO OPERATIVO ═══════════ -->
+  <section id="vistaInventario" hidden>
+    <div class="ad-barra">
+      <div>
+        <h1 class="ad-titulo">Inventario operativo</h1>
+        <p class="inventario-ayuda">Saldos del libro mayor y metadatos privados. El saldo no cambia la disponibilidad pública.</p>
+      </div>
+      <button class="btn" type="button" onclick="recargarInventario()">Actualizar</button>
+    </div>
+
+    <div class="inventario-grid">
+      <section class="panel">
+        <h2 class="panel-tit">Proveedores <span class="panel-chip">privado</span></h2>
+        <div class="tabla-wrap tabla-wrap--compacta">
+          <table class="tabla tabla--inventario">
+            <thead><tr><th>Proveedor</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="proveedoresTbody"></tbody>
+          </table>
+        </div>
+        <p class="vacio" id="proveedoresVacio" hidden>No hay proveedores para mostrar.</p>
+
+        <form id="proveedorForm" class="campos inventario-form" onsubmit="guardarProveedorDesdeForm(event)">
+          <input type="hidden" id="proveedorOriginal">
+          <div class="campo"><label for="proveedorId">Identificador</label><input id="proveedorId" required></div>
+          <div class="campo"><label for="proveedorNombre">Nombre</label><input id="proveedorNombre" required></div>
+          <div class="campo"><label for="proveedorTelefono">Teléfono</label><input id="proveedorTelefono"></div>
+          <div class="campo"><label for="proveedorDireccion">Dirección</label><input id="proveedorDireccion"></div>
+          <div class="campo campo--full"><label for="proveedorNotas">Notas</label><textarea id="proveedorNotas"></textarea></div>
+          <label class="control-check"><input type="checkbox" id="proveedorActivo" checked> Activo</label>
+          <div class="inventario-acciones campo--full">
+            <button class="btn" type="button" onclick="cancelarEdicionProveedor()">Cancelar</button>
+            <button class="btn btn--pri" type="submit" id="proveedorGuardar">Guardar proveedor</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-tit">Clasificación de producto <span class="panel-chip">privada</span></h2>
+        <p class="inventario-ayuda">El proveedor habitual y la modalidad no modifican precios, pedidos ni canales.</p>
+        <form class="campos inventario-form" onsubmit="guardarClasificacionDesdeForm(event)">
+          <div class="campo campo--full"><label for="clasificacionProducto">Producto del canal actual</label><select id="clasificacionProducto" required></select></div>
+          <div class="campo"><label for="clasificacionProveedor">Proveedor habitual</label><select id="clasificacionProveedor" required></select></div>
+          <div class="campo"><label for="clasificacionModalidad">Modalidad</label>
+            <select id="clasificacionModalidad" required>
+              <option value="CONTRA_PEDIDO">Contra pedido</option>
+              <option value="CONSIGNACION">Consignación</option>
+              <option value="STOCK_PROPIO">Stock propio</option>
+            </select>
+          </div>
+          <label class="control-check campo--full"><input type="checkbox" id="clasificacionSinStock"> Sin stock (decisión manual)</label>
+          <div class="inventario-acciones campo--full"><button class="btn btn--pri" type="submit">Guardar clasificación</button></div>
+        </form>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2 class="panel-tit">Saldo por producto</h2>
+      <div class="tabla-wrap">
+        <table class="tabla tabla--inventario">
+          <thead><tr><th>Producto</th><th>Proveedor habitual</th><th>Modalidad</th><th>Gestiona stock</th><th class="num">Saldo</th><th>Sin stock</th></tr></thead>
+          <tbody id="stockTbody"></tbody>
+        </table>
+      </div>
+      <p class="vacio" id="stockVacio" hidden>No hay productos de este canal en el resumen privado.</p>
+    </section>
+
+    <div class="inventario-grid">
+      <section class="panel">
+        <h2 class="panel-tit">Registrar movimiento</h2>
+        <p class="inventario-ayuda">Las ventas se registran sólo al entregar un pedido. Esta pantalla no crea ventas manuales.</p>
+        <form id="movimientoForm" class="campos inventario-form" onsubmit="guardarMovimientoDesdeForm(event)">
+          <div class="campo campo--full"><label for="movimientoProducto">Producto con stock gestionado</label><select id="movimientoProducto" required></select></div>
+          <div class="campo"><label for="movimientoTipo">Tipo</label>
+            <select id="movimientoTipo" onchange="actualizarCamposMovimiento()" required>
+              <option value="INGRESO">Ingreso</option>
+              <option value="CONSUMO_PROPIO">Consumo propio</option>
+              <option value="ROTURA_MERMA">Rotura / merma</option>
+              <option value="CORRECCION">Corrección</option>
+            </select>
+          </div>
+          <div class="campo"><label for="movimientoCantidad" id="movimientoCantidadLabel">Cantidad</label><input id="movimientoCantidad" type="number" step="any" required></div>
+          <div class="campo" id="movimientoCostoCampo"><label for="movimientoCosto">Costo unitario</label><input id="movimientoCosto" type="number" min="0" step="any"></div>
+          <div class="campo" id="movimientoReferenciaCampo" hidden><label for="movimientoReferencia">Movimiento antecedente</label><select id="movimientoReferencia"></select></div>
+          <div class="campo campo--full"><label for="movimientoNota">Nota <span id="movimientoNotaRequerida" hidden>(obligatoria para corrección)</span></label><textarea id="movimientoNota"></textarea></div>
+          <div class="inventario-acciones campo--full">
+            <button class="btn btn--pri" type="submit" id="movimientoGuardar">Registrar movimiento</button>
+            <button class="btn" type="button" id="movimientoReintentar" onclick="reintentarMovimientoPendiente()" hidden>Reintentar mismo movimiento</button>
+          </div>
+          <p class="inventario-estado campo--full" id="movimientoEstado" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-tit">Historial de movimientos</h2>
+        <form class="campos inventario-form" onsubmit="filtrarHistorial(event)">
+          <div class="campo"><label for="historialProducto">Producto</label><select id="historialProducto"></select></div>
+          <div class="campo"><label for="historialTipo">Tipo</label>
+            <select id="historialTipo">
+              <option value="">Todos los tipos</option><option value="INGRESO">Ingreso</option>
+              <option value="CONSUMO_PROPIO">Consumo propio</option><option value="ROTURA_MERMA">Rotura / merma</option>
+              <option value="CORRECCION">Corrección</option><option value="VENTA">Venta automática</option>
+            </select>
+          </div>
+          <div class="inventario-acciones campo--full"><button class="btn" type="submit">Aplicar filtros</button></div>
+        </form>
+        <div class="tabla-wrap">
+          <table class="tabla tabla--inventario">
+            <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="num">Cantidad</th><th class="num">Costo unit.</th><th>Referencia operativa</th><th>Nota</th></tr></thead>
+            <tbody id="historialTbody"></tbody>
+          </table>
+        </div>
+        <p class="vacio" id="historialVacio" hidden>No hay movimientos con esos filtros.</p>
+      </section>
     </div>
   </section>
 
