@@ -9686,7 +9686,7 @@
     },
     {
       "Id_Grupo": "48",
-      "Nombre_Grupo": "Adobo",
+      "Nombre_Grupo": "Adobo para Pizza",
       "Marca": "INDIAS",
       "Categoria": "Almacén",
       "Subcategoria": "Especias"
@@ -9784,14 +9784,14 @@
     },
     {
       "Id_Grupo": "62",
-      "Nombre_Grupo": "Sabor en Polvo",
+      "Nombre_Grupo": "Caldos Saborizantes",
       "Marca": "ALICANTE",
       "Categoria": "Almacén",
       "Subcategoria": "Especias"
     },
     {
       "Id_Grupo": "63",
-      "Nombre_Grupo": "Puré de Papa Tradicional Doypack",
+      "Nombre_Grupo": "Puré de Papa",
       "Marca": "MAMA COCINA",
       "Categoria": "Almacén",
       "Subcategoria": "Fideos, Arroz y Puré"
@@ -9812,21 +9812,21 @@
     },
     {
       "Id_Grupo": "66",
-      "Nombre_Grupo": "Pasta Corta",
+      "Nombre_Grupo": "Fideos Cortos",
       "Marca": "PROVIDENCIA",
       "Categoria": "Almacén",
       "Subcategoria": "Fideos, Arroz y Puré"
     },
     {
       "Id_Grupo": "67",
-      "Nombre_Grupo": "Pasta Larga",
+      "Nombre_Grupo": "Fideos Largos",
       "Marca": "PROVIDENCIA",
       "Categoria": "Almacén",
       "Subcategoria": "Fideos, Arroz y Puré"
     },
     {
       "Id_Grupo": "68",
-      "Nombre_Grupo": "Pasta Nido Cabello de Angel",
+      "Nombre_Grupo": "Fideos Nidos Cabello de Angel",
       "Marca": "PROVIDENCIA",
       "Categoria": "Almacén",
       "Subcategoria": "Fideos, Arroz y Puré"
@@ -10421,7 +10421,7 @@
     },
     {
       "Id_Grupo": "161",
-      "Nombre_Grupo": "Galleta Crackers",
+      "Nombre_Grupo": "Galletas Crackers",
       "Marca": "PROVIDENCIA",
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Tostadas y Galletas de Agua"
