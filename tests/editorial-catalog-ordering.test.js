@@ -69,10 +69,40 @@ test('ignores duplicated, missing and unavailable editorial references without d
   assert.deepEqual(sorted.map(group => group.id), ['103', '101', '102']);
 });
 
-test('ships Pringles as the sole initial Snacks Salados priority in both channels', () => {
+test('ships the requested Snacks Salados priorities in both channels', () => {
   const api = ordering();
-  assert.deepEqual(Array.from(api.getPriorityIds('B2C', 'Snacks y Golosinas', 'Snacks Salados')), ['252']);
-  assert.deepEqual(Array.from(api.getPriorityIds('B2B', 'Snacks y Golosinas', 'Snacks Salados')), ['252']);
+  assert.deepEqual(Array.from(api.getPriorityIds('B2C', 'Snacks y Golosinas', 'Snacks Salados')), ['252', '279', '253']);
+  assert.deepEqual(Array.from(api.getPriorityIds('B2B', 'Snacks y Golosinas', 'Snacks Salados')), ['252', '279', '253']);
+});
+
+test('ships the expanded editorial priorities independently for both channels', () => {
+  const api = ordering();
+  const priorities = [
+    ['Almacén', 'Conservas', ['41', '42']],
+    ['Almacén', 'Especias', ['62', '43', '44', '45']],
+    ['Almacén', 'Salsas y Aderezos', ['271', '98', '102', '101', '97', '100', '99']],
+    ['Desayuno y Mediatarde', 'Café', ['285', '286', '118', '119', '120']],
+    ['Desayuno y Mediatarde', 'Cereales', ['122', '124', '123']],
+    ['Desayuno y Mediatarde', 'Yerba Mate', ['173', '171']],
+    ['Snacks y Golosinas', 'Snacks Salados', ['252', '279', '253']]
+  ];
+
+  for (const channel of ['B2C', 'B2B']) {
+    for (const [category, subcategory, expectedIds] of priorities) {
+      assert.deepEqual(
+        Array.from(api.getPriorityIds(channel, category, subcategory)),
+        expectedIds,
+        `${channel} ${category} / ${subcategory}`
+      );
+    }
+  }
+
+  for (const channel of ['B2C', 'B2B']) {
+    const saucePriorities = api.getPriorityIds(channel, 'Almacén', 'Salsas y Aderezos');
+    for (const parmesanId of ['103', '104', '105', '106', '107', '108']) {
+      assert.ok(!saucePriorities.includes(parmesanId), `${channel} must leave Parmesan sauce ${parmesanId} alphabetical`);
+    }
+  }
 });
 
 test('applies the shared section sorter only in normal category exploration', () => {

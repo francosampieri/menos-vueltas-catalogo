@@ -13,13 +13,33 @@ const CANAL = (typeof window !== 'undefined' && window.CANAL) ? window.CANAL : '
 const OrdenEditorialCatalogo = (() => {
   const configuracion = Object.freeze({
     B2C: Object.freeze({
+      'Almacén': Object.freeze({
+        'Conservas': Object.freeze(['41', '42']),
+        'Especias': Object.freeze(['62', '43', '44', '45']),
+        'Salsas y Aderezos': Object.freeze(['271', '98', '102', '101', '97', '100', '99'])
+      }),
+      'Desayuno y Mediatarde': Object.freeze({
+        'Café': Object.freeze(['285', '286', '118', '119', '120']),
+        'Cereales': Object.freeze(['122', '124', '123']),
+        'Yerba Mate': Object.freeze(['173', '171'])
+      }),
       'Snacks y Golosinas': Object.freeze({
-        'Snacks Salados': Object.freeze(['252']) // Pringles
+        'Snacks Salados': Object.freeze(['252', '279', '253'])
       })
     }),
     B2B: Object.freeze({
+      'Almacén': Object.freeze({
+        'Conservas': Object.freeze(['41', '42']),
+        'Especias': Object.freeze(['62', '43', '44', '45']),
+        'Salsas y Aderezos': Object.freeze(['271', '98', '102', '101', '97', '100', '99'])
+      }),
+      'Desayuno y Mediatarde': Object.freeze({
+        'Café': Object.freeze(['285', '286', '118', '119', '120']),
+        'Cereales': Object.freeze(['122', '124', '123']),
+        'Yerba Mate': Object.freeze(['173', '171'])
+      }),
       'Snacks y Golosinas': Object.freeze({
-        'Snacks Salados': Object.freeze(['252']) // Pringles
+        'Snacks Salados': Object.freeze(['252', '279', '253'])
       })
     })
   });
