@@ -26,7 +26,7 @@ Google Sheets (fuente de verdad)
 | `admin/` | Panel de pedidos y clientes |
 | `shared/` | JavaScript, estilos, imágenes y catálogo generado compartidos |
 
-B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. La política de envío se aplica sólo a B2C: el mismo cálculo debe alimentar el carrito, el mensaje de pedido y la transferencia por QR; el QR conserva productos y cantidades, y recalcula el envío al abrirse en el teléfono. El carrito crea un mensaje de pedido para WhatsApp. En escritorio contempla abrir WhatsApp Web o transferir el pedido al teléfono mediante QR; en móvil abre WhatsApp directamente.
+B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. El orden editorial de grupos se configura localmente en ese archivo y se separa por canal, categoría y subcategoría; sólo reordena los grupos ya elegibles para la exploración normal. La misma colección ordenada alimenta los rieles mobile y las grillas desktop. Esta capa no modifica la fuente de Sheets ni los CSV o JSON generados, ni precios, promociones o disponibilidad. La política de envío se aplica sólo a B2C: el mismo cálculo debe alimentar el carrito, el mensaje de pedido y la transferencia por QR; el QR conserva productos y cantidades, y recalcula el envío al abrirse en el teléfono. El carrito crea un mensaje de pedido para WhatsApp. En escritorio contempla abrir WhatsApp Web o transferir el pedido al teléfono mediante QR; en móvil abre WhatsApp directamente.
 
 ### Actualización del catálogo
 
