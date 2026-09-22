@@ -6,7 +6,6 @@ const SHEETS_URL_PUBLICA = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDX
 // ANTES de cargar este archivo. Fallback a B2C por seguridad si no se definió.
 const CANAL = (typeof window !== 'undefined' && window.CANAL) ? window.CANAL : 'B2C';
 
-<<<<<<< Updated upstream
 // ══ ORDEN EDITORIAL DEL CATÁLOGO ══
 // Esta capa sólo cambia la posición visual de grupos ya elegibles. La clave
 // sigue el esquema canal → categoría → subcategoría → Id_Grupo[], para que
@@ -57,73 +56,6 @@ const OrdenEditorialCatalogo = (() => {
   }
 
   return Object.freeze({ getPriorityIds, sortGroups });
-=======
-// Orden visual local para la exploración normal del catálogo. Los IDs son de
-// grupos, no de variantes: Sheets y el JSON publicado siguen siendo la fuente
-// de verdad para nombres, precios, disponibilidad y habilitación por canal.
-const OrdenEditorialCatalogo = (() => {
-  const congelar = objeto => {
-    Object.values(objeto).forEach(valor => {
-      if (valor && typeof valor === 'object' && !Object.isFrozen(valor)) congelar(valor);
-    });
-    return Object.freeze(objeto);
-  };
-
-  const prioridades = congelar({
-    B2C: {
-      'Almacén': {
-        Conservas: ['41', '42'],
-        Especias: ['62', '43', '44', '45'],
-        'Salsas y Aderezos': ['271', '98', '102', '101', '97', '100', '99']
-      },
-      'Desayuno y Mediatarde': {
-        'Café': ['285', '286', '118', '119', '120'],
-        Cereales: ['122', '124', '123'],
-        'Yerba Mate': ['173', '171']
-      },
-      'Snacks y Golosinas': {
-        'Snacks Salados': ['252', '279', '253']
-      }
-    },
-    B2B: {
-      'Almacén': {
-        Conservas: ['41', '42'],
-        Especias: ['62', '43', '44', '45'],
-        'Salsas y Aderezos': ['271', '98', '102', '101', '97', '100', '99']
-      },
-      'Desayuno y Mediatarde': {
-        'Café': ['285', '286', '118', '119', '120'],
-        Cereales: ['122', '124', '123'],
-        'Yerba Mate': ['173', '171']
-      },
-      'Snacks y Golosinas': {
-        'Snacks Salados': ['252', '279', '253']
-      }
-    }
-  });
-
-  const compararTexto = (a, b) => String(a || '').localeCompare(String(b || ''), 'es', { sensitivity: 'base' });
-
-  function ordenar(items, canal, categoria, subcategoria, obtenerId, obtenerDatos) {
-    const idsPriorizados = prioridades[canal]?.[categoria]?.[subcategoria] || [];
-    const posiciones = new Map(idsPriorizados.map((id, indice) => [String(id), indice]));
-
-    return [...items].sort((a, b) => {
-      const posicionA = posiciones.get(String(obtenerId(a)));
-      const posicionB = posiciones.get(String(obtenerId(b)));
-      if (posicionA !== undefined || posicionB !== undefined) {
-        if (posicionA === undefined) return 1;
-        if (posicionB === undefined) return -1;
-        return posicionA - posicionB;
-      }
-      const datosA = obtenerDatos(a);
-      const datosB = obtenerDatos(b);
-      return compararTexto(datosA.nombre, datosB.nombre) || compararTexto(datosA.marca, datosB.marca);
-    });
-  }
-
-  return Object.freeze({ prioridades, ordenar });
->>>>>>> Stashed changes
 })();
 
 // La disponibilidad pública es una decisión manual publicada con el catálogo.
@@ -742,40 +674,10 @@ function renderGrupos() {
       return porCategoria || compararEtiquetasCatalogo(a.sub, b.sub);
     })
     .forEach(({ sub, cat, items }) => {
-<<<<<<< Updated upstream
     // Búsqueda y filtros especiales conservan su orden anterior. La navegación
     // normal comparte esta misma colección entre el riel mobile y la grilla.
     const usarOrdenEditorial = !busquedaActiva && !filtroEspecial;
     items = usarOrdenEditorial ? ordenarGruposSeccion(items, cat, sub) : ordenarGruposAlfabeticamente(items);
-=======
-    // La exploración normal usa una prioridad editorial local y, para todo
-    // grupo no listado, conserva el orden alfabético nombre → marca. Búsqueda
-    // y filtros especiales mantienen expresamente sus reglas actuales.
-    if (!busquedaActiva && !filtroEspecial) {
-      const ordenados = OrdenEditorialCatalogo.ordenar(
-        items,
-        CANAL,
-        cat,
-        sub,
-        ([gid]) => gid,
-        ([gid, vars]) => ({
-          nombre: grupos[gid]?.nombre || vars[0]['Producto'] || '',
-          marca: grupos[gid]?.marca || vars[0]['Marca'] || ''
-        })
-      );
-      items.splice(0, items.length, ...ordenados);
-    } else {
-      items.sort(([gidA, varsA], [gidB, varsB]) => {
-        const nombreA = grupos[gidA]?.nombre || varsA[0]['Producto'] || '';
-        const nombreB = grupos[gidB]?.nombre || varsB[0]['Producto'] || '';
-        const cmpNombre = nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
-        if (cmpNombre !== 0) return cmpNombre;
-        const marcaA = grupos[gidA]?.marca || varsA[0]['Marca'] || '';
-        const marcaB = grupos[gidB]?.marca || varsB[0]['Marca'] || '';
-        return marcaA.localeCompare(marcaB, 'es', { sensitivity: 'base' });
-      });
-    }
->>>>>>> Stashed changes
 
     // El título "clásico" (línea gris con la subcategoría) solo se usa en la
     // grilla; los rieles de mobile tienen su propio encabezado. Y si el

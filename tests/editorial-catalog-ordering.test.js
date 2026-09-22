@@ -5,7 +5,6 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'shared', 'app.js'), 'utf8');
-<<<<<<< Updated upstream
 const orderingBlock = source.match(/const OrdenEditorialCatalogo = \(\(\) => \{[\s\S]*?\n\}\)\(\);/);
 
 function ordering() {
@@ -79,70 +78,4 @@ test('ships Pringles as the sole initial Snacks Salados priority in both channel
 test('applies the shared section sorter only in normal category exploration', () => {
   assert.match(source, /const usarOrdenEditorial = !busquedaActiva && !filtroEspecial;/);
   assert.match(source, /usarOrdenEditorial \? ordenarGruposSeccion\(items, cat, sub\) : ordenarGruposAlfabeticamente\(items\)/);
-=======
-const editorialBlock = source.match(/const OrdenEditorialCatalogo = \(\(\) => \{[\s\S]*?\n\}\)\(\);/);
-
-function editorialCatalog() {
-  assert.ok(editorialBlock, 'shared/app.js must expose the local editorial catalog ordering');
-  const context = {};
-  vm.runInNewContext(`${editorialBlock[0]}; api = OrdenEditorialCatalogo;`, context);
-  return context.api;
-}
-
-const prioridadesEsperadas = {
-  'Almacén': {
-    Conservas: ['41', '42'],
-    Especias: ['62', '43', '44', '45'],
-    'Salsas y Aderezos': ['271', '98', '102', '101', '97', '100', '99']
-  },
-  'Desayuno y Mediatarde': {
-    'Café': ['285', '286', '118', '119', '120'],
-    Cereales: ['122', '124', '123'],
-    'Yerba Mate': ['173', '171']
-  },
-  'Snacks y Golosinas': {
-    'Snacks Salados': ['252', '279', '253']
-  }
-};
-
-test('defines the requested editorial priorities independently for B2C and B2B', () => {
-  const api = editorialCatalog();
-
-  assert.deepEqual(JSON.parse(JSON.stringify(api.prioridades.B2C)), prioridadesEsperadas);
-  assert.deepEqual(JSON.parse(JSON.stringify(api.prioridades.B2B)), prioridadesEsperadas);
-});
-
-test('places editorial groups first and keeps every remaining group alphabetical by name then brand', () => {
-  const api = editorialCatalog();
-  const groups = [
-    { id: '999', nombre: 'Papas Fritas', marca: 'ZZZ' },
-    { id: '253', nombre: 'Papas Fritas', marca: 'GOOD SHOW' },
-    { id: '279', nombre: 'Cintitas', marca: 'TOSTEX' },
-    { id: '252', nombre: 'Pringles', marca: 'PRINGLES' },
-    { id: '998', nombre: 'Papas Fritas', marca: 'AAA' }
-  ];
-
-  assert.deepEqual(
-    Array.from(api.ordenar(groups, 'B2C', 'Snacks y Golosinas', 'Snacks Salados', group => group.id, group => group), group => group.id),
-    ['252', '279', '253', '998', '999']
-  );
-});
-
-test('freezes only the current aderezos prefix and leaves Parmesan sauces as fallback groups', () => {
-  const api = editorialCatalog();
-  const parmesanIds = ['103', '104', '105', '106', '107', '108'];
-  const priorityIds = api.prioridades.B2C['Almacén']['Salsas y Aderezos'];
-  const groups = [
-    { id: '103', nombre: 'Chimichurri Tradicional', marca: 'PARMESANA' },
-    { id: '271', nombre: 'Barbacoa', marca: 'NATURA' },
-    { id: '99', nombre: 'Salsa Golf', marca: 'NATURA' },
-    { id: '104', nombre: 'Salsa Criolla', marca: 'PARMESANA' }
-  ];
-
-  assert.ok(parmesanIds.every(id => !priorityIds.includes(id)));
-  assert.deepEqual(
-    Array.from(api.ordenar(groups, 'B2B', 'Almacén', 'Salsas y Aderezos', group => group.id, group => group), group => group.id),
-    ['271', '99', '103', '104']
-  );
->>>>>>> Stashed changes
 });
