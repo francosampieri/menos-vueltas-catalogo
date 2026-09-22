@@ -6,6 +6,58 @@ const SHEETS_URL_PUBLICA = 'https://script.google.com/macros/s/AKfycbwdeAOUpuvDX
 // ANTES de cargar este archivo. Fallback a B2C por seguridad si no se definió.
 const CANAL = (typeof window !== 'undefined' && window.CANAL) ? window.CANAL : 'B2C';
 
+// ══ ORDEN EDITORIAL DEL CATÁLOGO ══
+// Esta capa sólo cambia la posición visual de grupos ya elegibles. La clave
+// sigue el esquema canal → categoría → subcategoría → Id_Grupo[], para que
+// cada canal conserve sus decisiones de exhibición de forma independiente.
+const OrdenEditorialCatalogo = (() => {
+  const configuracion = Object.freeze({
+    B2C: Object.freeze({
+      'Snacks y Golosinas': Object.freeze({
+        'Snacks Salados': Object.freeze(['252']) // Pringles
+      })
+    }),
+    B2B: Object.freeze({
+      'Snacks y Golosinas': Object.freeze({
+        'Snacks Salados': Object.freeze(['252']) // Pringles
+      })
+    })
+  });
+
+  function getPriorityIds(channel, category, subcategory, configuration = configuracion) {
+    const priorities = configuration?.[channel]?.[category]?.[subcategory];
+    return Array.isArray(priorities) ? priorities.map(String) : [];
+  }
+
+  function compareAlphabetically(groupA, groupB) {
+    const byName = String(groupA.nombre || '').localeCompare(String(groupB.nombre || ''), 'es', { sensitivity: 'base' });
+    if (byName !== 0) return byName;
+    return String(groupA.marca || '').localeCompare(String(groupB.marca || ''), 'es', { sensitivity: 'base' });
+  }
+
+  function sortGroups({ channel, category, subcategory, groups, configuration = configuracion }) {
+    const priorities = getPriorityIds(channel, category, subcategory, configuration);
+    const positions = new Map();
+    priorities.forEach(id => {
+      if (!positions.has(id)) positions.set(id, positions.size);
+    });
+
+    return groups.slice().sort((groupA, groupB) => {
+      const positionA = positions.get(String(groupA.id));
+      const positionB = positions.get(String(groupB.id));
+      const isPriorityA = positionA !== undefined;
+      const isPriorityB = positionB !== undefined;
+      if (isPriorityA || isPriorityB) {
+        if (isPriorityA && isPriorityB) return positionA - positionB;
+        return isPriorityA ? -1 : 1;
+      }
+      return compareAlphabetically(groupA, groupB);
+    });
+  }
+
+  return Object.freeze({ getPriorityIds, sortGroups });
+})();
+
 // La disponibilidad pública es una decisión manual publicada con el catálogo.
 // No se deriva de saldo ni de ningún otro dato interno.
 const DisponibilidadPublica = (() => {
@@ -561,6 +613,31 @@ function getGruposFiltrados() {
   });
 }
 
+function gruposOrdenables(items) {
+  return items.map(([gid, vars]) => ({
+    id: gid,
+    nombre: grupos[gid]?.nombre || vars[0]['Producto'] || '',
+    marca: grupos[gid]?.marca || vars[0]['Marca'] || '',
+    item: [gid, vars]
+  }));
+}
+
+function ordenarGruposAlfabeticamente(items) {
+  return OrdenEditorialCatalogo.sortGroups({
+    groups: gruposOrdenables(items),
+    configuration: {}
+  }).map(group => group.item);
+}
+
+function ordenarGruposSeccion(items, category, subcategory) {
+  return OrdenEditorialCatalogo.sortGroups({
+    channel: CANAL,
+    category,
+    subcategory,
+    groups: gruposOrdenables(items)
+  }).map(group => group.item);
+}
+
 function renderGrupos() {
   // Limpiar todos los timers de rotación antes de reconstruir el grid,
   // así no quedan intervalos "fantasma" corriendo sobre cards viejas
@@ -597,21 +674,10 @@ function renderGrupos() {
       return porCategoria || compararEtiquetasCatalogo(a.sub, b.sub);
     })
     .forEach(({ sub, cat, items }) => {
-    // Ordenar alfabéticamente por nombre de producto: así los productos
-    // "parecidos" (mismo tipo, distinta marca — ej. "Obleas 9 de Oro" y
-    // "Obleas Bauducco") quedan agrupados uno al lado del otro, en vez de
-    // depender del Id_Grupo (que no tiene relación con el orden visual).
-    items.sort(([gidA, varsA], [gidB, varsB]) => {
-      const nombreA = (grupos[gidA]?.nombre || varsA[0]['Producto'] || '');
-      const nombreB = (grupos[gidB]?.nombre || varsB[0]['Producto'] || '');
-      const cmpNombre = nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
-      if (cmpNombre !== 0) return cmpNombre;
-      // Mismo nombre genérico (ej. "Obleas"): desempatar por marca para
-      // que el orden entre variantes de distinta marca sea prolijo.
-      const marcaA = (grupos[gidA]?.marca || varsA[0]['Marca'] || '');
-      const marcaB = (grupos[gidB]?.marca || varsB[0]['Marca'] || '');
-      return marcaA.localeCompare(marcaB, 'es', { sensitivity: 'base' });
-    });
+    // Búsqueda y filtros especiales conservan su orden anterior. La navegación
+    // normal comparte esta misma colección entre el riel mobile y la grilla.
+    const usarOrdenEditorial = !busquedaActiva && !filtroEspecial;
+    items = usarOrdenEditorial ? ordenarGruposSeccion(items, cat, sub) : ordenarGruposAlfabeticamente(items);
 
     // El título "clásico" (línea gris con la subcategoría) solo se usa en la
     // grilla; los rieles de mobile tienen su propio encabezado. Y si el
