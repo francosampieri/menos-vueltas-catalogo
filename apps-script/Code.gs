@@ -953,13 +953,13 @@ function proyectarValorizacionLedger(ledger) {
       while (requerido > 0 && estado.abiertas.length) {
         const tanda = estado.abiertas[0]; const usado = Math.min(requerido, tanda.Remanente);
         const asignacion = { Salida_Movimiento_Id: salida.Movimiento_Id, Tanda_Movimiento_Id: tanda.Movimiento_Id,
-          Cantidad: usado, Costo_Unitario: tanda.Costo_Unitario, Valorizable: tanda.Valorizable, Orden_Ledger: orden, Revertido: 0 };
+          Tipo_Salida: tipo, Cantidad: usado, Costo_Unitario: tanda.Costo_Unitario, Valorizable: tanda.Valorizable, Orden_Ledger: orden, Revertido: 0 };
         tanda.Remanente -= usado; tanda.Asignaciones.push(asignacion); salida.Asignaciones.push(asignacion); estado.asignaciones.push(asignacion);
         requerido -= usado;
         if (tanda.Remanente === 0) estado.abiertas.shift();
       }
       if (requerido > 0) {
-        const pendiente = { Salida_Movimiento_Id: salida.Movimiento_Id, Cantidad: requerido, Cantidad_Original: requerido, Orden_Ledger: orden, Coberturas: [] };
+        const pendiente = { Salida_Movimiento_Id: salida.Movimiento_Id, Tipo_Salida: tipo, Cantidad: requerido, Cantidad_Original: requerido, Orden_Ledger: orden, Coberturas: [] };
         estado.pendientes.push(pendiente); estado.faltantes.push(pendiente); salida.Pendiente_Original = requerido;
       }
       estado.salidas[salida.Movimiento_Id] = salida; estado.saldo += cantidad;

@@ -917,7 +917,7 @@ if (typeof module === 'object' && module.exports) {
     productosConStockGestionado, filasHistorialOperativo,
     filtrarMovimientosHistorial, movimientosAntecedentesCorreccion,
     construirListasAbastecimiento, proyeccionListaDistrosec,
-    textoListaAbastecimiento
+    textoListaAbastecimiento, trazasValorizacionHumanas, resumenDetalleValorizacion
   };
 }
 
@@ -1247,42 +1247,71 @@ function pintarStock() {
   cuerpo.innerHTML = filas.map(fila => {
     const producto = productoOperativoPorId(fila.Id_Producto, productos);
     const detalle = encodeURIComponent(String(fila.Id_Producto));
-    const incompleto = fila.Capital_Total_Completo === false;
-    const composicionIncompleta = fila.Composicion_Modalidad_Completa === false;
-    return `<tr><td>${esc(producto?.n || fila.Id_Producto)}</td>` +
+    const nombreProducto = producto?.n || fila.Id_Producto;
+    return `<tr class="inventario-fila--detalle" role="button" tabindex="0" aria-label="Ver detalle de ${esc(nombreProducto)}" onclick="abrirModalValorizacionCodificada('${detalle}')" onkeydown="abrirModalValorizacionDesdeTecla(event, '${detalle}')"><td>${esc(nombreProducto)}</td>` +
       `<td>${esc(nombreProveedor(fila.Id_Proveedor))}</td>` +
       `<td>${esc(fila.Modalidad_Abastecimiento || 'CONTRA_PEDIDO')}</td>` +
       `<td class="num">${fila.Saldo === null ? 'No aplica' : esc(fila.Saldo)}</td>` +
-      `<td class="num">${money(fila.Capital_Stock_Propio || 0)}</td>` +
-      `<td class="num">${money(fila.Valor_Consignacion || 0)}</td>` +
-      `<td class="num">${money(fila.Valor_Fisico_Conocido || 0)}${incompleto ? ' <span class="inventario-aviso">Incompleto</span>' : ''}${composicionIncompleta ? ' <span class="inventario-aviso">composición por modalidad histórica incompleta</span>' : ''}</td>` +
-      `<td>${Number(fila.Faltante_Pendiente_Costo || 0) || '—'}${fila.Tramo_No_Valorizable ? ' · sin origen de costo histórico' : ''}</td>` +
-      `<td class="tabla-accion"><button class="btn btn--peque" type="button" onclick="abrirModalValorizacionCodificada('${detalle}')">Detalle</button></td></tr>`;
+      `<td class="num">${money(fila.Valor_Fisico_Conocido || 0)}</td></tr>`;
   }).join('');
   vacio.hidden = filas.length !== 0;
 }
 
 function abrirModalValorizacionCodificada(idCodificado) { abrirModalValorizacion(decodeURIComponent(idCodificado)); }
+function abrirModalValorizacionDesdeTecla(event, idCodificado) {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  event.preventDefault();
+  abrirModalValorizacionCodificada(idCodificado);
+}
 function abrirModalValorizacion(idProducto) {
   const fila = RESUMEN_STOCK.find(item => String(item.Id_Producto) === String(idProducto));
   if (!fila) return;
   const producto = productoOperativoPorId(idProducto);
   document.getElementById('valorizacionTitulo').textContent = producto?.n || String(idProducto);
+  document.getElementById('valorizacionEstado').textContent = resumenDetalleValorizacion(fila);
   document.getElementById('valorizacionTandas').innerHTML = (fila.Tandas || []).map(tanda =>
-    `<tr><td>${esc(tanda.Movimiento_Id)}</td><td>${esc(tanda.Modalidad_Abastecimiento || (tanda.Valorizable ? 'Legado valorizable sin modalidad histórica' : 'Sin origen de costo histórico'))}</td><td class="num">${esc(tanda.Cantidad_Original)}</td><td class="num">${esc(tanda.Remanente)}</td><td class="num">${tanda.Valorizable ? money(tanda.Costo_Unitario) : 'No valorizable'}</td></tr>`
+    `<tr><td>Ingreso</td><td>${esc(tanda.Modalidad_Abastecimiento || (tanda.Valorizable ? 'Legado valorizable sin modalidad histórica' : 'Sin origen de costo histórico'))}</td><td class="num">${esc(tanda.Cantidad_Original)}</td><td class="num">${esc(tanda.Remanente)}</td><td class="num">${tanda.Valorizable ? money(tanda.Costo_Unitario) : 'No valorizable'}</td></tr>`
   ).join('');
-  const trazas = []
-    .concat((fila.Asignaciones || []).map(item => ({ ...item, etiqueta: `Salida ${item.Salida_Movimiento_Id} consumió ${item.Cantidad} de ${item.Tanda_Movimiento_Id}${item.Valorizable ? ` a ${money(item.Costo_Unitario)}` : ' sin origen de costo histórico'}` })))
-    .concat((fila.Coberturas || []).map(item => ({ ...item, etiqueta: `Ingreso ${item.Tanda_Movimiento_Id} cubrió ${item.Cantidad} pendientes de ${item.Salida_Movimiento_Id}${item.Costo_Unitario === null ? '' : ` a ${money(item.Costo_Unitario)}` }` })))
-    .concat((fila.Correcciones || []).map(item => ({ ...item, etiqueta: `Corrección ${item.Movimiento_Id} revirtió ${item.Cantidad} de ${item.Referencia}` })))
-    .concat((fila.Faltantes || []).map(item => ({ ...item, etiqueta: item.Cantidad > 0 ? `Faltante pendiente de ${item.Cantidad} en ${item.Salida_Movimiento_Id}` : `Faltante de ${item.Cantidad_Original} en ${item.Salida_Movimiento_Id} cubierto posteriormente` })))
-    .sort((a, b) => Number(a.Orden_Ledger || 0) - Number(b.Orden_Ledger || 0));
+  const trazas = trazasValorizacionHumanas(fila);
   document.getElementById('valorizacionTrazas').innerHTML = trazas.length
     ? trazas.map(item => `<li>${esc(item.etiqueta)}</li>`).join('')
     : '<li>Sin asignaciones ni faltantes para este producto.</li>';
   document.getElementById('modalValorizacion').hidden = false;
 }
 function cerrarModalValorizacion() { document.getElementById('modalValorizacion').hidden = true; }
+
+function etiquetaTipoMovimientoValorizacion(tipo) {
+  return {
+    INGRESO: 'Ingreso', VENTA: 'Venta automática por pedido', CONSUMO_PROPIO: 'Consumo propio',
+    ROTURA_MERMA: 'Merma', CORRECCION: 'Corrección'
+  }[String(tipo || '').toUpperCase()] || 'Salida';
+}
+
+function unidadesValorizacion(cantidad) {
+  const numero = Number(cantidad);
+  return `${numero} ${numero === 1 ? 'unidad' : 'unidades'}`;
+}
+
+function trazasValorizacionHumanas(fila) {
+  return []
+    .concat((fila.Asignaciones || []).map(item => ({ Orden_Ledger: item.Orden_Ledger,
+      etiqueta: `${etiquetaTipoMovimientoValorizacion(item.Tipo_Salida)}: asignación FIFO de ${unidadesValorizacion(item.Cantidad)} desde un ingreso.` })))
+    .concat((fila.Coberturas || []).map(item => ({ Orden_Ledger: item.Orden_Ledger,
+      etiqueta: `Ingreso: cubrió ${unidadesValorizacion(item.Cantidad)} pendiente de una salida.` })))
+    .concat((fila.Correcciones || []).map(item => ({ Orden_Ledger: item.Orden_Ledger,
+      etiqueta: `Corrección: revirtió ${unidadesValorizacion(item.Cantidad)} de una salida anterior.` })))
+    .concat((fila.Faltantes || []).map(item => ({ Orden_Ledger: item.Orden_Ledger,
+      etiqueta: item.Cantidad > 0 ? `Faltante pendiente de costo: ${unidadesValorizacion(item.Cantidad)}.` : `Faltante de costo cubierto posteriormente: ${unidadesValorizacion(item.Cantidad_Original)}.` })))
+    .sort((a, b) => Number(a.Orden_Ledger || 0) - Number(b.Orden_Ledger || 0));
+}
+
+function resumenDetalleValorizacion(fila) {
+  const estados = [];
+  if (fila.Capital_Total_Completo === false) estados.push('Hay un tramo sin costo histórico: el valor total no está completo.');
+  if (fila.Composicion_Modalidad_Completa === false) estados.push('Incluye legado valorizable sin modalidad histórica conocida.');
+  if (Number(fila.Faltante_Pendiente_Costo || 0) > 0) estados.push(`Hay ${unidadesValorizacion(fila.Faltante_Pendiente_Costo)} pendientes de costo.`);
+  return estados.length ? estados.join(' ') : 'Valores y composición sin pendientes de costo.';
+}
 
 function abrirModalClasificacion() {
   pintarSelectoresInventario();

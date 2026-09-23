@@ -66,6 +66,10 @@ Para cada producto con stock gestionado, el resumen de costo MUST mostrar por se
 - **WHEN** una tanda histórica abierta no tiene modalidad pero conserva un costo numérico válido
 - **THEN** participa FIFO y suma a valor físico conocido, sin atribuirse a propio ni consignación, y el resumen señala la composición histórica desconocida
 
+#### Scenario: Legados manualmente asentados como stock propio
+- **WHEN** la lectura encuentra uno de los tres ingresos legado cuya modalidad fue asentada manualmente como `STOCK_PROPIO`
+- **THEN** reconstruye su tanda desde esa modalidad persistida, sin backfill, cambio de costo, reescritura ni mecanismo de escritura para otros históricos
+
 #### Scenario: Stock previo sin ingreso
 - **WHEN** un producto tiene saldo físico previo que no puede trazarse a un ingreso histórico
 - **THEN** el sistema no inventa una tanda ni un costo; la valorización queda sin ese origen hasta registrar un ingreso inicial real

@@ -96,8 +96,40 @@ test('C-08 warns when a valued historical layer has unknown modality without ass
     stockPropio: 10, consignacion: 0, legadoSinModalidad: 4, totalConocido: 14,
     capitalCompleto: true, composicionModalidadCompleta: false, tramoNoValorizable: false, faltante: 0
   }]);
+});
+
+test('C-08 inventory summary has exactly five accessible columns and its detail uses human trace labels', () => {
+  const markup = fs.readFileSync(path.join(__dirname, '..', 'admin', 'index.html'), 'utf8');
+  const header = markup.match(/<thead><tr>([\s\S]*?)<\/tr><\/thead>\s*<tbody id="stockTbody"/);
+  assert.ok(header);
+  assert.deepEqual([...header[1].matchAll(/<th(?:\s[^>]*)?>(.*?)<\/th>/g)].map(match => match[1]), [
+    'Producto', 'Proveedor', 'Modalidad', 'Saldo', 'Valor total'
+  ]);
   const script = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.js'), 'utf8');
-  assert.match(script, /composición por modalidad histórica incompleta/);
+  assert.match(script, /role="button" tabindex="0"/);
+  assert.match(script, /abrirModalValorizacionDesdeTecla\(event,/);
+  assert.match(script, /event\.key !== 'Enter' && event\.key !== ' '/);
+  const css = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.css'), 'utf8');
+  assert.match(css, /\.inventario-fila--detalle:hover td/);
+  assert.match(css, /\.inventario-fila--detalle:focus/);
+  assert.match(css, /#vistaInventario \{ max-width: 100%; overflow-x: hidden; \}/);
+
+  const trazas = admin.trazasValorizacionHumanas({
+    Asignaciones: [{ Movimiento_Id_Secreto: 'UUID-SECRETO', Tipo_Salida: 'VENTA', Cantidad: 2, Orden_Ledger: 1 }],
+    Coberturas: [{ Tanda_Movimiento_Id: 'UUID-SECRETO', Cantidad: 1, Orden_Ledger: 2 }],
+    Correcciones: [{ Movimiento_Id: 'UUID-SECRETO', Cantidad: 1, Orden_Ledger: 3 }],
+    Faltantes: [{ Salida_Movimiento_Id: 'UUID-SECRETO', Cantidad: 1, Cantidad_Original: 2, Orden_Ledger: 4 }]
+  });
+  assert.deepEqual(trazas.map(item => item.etiqueta), [
+    'Venta automática por pedido: asignación FIFO de 2 unidades desde un ingreso.',
+    'Ingreso: cubrió 1 unidad pendiente de una salida.',
+    'Corrección: revirtió 1 unidad de una salida anterior.',
+    'Faltante pendiente de costo: 1 unidad.'
+  ]);
+  assert.equal(JSON.stringify(trazas).includes('UUID-SECRETO'), false);
+  assert.equal(admin.resumenDetalleValorizacion({
+    Capital_Total_Completo: true, Composicion_Modalidad_Completa: false, Faltante_Pendiente_Costo: 2
+  }), 'Incluye legado valorizable sin modalidad histórica conocida. Hay 2 unidades pendientes de costo.');
 });
 
 test('C-08 does not let the client select an ingress modality', () => {

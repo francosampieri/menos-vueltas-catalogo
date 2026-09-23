@@ -27,3 +27,8 @@ El contrato de abastecimiento MUST tratar las tandas internas como una proyecci�
 #### Scenario: Ingreso nuevo inválido
 - **WHEN** se intenta registrar un ingreso nuevo con modalidad vacía, `CONTRA_PEDIDO`, otro valor distinto de los dos admitidos o costo inválido
 - **THEN** el contrato rechaza la operación antes de agregar un movimiento al ledger
+
+#### Scenario: Excepción manual ya asentada para tres ingresos legado
+- **WHEN** la lectura encuentra uno de los tres ingresos legado normalizados manualmente por el responsable con `Modalidad_Abastecimiento` igual a `STOCK_PROPIO`
+- **THEN** lo proyecta como una tanda histórica de stock propio sin modificar ninguna columna ni completar otros históricos
+- **THEN** el contrato no ofrece función, ruta, endpoint ni acción que escriba o complete modalidades históricas

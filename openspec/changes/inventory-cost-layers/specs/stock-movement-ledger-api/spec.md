@@ -20,3 +20,7 @@ La API administrativa MUST ofrecer una consulta privada y de sólo lectura que d
 #### Scenario: Legado valorizable sin modalidad durante la lectura
 - **WHEN** un ingreso histórico tiene modalidad vacía y costo numérico válido
 - **THEN** la consulta conserva su costo y FIFO, suma al total físico conocido sin asignarlo a propio o consignación, y expone la advertencia de composición por modalidad incompleta
+
+#### Scenario: Normalización histórica manual sin escritura de API
+- **WHEN** la consulta encuentra los tres ingresos legado cuya modalidad fue asentada manualmente por el responsable
+- **THEN** la API los lee por su modalidad histórica persistida y no incorpora acción, endpoint, parámetro ni función para normalizar otros ingresos

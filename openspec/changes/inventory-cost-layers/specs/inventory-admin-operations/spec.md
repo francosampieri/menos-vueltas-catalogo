@@ -3,11 +3,11 @@
 ## ADDED Requirements
 
 ### Requirement: Inventario valorizado y detalle trazable por producto
-La vista privada principal de Inventario MUST mostrar, por producto gestionado, saldo físico derivado, modalidad actual sólo informativa, capital en stock propio, valor en consignación, valor físico total a costo conocido y la cantidad o estado de faltante pendiente de costo cuando exista. Si tiene un tramo no valorizable, MUST mostrar ese estado y MUST NOT presentar el valor conocido como capital total completo. Si tiene un `LEGADO_VALORIZABLE_SIN_MODALIDAD`, MUST incluirlo sólo en valor físico conocido, MUST NOT atribuirlo a propio ni consignación y MUST mostrar una advertencia visible de composición por modalidad histórica incompleta. Un producto con tandas abiertas MUST continuar visible y valorizado aunque su modalidad actual sea `CONTRA_PEDIDO`. Las tandas agotadas MUST quedar fuera de esa vista principal. Al abrir un producto, el panel MUST mostrar el detalle sólo de lectura de tandas abiertas y agotadas —incluidas las que terminaron en cero por cubrir faltantes—, sus movimientos de ingreso de origen, consumo remanente, asignaciones de salida, correcciones relacionadas y faltantes pendientes o cubiertos. El panel MUST NOT permitir elegir, reordenar, editar, eliminar, fusionar ni crear manualmente una tanda; toda asignación se explica como resultado automático FIFO.
+La vista privada principal de Inventario MUST mostrar exactamente cinco columnas: Producto, Proveedor, Modalidad, Saldo y Valor total (suma de tandas abiertas por remanente × costo). No MUST tener botón o columna de detalle. Cada fila MUST ser clickeable, tener hover y foco visible, y abrir el mismo detalle con click, Enter o Espacio. El wrapper puede desplazarse horizontalmente en móvil sin ampliar el body. Un producto con tandas abiertas MUST continuar visible y valorizado aunque su modalidad actual sea `CONTRA_PEDIDO`. Las tandas agotadas, capital propio/consignación, faltantes, composición y trazabilidad MUST vivir en el detalle de sólo lectura. El detalle MUST usar etiquetas humanas en español —Ingreso, Venta automática por pedido, Consumo propio, Merma, Corrección y asignación FIFO— y MUST NOT mostrar UUID, códigos técnicos, clientes, PII ni cobros. El panel MUST NOT permitir elegir, reordenar, editar, eliminar, fusionar ni crear manualmente una tanda.
 
-#### Scenario: Tabla principal con faltante pendiente
-- **WHEN** un producto gestionado tiene saldo físico y una parte de salidas pendiente de costo
-- **THEN** la tabla presenta sus tres valores de costo separados y señala el faltante sin atribuirle capital propio ni valor de consignación
+#### Scenario: Tabla principal compacta y accesible
+- **WHEN** una persona operadora ve Inventario en desktop o mobile
+- **THEN** encuentra sólo las cinco columnas definidas y abre el detalle de la fila por click, Enter o Espacio, sin que la tabla amplíe el body en móvil
 
 #### Scenario: Apertura de detalle de producto
 - **WHEN** una persona operadora abre el producto en Inventario
@@ -17,6 +17,6 @@ La vista privada principal de Inventario MUST mostrar, por producto gestionado, 
 - **WHEN** un producto tiene una tanda abierta no valorizable y otra valorizable
 - **THEN** la tabla muestra el valor conocido separado y el estado de capital total incompleto, y el modal identifica la tanda sin origen de costo histórico
 
-#### Scenario: Advertencia de modalidad histórica desconocida
+#### Scenario: Composición y modalidad histórica en detalle
 - **WHEN** un producto tiene una tanda abierta valorizable con costo histórico pero sin modalidad
-- **THEN** la tabla suma su costo sólo al valor físico conocido, muestra la advertencia de composición incompleta y el modal identifica la tanda como legado valorizable sin modalidad histórica
+- **THEN** el detalle identifica la tanda como legado valorizable sin modalidad histórica y muestra la composición incompleta sin atribuirla a propio o consignación

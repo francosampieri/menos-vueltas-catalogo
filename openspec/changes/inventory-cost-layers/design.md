@@ -45,6 +45,10 @@ Un saldo previo sin ingreso histórico queda sin tanda y sin valor hasta que el 
 
 Alternativa descartada: leer la modalidad actual del producto para todas las tandas. Revalorizaría silenciosamente capital propio como consignación, o a la inversa, y rompería el histórico.
 
+### 2.1 Excepción manual ya realizada para tres legados
+
+El responsable ya asentó manualmente `STOCK_PROPIO` en `Modalidad_Abastecimiento` para los tres ingresos legado identificados. La proyección los lee como cualquier ingreso con modalidad histórica válida. No existe función de normalización en Apps Script, ni ruta `doGet`, `doPost`, API o UI para escribir o completar modalidad; la excepción no autoriza backfill de otros históricos.
+
 ### 3. Algoritmo FIFO por orden de ledger
 
 Para cada fila, la proyección aplica estas reglas:
@@ -76,9 +80,9 @@ Esto evita atribuir artificialmente costo cero a una salida y evita que un ingre
 
 ### 5. Contrato de vistas privadas
 
-La tabla principal de Inventario mostrará para cada producto gestionado: producto, modalidad actual informativa, saldo físico existente, capital en stock propio, valor en consignación, valor físico total a costo y un indicador/cantidad de faltante pendiente de costo. Si hay un tramo no valorizable, mostrará los valores conocidos separados y “capital total incompleto”. Si hay `LEGADO_VALORIZABLE_SIN_MODALIDAD`, el total físico incluye su costo pero la tabla advierte “composición por modalidad histórica incompleta”, sin atribuirlo a propio ni consignación. Los productos que tengan tandas abiertas continúan visibles con esos valores aunque su modalidad actual sea `CONTRA_PEDIDO`. Sólo lista tandas abiertas en su desglose; una tanda agotada no ocupa la vista principal.
+La tabla principal de Inventario mostrará exactamente Producto, Proveedor, Modalidad, Saldo y Valor total (suma de las tandas abiertas por remanente × costo). No tiene botón de detalle ni columnas de capital, consignación, faltantes o composición: cada fila completa abre el detalle por click, Enter o Espacio, con hover y foco visible. El wrapper puede desplazarse horizontalmente dentro de móvil, sin ampliar el body. Los productos que tengan tandas abiertas continúan visibles aunque su modalidad actual sea `CONTRA_PEDIDO`.
 
-El modal de producto mostrará una cronología de sólo lectura: ingresos de origen, tandas abiertas y agotadas, cantidad original/remanente, costo histórico, asignaciones de ventas/consumo/merma/correcciones, relación de correcciones y faltantes (pendientes o posteriormente cubiertos). No mostrará ni resolverá datos de clientes, cobros o Finanzas, ni tendrá controles para seleccionar, crear, borrar, fusionar o reordenar tandas.
+El modal de producto mostrará una cronología de sólo lectura: ingresos de origen, tandas abiertas y agotadas, cantidad original/remanente, costo histórico, asignaciones de ventas/consumo/merma/correcciones, relación de correcciones, composición y faltantes (pendientes o posteriormente cubiertos). No muestra UUID ni códigos técnicos: emplea etiquetas humanas como “Ingreso”, “Venta automática por pedido”, “Consumo propio”, “Merma”, “Corrección” y “asignación FIFO”. No mostrará ni resolverá datos de clientes, cobros o Finanzas, ni tendrá controles para seleccionar, crear, borrar, fusionar o reordenar tandas.
 
 Los valores conocidos se calculan con las tandas abiertas valorizables: `capital propio = Σ(remanente × costo)` de `STOCK_PROPIO`; `consignación = Σ(remanente × costo)` de `CONSIGNACION`; `legado sin modalidad = Σ(remanente × costo)` de `LEGADO_VALORIZABLE_SIN_MODALIDAD`; `total físico conocido = capital propio + consignación + legado sin modalidad`. Un faltante pendiente o tramo no valorizable no suma valor ni se disfraza como costo cero.
 
@@ -103,4 +107,4 @@ El usuario puede regularizar ese caso sólo mediante un ingreso inicial real, nu
 2. Implementar un lector puro que primero reconstruya y valide tandas, asignaciones, faltantes y totales antes de responder.
 3. Conectar el resumen y el modal privados de Inventario a esa respuesta, manteniendo los saldos existentes y ocultando tandas agotadas sólo en la tabla principal.
 4. Verificar con pruebas focalizadas y manualmente mediante escenarios aislados del flujo privado; no crear planillas temporales, no usar datos sintéticos en producción y no realizar despliegues como parte de este change.
-5. Si aparece un error de lectura, revertir la presentación de valorización sin tocar el ledger: al no haber proyección persistida, el rollback no requiere migración ni restauración de datos.
+5. Si aparece un error de lectura, revertir la presentación de valorización sin tocar el ledger: al no haber proyección persistida, el rollback no requiere cambios ni restauración de datos.
