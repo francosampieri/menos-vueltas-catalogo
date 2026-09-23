@@ -916,6 +916,7 @@ if (typeof module === 'object' && module.exports) {
     crearErrorRechazoConcluyente, resolverFalloMovimientoPendiente,
     productosConStockGestionado, filasHistorialOperativo,
     filtrarMovimientosHistorial, movimientosAntecedentesCorreccion,
+    referenciasCorreccionVisibles, opcionesAntecedentesCorreccion,
     construirListasAbastecimiento, proyeccionListaDistrosec,
     textoListaAbastecimiento, trazasValorizacionHumanas, resumenDetalleValorizacion
   };
@@ -1056,25 +1057,58 @@ function productosConStockGestionado(resumen, productos) {
     String(fila.Id_Producto) === String(producto.id) && fila.Gestiona_Stock === true));
 }
 
-function referenciaHistorialOperativa(movimiento) {
-  const referencias = [];
-  if (movimiento.Referencia) referencias.push(String(movimiento.Referencia));
-  if (movimiento.Id_Pedido) referencias.push('Pedido ' + movimiento.Id_Pedido);
-  if (movimiento.Item_Id) referencias.push('ítem ' + movimiento.Item_Id);
-  return referencias.join(' · ');
+function fechaCortaHumana(v) {
+  const iso = fechaISO(v);
+  if (!iso) return '—';
+  const partes = iso.split('-');
+  const meses = ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'];
+  return `${Number(partes[2])} ${meses[Number(partes[1]) - 1]}`;
 }
 
-function filasHistorialOperativo(movimientos, productos) {
+function descripcionMovimientoAntecedente(movimiento) {
+  const cantidad = Math.abs(Number(movimiento && movimiento.Cantidad));
+  const unidades = Number.isFinite(cantidad) ? `${cantidad} u.` : '—';
+  return `${etiquetaTipoMovimientoValorizacion(movimiento && movimiento.Tipo)} · ${fechaCortaHumana(movimiento && movimiento.Fecha)} · ${unidades}`;
+}
+
+function referenciasCorreccionVisibles(movimientos, idProducto) {
+  return movimientosAntecedentesCorreccion(movimientos, idProducto).map(movimiento => ({
+    id: String(movimiento.Movimiento_Id || ''),
+    descripcion: descripcionMovimientoAntecedente(movimiento)
+  }));
+}
+
+function opcionesAntecedentesCorreccion(movimientos, idProducto) {
+  return opcionesProductos(referenciasCorreccionVisibles(movimientos, idProducto).map(referencia => ({
+    id: referencia.id,
+    n: referencia.descripcion
+  })), '— Elegí antecedente —');
+}
+
+function referenciaHistorialOperativa(movimiento, movimientosCompletos) {
+  const tipo = String(movimiento && movimiento.Tipo || '').toUpperCase();
+  if (tipo === 'VENTA') {
+    const idPedido = textoOperativo(movimiento && movimiento.Id_Pedido);
+    return idPedido ? `Pedido #${idPedido}` : '—';
+  }
+  if (tipo !== 'CORRECCION') return '—';
+  const referencia = textoOperativo(movimiento && movimiento.Referencia);
+  const antecedente = (movimientosCompletos || []).find(item =>
+    textoOperativo(item && item.Movimiento_Id) === referencia);
+  return antecedente ? descripcionMovimientoAntecedente(antecedente) : '—';
+}
+
+function filasHistorialOperativo(movimientos, productos, movimientosCompletos = movimientos) {
   return (movimientos || []).map(movimiento => {
     const producto = productoOperativoPorId(movimiento.Id_Producto, productos);
     return {
       fecha: fechaCorta(movimiento.Fecha),
       producto: producto ? producto.n : String(movimiento.Id_Producto || '—'),
-      tipo: String(movimiento.Tipo || ''),
+      tipo: etiquetaTipoMovimientoValorizacion(movimiento.Tipo),
       cantidad: Number(movimiento.Cantidad),
       costo: Object.prototype.hasOwnProperty.call(movimiento, 'Costo_Unitario')
         ? Number(movimiento.Costo_Unitario) : null,
-      referencia: referenciaHistorialOperativa(movimiento),
+      referencia: referenciaHistorialOperativa(movimiento, movimientosCompletos),
       nota: String(movimiento.Nota || '')
     };
   });
@@ -1357,11 +1391,7 @@ function actualizarCamposMovimiento() {
   document.getElementById('movimientoNota').required = esCorreccion;
   document.getElementById('movimientoCantidadLabel').textContent =
     esCorreccion ? 'Corrección (+ o -)' : esIngreso ? 'Cantidad ingresada' : 'Unidades retiradas';
-  const referencias = movimientosAntecedentesCorreccion(MOVIMIENTOS_STOCK, producto);
-  document.getElementById('movimientoReferencia').innerHTML = opcionesProductos(
-    referencias.map(movimiento => ({ id: movimiento.Movimiento_Id, n: `${movimiento.Tipo} · ${movimiento.Movimiento_Id}` })),
-    '— Elegí antecedente —'
-  );
+  document.getElementById('movimientoReferencia').innerHTML = opcionesAntecedentesCorreccion(MOVIMIENTOS_STOCK, producto);
 }
 
 function camposMovimientoDesdeForm() {
@@ -1426,7 +1456,7 @@ async function reintentarMovimientoPendiente() {
 function pintarHistorial() {
   const cuerpo = document.getElementById('historialTbody');
   const vacio = document.getElementById('historialVacio');
-  const filas = filasHistorialOperativo(MOVIMIENTOS_STOCK_VISTA, productosCanalActual());
+  const filas = filasHistorialOperativo(MOVIMIENTOS_STOCK_VISTA, productosCanalActual(), MOVIMIENTOS_STOCK);
   cuerpo.innerHTML = filas.map(fila => `<tr><td>${esc(fila.fecha)}</td><td>${esc(fila.producto)}</td>` +
     `<td>${esc(fila.tipo)}</td><td class="num">${esc(fila.cantidad)}</td>` +
     `<td class="num">${fila.costo === null ? '—' : money(fila.costo)}</td>` +

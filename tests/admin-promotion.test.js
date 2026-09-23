@@ -550,7 +550,7 @@ test('C-04 filters only the history view and retains the full ledger for a corre
   );
 });
 
-test('C-04 prepares inventory rows and history without client or supplier contact fields', () => {
+test('C-04 describes history references and correction antecedents without exposing internal IDs', () => {
   const productos = [{ id: 'P-1', n: 'Producto uno' }, { id: 'P-2', n: 'Producto dos' }];
   const resumen = [
     { Id_Producto: 'P-1', Gestiona_Stock: true, Saldo: 0, Sin_Stock: false },
@@ -558,17 +558,37 @@ test('C-04 prepares inventory rows and history without client or supplier contac
   ];
   assert.deepEqual(admin.productosConStockGestionado(resumen, productos), [{ id: 'P-1', n: 'Producto uno' }]);
 
-  const filas = admin.filasHistorialOperativo([{
-    Fecha: '2026-09-20T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -2,
-    Nota: '', Referencia: '', Id_Pedido: 'PEDIDO-1', Item_Id: 'ITEM-1',
-    Cliente: 'No debe mostrarse', Telefono: 'No debe mostrarse', Direccion: 'No debe mostrarse',
-    Telefono_Proveedor: 'No debe mostrarse', Notas_Proveedor: 'No debe mostrarse'
-  }], productos);
-  assert.deepEqual(filas, [{
-    fecha: '20/09/2026', producto: 'Producto uno', tipo: 'VENTA', cantidad: -2,
-    costo: null, referencia: 'Pedido PEDIDO-1 · ítem ITEM-1', nota: ''
-  }]);
+  const movimientos = [
+    { Movimiento_Id: 'UUID-VENTA', Fecha: '2026-09-20T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -2,
+      Nota: '', Referencia: '', Id_Pedido: '45', Item_Id: 'UUID-ITEM-VENTA',
+      Cliente: 'No debe mostrarse', Telefono: 'No debe mostrarse', Direccion: 'No debe mostrarse',
+      Telefono_Proveedor: 'No debe mostrarse', Notas_Proveedor: 'No debe mostrarse' },
+    { Movimiento_Id: 'UUID-CONSUMO', Fecha: '2026-09-23T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'CONSUMO_PROPIO', Cantidad: -3 },
+    { Movimiento_Id: 'UUID-CORRECCION', Fecha: '2026-09-24T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 3,
+      Referencia: 'UUID-CONSUMO' },
+    { Movimiento_Id: 'UUID-INGRESO', Fecha: '2026-09-25T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2 },
+    { Movimiento_Id: 'UUID-MERMA', Fecha: '2026-09-26T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'ROTURA_MERMA', Cantidad: -1 }
+  ];
+  const filas = admin.filasHistorialOperativo(movimientos, productos, movimientos);
+  assert.deepEqual(filas.map(fila => ({ tipo: fila.tipo, referencia: fila.referencia })), [
+    { tipo: 'Venta automática por pedido', referencia: 'Pedido #45' },
+    { tipo: 'Consumo propio', referencia: '—' },
+    { tipo: 'Corrección', referencia: 'Consumo propio · 23 sep. · 3 u.' },
+    { tipo: 'Ingreso', referencia: '—' },
+    { tipo: 'Merma', referencia: '—' }
+  ]);
   assert.equal(JSON.stringify(filas).includes('No debe mostrarse'), false);
+  assert.equal(JSON.stringify(filas).includes('UUID-'), false);
+
+  const referencias = admin.referenciasCorreccionVisibles(movimientos, 'P-1');
+  assert.deepEqual(referencias.find(item => item.id === 'UUID-CONSUMO'), {
+    id: 'UUID-CONSUMO', descripcion: 'Consumo propio · 23 sep. · 3 u.'
+  });
+  assert.equal(referencias.every(item => !item.descripcion.includes('UUID-')), true);
+  assert.match(
+    admin.opcionesAntecedentesCorreccion(movimientos, 'P-1'),
+    /<option value="UUID-CONSUMO">Consumo propio · 23 sep\. · 3 u\.<\/option>/
+  );
 });
 
 test('C-05 derives read-only contra-pedido worklists from complete active snapshots', () => {

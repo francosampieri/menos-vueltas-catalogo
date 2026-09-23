@@ -84,6 +84,8 @@ La tabla principal de Inventario mostrará exactamente Producto, Proveedor, Moda
 
 El modal de producto mostrará una cronología de sólo lectura: ingresos de origen, tandas abiertas y agotadas, cantidad original/remanente, costo histórico, asignaciones de ventas/consumo/merma/correcciones, relación de correcciones, composición y faltantes (pendientes o posteriormente cubiertos). No muestra UUID ni códigos técnicos: emplea etiquetas humanas como “Ingreso”, “Venta automática por pedido”, “Consumo propio”, “Merma”, “Corrección” y “asignación FIFO”. No mostrará ni resolverá datos de clientes, cobros o Finanzas, ni tendrá controles para seleccionar, crear, borrar, fusionar o reordenar tandas.
 
+El historial general tampoco renderiza `Movimiento_Id`, `Item_Id` ni una referencia interna. Una venta se identifica como `Pedido #<Id_Pedido>`; ingreso, consumo propio y merma sin antecedente muestran `—`; una corrección busca su referencia dentro de la colección completa y muestra `Tipo humano · fecha corta · cantidad u.`. El selector de antecedente usa exactamente esa misma descripción visible, pero conserva el UUID sólo en el valor interno de la opción. Ninguna de estas etiquetas incorpora nombres de clientes ni otra PII.
+
 Los valores conocidos se calculan con las tandas abiertas valorizables: `capital propio = Σ(remanente × costo)` de `STOCK_PROPIO`; `consignación = Σ(remanente × costo)` de `CONSIGNACION`; `legado sin modalidad = Σ(remanente × costo)` de `LEGADO_VALORIZABLE_SIN_MODALIDAD`; `total físico conocido = capital propio + consignación + legado sin modalidad`. Un faltante pendiente o tramo no valorizable no suma valor ni se disfraza como costo cero.
 
 ### 6. Compatibilidad y condiciones de fallo
