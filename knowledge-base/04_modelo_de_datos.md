@@ -41,7 +41,11 @@ La planilla operativa privada contiene la entidad `Proveedores`. Su clave establ
 
 `Movimientos_Stock` es el libro mayor privado y append-only del saldo físico para productos con stock gestionado. Cada movimiento tiene una identidad, fecha-hora, producto, tipo, cantidad firmada, referencia y nota; puede referenciar pedido e ítem y llevar una clave de idempotencia. Los tipos son `INGRESO`, `VENTA`, `CONSUMO_PROPIO`, `ROTURA_MERMA` y `CORRECCION`. Las correcciones se expresan como un nuevo movimiento relacionado: un movimiento confirmado no se edita ni se elimina.
 
-`Sin_Stock` es una decisión manual global, independiente del saldo físico. Es el único dato de este dominio que se publica al catálogo como booleano; los campos privados de proveedor, modalidad, costos y movimientos permanecen excluidos.
+Todo `INGRESO` nuevo incorpora la modalidad histórica privada `Modalidad_Abastecimiento`, con valor exacto `STOCK_PROPIO` o `CONSIGNACION`, y un costo unitario válido. La modalidad pertenece al evento de ingreso: no se deriva después desde la clasificación actual del producto. Los ingresos históricos con modalidad y costo vacíos permanecen como tramos no valorizables; los que conservan costo válido pero no modalidad son legado valorizable sin modalidad. Ambos casos siguen legibles sin backfill automático.
+
+Las tandas o capas de costo, asignaciones FIFO y faltantes pendientes no son una tabla ni una hoja nueva: son una proyección privada en memoria a partir del ledger. Cada ingreso conserva su identidad de capa aun cuando su remanente sea cero. La proyección calcula por separado capital propio, valor de consignación y valor físico conocido; este último puede incluir legado valorizable sin modalidad, sin atribuirlo a ninguna de las dos primeras métricas. Los tramos sin costo y los faltantes pendientes no se presentan como costo cero.
+
+`Sin_Stock` es una decisión manual global, independiente del saldo físico. Es el único dato de este dominio que se publica al catálogo como booleano; los campos privados de proveedor, modalidad, costos, capas derivadas y movimientos permanecen excluidos.
 
 En la web B2C, los precios de lista, temporales, por cantidad y finales por
 código se comunican y calculan como múltiplos de $50. Se redondean al valor más

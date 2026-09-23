@@ -56,6 +56,11 @@
 18. El saldo físico de consignación y stock propio deriva únicamente del libro mayor de movimientos. No es una señal automática de disponibilidad pública, reserva ni reposición.
 19. Al pasar efectivamente a `Entregado`, cada línea cuyo snapshot gestiona stock registra una `VENTA` negativa e idempotente. Las líneas contra pedido no generan ese movimiento. La entrega no equivale a un cobro ni modifica Finanzas.
 20. Un movimiento de stock confirmado no se edita ni se borra. Todo ajuste se registra como una `CORRECCION` nueva y relacionada.
+21. Las tandas, asignaciones y valores de costo se derivan en lectura desde `Movimientos_Stock`; no existe una hoja adicional ni una segunda fuente de verdad para inventario valorizado.
+22. El consumo de capas sigue FIFO por orden físico append-only del ledger, no por una fecha editable. Una salida sin capas suficientes conserva un faltante pendiente de costo; el siguiente ingreso del mismo producto lo cubre antes de dejar remanente disponible.
+23. Las métricas de valor distinguen capital propio, consignación y valor físico conocido. Un ingreso legado con costo válido pero sin modalidad sólo puede sumar a valor físico conocido y debe advertir que la composición histórica por modalidad es incompleta. Un tramo sin costo histórico deja el total de capital incompleto.
+24. Una corrección positiva sólo puede revertir, dentro de su cantidad neta reversible, una salida negativa previa del mismo producto. Primero corrige el faltante pendiente si existe y luego restaura automáticamente las capas FIFO de origen; no se elige tanda ni costo manualmente.
+25. No se realiza backfill automático de modalidades ni costos históricos. Una normalización manual puntual sólo es válida cuando la modalidad histórica real se conoce; no habilita a inferirla desde el producto actual.
 
 ## Abastecimiento por proveedor
 

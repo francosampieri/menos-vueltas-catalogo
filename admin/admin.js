@@ -237,7 +237,21 @@ function filtrarResumenStock(filas, filtro = 'gestionado') {
   const resumen = (filas || []).map(fila => ({ ...fila }));
   return filtro === 'todos'
     ? resumen
-    : resumen.filter(fila => fila.Gestiona_Stock === true);
+    : resumen.filter(fila => fila.Gestiona_Stock === true || (fila.Tandas || []).some(tanda => Number(tanda.Remanente) > 0));
+}
+
+function filasInventarioValorizado(resumen, productos) {
+  return filtrarResumenStock(resumen, 'gestionado').map(fila => {
+    const producto = productoOperativoPorId(fila.Id_Producto, productos);
+    return {
+      id: String(fila.Id_Producto), producto: producto ? producto.n : String(fila.Id_Producto),
+      saldo: Number(fila.Saldo), modalidad: String(fila.Modalidad_Abastecimiento || 'CONTRA_PEDIDO'),
+      stockPropio: Number(fila.Capital_Stock_Propio || 0), consignacion: Number(fila.Valor_Consignacion || 0),
+      legadoSinModalidad: Number(fila.Valor_Legado_Sin_Modalidad || 0), totalConocido: Number(fila.Valor_Fisico_Conocido || 0), capitalCompleto: fila.Capital_Total_Completo !== false,
+      composicionModalidadCompleta: fila.Composicion_Modalidad_Completa !== false,
+      tramoNoValorizable: fila.Tramo_No_Valorizable === true, faltante: Number(fila.Faltante_Pendiente_Costo || 0)
+    };
+  });
 }
 
 function construirMovimientoManual(campos, clave) {
@@ -770,6 +784,11 @@ const API = {
     return respuesta.productos || [];
   },
 
+  async valorizacionStock() {
+    const respuesta = await this.leerOperativo('valorizacionStock');
+    return respuesta.productos || [];
+  },
+
   async registrarMovimiento(movimiento) {
     const respuesta = await this.escribirOperativo('registrarMovimiento', { movimiento });
     return respuesta.movimiento;
@@ -892,13 +911,14 @@ if (typeof module === 'object' && module.exports) {
     calcularPedido, modoEnvioPedido, paraGuardar, esPedidoAlCosto,
     calcularMetricas, calcularEstadisticasClientes, incorporarPedidoGuardado,
     actualizarPedidoTrasGuardado, construirProveedorParaGuardar,
-    construirClasificacionProducto, resumenInventarioDelCanal, filtrarResumenStock, filaProveedor,
+    construirClasificacionProducto, resumenInventarioDelCanal, filtrarResumenStock, filasInventarioValorizado, filaProveedor,
     construirMovimientoManual, prepararIntentoMovimientoManual,
     crearErrorRechazoConcluyente, resolverFalloMovimientoPendiente,
     productosConStockGestionado, filasHistorialOperativo,
     filtrarMovimientosHistorial, movimientosAntecedentesCorreccion,
+    referenciasCorreccionVisibles, opcionesAntecedentesCorreccion,
     construirListasAbastecimiento, proyeccionListaDistrosec,
-    textoListaAbastecimiento
+    textoListaAbastecimiento, trazasValorizacionHumanas, resumenDetalleValorizacion
   };
 }
 
@@ -1037,25 +1057,58 @@ function productosConStockGestionado(resumen, productos) {
     String(fila.Id_Producto) === String(producto.id) && fila.Gestiona_Stock === true));
 }
 
-function referenciaHistorialOperativa(movimiento) {
-  const referencias = [];
-  if (movimiento.Referencia) referencias.push(String(movimiento.Referencia));
-  if (movimiento.Id_Pedido) referencias.push('Pedido ' + movimiento.Id_Pedido);
-  if (movimiento.Item_Id) referencias.push('ítem ' + movimiento.Item_Id);
-  return referencias.join(' · ');
+function fechaCortaHumana(v) {
+  const iso = fechaISO(v);
+  if (!iso) return '—';
+  const partes = iso.split('-');
+  const meses = ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'];
+  return `${Number(partes[2])} ${meses[Number(partes[1]) - 1]}`;
 }
 
-function filasHistorialOperativo(movimientos, productos) {
+function descripcionMovimientoAntecedente(movimiento) {
+  const cantidad = Math.abs(Number(movimiento && movimiento.Cantidad));
+  const unidades = Number.isFinite(cantidad) ? `${cantidad} u.` : '—';
+  return `${etiquetaTipoMovimientoValorizacion(movimiento && movimiento.Tipo)} · ${fechaCortaHumana(movimiento && movimiento.Fecha)} · ${unidades}`;
+}
+
+function referenciasCorreccionVisibles(movimientos, idProducto) {
+  return movimientosAntecedentesCorreccion(movimientos, idProducto).map(movimiento => ({
+    id: String(movimiento.Movimiento_Id || ''),
+    descripcion: descripcionMovimientoAntecedente(movimiento)
+  }));
+}
+
+function opcionesAntecedentesCorreccion(movimientos, idProducto) {
+  return opcionesProductos(referenciasCorreccionVisibles(movimientos, idProducto).map(referencia => ({
+    id: referencia.id,
+    n: referencia.descripcion
+  })), '— Elegí antecedente —');
+}
+
+function referenciaHistorialOperativa(movimiento, movimientosCompletos) {
+  const tipo = String(movimiento && movimiento.Tipo || '').toUpperCase();
+  if (tipo === 'VENTA') {
+    const idPedido = textoOperativo(movimiento && movimiento.Id_Pedido);
+    return idPedido ? `Pedido #${idPedido}` : '—';
+  }
+  if (tipo !== 'CORRECCION') return '—';
+  const referencia = textoOperativo(movimiento && movimiento.Referencia);
+  const antecedente = (movimientosCompletos || []).find(item =>
+    textoOperativo(item && item.Movimiento_Id) === referencia);
+  return antecedente ? descripcionMovimientoAntecedente(antecedente) : '—';
+}
+
+function filasHistorialOperativo(movimientos, productos, movimientosCompletos = movimientos) {
   return (movimientos || []).map(movimiento => {
     const producto = productoOperativoPorId(movimiento.Id_Producto, productos);
     return {
       fecha: fechaCorta(movimiento.Fecha),
       producto: producto ? producto.n : String(movimiento.Id_Producto || '—'),
-      tipo: String(movimiento.Tipo || ''),
+      tipo: etiquetaTipoMovimientoValorizacion(movimiento.Tipo),
       cantidad: Number(movimiento.Cantidad),
       costo: Object.prototype.hasOwnProperty.call(movimiento, 'Costo_Unitario')
         ? Number(movimiento.Costo_Unitario) : null,
-      referencia: referenciaHistorialOperativa(movimiento),
+      referencia: referenciaHistorialOperativa(movimiento, movimientosCompletos),
       nota: String(movimiento.Nota || '')
     };
   });
@@ -1227,14 +1280,71 @@ function pintarStock() {
   const filas = filtrarResumenStock(resumenInventarioDelCanal(RESUMEN_STOCK, productos), filtro);
   cuerpo.innerHTML = filas.map(fila => {
     const producto = productoOperativoPorId(fila.Id_Producto, productos);
-    return `<tr><td>${esc(producto?.n || fila.Id_Producto)}</td>` +
+    const detalle = encodeURIComponent(String(fila.Id_Producto));
+    const nombreProducto = producto?.n || fila.Id_Producto;
+    return `<tr class="inventario-fila--detalle" role="button" tabindex="0" aria-label="Ver detalle de ${esc(nombreProducto)}" onclick="abrirModalValorizacionCodificada('${detalle}')" onkeydown="abrirModalValorizacionDesdeTecla(event, '${detalle}')"><td>${esc(nombreProducto)}</td>` +
       `<td>${esc(nombreProveedor(fila.Id_Proveedor))}</td>` +
       `<td>${esc(fila.Modalidad_Abastecimiento || 'CONTRA_PEDIDO')}</td>` +
-      `<td>${fila.Gestiona_Stock ? 'Sí' : 'No'}</td>` +
       `<td class="num">${fila.Saldo === null ? 'No aplica' : esc(fila.Saldo)}</td>` +
-      `<td>${fila.Sin_Stock ? 'Sí (manual)' : 'No'}</td></tr>`;
+      `<td class="num">${money(fila.Valor_Fisico_Conocido || 0)}</td></tr>`;
   }).join('');
   vacio.hidden = filas.length !== 0;
+}
+
+function abrirModalValorizacionCodificada(idCodificado) { abrirModalValorizacion(decodeURIComponent(idCodificado)); }
+function abrirModalValorizacionDesdeTecla(event, idCodificado) {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  event.preventDefault();
+  abrirModalValorizacionCodificada(idCodificado);
+}
+function abrirModalValorizacion(idProducto) {
+  const fila = RESUMEN_STOCK.find(item => String(item.Id_Producto) === String(idProducto));
+  if (!fila) return;
+  const producto = productoOperativoPorId(idProducto);
+  document.getElementById('valorizacionTitulo').textContent = producto?.n || String(idProducto);
+  document.getElementById('valorizacionEstado').textContent = resumenDetalleValorizacion(fila);
+  document.getElementById('valorizacionTandas').innerHTML = (fila.Tandas || []).map(tanda =>
+    `<tr><td>Ingreso</td><td>${esc(tanda.Modalidad_Abastecimiento || (tanda.Valorizable ? 'Legado valorizable sin modalidad histórica' : 'Sin origen de costo histórico'))}</td><td class="num">${esc(tanda.Cantidad_Original)}</td><td class="num">${esc(tanda.Remanente)}</td><td class="num">${tanda.Valorizable ? money(tanda.Costo_Unitario) : 'No valorizable'}</td></tr>`
+  ).join('');
+  const trazas = trazasValorizacionHumanas(fila);
+  document.getElementById('valorizacionTrazas').innerHTML = trazas.length
+    ? trazas.map(item => `<li>${esc(item.etiqueta)}</li>`).join('')
+    : '<li>Sin asignaciones ni faltantes para este producto.</li>';
+  document.getElementById('modalValorizacion').hidden = false;
+}
+function cerrarModalValorizacion() { document.getElementById('modalValorizacion').hidden = true; }
+
+function etiquetaTipoMovimientoValorizacion(tipo) {
+  return {
+    INGRESO: 'Ingreso', VENTA: 'Venta automática por pedido', CONSUMO_PROPIO: 'Consumo propio',
+    ROTURA_MERMA: 'Merma', CORRECCION: 'Corrección'
+  }[String(tipo || '').toUpperCase()] || 'Salida';
+}
+
+function unidadesValorizacion(cantidad) {
+  const numero = Number(cantidad);
+  return `${numero} ${numero === 1 ? 'unidad' : 'unidades'}`;
+}
+
+function trazasValorizacionHumanas(fila) {
+  return []
+    .concat((fila.Asignaciones || []).map(item => ({ Orden_Ledger: item.Orden_Ledger,
+      etiqueta: `${etiquetaTipoMovimientoValorizacion(item.Tipo_Salida)}: asignación FIFO de ${unidadesValorizacion(item.Cantidad)} desde un ingreso.` })))
+    .concat((fila.Coberturas || []).map(item => ({ Orden_Ledger: item.Orden_Ledger,
+      etiqueta: `Ingreso: cubrió ${unidadesValorizacion(item.Cantidad)} pendiente de una salida.` })))
+    .concat((fila.Correcciones || []).map(item => ({ Orden_Ledger: item.Orden_Ledger,
+      etiqueta: `Corrección: revirtió ${unidadesValorizacion(item.Cantidad)} de una salida anterior.` })))
+    .concat((fila.Faltantes || []).map(item => ({ Orden_Ledger: item.Orden_Ledger,
+      etiqueta: item.Cantidad > 0 ? `Faltante pendiente de costo: ${unidadesValorizacion(item.Cantidad)}.` : `Faltante de costo cubierto posteriormente: ${unidadesValorizacion(item.Cantidad_Original)}.` })))
+    .sort((a, b) => Number(a.Orden_Ledger || 0) - Number(b.Orden_Ledger || 0));
+}
+
+function resumenDetalleValorizacion(fila) {
+  const estados = [];
+  if (fila.Capital_Total_Completo === false) estados.push('Hay un tramo sin costo histórico: el valor total no está completo.');
+  if (fila.Composicion_Modalidad_Completa === false) estados.push('Incluye legado valorizable sin modalidad histórica conocida.');
+  if (Number(fila.Faltante_Pendiente_Costo || 0) > 0) estados.push(`Hay ${unidadesValorizacion(fila.Faltante_Pendiente_Costo)} pendientes de costo.`);
+  return estados.length ? estados.join(' ') : 'Valores y composición sin pendientes de costo.';
 }
 
 function abrirModalClasificacion() {
@@ -1281,11 +1391,7 @@ function actualizarCamposMovimiento() {
   document.getElementById('movimientoNota').required = esCorreccion;
   document.getElementById('movimientoCantidadLabel').textContent =
     esCorreccion ? 'Corrección (+ o -)' : esIngreso ? 'Cantidad ingresada' : 'Unidades retiradas';
-  const referencias = movimientosAntecedentesCorreccion(MOVIMIENTOS_STOCK, producto);
-  document.getElementById('movimientoReferencia').innerHTML = opcionesProductos(
-    referencias.map(movimiento => ({ id: movimiento.Movimiento_Id, n: `${movimiento.Tipo} · ${movimiento.Movimiento_Id}` })),
-    '— Elegí antecedente —'
-  );
+  document.getElementById('movimientoReferencia').innerHTML = opcionesAntecedentesCorreccion(MOVIMIENTOS_STOCK, producto);
 }
 
 function camposMovimientoDesdeForm() {
@@ -1350,7 +1456,7 @@ async function reintentarMovimientoPendiente() {
 function pintarHistorial() {
   const cuerpo = document.getElementById('historialTbody');
   const vacio = document.getElementById('historialVacio');
-  const filas = filasHistorialOperativo(MOVIMIENTOS_STOCK_VISTA, productosCanalActual());
+  const filas = filasHistorialOperativo(MOVIMIENTOS_STOCK_VISTA, productosCanalActual(), MOVIMIENTOS_STOCK);
   cuerpo.innerHTML = filas.map(fila => `<tr><td>${esc(fila.fecha)}</td><td>${esc(fila.producto)}</td>` +
     `<td>${esc(fila.tipo)}</td><td class="num">${esc(fila.cantidad)}</td>` +
     `<td class="num">${fila.costo === null ? '—' : money(fila.costo)}</td>` +
@@ -1381,7 +1487,7 @@ async function recargarProveedores() {
 async function recargarInventario() {
   try {
     const [proveedores, resumen, movimientos] = await Promise.all([
-      API.listarProveedores(), API.resumenStock(), API.listarMovimientos()
+      API.listarProveedores(), API.valorizacionStock(), API.listarMovimientos()
     ]);
     PROVEEDORES = proveedores;
     RESUMEN_STOCK = resumen;

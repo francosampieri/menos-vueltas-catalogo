@@ -19,7 +19,7 @@ const PROPIEDAD_PLANILLA_CATALOGO = 'CATALOG_SPREADSHEET_ID';
 const COLS_PROVEEDOR = ['Id_Proveedor', 'Nombre', 'Telefono', 'Direccion', 'Activo', 'Notas'];
 const COLS_MOVIMIENTO = [
   'Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario',
-  'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia'
+  'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'
 ];
 const MODALIDADES_ABASTECIMIENTO = ['CONTRA_PEDIDO', 'CONSIGNACION', 'STOCK_PROPIO'];
 const TIPOS_MOVIMIENTO = ['INGRESO', 'VENTA', 'CONSUMO_PROPIO', 'ROTURA_MERMA', 'CORRECCION'];
@@ -58,6 +58,7 @@ function doGet(e) {
     if (accion === 'clientes') return json({ ok: true, clientes: leerClientes() });
     if (accion === 'listarProveedores') return json({ ok: true, proveedores: listarProveedores() });
     if (accion === 'resumenStock') return json({ ok: true, productos: resumenStock() });
+    if (accion === 'valorizacionStock') return json({ ok: true, productos: valorizacionStock() });
     if (accion === 'listarMovimientos') return json({ ok: true, movimientos: listarMovimientos(e.parameter) });
     if (accion === 'validarCodigo') {
       const codigo = e && e.parameter ? e.parameter.codigo : '';
@@ -497,7 +498,7 @@ function ventasAsentadasDePedidoSinLock(idPedido) {
   const h = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_MOVIMIENTOS_STOCK);
   if (!h || h.getLastRow() < 2) return [];
   const filas = h.getDataRange().getValues();
-  const columnas = validarEncabezados(filas[0], COLS_MOVIMIENTO, HOJA_MOVIMIENTOS_STOCK);
+  const columnas = columnasMovimientos(filas[0]);
   const pedido = textoSimple(idPedido);
   return validarFilasMovimientos(filas, columnas, false).lista.filter(function (movimiento) {
     return movimiento.Tipo === 'VENTA' && movimiento.Id_Pedido === pedido &&
@@ -756,11 +757,22 @@ function agregarMovimientoValidado(movimiento, ventaInterna, gestionaStockSnapsh
   }
   if (tipo === 'CORRECCION' && cantidad === 0) throw new Error('CORRECCION requiere cantidad distinta de cero.');
   let costo = '';
+  let modalidadIngreso = '';
   if (tipo === 'INGRESO') {
     costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario');
     if (costo < 0) throw new Error('Costo_Unitario no puede ser negativo.');
+    modalidadIngreso = producto.Modalidad_Abastecimiento;
+    const modalidadSolicitada = textoSimple(movimiento.Modalidad_Abastecimiento).toUpperCase();
+    if (modalidadSolicitada && modalidadSolicitada !== modalidadIngreso) {
+      throw new Error('Modalidad_Abastecimiento no coincide con la clasificación vigente del producto.');
+    }
+    if (['STOCK_PROPIO', 'CONSIGNACION'].indexOf(modalidadIngreso) < 0) {
+      throw new Error('INGRESO requiere un producto actualmente clasificado como STOCK_PROPIO o CONSIGNACION.');
+    }
   } else if (!esVacio(movimiento.Costo_Unitario)) {
     throw new Error('Costo_Unitario sólo corresponde a INGRESO.');
+  } else if (!esVacio(movimiento.Modalidad_Abastecimiento)) {
+    throw new Error('Modalidad_Abastecimiento sólo corresponde a INGRESO.');
   }
   const referencia = textoSimple(movimiento.Referencia);
   const nota = textoSimple(movimiento.Nota);
@@ -782,7 +794,7 @@ function agregarMovimientoValidado(movimiento, ventaInterna, gestionaStockSnapsh
   let existentes = { lista: [], porId: {}, porClave: {} };
   if (hExistente) {
     const filas = hExistente.getDataRange().getValues();
-    const columnas = validarEncabezados(filas[0], COLS_MOVIMIENTO, HOJA_MOVIMIENTOS_STOCK);
+    const columnas = columnasMovimientos(filas[0]);
     existentes = validarFilasMovimientos(filas, columnas, false);
   }
   if (tipo === 'CORRECCION') {
@@ -795,7 +807,7 @@ function agregarMovimientoValidado(movimiento, ventaInterna, gestionaStockSnapsh
     const anterior = existentes.porClave[clave];
     const candidato = {
       Id_Producto: producto.Id_Producto, Tipo: tipo, Cantidad: cantidad,
-      Costo_Unitario: costo, Referencia: referencia, Nota: nota,
+      Costo_Unitario: costo, Modalidad_Abastecimiento: modalidadIngreso, Referencia: referencia, Nota: nota,
       Id_Pedido: idPedido, Item_Id: itemId, Clave_Idempotencia: clave
     };
     if (contenidoMovimientoIgual(anterior, candidato)) {
@@ -805,17 +817,27 @@ function agregarMovimientoValidado(movimiento, ventaInterna, gestionaStockSnapsh
   }
   const registro = {
     Movimiento_Id: Utilities.getUuid(), Fecha: new Date(), Id_Producto: producto.Id_Producto,
-    Tipo: tipo, Cantidad: cantidad, Costo_Unitario: costo, Referencia: referencia,
+    Tipo: tipo, Cantidad: cantidad, Costo_Unitario: costo, Modalidad_Abastecimiento: modalidadIngreso, Referencia: referencia,
     Nota: nota, Id_Pedido: idPedido, Item_Id: itemId, Clave_Idempotencia: clave
   };
-  const fila = COLS_MOVIMIENTO.map(function (nombre) { return registro[nombre]; });
+  validarMovimientoNuevoParaValorizacion(registro);
+  if (tipo === 'CORRECCION' && cantidad > 0) {
+    const antecedente = existentes.porId[referencia];
+    if (!antecedente || antecedente.Cantidad >= 0) throw new Error('La corrección positiva debe referir una salida negativa previa.');
+    proyectarValorizacionLedger(existentes.lista.concat([registro]));
+  }
   const h = hExistente || hojaMovimientos();
+  asegurarColumnaMovimiento(h, 'Modalidad_Abastecimiento');
+  const encabezados = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
+  const columnas = columnasMovimientos(encabezados);
+  const fila = Array(encabezados.length).fill('');
+  escribirObjetoEnFila(fila, columnas, registro);
   h.appendRow(fila);
   return registro;
 }
 
 function contenidoMovimientoIgual(anterior, candidato) {
-  return ['Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota',
+  return ['Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Modalidad_Abastecimiento', 'Referencia', 'Nota',
     'Id_Pedido', 'Item_Id', 'Clave_Idempotencia'].every(function (campo) {
     return anterior[campo] === candidato[campo];
   });
@@ -825,7 +847,7 @@ function resumenStock() {
   const productos = listarProductosClasificados();
   const h = hojaMovimientosExistente();
   const filas = h.getDataRange().getValues();
-  const columnas = validarEncabezados(filas[0], COLS_MOVIMIENTO, HOJA_MOVIMIENTOS_STOCK);
+  const columnas = columnasMovimientos(filas[0]);
   const ledger = validarFilasMovimientos(filas, columnas, true).lista;
   const saldos = {};
   ledger.forEach(function (movimiento) {
@@ -843,6 +865,170 @@ function resumenStock() {
   });
 }
 
+// Lectura privada y pura: las tandas, asignaciones y faltantes existen sólo
+// durante esta reconstrucción. El orden de la lista es el orden append-only
+// de la hoja, nunca la fecha visible del movimiento.
+function valorizacionStock() {
+  const productos = listarProductosClasificados();
+  const h = hojaMovimientosExistente();
+  const filas = h.getDataRange().getValues();
+  const ledger = validarFilasMovimientos(filas, columnasMovimientos(filas[0]), true, true).lista;
+  const proyeccion = proyectarValorizacionLedger(ledger);
+  const porProducto = {};
+  productos.forEach(function (producto) { porProducto[producto.Id_Producto] = producto; });
+  const ids = {};
+  productos.forEach(function (producto) { ids[producto.Id_Producto] = true; });
+  Object.keys(proyeccion.productos).forEach(function (id) { ids[id] = true; });
+  return Object.keys(ids).map(function (id) {
+    const estado = proyeccion.productos[id] || crearEstadoValorizacion(id);
+    const producto = porProducto[id] || {};
+    return {
+      Id_Producto: id,
+      Id_Proveedor: producto.Id_Proveedor || '',
+      Modalidad_Abastecimiento: producto.Modalidad_Abastecimiento || 'CONTRA_PEDIDO',
+      Gestiona_Stock: producto.Gestiona_Stock === true || estado.tandas.some(function (t) { return t.Remanente > 0; }),
+      Sin_Stock: producto.Sin_Stock === true,
+      Saldo: estado.saldo,
+      Capital_Stock_Propio: estado.valores.stockPropio,
+      Valor_Consignacion: estado.valores.consignacion,
+      Valor_Legado_Sin_Modalidad: estado.valores.legadoSinModalidad,
+      Valor_Fisico_Conocido: estado.valores.totalConocido,
+      Capital_Total_Completo: estado.estadoCapitalCompleto,
+      Composicion_Modalidad_Completa: estado.estadoComposicionModalidadCompleta,
+      Tramo_No_Valorizable: estado.tandas.some(function (t) { return !t.Valorizable && t.Remanente > 0; }),
+      Faltante_Pendiente_Costo: estado.pendientes.reduce(function (total, pendiente) { return total + pendiente.Cantidad; }, 0),
+      Tandas: estado.tandas,
+      Asignaciones: estado.asignaciones,
+      Coberturas: estado.coberturas,
+      Correcciones: estado.correcciones,
+      Faltantes: estado.faltantes
+    };
+  });
+}
+
+function crearEstadoValorizacion(idProducto) {
+  return { Id_Producto: idProducto, saldo: 0, tandas: [], abiertas: [], pendientes: [], faltantes: [],
+    salidas: {}, asignaciones: [], coberturas: [], correcciones: [], valores: { stockPropio: 0, consignacion: 0, legadoSinModalidad: 0, totalConocido: 0 }, estadoCapitalCompleto: true, estadoComposicionModalidadCompleta: true };
+}
+
+function proyectarValorizacionLedger(ledger) {
+  const productos = {};
+  const porMovimiento = {};
+  (ledger || []).forEach(function (movimiento, orden) {
+    const id = textoSimple(movimiento.Id_Producto);
+    if (!id) throw new Error('Id_Producto de movimiento obligatorio.');
+    const estado = productos[id] || (productos[id] = crearEstadoValorizacion(id));
+    const cantidad = numeroFinitoEstricto(movimiento.Cantidad, 'Cantidad');
+    const tipo = textoSimple(movimiento.Tipo).toUpperCase();
+    if (!textoSimple(movimiento.Movimiento_Id) || porMovimiento[movimiento.Movimiento_Id]) throw new Error('Movimiento_Id vacío o duplicado.');
+    if (tipo === 'INGRESO') {
+      if (cantidad <= 0) throw new Error('INGRESO malformado.');
+      const modalidad = textoSimple(movimiento.Modalidad_Abastecimiento).toUpperCase();
+      const estadoHistorico = clasificarIngresoHistorico(modalidad, movimiento.Costo_Unitario);
+      const valorizable = estadoHistorico.Valorizable;
+      let costo = null;
+      if (valorizable) { costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario'); if (costo < 0) throw new Error('Costo_Unitario inválido.'); }
+      const tanda = { Movimiento_Id: movimiento.Movimiento_Id, Id_Producto: id, Orden_Ledger: orden, Cantidad_Original: cantidad,
+        Remanente: 0, Costo_Unitario: costo, Modalidad_Abastecimiento: modalidad, Valorizable: valorizable, Legado_Valorizable_Sin_Modalidad: estadoHistorico.Legado_Valorizable_Sin_Modalidad, Asignaciones: [], Coberturas: [] };
+      estado.tandas.push(tanda);
+      let disponible = cantidad;
+      while (disponible > 0 && estado.pendientes.length) {
+        const pendiente = estado.pendientes[0];
+        const usado = Math.min(disponible, pendiente.Cantidad);
+        pendiente.Cantidad -= usado;
+        const cobertura = { Salida_Movimiento_Id: pendiente.Salida_Movimiento_Id, Tanda_Movimiento_Id: tanda.Movimiento_Id,
+          Cantidad: usado, Costo_Unitario: costo, Activa: true, Orden_Ledger: orden, Revertido: 0 };
+        estado.coberturas.push(cobertura); tanda.Coberturas.push(cobertura); pendiente.Coberturas.push(cobertura);
+        disponible -= usado;
+        if (pendiente.Cantidad === 0) estado.pendientes.shift();
+      }
+      tanda.Remanente = disponible;
+      if (disponible > 0) estado.abiertas.push(tanda);
+      estado.saldo += cantidad;
+    } else if (cantidad < 0) {
+      if (['VENTA', 'CONSUMO_PROPIO', 'ROTURA_MERMA', 'CORRECCION'].indexOf(tipo) < 0) throw new Error('Salida de stock malformada.');
+      const salida = { Movimiento_Id: movimiento.Movimiento_Id, Id_Producto: id, Cantidad_Original: -cantidad, Pendiente_Original: 0,
+        Asignaciones: [], Coberturas: [], Revertido: 0, Orden_Ledger: orden, Tipo: tipo };
+      let requerido = -cantidad;
+      while (requerido > 0 && estado.abiertas.length) {
+        const tanda = estado.abiertas[0]; const usado = Math.min(requerido, tanda.Remanente);
+        const asignacion = { Salida_Movimiento_Id: salida.Movimiento_Id, Tanda_Movimiento_Id: tanda.Movimiento_Id,
+          Tipo_Salida: tipo, Cantidad: usado, Costo_Unitario: tanda.Costo_Unitario, Valorizable: tanda.Valorizable, Orden_Ledger: orden, Revertido: 0 };
+        tanda.Remanente -= usado; tanda.Asignaciones.push(asignacion); salida.Asignaciones.push(asignacion); estado.asignaciones.push(asignacion);
+        requerido -= usado;
+        if (tanda.Remanente === 0) estado.abiertas.shift();
+      }
+      if (requerido > 0) {
+        const pendiente = { Salida_Movimiento_Id: salida.Movimiento_Id, Tipo_Salida: tipo, Cantidad: requerido, Cantidad_Original: requerido, Orden_Ledger: orden, Coberturas: [] };
+        estado.pendientes.push(pendiente); estado.faltantes.push(pendiente); salida.Pendiente_Original = requerido;
+      }
+      estado.salidas[salida.Movimiento_Id] = salida; estado.saldo += cantidad;
+    } else if (tipo === 'CORRECCION') {
+      const antecedente = porMovimiento[movimiento.Referencia];
+      if (!antecedente || antecedente.Id_Producto !== id || antecedente.Cantidad >= 0 || !estado.salidas[movimiento.Referencia]) throw new Error('Referencia de corrección positiva inválida.');
+      const salida = estado.salidas[movimiento.Referencia];
+      const maximo = salida.Cantidad_Original - salida.Revertido;
+      if (cantidad > maximo) throw new Error('Cantidad de corrección excede el saldo reversible.');
+      let restante = cantidad;
+      // Primero el faltante aún abierto, luego coberturas de faltantes y por último las capas FIFO originales.
+      estado.pendientes.forEach(function (pendiente) {
+        if (restante <= 0 || pendiente.Salida_Movimiento_Id !== salida.Movimiento_Id) return;
+        const usado = Math.min(restante, pendiente.Cantidad); pendiente.Cantidad -= usado; restante -= usado;
+      });
+      estado.pendientes = estado.pendientes.filter(function (pendiente) { return pendiente.Cantidad > 0; });
+      salida.Coberturas.concat(estado.coberturas.filter(function (c) { return c.Salida_Movimiento_Id === salida.Movimiento_Id; })).forEach(function (cobertura) {
+        if (restante <= 0 || !cobertura.Activa) return;
+        const disponible = cobertura.Cantidad - cobertura.Revertido; const usado = Math.min(restante, disponible);
+        if (!usado) return; cobertura.Revertido += usado; if (cobertura.Revertido === cobertura.Cantidad) cobertura.Activa = false;
+        reabrirTanda(estado, cobertura.Tanda_Movimiento_Id, usado); restante -= usado;
+      });
+      salida.Asignaciones.forEach(function (asignacion) {
+        if (restante <= 0) return;
+        const disponible = asignacion.Cantidad - asignacion.Revertido; const usado = Math.min(restante, disponible);
+        if (!usado) return; asignacion.Revertido += usado; reabrirTanda(estado, asignacion.Tanda_Movimiento_Id, usado); restante -= usado;
+      });
+      if (restante !== 0) throw new Error('No se pudo reconstruir la corrección de forma íntegra.');
+      salida.Revertido += cantidad; estado.correcciones.push({ Movimiento_Id: movimiento.Movimiento_Id, Referencia: movimiento.Referencia, Cantidad: cantidad, Orden_Ledger: orden }); estado.saldo += cantidad;
+    } else { throw new Error('Movimiento de stock inválido.'); }
+    porMovimiento[movimiento.Movimiento_Id] = movimiento;
+  });
+  Object.keys(productos).forEach(function (id) {
+    const estado = productos[id];
+    estado.tandas.forEach(function (tanda) {
+      if (!tanda.Valorizable && tanda.Remanente > 0) estado.estadoCapitalCompleto = false;
+      if (tanda.Valorizable && tanda.Remanente > 0) {
+        const valor = tanda.Remanente * tanda.Costo_Unitario;
+        if (tanda.Modalidad_Abastecimiento === 'STOCK_PROPIO') estado.valores.stockPropio += valor;
+        if (tanda.Modalidad_Abastecimiento === 'CONSIGNACION') estado.valores.consignacion += valor;
+        if (tanda.Legado_Valorizable_Sin_Modalidad) {
+          estado.valores.legadoSinModalidad += valor;
+          estado.estadoComposicionModalidadCompleta = false;
+        }
+      }
+    });
+    estado.valores.totalConocido = estado.valores.stockPropio + estado.valores.consignacion + estado.valores.legadoSinModalidad;
+  });
+  return { productos: productos };
+}
+
+function reabrirTanda(estado, movimientoId, cantidad) {
+  const tanda = estado.tandas.filter(function (item) { return item.Movimiento_Id === movimientoId; })[0];
+  if (!tanda) throw new Error('Tanda de origen inexistente.');
+  tanda.Remanente += cantidad;
+  if (estado.abiertas.indexOf(tanda) < 0) estado.abiertas.push(tanda);
+  estado.abiertas.sort(function (a, b) { return a.Orden_Ledger - b.Orden_Ledger; });
+}
+
+function clasificarIngresoHistorico(modalidad, costoUnitario) {
+  const modalidadNormalizada = textoSimple(modalidad).toUpperCase();
+  const historicoNoValorizable = !modalidadNormalizada && esVacio(costoUnitario);
+  const legadoValorizableSinModalidad = !modalidadNormalizada && !esVacio(costoUnitario);
+  if (!historicoNoValorizable && !legadoValorizableSinModalidad && ['STOCK_PROPIO', 'CONSIGNACION'].indexOf(modalidadNormalizada) < 0) {
+    throw new Error('Modalidad_Abastecimiento inválida.');
+  }
+  return { Valorizable: !historicoNoValorizable, Legado_Valorizable_Sin_Modalidad: legadoValorizableSinModalidad };
+}
+
 // Esta lectura no inicializa el libro ni resuelve referencias contra pedidos,
 // clientes, contactos, proveedores o Finanzas. El historial de inventario
 // conserva sólo la evidencia operativa inmutable que ya vive en el ledger.
@@ -854,7 +1040,7 @@ function listarMovimientos(filtros) {
 
   const h = hojaMovimientosExistente();
   const filas = h.getDataRange().getValues();
-  const columnas = validarEncabezados(filas[0], COLS_MOVIMIENTO, HOJA_MOVIMIENTOS_STOCK);
+  const columnas = columnasMovimientos(filas[0]);
   return validarFilasMovimientos(filas, columnas, false).lista
     .filter(function (movimiento) {
       return (!idProducto || movimiento.Id_Producto === idProducto) && (!tipo || movimiento.Tipo === tipo);
@@ -879,7 +1065,7 @@ function proyectarMovimientoHistorial(movimiento) {
   return resultado;
 }
 
-function validarFilasMovimientos(filas, columnas, validarProductos) {
+function validarFilasMovimientos(filas, columnas, validarProductos, permitirHistoricoReclasificado) {
   const lista = [];
   const porId = {};
   const porClave = {};
@@ -887,7 +1073,7 @@ function validarFilasMovimientos(filas, columnas, validarProductos) {
     const fila = filas[i];
     if (fila.every(esVacio)) continue;
     const movimiento = {};
-    COLS_MOVIMIENTO.forEach(function (nombre) { movimiento[nombre] = valorColumna(fila, columnas, nombre); });
+    COLS_MOVIMIENTO.forEach(function (nombre) { movimiento[nombre] = columnas[nombre] === undefined ? '' : valorColumna(fila, columnas, nombre); });
     movimiento.Movimiento_Id = textoSimple(movimiento.Movimiento_Id);
     movimiento.Id_Producto = textoSimple(movimiento.Id_Producto);
     movimiento.Tipo = textoSimple(movimiento.Tipo).toUpperCase();
@@ -897,15 +1083,21 @@ function validarFilasMovimientos(filas, columnas, validarProductos) {
     movimiento.Id_Pedido = textoSimple(movimiento.Id_Pedido);
     movimiento.Item_Id = textoSimple(movimiento.Item_Id);
     movimiento.Clave_Idempotencia = textoSimple(movimiento.Clave_Idempotencia);
+    movimiento.Modalidad_Abastecimiento = textoSimple(movimiento.Modalidad_Abastecimiento).toUpperCase();
     if (!movimiento.Movimiento_Id || porId[movimiento.Movimiento_Id]) throw new Error('Movimiento_Id vacío o duplicado.');
     if (esVacio(movimiento.Fecha)) throw new Error('Fecha de movimiento obligatoria.');
     if (!movimiento.Id_Producto) throw new Error('Id_Producto de movimiento obligatorio.');
     if (TIPOS_MOVIMIENTO.indexOf(movimiento.Tipo) < 0) throw new Error('Tipo de movimiento inválido.');
     if (movimiento.Tipo === 'INGRESO') {
       if (movimiento.Cantidad <= 0) throw new Error('INGRESO malformado.');
-      const costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario');
-      if (costo < 0) throw new Error('Costo_Unitario inválido.');
-      movimiento.Costo_Unitario = costo;
+      const estadoHistorico = clasificarIngresoHistorico(movimiento.Modalidad_Abastecimiento, movimiento.Costo_Unitario);
+      if (estadoHistorico.Valorizable) {
+        const costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario');
+        if (costo < 0) throw new Error('Costo_Unitario inválido.');
+        movimiento.Costo_Unitario = costo;
+      } else {
+        movimiento.Costo_Unitario = '';
+      }
     } else if (movimiento.Tipo === 'CORRECCION') {
       if (!movimiento.Cantidad || !movimiento.Nota || !movimiento.Referencia ||
           !porId[movimiento.Referencia] || porId[movimiento.Referencia].Id_Producto !== movimiento.Id_Producto) {
@@ -927,8 +1119,11 @@ function validarFilasMovimientos(filas, columnas, validarProductos) {
     // Una VENTA ya asentada puede corresponder a un snapshot histórico de
     // C-03 aunque el catálogo se haya reclasificado después. Las demás
     // salidas conservan la validación de clasificación vigente de C-02.
-    if (validarProductos && movimiento.Tipo !== 'VENTA' && !obtenerProductoClasificado(movimiento.Id_Producto).Gestiona_Stock) {
-      throw new Error('Movimiento para producto sin stock gestionado.');
+    if (validarProductos) {
+      const producto = obtenerProductoClasificado(movimiento.Id_Producto);
+      if (!permitirHistoricoReclasificado && movimiento.Tipo !== 'VENTA' && !producto.Gestiona_Stock) {
+        throw new Error('Movimiento para producto sin stock gestionado.');
+      }
     }
     porId[movimiento.Movimiento_Id] = movimiento;
     lista.push(movimiento);
@@ -975,6 +1170,30 @@ function hojaProductosCatalogo() {
 
 function hojaMovimientos() {
   return hoja(HOJA_MOVIMIENTOS_STOCK, COLS_MOVIMIENTO);
+}
+
+function columnasMovimientos(encabezados) {
+  // La nueva columna se busca por nombre. Su ausencia sólo identifica filas
+  // históricas: nunca se reordena ni se completa el libro al leerlo.
+  return validarEncabezados(encabezados, COLS_MOVIMIENTO.filter(function (nombre) {
+    return nombre !== 'Modalidad_Abastecimiento';
+  }), HOJA_MOVIMIENTOS_STOCK);
+}
+
+function asegurarColumnaMovimiento(h, nombre) {
+  const encabezados = h.getRange(1, 1, 1, h.getLastColumn()).getValues()[0];
+  if (mapaEncabezados(encabezados)[nombre] !== undefined) return;
+  const columna = h.getLastColumn() + 1;
+  h.getRange(1, columna, 1, 1).setValues([[nombre]]);
+  h.getRange(1, columna, 1, 1).setFontWeight('bold');
+}
+
+function validarMovimientoNuevoParaValorizacion(movimiento) {
+  if (textoSimple(movimiento && movimiento.Tipo).toUpperCase() !== 'INGRESO') return;
+  const modalidad = textoSimple(movimiento.Modalidad_Abastecimiento).toUpperCase();
+  if (['STOCK_PROPIO', 'CONSIGNACION'].indexOf(modalidad) < 0) throw new Error('Modalidad_Abastecimiento de INGRESO inválida.');
+  const costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario');
+  if (costo < 0) throw new Error('Costo_Unitario inválido.');
 }
 
 function hojaMovimientosExistente() {

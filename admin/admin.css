@@ -446,6 +446,9 @@ button { cursor: pointer; background: none; border: none; }
 .control-check input { margin-right: 6px; accent-color: var(--accent); }
 .tabla--inventario { min-width: 700px; }
 .tabla--inventario td small { display: block; margin-top: 2px; color: var(--t3); font-size: .72rem; }
+.inventario-fila--detalle { cursor: pointer; }
+.inventario-fila--detalle:hover td { background: var(--accent-bg); }
+.inventario-fila--detalle:focus { outline: 3px solid var(--accent); outline-offset: -3px; }
 .tabla--proveedores { min-width: 620px; }
 .tabla--proveedores .tabla-accion {
   width: 1%;
@@ -461,6 +464,7 @@ button { cursor: pointer; background: none; border: none; }
 #vistaProveedores,
 #vistaInventario .inventario-grid,
 #vistaInventario .inventario-grid > .panel { min-width: 0; }
+#vistaInventario { max-width: 100%; overflow-x: hidden; }
 #vistaInventario .tabla-wrap,
 #vistaProveedores .tabla-wrap,
 .modal .tabla-wrap {
@@ -636,6 +640,21 @@ input[type="date"], input[type="number"] {
   font-size: .68rem;
   font-weight: 700;
   vertical-align: middle;
+}
+
+.inventario-aviso {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--ambar);
+  font-size: .66rem;
+  font-weight: 700;
+}
+.inventario-trazas {
+  margin: var(--s3) 0;
+  padding-left: 20px;
+  color: var(--t2);
+  font-size: .8rem;
+  line-height: 1.45;
 }
 
 .pedido-al-costo-control {

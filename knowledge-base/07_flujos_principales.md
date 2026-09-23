@@ -82,6 +82,15 @@
 3. Excluye líneas de consignación o stock propio, pedidos cancelados o entregados e históricos incompletos. No completa datos ausentes con el catálogo actual.
 4. El equipo puede consultar o copiar la lista para comprar; esa acción no cambia la operación ni el inventario. Distrosec conserva su proyección agregada compatible.
 
+## Flujo de inventario y valorización privada
+
+1. El equipo clasifica el producto con su proveedor habitual, modalidad y disponibilidad manual. Todo ingreso nuevo queda asentado con la modalidad histórica correspondiente; no se modifica un ingreso ya confirmado.
+2. En Inventario, la tabla muestra producto, proveedor, modalidad actual, saldo y valor total conocido. La fila abre un detalle de sólo lectura mediante click, Enter o Espacio.
+3. El detalle reconstruye tandas de ingreso, consumo FIFO, faltantes y correcciones desde el ledger. Usa etiquetas humanas y no muestra identificadores técnicos, datos de clientes ni cobros.
+4. Si una salida supera las capas disponibles, queda un faltante pendiente de costo. Un ingreso posterior del mismo producto lo cubre primero; el excedente recién queda como remanente de la tanda.
+5. Si hace falta rectificar una salida o ingreso, el equipo registra una corrección relacionada. La corrección no borra ni altera el antecedente, ni permite elegir manualmente una tanda.
+6. Consultar el resumen, el detalle o el historial no genera movimientos, no modifica precios, disponibilidad, catálogo, B2C, B2B ni Finanzas.
+
 ## Flujo B2B — objetivo en preparación
 
 1. Un comercio pequeño accede a la propuesta B2B.

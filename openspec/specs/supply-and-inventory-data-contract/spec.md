@@ -171,3 +171,34 @@ Después de aplicar una venta, el sistema MUST impedir modificar silenciosamente
 #### Scenario: Pedido histórico reclasificado
 - **WHEN** el responsable decide incorporar al inventario un pedido histórico sin snapshot
 - **THEN** la regularización se realiza mediante movimientos explícitos y documentados, no mediante inferencia automática del catálogo vigente
+
+### Requirement: Tandas de costo no son lotes ni una fuente de inventario independiente
+El contrato de abastecimiento MUST tratar las tandas internas como una proyección privada de costo de `Movimientos_Stock`: cada una deriva de un `INGRESO`, incluso si todo su ingreso cubre faltantes y deja remanente cero, y de su clasificación inmutable de ingreso, sin introducir lotes físicos, vencimientos, proveedor efectivo ni una entidad editable paralela. El orden canónico para FIFO MUST ser el de inserción append-only del ledger. Las filas y saldos históricos MUST conservarse sin backfill, reescritura ni movimientos retrospectivos; un saldo físico previo sin ingreso histórico requiere un ingreso inicial nuevo, explícito y real antes de poder valorarse. Esta capacidad MUST permanecer fuera del catálogo, la disponibilidad pública, precios, B2C, B2B y Finanzas.
+
+#### Scenario: Cambio posterior de modalidad del producto
+- **WHEN** cambia la modalidad actual de un producto después de un ingreso ya registrado
+- **THEN** la tanda derivada conserva la modalidad inmutable que tuvo el ingreso, sigue visible y valorizada si está abierta aun cuando el producto pase a `CONTRA_PEDIDO`, y la re-clasificación no revaloriza ni reescribe su historia
+
+#### Scenario: Ausencia de origen histórico de costo
+- **WHEN** se consulta un saldo existente sin ingreso histórico que lo origine
+- **THEN** el contrato no lo trata como tanda ni inventa un costo, lote o proveedor efectivo
+
+### Requirement: Modalidad privada obligatoria en ingresos nuevos y compatibilidad histórica explícita
+`Movimientos_Stock` MUST incorporar la columna privada `Modalidad_Abastecimiento`, identificada por encabezado. Todo `INGRESO` nuevo MUST incluir exactamente `STOCK_PROPIO` o `CONSIGNACION` y un costo unitario válido; la escritura MUST rechazar antes del append cualquier otro valor, vacío o costo insuficiente. Un `INGRESO` histórico con modalidad vacía y costo numérico, finito y no negativo MUST conservarse sin backfill como `LEGADO_VALORIZABLE_SIN_MODALIDAD`: mantiene costo y FIFO, no se atribuye a propio ni consignación y activa advertencia de composición histórica desconocida. Modalidad y costo ambos vacíos MUST conservarse como tramo no valorizable. Cualquier costo no numérico, modalidad fuera del enum u otro dato malformado MUST fallar cerradamente; la modalidad histórica MUST NOT derivarse del producto actual.
+
+#### Scenario: Ingreso histórico valorizable sin modalidad
+- **WHEN** un ingreso histórico tiene `Modalidad_Abastecimiento` vacía y costo numérico válido
+- **THEN** mantiene su identidad, costo y orden FIFO como `LEGADO_VALORIZABLE_SIN_MODALIDAD`, suma al valor físico conocido sin atribuirse a propio ni consignación y no completa su modalidad desde el producto actual
+
+#### Scenario: Ingreso histórico no valorizable
+- **WHEN** un ingreso histórico tiene `Modalidad_Abastecimiento` y `Costo_Unitario` ambos vacíos
+- **THEN** mantiene su identidad y saldo físico como tramo no valorizable, y no entra en los valores de capital conocidos ni se completa su fila
+
+#### Scenario: Ingreso nuevo inválido
+- **WHEN** se intenta registrar un ingreso nuevo con modalidad vacía, `CONTRA_PEDIDO`, otro valor distinto de los dos admitidos o costo inválido
+- **THEN** el contrato rechaza la operación antes de agregar un movimiento al ledger
+
+#### Scenario: Excepción manual ya asentada para tres ingresos legado
+- **WHEN** la lectura encuentra uno de los tres ingresos legado normalizados manualmente por el responsable con `Modalidad_Abastecimiento` igual a `STOCK_PROPIO`
+- **THEN** lo proyecta como una tanda histórica de stock propio sin modificar ninguna columna ni completar otros históricos
+- **THEN** el contrato no ofrece función, ruta, endpoint ni acción que escriba o complete modalidades históricas

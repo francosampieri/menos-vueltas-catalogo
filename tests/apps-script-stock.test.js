@@ -226,12 +226,12 @@ test('missing product rejects classification before adding supply columns', () =
 test('manual movement writer creates immutable signed movements and rejects invalid payloads atomically', () => {
   const { context, operational } = makeContext();
   const ingreso = post(context, { accion: 'registrarMovimiento', movimiento: {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 10, Costo_Unitario: 4, Referencia: 'COMPRA-SINTETICA'
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 10, Costo_Unitario: 4, Modalidad_Abastecimiento: 'STOCK_PROPIO', Referencia: 'COMPRA-SINTETICA'
   }});
   assert.equal(ingreso.ok, true);
   assert.match(ingreso.movimiento.Movimiento_Id, /^MOV-/);
   const sheet = operational.getSheetByName('Movimientos_Stock');
-  assert.deepEqual(sheet.rows[0], ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia']);
+  assert.deepEqual(sheet.rows[0], ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento']);
   assert.equal(post(context, { accion: 'registrarMovimiento', movimiento: {
     Id_Producto: 'P-1', Tipo: 'CONSUMO_PROPIO', Cantidad: -2
   }}).ok, true);
@@ -258,10 +258,10 @@ test('manual movement writer creates immutable signed movements and rejects inva
   assert.equal(correction.ok, true);
   assert.equal(sheet.rows.find(row => row[0] === ingreso.movimiento.Movimiento_Id)[4], 10);
   assert.equal(post(context, { accion: 'registrarMovimiento', movimiento: {
-    Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 2, Nota: 'Ajuste positivo', Referencia: ingreso.movimiento.Movimiento_Id
+    Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 1, Nota: 'Ajuste positivo', Referencia: correction.movimiento.Movimiento_Id
   }}).ok, true);
   assert.throws(() => context.registrarMovimiento({
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: Infinity, Costo_Unitario: 1
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: Infinity, Costo_Unitario: 1, Modalidad_Abastecimiento: 'STOCK_PROPIO'
   }), /finito/);
 });
 
@@ -271,7 +271,7 @@ test('corrections reject cross-product antecedents', () => {
     ['P-1', 'L1', 'Uno', 'PRV-A', 'STOCK_PROPIO', false],
     ['P-3', 'L3', 'Tres', 'PRV-A', 'CONSIGNACION', false]
   ] });
-  const prior = post(context, { accion: 'registrarMovimiento', movimiento: { Id_Producto: 'P-3', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1 } });
+  const prior = post(context, { accion: 'registrarMovimiento', movimiento: { Id_Producto: 'P-3', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1, Modalidad_Abastecimiento: 'CONSIGNACION' } });
   assert.equal(post(context, { accion: 'registrarMovimiento', movimiento: {
     Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 1, Nota: 'x', Referencia: prior.movimiento.Movimiento_Id
   }}).ok, false);
@@ -298,7 +298,7 @@ test('manual idempotency rejects the reserved sale namespace and compares the fu
   assert.equal(operational.getSheetByName('Movimientos_Stock'), null);
 
   const base = {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2, Costo_Unitario: 4,
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2, Costo_Unitario: 4, Modalidad_Abastecimiento: 'STOCK_PROPIO',
     Referencia: 'COMPRA-SINTETICA', Nota: 'Ingreso sintético',
     Clave_Idempotencia: 'MANUAL:INGRESO:1'
   };
@@ -337,7 +337,7 @@ test('internal sale writer is idempotent and rejects incompatible collisions', (
 test('separate ingress requests each acquire the lock and receive unique IDs', () => {
   const { context, lockDepth, lockAcquisitions } = makeContext();
   const payload = { accion: 'registrarMovimiento', movimiento: {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1, Modalidad_Abastecimiento: 'STOCK_PROPIO'
   }};
   const first = post(context, payload);
   const second = post(context, payload);
@@ -359,9 +359,9 @@ test('stock summary is algebraic, isolated, nullable for unmanaged products and 
     ['INGRESO', 10, 1], ['CONSUMO_PROPIO', -1], ['ROTURA_MERMA', -2]
   ];
   for (const [Tipo, Cantidad, Costo_Unitario] of movements) {
-    assert.equal(post(context, { accion: 'registrarMovimiento', movimiento: { Id_Producto: 'P-1', Tipo, Cantidad, Costo_Unitario } }).ok, true);
+    assert.equal(post(context, { accion: 'registrarMovimiento', movimiento: { Id_Producto: 'P-1', Tipo, Cantidad, Costo_Unitario, ...(Tipo === 'INGRESO' ? { Modalidad_Abastecimiento: 'STOCK_PROPIO' } : {}) } }).ok, true);
   }
-  const prior = post(context, { accion: 'registrarMovimiento', movimiento: { Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1 } }).movimiento;
+  const prior = post(context, { accion: 'registrarMovimiento', movimiento: { Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1, Modalidad_Abastecimiento: 'STOCK_PROPIO' } }).movimiento;
   assert.equal(post(context, { accion: 'registrarMovimiento', movimiento: { Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: -3, Nota: 'x', Referencia: prior.Movimiento_Id } }).ok, true);
   const result = get(context, { accion: 'resumenStock' });
   assert.equal(result.ok, true);
@@ -374,7 +374,7 @@ test('stock summary is algebraic, isolated, nullable for unmanaged products and 
 });
 
 test('stock summary fails closed with no partial balances for malformed ledger rows', () => {
-  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia'];
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
   const badRows = [
     ['', new Date(), 'P-1', 'INGRESO', 1, 1, '', '', '', '', ''],
     ['MOV-X', new Date(), 'P-1', 'VENTA', 1, '', '', '', '1', 'I', 'VENTA:1:I'],
@@ -400,12 +400,12 @@ test('stock summary GET fails closed without creating a missing ledger', () => {
 });
 
 test('C-04 lists the private ledger newest first with only operational identifiers', () => {
-  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia'];
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
   const { context } = makeContext({ movements: [
     headers,
-    ['MOV-1', new Date('2026-01-10T09:00:00Z'), 'P-1', 'INGRESO', 8, 12, 'COMPRA-1', '', '', '', 'MANUAL:UNO'],
-    ['MOV-2', new Date('2026-01-11T09:00:00Z'), 'P-1', 'VENTA', -2, '', '', '', 'PEDIDO-1', 'ITEM-1', 'VENTA:PEDIDO-1:ITEM-1'],
-    ['MOV-3', new Date('2026-01-12T09:00:00Z'), 'P-1', 'CONSUMO_PROPIO', -1, '', '', 'Uso interno', '', '', 'MANUAL:DOS']
+    ['MOV-1', new Date('2026-01-10T09:00:00Z'), 'P-1', 'INGRESO', 8, 12, 'COMPRA-1', '', '', '', 'MANUAL:UNO', 'STOCK_PROPIO'],
+    ['MOV-2', new Date('2026-01-11T09:00:00Z'), 'P-1', 'VENTA', -2, '', '', '', 'PEDIDO-1', 'ITEM-1', 'VENTA:PEDIDO-1:ITEM-1', ''],
+    ['MOV-3', new Date('2026-01-12T09:00:00Z'), 'P-1', 'CONSUMO_PROPIO', -1, '', '', 'Uso interno', '', '', 'MANUAL:DOS', '']
   ] });
   // El historial no puede resolver nada fuera del libro mayor, aun cuando
   // esas lecturas privadas existan en el mismo proyecto.
@@ -437,12 +437,12 @@ test('C-04 lists the private ledger newest first with only operational identifie
 });
 
 test('C-04 filters private history without creating or partially returning a ledger', () => {
-  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia'];
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
   const { context, operational } = makeContext({ movements: [
     headers,
-    ['MOV-1', new Date('2026-01-10T09:00:00Z'), 'P-1', 'INGRESO', 2, 3, '', '', '', '', 'MANUAL:UNO'],
-    ['MOV-2', new Date('2026-01-11T09:00:00Z'), 'P-1', 'ROTURA_MERMA', -1, '', '', '', '', '', 'MANUAL:DOS'],
-    ['MOV-3', new Date('2026-01-12T09:00:00Z'), 'P-2', 'CONSUMO_PROPIO', -1, '', '', '', '', '', 'MANUAL:TRES']
+    ['MOV-1', new Date('2026-01-10T09:00:00Z'), 'P-1', 'INGRESO', 2, 3, '', '', '', '', 'MANUAL:UNO', 'STOCK_PROPIO'],
+    ['MOV-2', new Date('2026-01-11T09:00:00Z'), 'P-1', 'ROTURA_MERMA', -1, '', '', '', '', '', 'MANUAL:DOS', ''],
+    ['MOV-3', new Date('2026-01-12T09:00:00Z'), 'P-2', 'CONSUMO_PROPIO', -1, '', '', '', '', '', 'MANUAL:TRES', '']
   ] });
 
   assert.deepEqual(get(context, { accion: 'listarMovimientos', Id_Producto: 'P-1' }).movimientos.map(m => m.Movimiento_Id), ['MOV-2', 'MOV-1']);
@@ -461,7 +461,7 @@ test('C-04 filters private history without creating or partially returning a led
 test('serialized first writes initialize the ledger exactly once', () => {
   const { context, operational, lockAcquisitions, maxLockDepth } = makeContext();
   const payload = { accion: 'registrarMovimiento', movimiento: {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1, Modalidad_Abastecimiento: 'STOCK_PROPIO'
   }};
   const first = post(context, payload);
   const second = post(context, payload);
@@ -722,7 +722,7 @@ test('public writers lock exactly once while already-locked primitives never rea
   });
   assert.equal(lockAcquisitions(), 3);
   context.registrarMovimiento({
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 1, Modalidad_Abastecimiento: 'STOCK_PROPIO'
   });
   assert.equal(lockAcquisitions(), 4);
   context.registrarVentaInterna({
@@ -746,4 +746,149 @@ test('public writers lock exactly once while already-locked primitives never rea
   }
   assert.equal(lockAcquisitions(), 7);
   assert.equal(maxLockDepth(), 1);
+});
+
+test('C-08 projects FIFO layers in append-only order and keeps a zero remainder ingress in history', () => {
+  const { context } = makeContext();
+  const projection = context.proyectarValorizacionLedger([
+    { Movimiento_Id: 'I-1', Fecha: '2030-02-02', Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2, Costo_Unitario: 10, Modalidad_Abastecimiento: 'STOCK_PROPIO' },
+    { Movimiento_Id: 'I-2', Fecha: '2030-01-01', Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 3, Costo_Unitario: 20, Modalidad_Abastecimiento: 'CONSIGNACION' },
+    { Movimiento_Id: 'S-1', Fecha: '2030-03-01', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -4, Id_Pedido: '1', Item_Id: '1', Clave_Idempotencia: 'VENTA:1:1' },
+    { Movimiento_Id: 'S-2', Fecha: '2030-03-02', Id_Producto: 'P-2', Tipo: 'VENTA', Cantidad: -2, Id_Pedido: '2', Item_Id: '2', Clave_Idempotencia: 'VENTA:2:2' },
+    { Movimiento_Id: 'I-3', Fecha: '2030-03-03', Id_Producto: 'P-2', Tipo: 'INGRESO', Cantidad: 2, Costo_Unitario: 7, Modalidad_Abastecimiento: 'STOCK_PROPIO' }
+  ]);
+  const p1 = projection.productos['P-1'];
+  const p2 = projection.productos['P-2'];
+  assert.deepEqual(JSON.parse(JSON.stringify(p1.tandas.map(t => [t.Movimiento_Id, t.Remanente]))), [['I-1', 0], ['I-2', 1]]);
+  assert.equal(p1.valores.consignacion, 20);
+  assert.equal(p1.valores.stockPropio, 0);
+  assert.equal(p2.tandas.find(t => t.Movimiento_Id === 'I-3').Remanente, 0);
+  assert.equal(p2.coberturas[0].Salida_Movimiento_Id, 'S-2');
+});
+
+test('C-08 marks historical incomplete layers and rejects invalid new ingresses and invalid reversals', () => {
+  const { context } = makeContext();
+  const projection = context.proyectarValorizacionLedger([
+    { Movimiento_Id: 'H-1', Fecha: '2030-01-01', Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2, Costo_Unitario: '', Modalidad_Abastecimiento: '' },
+    { Movimiento_Id: 'I-1', Fecha: '2030-01-02', Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 5, Modalidad_Abastecimiento: 'STOCK_PROPIO' }
+  ]);
+  assert.equal(projection.productos['P-1'].estadoCapitalCompleto, false);
+  assert.equal(projection.productos['P-1'].valores.totalConocido, 5);
+  assert.throws(() => context.validarMovimientoNuevoParaValorizacion({ Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 5, Modalidad_Abastecimiento: '' }), /Modalidad/);
+  assert.throws(() => context.proyectarValorizacionLedger([
+    { Movimiento_Id: 'S-1', Fecha: '2030-01-01', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -1, Id_Pedido: '1', Item_Id: '1', Clave_Idempotencia: 'VENTA:1:1' },
+    { Movimiento_Id: 'C-1', Fecha: '2030-01-02', Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 2, Referencia: 'S-1', Nota: 'invalida' }
+  ]), /reversible/);
+});
+
+test('C-08 reverses a covered shortage before original FIFO layers and rejects exhausted references', () => {
+  const { context } = makeContext();
+  const projection = context.proyectarValorizacionLedger([
+    { Movimiento_Id: 'I-1', Fecha: '2030-01-01', Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2, Costo_Unitario: 10, Modalidad_Abastecimiento: 'STOCK_PROPIO' },
+    { Movimiento_Id: 'S-1', Fecha: '2030-01-02', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -4, Id_Pedido: '1', Item_Id: '1', Clave_Idempotencia: 'VENTA:1:1' },
+    { Movimiento_Id: 'I-2', Fecha: '2030-01-03', Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2, Costo_Unitario: 20, Modalidad_Abastecimiento: 'CONSIGNACION' },
+    { Movimiento_Id: 'C-1', Fecha: '2030-01-04', Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 3, Referencia: 'S-1', Nota: 'reversión parcial' },
+    { Movimiento_Id: 'C-2', Fecha: '2030-01-05', Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 1, Referencia: 'S-1', Nota: 'reversión final' }
+  ]);
+  const p1 = projection.productos['P-1'];
+  assert.equal(p1.tandas.find(t => t.Movimiento_Id === 'I-1').Remanente, 2);
+  assert.equal(p1.tandas.find(t => t.Movimiento_Id === 'I-2').Remanente, 2);
+  assert.equal(p1.valores.stockPropio, 20);
+  assert.equal(p1.valores.consignacion, 40);
+  assert.throws(() => context.proyectarValorizacionLedger([
+    { Movimiento_Id: 'S-1', Fecha: '2030-01-01', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -1, Id_Pedido: '1', Item_Id: '1', Clave_Idempotencia: 'VENTA:1:1' },
+    { Movimiento_Id: 'C-1', Fecha: '2030-01-02', Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 1, Referencia: 'S-1', Nota: 'ok' },
+    { Movimiento_Id: 'C-2', Fecha: '2030-01-03', Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 1, Referencia: 'S-1', Nota: 'doble' }
+  ]), /reversible/);
+});
+
+test('C-08 writes the private ingress modality only for new ingresses and keeps legacy rows unmodified', () => {
+  const { context, operational } = makeContext({ movements: [
+    ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia'],
+    ['H-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 1, '', '', '', '', '', 'HIST']
+  ] });
+  const before = JSON.stringify(operational.getSheetByName('Movimientos_Stock').rows[1]);
+  const ok = post(context, { accion: 'registrarMovimiento', movimiento: {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 3
+  }});
+  assert.equal(ok.ok, true);
+  assert.equal(ok.movimiento.Modalidad_Abastecimiento, 'STOCK_PROPIO');
+  const sheet = operational.getSheetByName('Movimientos_Stock');
+  assert.equal(JSON.stringify(sheet.rows[1].slice(0, 11)), before);
+  assert.equal(sheet.rows[0].includes('Modalidad_Abastecimiento'), true);
+});
+
+test('C-08 exposes valuation as a read-only private query and fails closed on malformed ledger data', () => {
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
+  const valid = makeContext({ movements: [headers, ['I-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 2, 4, '', '', '', '', 'M-1', 'STOCK_PROPIO']] });
+  const before = JSON.stringify(valid.operational.getSheetByName('Movimientos_Stock').rows);
+  const read = get(valid.context, { accion: 'valorizacionStock' });
+  assert.equal(read.ok, true);
+  assert.equal(read.productos.find(producto => producto.Id_Producto === 'P-1').Capital_Stock_Propio, 8);
+  assert.equal(JSON.stringify(valid.operational.getSheetByName('Movimientos_Stock').rows), before);
+  assert.equal(valid.operational.insertSheetCalls, 0);
+
+  const invalid = makeContext({ movements: [headers, ['I-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 2, 4, '', '', '', '', 'M-1', 'OTRA']] });
+  const rejected = get(invalid.context, { accion: 'valorizacionStock' });
+  assert.equal(rejected.ok, false);
+  assert.equal('productos' in rejected, false);
+  assert.equal(invalid.operational.insertSheetCalls, 0);
+});
+
+test('C-08 derives ingress modality from current classification, rejects a mismatched client value and reads historical layers after reclassification', () => {
+  const { context, operational } = makeContext();
+  const ingreso = post(context, { accion: 'registrarMovimiento', movimiento: {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2, Costo_Unitario: 8
+  }});
+  assert.equal(ingreso.ok, true);
+  assert.equal(ingreso.movimiento.Modalidad_Abastecimiento, 'STOCK_PROPIO');
+  const before = operational.getSheetByName('Movimientos_Stock').rows.length;
+  assert.equal(post(context, { accion: 'registrarMovimiento', movimiento: {
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 1, Costo_Unitario: 8, Modalidad_Abastecimiento: 'CONSIGNACION'
+  }}).ok, false);
+  assert.equal(operational.getSheetByName('Movimientos_Stock').rows.length, before);
+  assert.equal(post(context, { accion: 'clasificarProducto', clasificacion: {
+    Id_Producto: 'P-1', Id_Proveedor: 'PRV-A', Modalidad_Abastecimiento: 'CONTRA_PEDIDO', Sin_Stock: false
+  }}).ok, true);
+  const valuacion = get(context, { accion: 'valorizacionStock' });
+  assert.equal(valuacion.ok, true);
+  const fila = valuacion.productos.find(producto => producto.Id_Producto === 'P-1');
+  assert.equal(fila.Modalidad_Abastecimiento, 'CONTRA_PEDIDO');
+  assert.equal(fila.Capital_Stock_Propio, 16);
+  assert.equal(fila.Gestiona_Stock, true);
+});
+
+test('C-08 values a historical ingress without modality, keeps its FIFO cost and leaves composition unknown', () => {
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
+  const compatible = makeContext({ movements: [headers,
+    ['H-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 2, 4, '', '', '', '', 'H-1', ''],
+    ['I-1', new Date('2030-01-02T00:00:00Z'), 'P-1', 'INGRESO', 1, 10, '', '', '', '', 'I-1', 'STOCK_PROPIO'],
+    ['I-2', new Date('2030-01-03T00:00:00Z'), 'P-1', 'INGRESO', 1, 6, '', '', '', '', 'I-2', 'CONSIGNACION'],
+    ['S-1', new Date('2030-01-04T00:00:00Z'), 'P-1', 'VENTA', -1, '', '', '', '1', '1', 'VENTA:1:1', '']
+  ] });
+  const respuesta = get(compatible.context, { accion: 'valorizacionStock' });
+  assert.equal(respuesta.ok, true);
+  const fila = respuesta.productos.find(producto => producto.Id_Producto === 'P-1');
+  assert.equal(fila.Capital_Stock_Propio, 10);
+  assert.equal(fila.Valor_Consignacion, 6);
+  assert.equal(fila.Valor_Legado_Sin_Modalidad, 4);
+  assert.equal(fila.Valor_Fisico_Conocido, 20);
+  assert.equal(fila.Capital_Total_Completo, true);
+  assert.equal(fila.Composicion_Modalidad_Completa, false);
+  const tanda = fila.Tandas.find(item => item.Movimiento_Id === 'H-1');
+  assert.equal(tanda.Modalidad_Abastecimiento, '');
+  assert.equal(tanda.Valorizable, true);
+  assert.equal(tanda.Remanente, 1);
+  assert.equal(fila.Asignaciones[0].Costo_Unitario, 4);
+
+  const noValorizable = makeContext({ movements: [headers, ['H-2', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 1, '', '', '', '', '', 'H-2', '']] });
+  const noValorizableRespuesta = get(noValorizable.context, { accion: 'valorizacionStock' });
+  assert.equal(noValorizableRespuesta.ok, true);
+  assert.equal(noValorizableRespuesta.productos.find(producto => producto.Id_Producto === 'P-1').Capital_Total_Completo, false);
+  for (const [costo, modalidad] of [['no-numérico', ''], ['', 'STOCK_PROPIO'], [4, 'OTRA']]) {
+    const contexto = makeContext({ movements: [headers, ['H-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 1, costo, '', '', '', '', 'H-1', modalidad]] });
+    const invalida = get(contexto.context, { accion: 'valorizacionStock' });
+    assert.equal(invalida.ok, false);
+    assert.equal('productos' in invalida, false);
+  }
 });
