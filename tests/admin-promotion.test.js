@@ -67,6 +67,32 @@ test('inventory stock filter keeps zero and negative managed balances, while all
   );
 });
 
+test('C-08 keeps open historical layers visible after a current contra-pedido reclassification', () => {
+  const rows = admin.filasInventarioValorizado([
+    {
+      Id_Producto: 'P-1', Modalidad_Abastecimiento: 'CONTRA_PEDIDO', Gestiona_Stock: false,
+      Saldo: 3, Capital_Stock_Propio: 40, Valor_Consignacion: 10,
+      Valor_Fisico_Conocido: 50, Capital_Total_Completo: false,
+      Tramo_No_Valorizable: true, Faltante_Pendiente_Costo: 2,
+      Tandas: [{ Remanente: 3 }]
+    }
+  ], [{ id: 'P-1', n: 'Producto de prueba' }]);
+  assert.deepEqual(rows, [{
+    id: 'P-1', producto: 'Producto de prueba', saldo: 3, modalidad: 'CONTRA_PEDIDO',
+    stockPropio: 40, consignacion: 10, totalConocido: 50,
+    capitalCompleto: false, tramoNoValorizable: true, faltante: 2
+  }]);
+});
+
+test('C-08 does not let the client select an ingress modality', () => {
+  const markup = fs.readFileSync(path.join(__dirname, '..', 'admin', 'index.html'), 'utf8');
+  const payload = admin.construirMovimientoManual({
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '2', Costo_Unitario: '7', Modalidad_Abastecimiento: 'CONSIGNACION'
+  }, 'MANUAL:ingreso');
+  assert.equal('Modalidad_Abastecimiento' in payload, false);
+  assert.doesNotMatch(markup, /id="movimientoModalidad"/);
+});
+
 test('supplier rows show the phone or a safe fallback before the rightmost edit action', () => {
   const conTelefono = admin.filaProveedor({
     Nombre: 'Proveedor de prueba', Id_Proveedor: 'PRV-TEST', Telefono: 'tel-prueba', Activo: true
@@ -390,7 +416,7 @@ test('C-04 keeps physical balance separate from manual availability and channel 
 
 test('C-04 freezes a manual movement intent and reserves sales for delivered orders', () => {
   const ingreso = admin.construirMovimientoManual({
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: 'Ingreso'
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: 'Ingreso'
   }, 'MANUAL:uno');
   assert.deepEqual(ingreso, {
     Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 3, Costo_Unitario: 4,
@@ -410,13 +436,13 @@ test('C-04 freezes a manual movement intent and reserves sales for delivered ord
   }, 'MANUAL:venta'), /VENTA/);
 
   const primero = admin.prepararIntentoMovimientoManual(null, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: ''
   }, () => 'uno');
   const reintento = admin.prepararIntentoMovimientoManual(primero, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '99', Costo_Unitario: '99', Nota: 'Cambiado'
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '99', Costo_Unitario: '99', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: 'Cambiado'
   }, () => 'dos');
   const nuevaIntencion = admin.prepararIntentoMovimientoManual(null, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: ''
   }, () => 'tres');
   assert.strictEqual(reintento, primero);
   assert.equal(primero.payload.Clave_Idempotencia, 'MANUAL:uno');
@@ -427,7 +453,7 @@ test('C-04 freezes a manual movement intent and reserves sales for delivered ord
 
 test('C-04 releases a manual intent after an explicit Apps Script rejection', () => {
   const pendiente = admin.prepararIntentoMovimientoManual(null, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: ''
   }, () => 'original');
   const rechazo = admin.crearErrorRechazoConcluyente('El saldo no permite el movimiento.');
 
@@ -436,7 +462,7 @@ test('C-04 releases a manual intent after an explicit Apps Script rejection', ()
 
   const corregido = admin.prepararIntentoMovimientoManual(
     admin.resolverFalloMovimientoPendiente(pendiente, rechazo),
-    { Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '2', Costo_Unitario: '4', Nota: 'Corregido' },
+    { Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '2', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: 'Corregido' },
     () => 'corregido'
   );
   assert.equal(corregido.payload.Clave_Idempotencia, 'MANUAL:corregido');
@@ -445,7 +471,7 @@ test('C-04 releases a manual intent after an explicit Apps Script rejection', ()
 
 test('C-04 retains the exact manual payload and key after an uncertain failure', () => {
   const pendiente = admin.prepararIntentoMovimientoManual(null, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: ''
   }, () => 'original');
 
   const trasTimeout = admin.resolverFalloMovimientoPendiente(

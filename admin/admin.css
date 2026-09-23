@@ -638,6 +638,21 @@ input[type="date"], input[type="number"] {
   vertical-align: middle;
 }
 
+.inventario-aviso {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--ambar);
+  font-size: .66rem;
+  font-weight: 700;
+}
+.inventario-trazas {
+  margin: var(--s3) 0;
+  padding-left: 20px;
+  color: var(--t2);
+  font-size: .8rem;
+  line-height: 1.45;
+}
+
 .pedido-al-costo-control {
   display: inline-flex;
   align-items: center;

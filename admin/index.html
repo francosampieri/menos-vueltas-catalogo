@@ -140,7 +140,7 @@
       </div>
       <div class="tabla-wrap">
         <table class="tabla tabla--inventario">
-          <thead><tr><th>Producto</th><th>Proveedor habitual</th><th>Modalidad</th><th>Gestiona stock</th><th class="num">Saldo</th><th>Sin stock</th></tr></thead>
+          <thead><tr><th>Producto</th><th>Proveedor habitual</th><th>Modalidad actual</th><th class="num">Saldo</th><th class="num">Capital propio</th><th class="num">Consignación</th><th class="num">Valor físico conocido</th><th>Estado de costo</th><th class="tabla-accion"></th></tr></thead>
           <tbody id="stockTbody"></tbody>
         </table>
       </div>
@@ -529,6 +529,20 @@
     </div>
     <p class="inventario-estado" id="movimientoEstado" role="status" aria-live="polite"></p>
   </form>
+</div>
+
+<!-- ═══════════ MODAL: VALORIZACIÓN DE INVENTARIO ═══════════ -->
+<div class="modal" id="modalValorizacion" hidden>
+  <div class="modal-caja modal-caja--ancha">
+    <button type="button" class="modal-x" onclick="cerrarModalValorizacion()" aria-label="Cerrar">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2 id="valorizacionTitulo">Detalle de valorización</h2>
+    <p class="modal-descripcion">Consulta de sólo lectura derivada del ledger. No crea, selecciona ni edita tandas.</p>
+    <div class="tabla-wrap"><table class="tabla tabla--inventario"><thead><tr><th>Ingreso origen</th><th>Modalidad histórica</th><th class="num">Cantidad original</th><th class="num">Remanente</th><th class="num">Costo histórico</th></tr></thead><tbody id="valorizacionTandas"></tbody></table></div>
+    <p class="modal-descripcion">Trazabilidad automática FIFO</p><ul class="inventario-trazas" id="valorizacionTrazas"></ul>
+    <div class="modal-acciones"><button type="button" class="btn" onclick="cerrarModalValorizacion()">Cerrar</button></div>
+  </div>
 </div>
 
 <!-- ═══════════ MODAL: HISTORIAL DE STOCK ═══════════ -->

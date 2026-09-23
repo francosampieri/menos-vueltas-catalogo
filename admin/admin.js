@@ -237,7 +237,20 @@ function filtrarResumenStock(filas, filtro = 'gestionado') {
   const resumen = (filas || []).map(fila => ({ ...fila }));
   return filtro === 'todos'
     ? resumen
-    : resumen.filter(fila => fila.Gestiona_Stock === true);
+    : resumen.filter(fila => fila.Gestiona_Stock === true || (fila.Tandas || []).some(tanda => Number(tanda.Remanente) > 0));
+}
+
+function filasInventarioValorizado(resumen, productos) {
+  return filtrarResumenStock(resumen, 'gestionado').map(fila => {
+    const producto = productoOperativoPorId(fila.Id_Producto, productos);
+    return {
+      id: String(fila.Id_Producto), producto: producto ? producto.n : String(fila.Id_Producto),
+      saldo: Number(fila.Saldo), modalidad: String(fila.Modalidad_Abastecimiento || 'CONTRA_PEDIDO'),
+      stockPropio: Number(fila.Capital_Stock_Propio || 0), consignacion: Number(fila.Valor_Consignacion || 0),
+      totalConocido: Number(fila.Valor_Fisico_Conocido || 0), capitalCompleto: fila.Capital_Total_Completo !== false,
+      tramoNoValorizable: fila.Tramo_No_Valorizable === true, faltante: Number(fila.Faltante_Pendiente_Costo || 0)
+    };
+  });
 }
 
 function construirMovimientoManual(campos, clave) {
@@ -770,6 +783,11 @@ const API = {
     return respuesta.productos || [];
   },
 
+  async valorizacionStock() {
+    const respuesta = await this.leerOperativo('valorizacionStock');
+    return respuesta.productos || [];
+  },
+
   async registrarMovimiento(movimiento) {
     const respuesta = await this.escribirOperativo('registrarMovimiento', { movimiento });
     return respuesta.movimiento;
@@ -892,7 +910,7 @@ if (typeof module === 'object' && module.exports) {
     calcularPedido, modoEnvioPedido, paraGuardar, esPedidoAlCosto,
     calcularMetricas, calcularEstadisticasClientes, incorporarPedidoGuardado,
     actualizarPedidoTrasGuardado, construirProveedorParaGuardar,
-    construirClasificacionProducto, resumenInventarioDelCanal, filtrarResumenStock, filaProveedor,
+    construirClasificacionProducto, resumenInventarioDelCanal, filtrarResumenStock, filasInventarioValorizado, filaProveedor,
     construirMovimientoManual, prepararIntentoMovimientoManual,
     crearErrorRechazoConcluyente, resolverFalloMovimientoPendiente,
     productosConStockGestionado, filasHistorialOperativo,
@@ -1227,15 +1245,42 @@ function pintarStock() {
   const filas = filtrarResumenStock(resumenInventarioDelCanal(RESUMEN_STOCK, productos), filtro);
   cuerpo.innerHTML = filas.map(fila => {
     const producto = productoOperativoPorId(fila.Id_Producto, productos);
+    const detalle = encodeURIComponent(String(fila.Id_Producto));
+    const incompleto = fila.Capital_Total_Completo === false;
     return `<tr><td>${esc(producto?.n || fila.Id_Producto)}</td>` +
       `<td>${esc(nombreProveedor(fila.Id_Proveedor))}</td>` +
       `<td>${esc(fila.Modalidad_Abastecimiento || 'CONTRA_PEDIDO')}</td>` +
-      `<td>${fila.Gestiona_Stock ? 'Sí' : 'No'}</td>` +
       `<td class="num">${fila.Saldo === null ? 'No aplica' : esc(fila.Saldo)}</td>` +
-      `<td>${fila.Sin_Stock ? 'Sí (manual)' : 'No'}</td></tr>`;
+      `<td class="num">${money(fila.Capital_Stock_Propio || 0)}</td>` +
+      `<td class="num">${money(fila.Valor_Consignacion || 0)}</td>` +
+      `<td class="num">${money(fila.Valor_Fisico_Conocido || 0)}${incompleto ? ' <span class="inventario-aviso">Incompleto</span>' : ''}</td>` +
+      `<td>${Number(fila.Faltante_Pendiente_Costo || 0) || '—'}${fila.Tramo_No_Valorizable ? ' · sin origen de costo histórico' : ''}</td>` +
+      `<td class="tabla-accion"><button class="btn btn--peque" type="button" onclick="abrirModalValorizacionCodificada('${detalle}')">Detalle</button></td></tr>`;
   }).join('');
   vacio.hidden = filas.length !== 0;
 }
+
+function abrirModalValorizacionCodificada(idCodificado) { abrirModalValorizacion(decodeURIComponent(idCodificado)); }
+function abrirModalValorizacion(idProducto) {
+  const fila = RESUMEN_STOCK.find(item => String(item.Id_Producto) === String(idProducto));
+  if (!fila) return;
+  const producto = productoOperativoPorId(idProducto);
+  document.getElementById('valorizacionTitulo').textContent = producto?.n || String(idProducto);
+  document.getElementById('valorizacionTandas').innerHTML = (fila.Tandas || []).map(tanda =>
+    `<tr><td>${esc(tanda.Movimiento_Id)}</td><td>${esc(tanda.Modalidad_Abastecimiento || 'Sin origen de costo histórico')}</td><td class="num">${esc(tanda.Cantidad_Original)}</td><td class="num">${esc(tanda.Remanente)}</td><td class="num">${tanda.Valorizable ? money(tanda.Costo_Unitario) : 'No valorizable'}</td></tr>`
+  ).join('');
+  const trazas = []
+    .concat((fila.Asignaciones || []).map(item => ({ ...item, etiqueta: `Salida ${item.Salida_Movimiento_Id} consumió ${item.Cantidad} de ${item.Tanda_Movimiento_Id}${item.Valorizable ? ` a ${money(item.Costo_Unitario)}` : ' sin origen de costo histórico'}` })))
+    .concat((fila.Coberturas || []).map(item => ({ ...item, etiqueta: `Ingreso ${item.Tanda_Movimiento_Id} cubrió ${item.Cantidad} pendientes de ${item.Salida_Movimiento_Id}${item.Costo_Unitario === null ? '' : ` a ${money(item.Costo_Unitario)}` }` })))
+    .concat((fila.Correcciones || []).map(item => ({ ...item, etiqueta: `Corrección ${item.Movimiento_Id} revirtió ${item.Cantidad} de ${item.Referencia}` })))
+    .concat((fila.Faltantes || []).map(item => ({ ...item, etiqueta: item.Cantidad > 0 ? `Faltante pendiente de ${item.Cantidad} en ${item.Salida_Movimiento_Id}` : `Faltante de ${item.Cantidad_Original} en ${item.Salida_Movimiento_Id} cubierto posteriormente` })))
+    .sort((a, b) => Number(a.Orden_Ledger || 0) - Number(b.Orden_Ledger || 0));
+  document.getElementById('valorizacionTrazas').innerHTML = trazas.length
+    ? trazas.map(item => `<li>${esc(item.etiqueta)}</li>`).join('')
+    : '<li>Sin asignaciones ni faltantes para este producto.</li>';
+  document.getElementById('modalValorizacion').hidden = false;
+}
+function cerrarModalValorizacion() { document.getElementById('modalValorizacion').hidden = true; }
 
 function abrirModalClasificacion() {
   pintarSelectoresInventario();
@@ -1381,7 +1426,7 @@ async function recargarProveedores() {
 async function recargarInventario() {
   try {
     const [proveedores, resumen, movimientos] = await Promise.all([
-      API.listarProveedores(), API.resumenStock(), API.listarMovimientos()
+      API.listarProveedores(), API.valorizacionStock(), API.listarMovimientos()
     ]);
     PROVEEDORES = proveedores;
     RESUMEN_STOCK = resumen;
