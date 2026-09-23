@@ -247,7 +247,8 @@ function filasInventarioValorizado(resumen, productos) {
       id: String(fila.Id_Producto), producto: producto ? producto.n : String(fila.Id_Producto),
       saldo: Number(fila.Saldo), modalidad: String(fila.Modalidad_Abastecimiento || 'CONTRA_PEDIDO'),
       stockPropio: Number(fila.Capital_Stock_Propio || 0), consignacion: Number(fila.Valor_Consignacion || 0),
-      totalConocido: Number(fila.Valor_Fisico_Conocido || 0), capitalCompleto: fila.Capital_Total_Completo !== false,
+      legadoSinModalidad: Number(fila.Valor_Legado_Sin_Modalidad || 0), totalConocido: Number(fila.Valor_Fisico_Conocido || 0), capitalCompleto: fila.Capital_Total_Completo !== false,
+      composicionModalidadCompleta: fila.Composicion_Modalidad_Completa !== false,
       tramoNoValorizable: fila.Tramo_No_Valorizable === true, faltante: Number(fila.Faltante_Pendiente_Costo || 0)
     };
   });
@@ -1247,13 +1248,14 @@ function pintarStock() {
     const producto = productoOperativoPorId(fila.Id_Producto, productos);
     const detalle = encodeURIComponent(String(fila.Id_Producto));
     const incompleto = fila.Capital_Total_Completo === false;
+    const composicionIncompleta = fila.Composicion_Modalidad_Completa === false;
     return `<tr><td>${esc(producto?.n || fila.Id_Producto)}</td>` +
       `<td>${esc(nombreProveedor(fila.Id_Proveedor))}</td>` +
       `<td>${esc(fila.Modalidad_Abastecimiento || 'CONTRA_PEDIDO')}</td>` +
       `<td class="num">${fila.Saldo === null ? 'No aplica' : esc(fila.Saldo)}</td>` +
       `<td class="num">${money(fila.Capital_Stock_Propio || 0)}</td>` +
       `<td class="num">${money(fila.Valor_Consignacion || 0)}</td>` +
-      `<td class="num">${money(fila.Valor_Fisico_Conocido || 0)}${incompleto ? ' <span class="inventario-aviso">Incompleto</span>' : ''}</td>` +
+      `<td class="num">${money(fila.Valor_Fisico_Conocido || 0)}${incompleto ? ' <span class="inventario-aviso">Incompleto</span>' : ''}${composicionIncompleta ? ' <span class="inventario-aviso">composición por modalidad histórica incompleta</span>' : ''}</td>` +
       `<td>${Number(fila.Faltante_Pendiente_Costo || 0) || '—'}${fila.Tramo_No_Valorizable ? ' · sin origen de costo histórico' : ''}</td>` +
       `<td class="tabla-accion"><button class="btn btn--peque" type="button" onclick="abrirModalValorizacionCodificada('${detalle}')">Detalle</button></td></tr>`;
   }).join('');
@@ -1267,7 +1269,7 @@ function abrirModalValorizacion(idProducto) {
   const producto = productoOperativoPorId(idProducto);
   document.getElementById('valorizacionTitulo').textContent = producto?.n || String(idProducto);
   document.getElementById('valorizacionTandas').innerHTML = (fila.Tandas || []).map(tanda =>
-    `<tr><td>${esc(tanda.Movimiento_Id)}</td><td>${esc(tanda.Modalidad_Abastecimiento || 'Sin origen de costo histórico')}</td><td class="num">${esc(tanda.Cantidad_Original)}</td><td class="num">${esc(tanda.Remanente)}</td><td class="num">${tanda.Valorizable ? money(tanda.Costo_Unitario) : 'No valorizable'}</td></tr>`
+    `<tr><td>${esc(tanda.Movimiento_Id)}</td><td>${esc(tanda.Modalidad_Abastecimiento || (tanda.Valorizable ? 'Legado valorizable sin modalidad histórica' : 'Sin origen de costo histórico'))}</td><td class="num">${esc(tanda.Cantidad_Original)}</td><td class="num">${esc(tanda.Remanente)}</td><td class="num">${tanda.Valorizable ? money(tanda.Costo_Unitario) : 'No valorizable'}</td></tr>`
   ).join('');
   const trazas = []
     .concat((fila.Asignaciones || []).map(item => ({ ...item, etiqueta: `Salida ${item.Salida_Movimiento_Id} consumió ${item.Cantidad} de ${item.Tanda_Movimiento_Id}${item.Valorizable ? ` a ${money(item.Costo_Unitario)}` : ' sin origen de costo histórico'}` })))

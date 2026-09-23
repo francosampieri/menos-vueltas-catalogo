@@ -891,8 +891,10 @@ function valorizacionStock() {
       Saldo: estado.saldo,
       Capital_Stock_Propio: estado.valores.stockPropio,
       Valor_Consignacion: estado.valores.consignacion,
+      Valor_Legado_Sin_Modalidad: estado.valores.legadoSinModalidad,
       Valor_Fisico_Conocido: estado.valores.totalConocido,
       Capital_Total_Completo: estado.estadoCapitalCompleto,
+      Composicion_Modalidad_Completa: estado.estadoComposicionModalidadCompleta,
       Tramo_No_Valorizable: estado.tandas.some(function (t) { return !t.Valorizable && t.Remanente > 0; }),
       Faltante_Pendiente_Costo: estado.pendientes.reduce(function (total, pendiente) { return total + pendiente.Cantidad; }, 0),
       Tandas: estado.tandas,
@@ -906,7 +908,7 @@ function valorizacionStock() {
 
 function crearEstadoValorizacion(idProducto) {
   return { Id_Producto: idProducto, saldo: 0, tandas: [], abiertas: [], pendientes: [], faltantes: [],
-    salidas: {}, asignaciones: [], coberturas: [], correcciones: [], valores: { stockPropio: 0, consignacion: 0, totalConocido: 0 }, estadoCapitalCompleto: true };
+    salidas: {}, asignaciones: [], coberturas: [], correcciones: [], valores: { stockPropio: 0, consignacion: 0, legadoSinModalidad: 0, totalConocido: 0 }, estadoCapitalCompleto: true, estadoComposicionModalidadCompleta: true };
 }
 
 function proyectarValorizacionLedger(ledger) {
@@ -922,14 +924,12 @@ function proyectarValorizacionLedger(ledger) {
     if (tipo === 'INGRESO') {
       if (cantidad <= 0) throw new Error('INGRESO malformado.');
       const modalidad = textoSimple(movimiento.Modalidad_Abastecimiento).toUpperCase();
-      const faltaCosto = esVacio(movimiento.Costo_Unitario);
-      const historicoNoValorizable = !modalidad && faltaCosto;
-      if (!historicoNoValorizable && ['STOCK_PROPIO', 'CONSIGNACION'].indexOf(modalidad) < 0) throw new Error('Modalidad_Abastecimiento inválida.');
-      const valorizable = !historicoNoValorizable;
+      const estadoHistorico = clasificarIngresoHistorico(modalidad, movimiento.Costo_Unitario);
+      const valorizable = estadoHistorico.Valorizable;
       let costo = null;
       if (valorizable) { costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario'); if (costo < 0) throw new Error('Costo_Unitario inválido.'); }
       const tanda = { Movimiento_Id: movimiento.Movimiento_Id, Id_Producto: id, Orden_Ledger: orden, Cantidad_Original: cantidad,
-        Remanente: 0, Costo_Unitario: costo, Modalidad_Abastecimiento: modalidad, Valorizable: valorizable, Asignaciones: [], Coberturas: [] };
+        Remanente: 0, Costo_Unitario: costo, Modalidad_Abastecimiento: modalidad, Valorizable: valorizable, Legado_Valorizable_Sin_Modalidad: estadoHistorico.Legado_Valorizable_Sin_Modalidad, Asignaciones: [], Coberturas: [] };
       estado.tandas.push(tanda);
       let disponible = cantidad;
       while (disponible > 0 && estado.pendientes.length) {
@@ -1000,9 +1000,13 @@ function proyectarValorizacionLedger(ledger) {
         const valor = tanda.Remanente * tanda.Costo_Unitario;
         if (tanda.Modalidad_Abastecimiento === 'STOCK_PROPIO') estado.valores.stockPropio += valor;
         if (tanda.Modalidad_Abastecimiento === 'CONSIGNACION') estado.valores.consignacion += valor;
+        if (tanda.Legado_Valorizable_Sin_Modalidad) {
+          estado.valores.legadoSinModalidad += valor;
+          estado.estadoComposicionModalidadCompleta = false;
+        }
       }
     });
-    estado.valores.totalConocido = estado.valores.stockPropio + estado.valores.consignacion;
+    estado.valores.totalConocido = estado.valores.stockPropio + estado.valores.consignacion + estado.valores.legadoSinModalidad;
   });
   return { productos: productos };
 }
@@ -1013,6 +1017,16 @@ function reabrirTanda(estado, movimientoId, cantidad) {
   tanda.Remanente += cantidad;
   if (estado.abiertas.indexOf(tanda) < 0) estado.abiertas.push(tanda);
   estado.abiertas.sort(function (a, b) { return a.Orden_Ledger - b.Orden_Ledger; });
+}
+
+function clasificarIngresoHistorico(modalidad, costoUnitario) {
+  const modalidadNormalizada = textoSimple(modalidad).toUpperCase();
+  const historicoNoValorizable = !modalidadNormalizada && esVacio(costoUnitario);
+  const legadoValorizableSinModalidad = !modalidadNormalizada && !esVacio(costoUnitario);
+  if (!historicoNoValorizable && !legadoValorizableSinModalidad && ['STOCK_PROPIO', 'CONSIGNACION'].indexOf(modalidadNormalizada) < 0) {
+    throw new Error('Modalidad_Abastecimiento inválida.');
+  }
+  return { Valorizable: !historicoNoValorizable, Legado_Valorizable_Sin_Modalidad: legadoValorizableSinModalidad };
 }
 
 // Esta lectura no inicializa el libro ni resuelve referencias contra pedidos,
@@ -1076,9 +1090,8 @@ function validarFilasMovimientos(filas, columnas, validarProductos, permitirHist
     if (TIPOS_MOVIMIENTO.indexOf(movimiento.Tipo) < 0) throw new Error('Tipo de movimiento inválido.');
     if (movimiento.Tipo === 'INGRESO') {
       if (movimiento.Cantidad <= 0) throw new Error('INGRESO malformado.');
-      const historicoNoValorizable = !movimiento.Modalidad_Abastecimiento && esVacio(movimiento.Costo_Unitario);
-      if (!historicoNoValorizable) {
-        if (['STOCK_PROPIO', 'CONSIGNACION'].indexOf(movimiento.Modalidad_Abastecimiento) < 0) throw new Error('Modalidad_Abastecimiento inválida.');
+      const estadoHistorico = clasificarIngresoHistorico(movimiento.Modalidad_Abastecimiento, movimiento.Costo_Unitario);
+      if (estadoHistorico.Valorizable) {
         const costo = numeroFinitoEstricto(movimiento.Costo_Unitario, 'Costo_Unitario');
         if (costo < 0) throw new Error('Costo_Unitario inválido.');
         movimiento.Costo_Unitario = costo;

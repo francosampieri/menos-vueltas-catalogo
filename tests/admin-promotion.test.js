@@ -79,9 +79,25 @@ test('C-08 keeps open historical layers visible after a current contra-pedido re
   ], [{ id: 'P-1', n: 'Producto de prueba' }]);
   assert.deepEqual(rows, [{
     id: 'P-1', producto: 'Producto de prueba', saldo: 3, modalidad: 'CONTRA_PEDIDO',
-    stockPropio: 40, consignacion: 10, totalConocido: 50,
-    capitalCompleto: false, tramoNoValorizable: true, faltante: 2
+    stockPropio: 40, consignacion: 10, legadoSinModalidad: 0, totalConocido: 50,
+    capitalCompleto: false, composicionModalidadCompleta: true, tramoNoValorizable: true, faltante: 2
   }]);
+});
+
+test('C-08 warns when a valued historical layer has unknown modality without assigning it to own or consignment', () => {
+  const rows = admin.filasInventarioValorizado([{
+    Id_Producto: 'P-1', Modalidad_Abastecimiento: 'CONTRA_PEDIDO', Gestiona_Stock: false,
+    Saldo: 2, Capital_Stock_Propio: 10, Valor_Consignacion: 0, Valor_Legado_Sin_Modalidad: 4,
+    Valor_Fisico_Conocido: 14, Capital_Total_Completo: true, Composicion_Modalidad_Completa: false,
+    Tramo_No_Valorizable: false, Faltante_Pendiente_Costo: 0, Tandas: [{ Remanente: 2 }]
+  }], [{ id: 'P-1', n: 'Producto de prueba' }]);
+  assert.deepEqual(rows, [{
+    id: 'P-1', producto: 'Producto de prueba', saldo: 2, modalidad: 'CONTRA_PEDIDO',
+    stockPropio: 10, consignacion: 0, legadoSinModalidad: 4, totalConocido: 14,
+    capitalCompleto: true, composicionModalidadCompleta: false, tramoNoValorizable: false, faltante: 0
+  }]);
+  const script = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.js'), 'utf8');
+  assert.match(script, /composición por modalidad histórica incompleta/);
 });
 
 test('C-08 does not let the client select an ingress modality', () => {

@@ -14,10 +14,14 @@ El contrato de abastecimiento MUST tratar las tandas internas como una proyecci�
 - **THEN** el contrato no lo trata como tanda ni inventa un costo, lote o proveedor efectivo
 
 ### Requirement: Modalidad privada obligatoria en ingresos nuevos y compatibilidad histórica explícita
-`Movimientos_Stock` MUST incorporar la columna privada `Modalidad_Abastecimiento`, identificada por encabezado. Todo `INGRESO` nuevo MUST incluir exactamente `STOCK_PROPIO` o `CONSIGNACION` y un costo unitario válido; la escritura MUST rechazar antes del append cualquier otro valor, vacío o costo insuficiente. Un `INGRESO` histórico con modalidad vacía o costo insuficiente MUST conservarse sin backfill como tramo no valorizable explícito. Cualquier dato malformado que no corresponda a esa compatibilidad histórica MUST fallar cerradamente para la valorización, sin inventar modalidad, costo o total completo.
+`Movimientos_Stock` MUST incorporar la columna privada `Modalidad_Abastecimiento`, identificada por encabezado. Todo `INGRESO` nuevo MUST incluir exactamente `STOCK_PROPIO` o `CONSIGNACION` y un costo unitario válido; la escritura MUST rechazar antes del append cualquier otro valor, vacío o costo insuficiente. Un `INGRESO` histórico con modalidad vacía y costo numérico, finito y no negativo MUST conservarse sin backfill como `LEGADO_VALORIZABLE_SIN_MODALIDAD`: mantiene costo y FIFO, no se atribuye a propio ni consignación y activa advertencia de composición histórica desconocida. Modalidad y costo ambos vacíos MUST conservarse como tramo no valorizable. Cualquier costo no numérico, modalidad fuera del enum u otro dato malformado MUST fallar cerradamente; la modalidad histórica MUST NOT derivarse del producto actual.
+
+#### Scenario: Ingreso histórico valorizable sin modalidad
+- **WHEN** un ingreso histórico tiene `Modalidad_Abastecimiento` vacía y costo numérico válido
+- **THEN** mantiene su identidad, costo y orden FIFO como `LEGADO_VALORIZABLE_SIN_MODALIDAD`, suma al valor físico conocido sin atribuirse a propio ni consignación y no completa su modalidad desde el producto actual
 
 #### Scenario: Ingreso histórico no valorizable
-- **WHEN** un ingreso histórico tiene `Modalidad_Abastecimiento` vacía o no tiene costo suficiente para valorarlo
+- **WHEN** un ingreso histórico tiene `Modalidad_Abastecimiento` y `Costo_Unitario` ambos vacíos
 - **THEN** mantiene su identidad y saldo físico como tramo no valorizable, y no entra en los valores de capital conocidos ni se completa su fila
 
 #### Scenario: Ingreso nuevo inválido

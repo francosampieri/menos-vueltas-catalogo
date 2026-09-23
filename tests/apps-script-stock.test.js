@@ -858,14 +858,37 @@ test('C-08 derives ingress modality from current classification, rejects a misma
   assert.equal(fila.Gestiona_Stock, true);
 });
 
-test('C-08 accepts as non-valued history only when both modality and cost are absent', () => {
+test('C-08 values a historical ingress without modality, keeps its FIFO cost and leaves composition unknown', () => {
   const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
-  const compatible = makeContext({ movements: [headers, ['H-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 1, '', '', '', '', '', 'H-1', '']] });
-  assert.equal(get(compatible.context, { accion: 'valorizacionStock' }).ok, true);
-  for (const [costo, modalidad] of [['no-numérico', ''], ['', 'STOCK_PROPIO'], [4, '']]) {
+  const compatible = makeContext({ movements: [headers,
+    ['H-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 2, 4, '', '', '', '', 'H-1', ''],
+    ['I-1', new Date('2030-01-02T00:00:00Z'), 'P-1', 'INGRESO', 1, 10, '', '', '', '', 'I-1', 'STOCK_PROPIO'],
+    ['I-2', new Date('2030-01-03T00:00:00Z'), 'P-1', 'INGRESO', 1, 6, '', '', '', '', 'I-2', 'CONSIGNACION'],
+    ['S-1', new Date('2030-01-04T00:00:00Z'), 'P-1', 'VENTA', -1, '', '', '', '1', '1', 'VENTA:1:1', '']
+  ] });
+  const respuesta = get(compatible.context, { accion: 'valorizacionStock' });
+  assert.equal(respuesta.ok, true);
+  const fila = respuesta.productos.find(producto => producto.Id_Producto === 'P-1');
+  assert.equal(fila.Capital_Stock_Propio, 10);
+  assert.equal(fila.Valor_Consignacion, 6);
+  assert.equal(fila.Valor_Legado_Sin_Modalidad, 4);
+  assert.equal(fila.Valor_Fisico_Conocido, 20);
+  assert.equal(fila.Capital_Total_Completo, true);
+  assert.equal(fila.Composicion_Modalidad_Completa, false);
+  const tanda = fila.Tandas.find(item => item.Movimiento_Id === 'H-1');
+  assert.equal(tanda.Modalidad_Abastecimiento, '');
+  assert.equal(tanda.Valorizable, true);
+  assert.equal(tanda.Remanente, 1);
+  assert.equal(fila.Asignaciones[0].Costo_Unitario, 4);
+
+  const noValorizable = makeContext({ movements: [headers, ['H-2', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 1, '', '', '', '', '', 'H-2', '']] });
+  const noValorizableRespuesta = get(noValorizable.context, { accion: 'valorizacionStock' });
+  assert.equal(noValorizableRespuesta.ok, true);
+  assert.equal(noValorizableRespuesta.productos.find(producto => producto.Id_Producto === 'P-1').Capital_Total_Completo, false);
+  for (const [costo, modalidad] of [['no-numérico', ''], ['', 'STOCK_PROPIO'], [4, 'OTRA']]) {
     const contexto = makeContext({ movements: [headers, ['H-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 1, costo, '', '', '', '', 'H-1', modalidad]] });
-    const respuesta = get(contexto.context, { accion: 'valorizacionStock' });
-    assert.equal(respuesta.ok, false);
-    assert.equal('productos' in respuesta, false);
+    const invalida = get(contexto.context, { accion: 'valorizacionStock' });
+    assert.equal(invalida.ok, false);
+    assert.equal('productos' in invalida, false);
   }
 });

@@ -7,7 +7,7 @@ El saldo físico actual es auditable desde `Movimientos_Stock`, pero no permite 
 ## What Changes
 
 - Incorporar una proyección privada de **tandas internas de costo**: cada `INGRESO` originará siempre una tanda identificable por su `Movimiento_Id`, cantidad y costo unitario reales, incluso si todo su ingreso cubre faltantes previos y su remanente termina en cero. No representa un lote del proveedor y no gestiona vencimientos.
-- Extender el contrato privado de `Movimientos_Stock` con la columna `Modalidad_Abastecimiento`: será obligatoria en todo `INGRESO` nuevo y admitirá exactamente `STOCK_PROPIO` o `CONSIGNACION`. Un `INGRESO` histórico con modalidad o costo insuficiente se expondrá como tramo explícitamente no valorizable, sin backfill; los datos malformados siguen fallando cerradamente.
+- Extender el contrato privado de `Movimientos_Stock` con la columna `Modalidad_Abastecimiento`: será obligatoria en todo `INGRESO` nuevo y admitirá exactamente `STOCK_PROPIO` o `CONSIGNACION`. Un ingreso histórico con modalidad vacía y costo numérico válido será una tanda `LEGADO_VALORIZABLE_SIN_MODALIDAD`: conserva su costo y participa FIFO, sin atribuirse a propio ni consignación; suma al valor físico conocido y advierte composición histórica desconocida. Modalidad y costo ambos vacíos seguirá siendo un tramo no valorizable, sin backfill; los demás datos malformados fallan cerradamente.
 - Resolver las salidas `VENTA`, `CONSUMO_PROPIO`, `ROTURA_MERMA` y `CORRECCION` negativa contra las tandas abiertas por FIFO según el orden físico append-only del ledger, no según una fecha editable.
 - Mantener faltantes de costo como salidas pendientes ordenadas; el siguiente `INGRESO` las valuará antes de dejar remanente como nueva tanda abierta, conservando de todos modos la identidad histórica de esa tanda.
 - Extender el resumen privado de Inventario para separar capital en stock propio, valor de mercadería en consignación y valor físico total a costo; los saldos y movimientos existentes se conservan sin backfill ni reescritura.
@@ -27,5 +27,5 @@ El saldo físico actual es auditable desde `Movimientos_Stock`, pero no permite 
 ## Impact
 
 - Afecta únicamente el diseño futuro de la planilla operativa privada, Apps Script y el panel `admin/`.
-- `Movimientos_Stock` sigue siendo la única fuente de los movimientos y del saldo; la proyección no publica costos, proveedores, tandas ni datos operativos en B2C, B2B, CSV o JSON. La modalidad actual `CONTRA_PEDIDO` de un producto no oculta ni revaloriza las tandas históricas abiertas: sólo es informativa respecto de ellas.
+- `Movimientos_Stock` sigue siendo la única fuente de los movimientos y del saldo; la proyección no publica costos, proveedores, tandas ni datos operativos en B2C, B2B, CSV o JSON. La modalidad actual `CONTRA_PEDIDO` de un producto no oculta, no revaloriza ni completa la modalidad de tandas históricas abiertas: sólo es informativa respecto de ellas.
 - No incluye implementación, backfill, reescritura de movimientos, cambios de precios o márgenes, Finanzas, catálogo, workflow, deployment, pruebas con datos productivos, planillas temporales ni lotes/vencimientos reales.
