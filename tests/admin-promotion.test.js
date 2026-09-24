@@ -67,6 +67,80 @@ test('inventory stock filter keeps zero and negative managed balances, while all
   );
 });
 
+test('C-08 keeps open historical layers visible after a current contra-pedido reclassification', () => {
+  const rows = admin.filasInventarioValorizado([
+    {
+      Id_Producto: 'P-1', Modalidad_Abastecimiento: 'CONTRA_PEDIDO', Gestiona_Stock: false,
+      Saldo: 3, Capital_Stock_Propio: 40, Valor_Consignacion: 10,
+      Valor_Fisico_Conocido: 50, Capital_Total_Completo: false,
+      Tramo_No_Valorizable: true, Faltante_Pendiente_Costo: 2,
+      Tandas: [{ Remanente: 3 }]
+    }
+  ], [{ id: 'P-1', n: 'Producto de prueba' }]);
+  assert.deepEqual(rows, [{
+    id: 'P-1', producto: 'Producto de prueba', saldo: 3, modalidad: 'CONTRA_PEDIDO',
+    stockPropio: 40, consignacion: 10, legadoSinModalidad: 0, totalConocido: 50,
+    capitalCompleto: false, composicionModalidadCompleta: true, tramoNoValorizable: true, faltante: 2
+  }]);
+});
+
+test('C-08 warns when a valued historical layer has unknown modality without assigning it to own or consignment', () => {
+  const rows = admin.filasInventarioValorizado([{
+    Id_Producto: 'P-1', Modalidad_Abastecimiento: 'CONTRA_PEDIDO', Gestiona_Stock: false,
+    Saldo: 2, Capital_Stock_Propio: 10, Valor_Consignacion: 0, Valor_Legado_Sin_Modalidad: 4,
+    Valor_Fisico_Conocido: 14, Capital_Total_Completo: true, Composicion_Modalidad_Completa: false,
+    Tramo_No_Valorizable: false, Faltante_Pendiente_Costo: 0, Tandas: [{ Remanente: 2 }]
+  }], [{ id: 'P-1', n: 'Producto de prueba' }]);
+  assert.deepEqual(rows, [{
+    id: 'P-1', producto: 'Producto de prueba', saldo: 2, modalidad: 'CONTRA_PEDIDO',
+    stockPropio: 10, consignacion: 0, legadoSinModalidad: 4, totalConocido: 14,
+    capitalCompleto: true, composicionModalidadCompleta: false, tramoNoValorizable: false, faltante: 0
+  }]);
+});
+
+test('C-08 inventory summary has exactly five accessible columns and its detail uses human trace labels', () => {
+  const markup = fs.readFileSync(path.join(__dirname, '..', 'admin', 'index.html'), 'utf8');
+  const header = markup.match(/<thead><tr>([\s\S]*?)<\/tr><\/thead>\s*<tbody id="stockTbody"/);
+  assert.ok(header);
+  assert.deepEqual([...header[1].matchAll(/<th(?:\s[^>]*)?>(.*?)<\/th>/g)].map(match => match[1]), [
+    'Producto', 'Proveedor', 'Modalidad', 'Saldo', 'Valor total'
+  ]);
+  const script = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.js'), 'utf8');
+  assert.match(script, /role="button" tabindex="0"/);
+  assert.match(script, /abrirModalValorizacionDesdeTecla\(event,/);
+  assert.match(script, /event\.key !== 'Enter' && event\.key !== ' '/);
+  const css = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.css'), 'utf8');
+  assert.match(css, /\.inventario-fila--detalle:hover td/);
+  assert.match(css, /\.inventario-fila--detalle:focus/);
+  assert.match(css, /#vistaInventario \{ max-width: 100%; overflow-x: hidden; \}/);
+
+  const trazas = admin.trazasValorizacionHumanas({
+    Asignaciones: [{ Movimiento_Id_Secreto: 'UUID-SECRETO', Tipo_Salida: 'VENTA', Cantidad: 2, Orden_Ledger: 1 }],
+    Coberturas: [{ Tanda_Movimiento_Id: 'UUID-SECRETO', Cantidad: 1, Orden_Ledger: 2 }],
+    Correcciones: [{ Movimiento_Id: 'UUID-SECRETO', Cantidad: 1, Orden_Ledger: 3 }],
+    Faltantes: [{ Salida_Movimiento_Id: 'UUID-SECRETO', Cantidad: 1, Cantidad_Original: 2, Orden_Ledger: 4 }]
+  });
+  assert.deepEqual(trazas.map(item => item.etiqueta), [
+    'Venta automática por pedido: asignación FIFO de 2 unidades desde un ingreso.',
+    'Ingreso: cubrió 1 unidad pendiente de una salida.',
+    'Corrección: revirtió 1 unidad de una salida anterior.',
+    'Faltante pendiente de costo: 1 unidad.'
+  ]);
+  assert.equal(JSON.stringify(trazas).includes('UUID-SECRETO'), false);
+  assert.equal(admin.resumenDetalleValorizacion({
+    Capital_Total_Completo: true, Composicion_Modalidad_Completa: false, Faltante_Pendiente_Costo: 2
+  }), 'Incluye legado valorizable sin modalidad histórica conocida. Hay 2 unidades pendientes de costo.');
+});
+
+test('C-08 does not let the client select an ingress modality', () => {
+  const markup = fs.readFileSync(path.join(__dirname, '..', 'admin', 'index.html'), 'utf8');
+  const payload = admin.construirMovimientoManual({
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '2', Costo_Unitario: '7', Modalidad_Abastecimiento: 'CONSIGNACION'
+  }, 'MANUAL:ingreso');
+  assert.equal('Modalidad_Abastecimiento' in payload, false);
+  assert.doesNotMatch(markup, /id="movimientoModalidad"/);
+});
+
 test('supplier rows show the phone or a safe fallback before the rightmost edit action', () => {
   const conTelefono = admin.filaProveedor({
     Nombre: 'Proveedor de prueba', Id_Proveedor: 'PRV-TEST', Telefono: 'tel-prueba', Activo: true
@@ -390,7 +464,7 @@ test('C-04 keeps physical balance separate from manual availability and channel 
 
 test('C-04 freezes a manual movement intent and reserves sales for delivered orders', () => {
   const ingreso = admin.construirMovimientoManual({
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: 'Ingreso'
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: 'Ingreso'
   }, 'MANUAL:uno');
   assert.deepEqual(ingreso, {
     Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 3, Costo_Unitario: 4,
@@ -410,13 +484,13 @@ test('C-04 freezes a manual movement intent and reserves sales for delivered ord
   }, 'MANUAL:venta'), /VENTA/);
 
   const primero = admin.prepararIntentoMovimientoManual(null, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: ''
   }, () => 'uno');
   const reintento = admin.prepararIntentoMovimientoManual(primero, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '99', Costo_Unitario: '99', Nota: 'Cambiado'
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '99', Costo_Unitario: '99', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: 'Cambiado'
   }, () => 'dos');
   const nuevaIntencion = admin.prepararIntentoMovimientoManual(null, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: ''
   }, () => 'tres');
   assert.strictEqual(reintento, primero);
   assert.equal(primero.payload.Clave_Idempotencia, 'MANUAL:uno');
@@ -427,7 +501,7 @@ test('C-04 freezes a manual movement intent and reserves sales for delivered ord
 
 test('C-04 releases a manual intent after an explicit Apps Script rejection', () => {
   const pendiente = admin.prepararIntentoMovimientoManual(null, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: ''
   }, () => 'original');
   const rechazo = admin.crearErrorRechazoConcluyente('El saldo no permite el movimiento.');
 
@@ -436,7 +510,7 @@ test('C-04 releases a manual intent after an explicit Apps Script rejection', ()
 
   const corregido = admin.prepararIntentoMovimientoManual(
     admin.resolverFalloMovimientoPendiente(pendiente, rechazo),
-    { Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '2', Costo_Unitario: '4', Nota: 'Corregido' },
+    { Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '2', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: 'Corregido' },
     () => 'corregido'
   );
   assert.equal(corregido.payload.Clave_Idempotencia, 'MANUAL:corregido');
@@ -445,7 +519,7 @@ test('C-04 releases a manual intent after an explicit Apps Script rejection', ()
 
 test('C-04 retains the exact manual payload and key after an uncertain failure', () => {
   const pendiente = admin.prepararIntentoMovimientoManual(null, {
-    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Nota: ''
+    Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: '3', Costo_Unitario: '4', Modalidad_Abastecimiento: 'STOCK_PROPIO', Nota: ''
   }, () => 'original');
 
   const trasTimeout = admin.resolverFalloMovimientoPendiente(
@@ -476,7 +550,7 @@ test('C-04 filters only the history view and retains the full ledger for a corre
   );
 });
 
-test('C-04 prepares inventory rows and history without client or supplier contact fields', () => {
+test('C-04 describes history references and correction antecedents without exposing internal IDs', () => {
   const productos = [{ id: 'P-1', n: 'Producto uno' }, { id: 'P-2', n: 'Producto dos' }];
   const resumen = [
     { Id_Producto: 'P-1', Gestiona_Stock: true, Saldo: 0, Sin_Stock: false },
@@ -484,17 +558,37 @@ test('C-04 prepares inventory rows and history without client or supplier contac
   ];
   assert.deepEqual(admin.productosConStockGestionado(resumen, productos), [{ id: 'P-1', n: 'Producto uno' }]);
 
-  const filas = admin.filasHistorialOperativo([{
-    Fecha: '2026-09-20T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -2,
-    Nota: '', Referencia: '', Id_Pedido: 'PEDIDO-1', Item_Id: 'ITEM-1',
-    Cliente: 'No debe mostrarse', Telefono: 'No debe mostrarse', Direccion: 'No debe mostrarse',
-    Telefono_Proveedor: 'No debe mostrarse', Notas_Proveedor: 'No debe mostrarse'
-  }], productos);
-  assert.deepEqual(filas, [{
-    fecha: '20/09/2026', producto: 'Producto uno', tipo: 'VENTA', cantidad: -2,
-    costo: null, referencia: 'Pedido PEDIDO-1 · ítem ITEM-1', nota: ''
-  }]);
+  const movimientos = [
+    { Movimiento_Id: 'UUID-VENTA', Fecha: '2026-09-20T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'VENTA', Cantidad: -2,
+      Nota: '', Referencia: '', Id_Pedido: '45', Item_Id: 'UUID-ITEM-VENTA',
+      Cliente: 'No debe mostrarse', Telefono: 'No debe mostrarse', Direccion: 'No debe mostrarse',
+      Telefono_Proveedor: 'No debe mostrarse', Notas_Proveedor: 'No debe mostrarse' },
+    { Movimiento_Id: 'UUID-CONSUMO', Fecha: '2026-09-23T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'CONSUMO_PROPIO', Cantidad: -3 },
+    { Movimiento_Id: 'UUID-CORRECCION', Fecha: '2026-09-24T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'CORRECCION', Cantidad: 3,
+      Referencia: 'UUID-CONSUMO' },
+    { Movimiento_Id: 'UUID-INGRESO', Fecha: '2026-09-25T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'INGRESO', Cantidad: 2 },
+    { Movimiento_Id: 'UUID-MERMA', Fecha: '2026-09-26T10:00:00.000Z', Id_Producto: 'P-1', Tipo: 'ROTURA_MERMA', Cantidad: -1 }
+  ];
+  const filas = admin.filasHistorialOperativo(movimientos, productos, movimientos);
+  assert.deepEqual(filas.map(fila => ({ tipo: fila.tipo, referencia: fila.referencia })), [
+    { tipo: 'Venta automática por pedido', referencia: 'Pedido #45' },
+    { tipo: 'Consumo propio', referencia: '—' },
+    { tipo: 'Corrección', referencia: 'Consumo propio · 23 sep. · 3 u.' },
+    { tipo: 'Ingreso', referencia: '—' },
+    { tipo: 'Merma', referencia: '—' }
+  ]);
   assert.equal(JSON.stringify(filas).includes('No debe mostrarse'), false);
+  assert.equal(JSON.stringify(filas).includes('UUID-'), false);
+
+  const referencias = admin.referenciasCorreccionVisibles(movimientos, 'P-1');
+  assert.deepEqual(referencias.find(item => item.id === 'UUID-CONSUMO'), {
+    id: 'UUID-CONSUMO', descripcion: 'Consumo propio · 23 sep. · 3 u.'
+  });
+  assert.equal(referencias.every(item => !item.descripcion.includes('UUID-')), true);
+  assert.match(
+    admin.opcionesAntecedentesCorreccion(movimientos, 'P-1'),
+    /<option value="UUID-CONSUMO">Consumo propio · 23 sep\. · 3 u\.<\/option>/
+  );
 });
 
 test('C-05 derives read-only contra-pedido worklists from complete active snapshots', () => {

@@ -32,11 +32,13 @@ B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. El orden
 
 `.github/workflows/actualizar-catalogo.yml` se ejecuta cada 30 minutos y puede iniciarse manualmente. Descarga los CSV públicos de Productos, Grupos y Precios; produce el catálogo completo y una versión reducida para el panel; valida que no exista una proporción anormal de productos B2C activos sin precio; y hace commit y push de los JSON cuando detecta cambios.
 
-La publicación aplica una allowlist: del dominio de abastecimiento sólo puede llegar `Sin_Stock` como booleano, con `false` por defecto. La entidad privada `Proveedores`, su FK, modalidad, costos, saldos y ledger no se publican ni se incluyen en los artefactos públicos.
+La publicación aplica una allowlist: del dominio de abastecimiento sólo puede llegar `Sin_Stock` como booleano, con `false` por defecto. La entidad privada `Proveedores`, su FK, modalidad, costos, saldos, capas derivadas y ledger no se publican ni se incluyen en los artefactos públicos.
 
 ### Panel administrativo
 
 El panel estático carga pedidos y clientes desde Apps Script, consume `admin/productos.json` para buscar y calcular, y permite gestionar pedidos y fichas de clientes. Para B2C, conserva `Envio` como componente propio del pedido y totaliza productos netos + envío + extras; el importador de WhatsApp debe reconocer ese componente. El Apps Script debe resolver la columna por encabezado, preservando registros históricos sin valor y sin backfill. El admin privado gestiona proveedores, clasificación de abastecimiento, consulta de historial y movimientos manuales; sus listas de abastecimiento son proyecciones de sólo lectura. Incluye importación de mensajes de WhatsApp y recuperación local de borradores. No reemplaza la planilla de Finanzas como registro de cobros reales.
+
+La valorización de inventario es otra lectura privada del Apps Script: recorre `Movimientos_Stock` y construye en memoria tandas FIFO, asignaciones, correcciones y faltantes. No crea una hoja de capas ni persiste resultados derivados. La respuesta se limita al panel administrativo: proveedor, modalidad de ingreso, costos, valores y trazabilidad no ingresan en CSV, JSON público, B2C ni B2B. La interfaz presenta un resumen compacto y un detalle de sólo lectura con etiquetas humanas, sin exponer UUID, referencias técnicas ni PII.
 
 ## Seguridad actual: estado conocido
 
