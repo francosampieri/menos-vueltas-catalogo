@@ -150,7 +150,7 @@ function construirListasAbastecimiento(pedidos) {
       const claveGrupo = [canal, idProveedor, modalidadAbastecimiento].join('\u0000');
       let grupo = porGrupo.get(claveGrupo);
       if (!grupo) {
-        grupo = { canal, idProveedor, modalidadAbastecimiento, productos: new Map() };
+        grupo = { canal, idProveedor, modalidadAbastecimiento, costoTotal: 0, gananciaEstimada: 0, productos: new Map() };
         porGrupo.set(claveGrupo, grupo);
       }
 
@@ -159,8 +159,16 @@ function construirListasAbastecimiento(pedidos) {
       const id = textoOperativo(item.id);
       const nombre = textoOperativo(item.nombre);
       const claveProducto = [id, nombre].join('\u0000');
-      const producto = grupo.productos.get(claveProducto) || { id, nombre, cantidad: 0 };
+      // Costo y ganancia son totales congelados de la línea en Items. La
+      // lista no consulta ni recalcula valores del catálogo actual.
+      const costo = valorMonetarioSnapshot(item.costoTot);
+      const ganancia = valorMonetarioSnapshot(item.ganancia);
+      const producto = grupo.productos.get(claveProducto) || { id, nombre, cantidad: 0, costo: 0, ganancia: 0 };
       producto.cantidad += Number(item.cant);
+      producto.costo += costo;
+      producto.ganancia += ganancia;
+      grupo.costoTotal += costo;
+      grupo.gananciaEstimada += ganancia;
       grupo.productos.set(claveProducto, producto);
     });
   });
@@ -170,12 +178,19 @@ function construirListasAbastecimiento(pedidos) {
       canal: grupo.canal,
       idProveedor: grupo.idProveedor,
       modalidadAbastecimiento: grupo.modalidadAbastecimiento,
+      costoTotal: grupo.costoTotal,
+      gananciaEstimada: grupo.gananciaEstimada,
       productos: [...grupo.productos.values()].sort((a, b) =>
         a.nombre.localeCompare(b.nombre, 'es') || a.id.localeCompare(b.id, 'es'))
     }))
     .sort((a, b) => a.canal.localeCompare(b.canal, 'es') ||
       a.idProveedor.localeCompare(b.idProveedor, 'es') ||
       a.modalidadAbastecimiento.localeCompare(b.modalidadAbastecimiento, 'es'));
+}
+
+function valorMonetarioSnapshot(valor) {
+  const numero = Number(valor);
+  return Number.isFinite(numero) ? numero : 0;
 }
 
 function proyeccionListaDistrosec(listas, canal) {
@@ -2255,10 +2270,11 @@ function abrirListasAbastecimiento() {
         <h3 class="dist-subtit">${esc(lista.idProveedor)} · ${esc(lista.canal.toUpperCase())} · ${esc(lista.modalidadAbastecimiento)}</h3>
         <div class="tabla-wrap">
           <table class="tabla">
-            <thead><tr><th>Producto</th><th class="num">Cantidad</th></tr></thead>
-            <tbody>${lista.productos.map(producto => `<tr><td>${esc(producto.nombre)}</td><td class="num">${producto.cantidad}</td></tr>`).join('')}</tbody>
+            <thead><tr><th>Producto</th><th class="num">Cantidad</th><th class="num">Costo</th><th class="num">Ganancia</th></tr></thead>
+            <tbody>${lista.productos.map(producto => `<tr><td>${esc(producto.nombre)}</td><td class="num">${producto.cantidad}</td><td class="num">${money(producto.costo)}</td><td class="num">${money(producto.ganancia)}</td></tr>`).join('')}</tbody>
           </table>
         </div>
+        <p class="modal-descripcion">Costo total a proveedor: <strong>${money(lista.costoTotal)}</strong> · Ganancia estimada: <strong>${money(lista.gananciaEstimada)}</strong></p>
         <div class="modal-acciones">
           <button type="button" class="btn btn--pri" onclick="copiarListaAbastecimiento(${indice})">Copiar lista</button>
         </div>

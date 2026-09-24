@@ -528,19 +528,23 @@ test('C-05 derives read-only contra-pedido worklists from complete active snapsh
   assert.deepEqual(admin.construirListasAbastecimiento(pedidos), [
     {
       canal: 'b2b', idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO',
-      productos: [{ id: 'P-MATE', nombre: 'Mate sintético', cantidad: 7 }]
+      costoTotal: 0, gananciaEstimada: 0,
+      productos: [{ id: 'P-MATE', nombre: 'Mate sintético', cantidad: 7, costo: 0, ganancia: 0 }]
     },
     {
       canal: 'b2c', idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO',
-      productos: [{ id: 'P-MATE', nombre: 'Mate sintético', cantidad: 2 }]
+      costoTotal: 0, gananciaEstimada: 0,
+      productos: [{ id: 'P-MATE', nombre: 'Mate sintético', cantidad: 2, costo: 0, ganancia: 0 }]
     },
     {
       canal: 'b2c', idProveedor: 'HUEVOS', modalidadAbastecimiento: 'CONTRA_PEDIDO',
-      productos: [{ id: 'P-HUEVOS', nombre: 'Huevos sintéticos', cantidad: 3 }]
+      costoTotal: 0, gananciaEstimada: 0,
+      productos: [{ id: 'P-HUEVOS', nombre: 'Huevos sintéticos', cantidad: 3, costo: 0, ganancia: 0 }]
     },
     {
       canal: 'b2c', idProveedor: 'PROCAKE', modalidadAbastecimiento: 'CONTRA_PEDIDO',
-      productos: [{ id: 'P-GALLETAS', nombre: 'Galletas sintéticas', cantidad: 1 }]
+      costoTotal: 0, gananciaEstimada: 0,
+      productos: [{ id: 'P-GALLETAS', nombre: 'Galletas sintéticas', cantidad: 1, costo: 0, ganancia: 0 }]
     }
   ]);
 });
@@ -560,10 +564,32 @@ test('C-05 keeps the Distrosec copy projection inside its matching channel group
   const distrosec = admin.proyeccionListaDistrosec(listas, 'b2c');
   assert.deepEqual(distrosec, {
     canal: 'b2c', idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO',
+    costoTotal: 0, gananciaEstimada: 0,
     productos: [
-      { id: 'P-2', nombre: 'Producto dos', cantidad: 1 },
-      { id: 'P-1', nombre: 'Producto uno', cantidad: 2 }
+      { id: 'P-2', nombre: 'Producto dos', cantidad: 1, costo: 0, ganancia: 0 },
+      { id: 'P-1', nombre: 'Producto uno', cantidad: 2, costo: 0, ganancia: 0 }
     ]
   });
   assert.equal(admin.textoListaAbastecimiento(distrosec), '🛒 Pedido:\n- 1x Producto dos\n- 2x Producto uno');
+});
+
+test('supply worklists sum frozen cost and profit by product without copying monetary values', () => {
+  const listas = admin.construirListasAbastecimiento([
+    {
+      canal: 'b2c', estado: 'Nuevo',
+      items: [
+        { itemId: 'ITEM-90-1', id: 'P-1', nombre: 'Producto uno', cant: 2, costoTot: 300, ganancia: 120, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false },
+        { itemId: 'ITEM-90-2', id: 'P-1', nombre: 'Producto uno', cant: 3, costoTot: 450, ganancia: 180, idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false }
+      ]
+    }
+  ]);
+
+  assert.deepEqual(listas, [{
+    canal: 'b2c', idProveedor: 'DISTROSEC', modalidadAbastecimiento: 'CONTRA_PEDIDO',
+    costoTotal: 750, gananciaEstimada: 300,
+    productos: [{ id: 'P-1', nombre: 'Producto uno', cantidad: 5, costo: 750, ganancia: 300 }]
+  }]);
+  const texto = admin.textoListaAbastecimiento(listas[0]);
+  assert.equal(texto, '🛒 Pedido:\n- 5x Producto uno');
+  assert.doesNotMatch(texto, /750|300|\$/);
 });
