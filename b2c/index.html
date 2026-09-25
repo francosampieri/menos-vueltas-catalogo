@@ -122,8 +122,7 @@
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
-<body data-hero="estandar" data-canal="b2c">
-<!-- ═ HERO ACTIVO ═ -->
+<body data-canal="b2c">
 
 <!-- ═ BARRA SUPERIOR ═ -->
 <header class="topbar">
@@ -192,30 +191,51 @@
 <!-- ══ LANDING ══ -->
 <div id="vista-landing">
 
-  <!-- ═ HERO ESTÁNDAR ═ (el de siempre, se muestra cuando data-hero="estandar") -->
-  <section class="hero-bg">
-  <div class="hero">
-    <div class="hero-inner">
-      <h1 class="hero-title">Menos Vueltas</h1>
-      <div class="hero-pills">
-        <span class="hero-pill">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Más tiempo para vos
-        </span>
-        <span class="hero-pill">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Más ahorro
-        </span>
-      </div>
-      <div class="hero-actions">
-        <button class="btn-primary" onclick="mostrarCatalogoCompleto()">Ver catálogo</button>
-        <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Cómo pedir</button>
-      </div>
+  <!-- Los bloques se pueden reordenar, quitar o extender libremente. Cada
+       hero conserva su propio HTML; el carrusel sólo aporta navegación. -->
+  <section class="multihero" data-multihero aria-roledescription="carrusel" aria-label="Mensajes destacados">
+    <div class="multihero-track" data-multihero-track>
+      <!-- Hero actual: primer bloque reservado para la próxima campaña. -->
+      <article class="multihero-slide multihero-slide--actual" data-multihero-slide></article>
+
+      <!-- Hero estándar: segundo bloque por defecto. -->
+      <article class="multihero-slide multihero-slide--standard" data-multihero-slide>
+        <section class="hero-bg">
+          <div class="hero">
+            <div class="hero-inner">
+              <h1 class="hero-title">Menos Vueltas</h1>
+              <div class="hero-pills">
+                <span class="hero-pill">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Más tiempo para vos
+                </span>
+                <span class="hero-pill">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Más ahorro
+                </span>
+              </div>
+              <div class="hero-actions">
+                <button class="btn-primary" onclick="mostrarCatalogoCompleto()">Ver catálogo</button>
+                <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Cómo pedir</button>
+              </div>
+            </div>
+            <div class="hero-visual">
+              <img src="hero-bolsas.jpg" alt="Bolsas de compras Menos Vueltas" class="hero-photo">
+            </div>
+          </div>
+        </section>
+      </article>
+
+      <!-- Agregá heroes extra después de este comentario como artículos
+           .multihero-slide con data-multihero-slide. -->
     </div>
-    <div class="hero-visual">
-      <img src="hero-bolsas.jpg" alt="Bolsas de compras Menos Vueltas" class="hero-photo">
-    </div>
-  </div>
+    <button class="multihero-arrow multihero-arrow--previous" type="button" data-multihero-previous aria-label="Ver hero anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <button class="multihero-arrow multihero-arrow--next" type="button" data-multihero-next aria-label="Ver hero siguiente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+    <div class="multihero-dots" data-multihero-dots aria-label="Posición del hero"></div>
   </section>
 
   <!-- Nuevos ingresos: una selección breve en la landing. Cada card lleva
@@ -899,5 +919,6 @@
 <script>window.CANAL = 'B2C';</script>
 <script src="shipping.js"></script>
 <script src="app.js"></script>
+<script src="multihero.js"></script>
 <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3413da61b33b51a',t:'MTc4ODIzMzg5Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

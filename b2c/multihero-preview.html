@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Preview · Multihero — Menos Vueltas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Cabin:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --mh-olive: #526244;
+      --mh-olive-dark: #33402c;
+      --mh-cream: #f6f4ee;
+      --mh-ink: #2f3430;
+      --mh-muted: #6f756d;
+      --mh-line: rgba(47, 52, 48, .16);
+      --mh-radius: 14px;
+      --mh-gutter: clamp(20px, 6vw, 92px);
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--mh-cream); }
+    body {
+      margin: 0;
+      color: var(--mh-ink);
+      background: var(--mh-cream);
+      font-family: 'DM Sans', sans-serif;
+    }
+    button { font: inherit; }
+
+    .mh-topbar {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 0 var(--mh-gutter);
+      background: rgba(246, 244, 238, .96);
+      border-bottom: 1px solid rgba(47, 52, 48, .08);
+    }
+    .mh-brand { display: inline-flex; align-items: center; border: 0; padding: 0; background: transparent; }
+    .mh-brand img { width: 145px; height: auto; display: block; }
+    .mh-nav { display: flex; align-items: center; gap: 28px; }
+    .mh-nav span { color: #4e554e; font-size: .86rem; }
+    .mh-cart {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--mh-line);
+      border-radius: 999px;
+      padding: 9px 14px;
+      color: var(--mh-ink);
+      background: transparent;
+      font-size: .85rem;
+    }
+    .mh-cart-count {
+      display: grid;
+      place-items: center;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      color: white;
+      background: var(--mh-olive);
+      font-size: .68rem;
+      font-weight: 700;
+    }
+
+    .mh-carousel {
+      position: relative;
+      overflow: hidden;
+      background: var(--mh-cream);
+      isolation: isolate;
+    }
+    .mh-track {
+      display: flex;
+      width: 100%;
+      transition: transform 520ms cubic-bezier(.22, .61, .36, 1);
+      will-change: transform;
+    }
+    .mh-slide {
+      position: relative;
+      flex: 0 0 100%;
+      min-width: 0;
+      min-height: calc(100vh - 72px);
+    }
+    .mh-slide[aria-hidden="true"] { visibility: hidden; }
+    .mh-slide[aria-hidden="false"] { visibility: visible; }
+
+    /* El primer espacio se reserva para el futuro hero actual. En el
+       componente final quedará vacío hasta que se diseñe la campaña. */
+    .mh-slide--actual,
+    .mh-slide--extra {
+      background: #ecebe5;
+    }
+    .mh-slide--extra { background: #e3e8dd; }
+
+    /* Segundo slide: reproducción visual del hero estándar vigente. */
+    .mh-standard {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+    }
+    .mh-standard-copy {
+      display: flex;
+      flex: 0 0 min(48%, 580px);
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px 48px 64px var(--mh-gutter);
+      background: var(--mh-cream);
+    }
+    .mh-standard-title {
+      margin: 0 0 32px;
+      color: var(--mh-olive);
+      font-size: clamp(2.6rem, 5vw, 4.2rem);
+      font-weight: 600;
+      letter-spacing: -.055em;
+      line-height: 1.03;
+    }
+    .mh-pills { display: flex; gap: 28px; margin-bottom: 46px; flex-wrap: wrap; }
+    .mh-pill {
+      border-bottom: 2px solid var(--mh-olive);
+      padding: 2px 4px 6px;
+      color: var(--mh-ink);
+      font-size: .95rem;
+      font-weight: 500;
+    }
+    .mh-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .mh-button {
+      min-height: 44px;
+      border-radius: 999px;
+      padding: 0 24px;
+      border: 1px solid var(--mh-olive);
+      font-size: .9rem;
+      font-weight: 600;
+    }
+    .mh-button--main { color: white; background: var(--mh-olive); }
+    .mh-button--ghost { color: var(--mh-olive-dark); background: transparent; }
+    .mh-standard-art {
+      position: relative;
+      flex: 1;
+      min-height: 420px;
+      overflow: hidden;
+      background: var(--mh-olive);
+    }
+    .mh-standard-art::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--mh-cream) 0%, transparent 24%);
+      pointer-events: none;
+    }
+    .mh-standard-art img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 85%;
+    }
+
+    .mh-arrow {
+      position: absolute;
+      z-index: 3;
+      top: 50%;
+      display: grid;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, .72);
+      border-radius: 50%;
+      color: white;
+      background: rgba(31, 40, 28, .38);
+      box-shadow: 0 5px 18px rgba(0, 0, 0, .15);
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    .mh-arrow:hover { background: rgba(31, 40, 28, .72); }
+    .mh-arrow:focus-visible { outline: 3px solid #f5d260; outline-offset: 3px; }
+    .mh-arrow svg { width: 21px; height: 21px; }
+    .mh-arrow--prev { left: 22px; }
+    .mh-arrow--next { right: 22px; }
+
+    .mh-indicators {
+      position: absolute;
+      z-index: 3;
+      bottom: 24px;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, .44);
+      border-radius: 999px;
+      background: rgba(32, 40, 28, .42);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .12);
+      transform: translateX(-50%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .mh-indicator { display: none; }
+    body[data-indicator="dots"] .mh-indicator--dots,
+    body[data-indicator="bars"] .mh-indicator--bars,
+    body[data-indicator="count"] .mh-indicator--count { display: flex; }
+
+    .mh-indicator--dots { align-items: center; gap: 8px; }
+    .mh-dot {
+      position: relative;
+      overflow: hidden;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .5);
+      transition: width 220ms ease, background 220ms ease;
+    }
+    .mh-dot.is-active { width: 22px; border-radius: 999px; background: rgba(255, 255, 255, .36); }
+    .mh-dot.is-active::after {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      border-radius: inherit;
+      background: white;
+      content: '';
+      animation: mh-progress 8s linear forwards;
+    }
+    .mh-carousel.is-paused .mh-dot.is-active::after { animation-play-state: paused; }
+
+    .mh-indicator--bars { gap: 5px; }
+    .mh-bar {
+      width: clamp(26px, 4vw, 48px);
+      height: 4px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, .38);
+    }
+    .mh-bar::after {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: white;
+      content: '';
+    }
+    .mh-bar.is-active::after { animation: mh-progress 8s linear forwards; }
+    .mh-carousel.is-paused .mh-bar.is-active::after { animation-play-state: paused; }
+    @keyframes mh-progress { from { width: 0; } to { width: 100%; } }
+
+    .mh-indicator--count { gap: 8px; color: white; font-family: 'Cabin', sans-serif; font-size: .86rem; }
+    .mh-count-current { font-weight: 600; }
+    .mh-count-divider { color: rgba(255, 255, 255, .56); }
+    .mh-count-total { color: rgba(255, 255, 255, .72); }
+
+    .mh-preview-caption {
+      position: absolute;
+      z-index: 4;
+      bottom: 78px;
+      left: 50%;
+      color: rgba(255, 255, 255, .78);
+      font-size: .72rem;
+      letter-spacing: .04em;
+      text-align: center;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+    }
+
+    .mh-after {
+      padding: 64px var(--mh-gutter) 90px;
+      background: #e6eedc;
+    }
+    .mh-after-inner { max-width: 1180px; margin: 0 auto; }
+    .mh-after-kicker { margin: 0 0 6px; color: var(--mh-olive); font-size: .77rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .mh-after h2 { max-width: 600px; margin: 0; font-size: clamp(1.8rem, 3vw, 2.7rem); letter-spacing: -.04em; }
+
+    @media (max-width: 700px) {
+      .mh-topbar { height: 64px; padding: 0 20px; }
+      .mh-brand img { width: 128px; }
+      .mh-nav { display: none; }
+      .mh-cart { padding: 8px 10px; font-size: 0; }
+      .mh-cart-count { font-size: .68rem; }
+      .mh-slide, .mh-standard { min-height: calc(100svh - 64px); }
+      .mh-standard { position: relative; display: block; color: white; background: var(--mh-olive-dark); }
+      .mh-standard-copy {
+        position: relative;
+        z-index: 2;
+        min-height: calc(100svh - 64px);
+        padding: 42px 24px 36px;
+        justify-content: flex-start;
+        color: white;
+        background: linear-gradient(180deg, rgba(27, 36, 24, .38) 0%, rgba(27, 36, 24, .88) 88%);
+      }
+      .mh-standard-title { margin-top: 0; margin-bottom: 26px; color: white; font-size: clamp(2.35rem, 11vw, 3.25rem); }
+      .mh-pills { gap: 9px; margin-bottom: auto; flex-direction: column; align-items: flex-start; }
+      .mh-pill { padding: 7px 12px; border: 1px solid rgba(255, 255, 255, .72); border-radius: 999px; color: white; background: rgba(255, 255, 255, .1); font-size: .82rem; }
+      .mh-actions { width: 100%; flex-direction: column; }
+      .mh-button { width: 100%; }
+      .mh-button--main { color: var(--mh-olive-dark); background: white; border-color: white; }
+      .mh-button--ghost { color: white; border-color: rgba(255, 255, 255, .75); background: rgba(255, 255, 255, .1); }
+      .mh-standard-art { position: absolute; inset: 0; min-height: 0; }
+      .mh-standard-art::after { background: linear-gradient(180deg, rgba(27, 36, 24, .14), rgba(27, 36, 24, .1) 45%, rgba(27, 36, 24, .82)); }
+      .mh-standard-art img { object-position: center 82%; }
+      .mh-arrow { display: none; }
+      .mh-indicators { bottom: 18px; min-height: 30px; padding: 7px 11px; }
+      .mh-preview-caption { bottom: 65px; font-size: .62rem; white-space: nowrap; }
+      .mh-after { padding: 48px 24px 72px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mh-track, .mh-dot, .mh-bar.is-active::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body data-indicator="dots">
+  <header class="mh-topbar">
+    <button class="mh-brand" aria-label="Menos Vueltas, inicio"><img src="../shared/assets/logos/logo.svg" alt="Menos Vueltas"></button>
+    <nav class="mh-nav" aria-label="Navegación de ejemplo"><span>Catálogo</span><span>Cómo pedir</span><span>Nosotros</span></nav>
+    <button class="mh-cart" aria-label="Carrito, 0 productos">Carrito <span class="mh-cart-count">0</span></button>
+  </header>
+
+  <main>
+    <section class="mh-carousel" aria-roledescription="carrusel" aria-label="Heroes de Menos Vueltas">
+      <div class="mh-track">
+        <!-- Hero actual: bloque vacío reservado para la próxima campaña. -->
+        <article class="mh-slide mh-slide--actual" aria-roledescription="slide" aria-label="1 de 3"></article>
+
+        <!-- Hero estándar: segundo bloque por defecto. Cada hero mantiene su HTML propio. -->
+        <article class="mh-slide" aria-roledescription="slide" aria-label="2 de 3">
+          <div class="mh-standard">
+            <div class="mh-standard-copy">
+              <h1 class="mh-standard-title">Menos Vueltas</h1>
+              <div class="mh-pills"><span class="mh-pill">Más tiempo para vos</span><span class="mh-pill">Más ahorro</span></div>
+              <div class="mh-actions"><button class="mh-button mh-button--main">Ver catálogo</button><button class="mh-button mh-button--ghost">Cómo pedir</button></div>
+            </div>
+            <div class="mh-standard-art"><img src="hero-bolsas.jpg" alt="Bolsas de compras Menos Vueltas"></div>
+          </div>
+        </article>
+
+        <!-- Ejemplo de hero extra vacío. Se podrá sustituir por cualquier HTML. -->
+        <article class="mh-slide mh-slide--extra" aria-roledescription="slide" aria-label="3 de 3"></article>
+      </div>
+
+      <button class="mh-arrow mh-arrow--prev" type="button" aria-label="Ver hero anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button class="mh-arrow mh-arrow--next" type="button" aria-label="Ver hero siguiente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+
+      <div class="mh-preview-caption" aria-hidden="true">Preview de indicador</div>
+      <div class="mh-indicators" aria-label="Posición actual del carrusel">
+        <div class="mh-indicator mh-indicator--dots" aria-hidden="true"><span class="mh-dot"></span><span class="mh-dot"></span><span class="mh-dot"></span></div>
+        <div class="mh-indicator mh-indicator--bars" aria-hidden="true"><span class="mh-bar"></span><span class="mh-bar"></span><span class="mh-bar"></span></div>
+        <div class="mh-indicator mh-indicator--count" aria-live="polite"><span class="mh-count-current">1</span><span class="mh-count-divider">/</span><span class="mh-count-total">3</span></div>
+      </div>
+    </section>
+
+    <section class="mh-after"><div class="mh-after-inner"><p class="mh-after-kicker">La página continúa igual</p><h2>Una referencia visual de cómo se integra el multihero a la landing.</h2></div></section>
+  </main>
+
+  <script>
+    (() => {
+      const indicator = new URLSearchParams(window.location.search).get('indicador');
+      document.body.dataset.indicator = ['dots', 'bars', 'count'].includes(indicator) ? indicator : 'dots';
+
+      const carousel = document.querySelector('.mh-carousel');
+      const track = carousel.querySelector('.mh-track');
+      const slides = [...carousel.querySelectorAll('.mh-slide')];
+      const dots = [...carousel.querySelectorAll('.mh-dot')];
+      const bars = [...carousel.querySelectorAll('.mh-bar')];
+      const currentLabel = carousel.querySelector('.mh-count-current');
+      const previous = carousel.querySelector('.mh-arrow--prev');
+      const next = carousel.querySelector('.mh-arrow--next');
+      const interval = 8000;
+      let active = 0;
+      let timer = null;
+      let pausedByFocus = false;
+      let pointerStart = null;
+
+      function paint() {
+        track.style.transform = `translateX(-${active * 100}%)`;
+        slides.forEach((slide, index) => slide.setAttribute('aria-hidden', String(index !== active)));
+        dots.forEach((dot, index) => dot.classList.toggle('is-active', index === active));
+        bars.forEach((bar, index) => bar.classList.toggle('is-active', index === active));
+        currentLabel.textContent = String(active + 1);
+      }
+
+      function stop() {
+        window.clearTimeout(timer);
+        timer = null;
+        carousel.classList.add('is-paused');
+      }
+
+      function schedule() {
+        stop();
+        if (pausedByFocus || document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        carousel.classList.remove('is-paused');
+        timer = window.setTimeout(() => go(active + 1), interval);
+      }
+
+      function go(index) {
+        active = (index + slides.length) % slides.length;
+        paint();
+        schedule();
+      }
+
+      previous.addEventListener('click', () => { pausedByFocus = false; go(active - 1); });
+      next.addEventListener('click', () => { pausedByFocus = false; go(active + 1); });
+      carousel.addEventListener('focusin', () => { pausedByFocus = true; stop(); });
+      document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else schedule(); });
+
+      carousel.addEventListener('pointerdown', event => {
+        if (!window.matchMedia('(max-width: 700px)').matches) return;
+        pointerStart = event.clientX;
+        stop();
+      });
+      carousel.addEventListener('pointerup', event => {
+        if (pointerStart === null) return;
+        const distance = event.clientX - pointerStart;
+        pointerStart = null;
+        if (Math.abs(distance) >= 42) go(active + (distance < 0 ? 1 : -1));
+        else schedule();
+      });
+      carousel.addEventListener('pointercancel', () => { pointerStart = null; schedule(); });
+
+      paint();
+      schedule();
+    })();
+  </script>
+</body>
+</html>

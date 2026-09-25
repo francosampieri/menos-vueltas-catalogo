@@ -464,18 +464,6 @@ img { display: block; max-width: 100%; }
 
 
 /* ══════════════════════════════════════════════════════
-   INTERRUPTOR DE HERO
-   Controlado por el atributo data-hero del <body> (ver <head> del HTML).
-   Muestra un hero completo y oculta el otro — nunca los dos a la vez.
-   Cada campaña se diseña de cero dentro de .hero-promo-bg, sin heredar
-   nada del hero anterior; solo hace falta que la sección tenga esa clase
-   para que el interruptor la reconozca.
-══════════════════════════════════════════════════════ */
-body[data-hero="estandar"] .hero-promo-bg { display: none; }
-body[data-hero="promo"]    .hero-bg       { display: none; }
-
-
-/* ══════════════════════════════════════════════════════
    LANDING — HERO
 ══════════════════════════════════════════════════════ */
 .hero-bg {
@@ -567,362 +555,150 @@ body[data-hero="promo"]    .hero-bg       { display: none; }
   display: block;
 }
 
-
 /* ══════════════════════════════════════════════════════
-   LANDING — HERO DE CAMPAÑA (promociones temporales)
-   Reemplaza al hero estándar cuando data-hero="promo" (ver interruptor
-   arriba). Pensado para rediseñarse de cero en cada campaña: estas
-   clases son un punto de partida, no un molde fijo — la próxima promo
-   puede tener otra estructura, otros colores, otro layout, lo que haga
-   falta para esa comunicación puntual.
-
-   Esta versión: foto de campaña a pantalla completa (hero-promo.jpg) con
-   degradé oscuro a la izquierda para que el texto sea siempre legible.
-
-   El contenedor mantiene la MISMA proporción que la foto (aspect-ratio)
-   en vez de basarse en el alto de la pantalla (100vh): así la imagen
-   nunca necesita agrandarse para cubrir el alto, y por lo tanto nunca
-   recorta la parte de arriba (la mano) ni la de abajo (los escalones),
-   sea cual sea el ancho de la pantalla (notebook, monitor de escritorio,
-   etc). La foto es panorámica (ancha en relación a su alto) a propósito,
-   para que el hero entre completo en el primer vistazo sin necesidad de
-   scrollear. Si el día de mañana se reemplaza hero-promo.jpg por una
-   foto con otra proporción, hay que actualizar este aspect-ratio para
-   que coincida con el nuevo archivo (y, si la foto es más "cuadrada",
-   conviene pedir una versión más panorámica en vez de solo ajustar el
-   número, para no volver a quedar con un hero demasiado alto).
+   LANDING — MULTIHERO
+   Cada artículo mantiene su HTML libre; este bloque sólo define el lienzo,
+   la navegación y el indicador compartidos por B2C y B2B.
 ══════════════════════════════════════════════════════ */
-.hero-promo-bg {
+.multihero {
   position: relative;
-  aspect-ratio: 1528 / 704; /* debe coincidir con la proporción real de hero-promo.jpg */
   width: 100%;
-  /* Tope de seguridad: en pantallas anchas y no muy altas (ej. monitores
-     1920×1080) el aspect-ratio de la foto puede dar un hero apenas más
-     alto que el espacio visible bajo la topbar. Este límite evita que
-     haga falta scrollear un poquito en esos casos, sin afectar el
-     encuadre (la imagen sigue centrada con object-fit: cover). */
-  max-height: calc(100vh - 72px);
-  display: flex;
-  align-items: center;
   overflow: hidden;
-  background: var(--accent-2); /* color de respaldo mientras carga la foto */
+  background: var(--surface);
 }
 
-.hero-promo-photo {
-  position: absolute;
-  inset: 0;
+.multihero-track {
+  display: flex;
   width: 100%;
+  transform: translateX(0);
+  transition: transform 520ms var(--ease);
+  will-change: transform;
+  touch-action: pan-y;
+}
+
+.multihero-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+}
+
+.multihero-slide--actual { background: var(--surface); }
+
+/* El hero estándar conserva su diseño interno, pero se adapta al lienzo del
+   carrusel para que todos los slides tengan la misma altura. */
+.multihero-slide .hero-bg,
+.multihero-slide .hero {
   height: 100%;
-  object-fit: cover;
-  object-position: center;
+  min-height: 0;
 }
 
-.hero-promo-bg::after {
-  content: '';
+.multihero-slide .hero-inner { height: 100%; }
+
+.multihero-arrow {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(20,28,18,.78) 0%, rgba(20,28,18,.42) 45%, rgba(20,28,18,.05) 75%);
+  z-index: 3;
+  top: 50%;
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--accent-2);
+  background: rgba(255,255,255,.9);
+  box-shadow: var(--s2);
+  transform: translateY(-50%);
+  transition: background var(--t) var(--ease), transform var(--t) var(--ease);
 }
 
-.hero-promo {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-}
-
-.hero-promo-inner {
-  max-width: 560px;
-  padding: var(--space-8) var(--space-5) var(--space-8) var(--content-gutter);
-}
-
-.hero-promo-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(255,255,255,.16);
-  border: 1px solid rgba(255,255,255,.5);
-  border-radius: var(--rf);
-  padding: 6px 16px;
-  margin-bottom: var(--space-5);
-  color: white;
-  font-family: var(--font);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  backdrop-filter: blur(4px);
-}
-.hero-promo-badge svg {
-  width: 15px;
-  height: 15px;
-  flex-shrink: 0;
-}
-
-.hero-promo-titulo {
-  font-size: clamp(2.1rem, 4.6vw, 3.2rem);
-  font-weight: 700;
-  line-height: 1.06;
-  letter-spacing: -0.03em;
-  color: white;
-  margin-bottom: var(--space-5);
-  text-shadow: 0 2px 20px rgba(0,0,0,.25);
-}
-.hero-promo-titulo strong {
-  font: inherit;
-  color: #D9E8C9;
-}
-
-.hero-promo-chips {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-5);
-}
-
-.hero-promo-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.4);
-  border-radius: var(--rf);
-  padding: 7px 14px;
-  color: white;
-  font-family: var(--font);
-  font-size: .84rem;
-  font-weight: 600;
-  letter-spacing: -.005em;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  text-shadow: 0 1px 4px rgba(0,0,0,.4);
-}
-
-.hero-promo-chip svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.hero-promo-texto {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: rgba(255,255,255,.9);
-  line-height: 1.6;
-  max-width: 420px;
-  margin-bottom: var(--space-6);
-}
-
-/* ── Cuenta regresiva de la promo ──
-   Ocupa el lugar del párrafo: cuatro cajas de vidrio con días / horas /
-   minutos / segundos. La fecha límite viaja en el data-fin del HTML, así
-   cambiar de campaña no obliga a tocar el JS. */
-.promo-cd {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
-}
-.promo-cd-label {
-  font-family: var(--font);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.7);
-}
-.promo-cd-nums { display: flex; gap: 7px; }
-.promo-cd-u {
-  min-width: 52px;
-  padding: 7px 6px 5px;
-  background: rgba(255,255,255,.14);
-  border: 1px solid rgba(255,255,255,.34);
-  border-radius: var(--r2);
-  text-align: center;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-}
-.promo-cd-u b {
-  display: block;
-  font-family: var(--font);
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -.03em;
-  color: white;
-  /* Ancho fijo por dígito: sin esto los números bailan a cada segundo. */
-  font-variant-numeric: tabular-nums;
-}
-.promo-cd-u i {
-  display: block;
-  margin-top: 3px;
-  font-style: normal;
-  font-size: 0.56rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.62);
-}
-/* Si la promo venció, el JS marca el bloque y desaparece. */
-.promo-cd.vencida { display: none; }
-
-.hero-promo-nota {
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  color: rgba(255,255,255,.72);
-  line-height: 1.5;
-  max-width: 420px;
-  margin-top: var(--space-4);
-}
-
-.hero-promo-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-
-/* Botón principal sobre foto: variante clara del btn-primary, ya que el
-   verde de marca no resalta sobre sí mismo. */
-.hero-promo-actions .btn-primary {
+.multihero-arrow:hover {
   background: white;
-  color: var(--accent-2);
-  box-shadow: 0 4px 16px rgba(0,0,0,.18);
-}
-.hero-promo-actions .btn-primary:hover {
-  background: var(--surface-2);
-  color: var(--accent-2);
-}
-.hero-promo-actions .btn-ghost-dark {
-  background: rgba(255,255,255,.14);
-  border-color: rgba(255,255,255,.65);
-  color: white;
-}
-.hero-promo-actions .btn-ghost-dark:hover {
-  background: rgba(255,255,255,.22);
-  color: white;
-  border-color: white;
+  transform: translateY(-50%) scale(1.05);
 }
 
-/* Tablet: la proporción fija ya resuelve el alto, solo achicamos el
-   padding lateral para que el texto no quede pegado al borde. */
-@media (max-width: 900px) {
-  .hero-promo-inner { padding: var(--space-7) var(--space-4); max-width: none; }
+.multihero-arrow:focus-visible {
+  outline: 3px solid var(--accent-line);
+  outline-offset: 3px;
 }
 
-/* Mobile: la proporción de la pantalla es tan distinta a la de la foto
-   (angosta y alta vs. panorámica) que mantener el aspect-ratio dejaría
-   un hero larguísimo. Acá se usa el mismo recurso que ya tiene el hero
-   estándar en mobile: alto fijo, foto de fondo enfocada hacia la derecha
-   (donde están la bolsa y la mano) y degradé de arriba hacia abajo con
-   el texto apoyado abajo, sobre la parte más "tranquila" de la imagen
-   (el escalón), para que siempre se lea bien. */
-@media (max-width: 600px) {
-  .hero-promo-bg {
-    aspect-ratio: unset;
-    min-height: 620px;
-    align-items: stretch; /* el bloque de texto ocupa todo el alto del hero */
+.multihero-arrow svg { width: 21px; height: 21px; }
+.multihero-arrow--previous { left: var(--space-5); }
+.multihero-arrow--next { right: var(--space-5); }
+
+.multihero-dots {
+  position: absolute;
+  z-index: 3;
+  bottom: var(--space-4);
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 7px 11px;
+  border: 1px solid rgba(82,98,68,.18);
+  border-radius: var(--rf);
+  background: rgba(255,255,255,.82);
+  box-shadow: var(--s1);
+  transform: translateX(-50%);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+.multihero-dot {
+  position: relative;
+  display: block;
+  width: 7px;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: rgba(82,98,68,.32);
+  transition: width 220ms var(--ease), background 220ms var(--ease);
+}
+
+.multihero-dot.is-active {
+  width: 24px;
+  border-radius: var(--rf);
+  background: rgba(82,98,68,.2);
+}
+
+.multihero-dot.is-active::after {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: inherit;
+  background: var(--accent-2);
+  content: '';
+}
+
+.multihero-dot.is-active.is-progressing::after {
+  animation: multihero-progress 8s linear forwards;
+}
+
+.multihero.is-paused .multihero-dot.is-active.is-progressing::after {
+  animation-play-state: paused;
+}
+
+@keyframes multihero-progress {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@media (max-width: 700px) {
+  .multihero-slide {
+    aspect-ratio: 9 / 13;
   }
-  .hero-promo-photo {
-    object-position: 85% center;
-  }
-  .hero-promo-bg::after {
-    background: linear-gradient(180deg, rgba(20,28,18,.42) 0%, rgba(20,28,18,.16) 32%, rgba(20,28,18,.08) 45%, rgba(20,28,18,.88) 100%);
-  }
-  .hero-promo {
-    display: flex;
-  }
-  /* El título (con el párrafo debajo) sube al tope del hero, aprovechando
-     el espacio vacío del encuadre; los botones y la nota quedan apoyados
-     abajo, exactamente donde estaban. La pill no se muestra en mobile. */
-  .hero-promo-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    /* Arriba achicamos un pelo el padding para que el bloque
-       título/chips/contador quede unos px más arriba, en mejor
-       armonía con la bolsa de la foto; abajo se mantiene igual
-       para que los botones sigan apoyados en el fondo. */
-    padding: 20px var(--space-4) var(--space-5);
-    max-width: none;
-  }
-  .hero-promo-badge {
-    display: none;
-  }
-  .hero-promo-titulo {
-    font-size: clamp(1.92rem, 8.65vw, 2.4rem);
-    margin-bottom: var(--space-3);
-    /* Sin la pill arriba, el título necesita más peso visual: sombra más
-       marcada + un leve halo oscuro que lo despega de la foto clara. */
-    text-shadow: 0 2px 6px rgba(0,0,0,.45), 0 8px 30px rgba(0,0,0,.35);
-  }
-  .hero-promo-titulo strong {
-    text-shadow: 0 2px 6px rgba(0,0,0,.5), 0 8px 30px rgba(0,0,0,.35);
-  }
-  /* Los chips de beneficios también se cortan antes de chocar con la bolsa
-     del super de la foto, y se achican bien para quedar los dos en una sola
-     hilera sin desplazar el contador. */
-  .hero-promo-chips {
-    max-width: 60%;
-    gap: 5px;
-    margin-bottom: var(--space-2);
-    flex-wrap: nowrap;
-  }
-  .hero-promo-chip {
-    padding: 4px 9px;
-    font-size: .72rem;
-    gap: 5px;
-    white-space: nowrap;
-  }
-  .hero-promo-chip svg {
-    width: 11px;
-    height: 11px;
-  }
-  .hero-promo-texto {
-    max-width: 60%; /* corta antes de chocar con la bolsa de la foto */
-    margin-bottom: 0;
-    text-shadow: 0 1px 5px rgba(0,0,0,.45);
-  }
-  /* El contador se apila: "Termina en" pasa a ser un renglón propio arriba
-     de las cajas (en fila no entra). Sin el rótulo los números no se
-     entienden. Las cajas NO se estiran a todo el ancho: quedan compactas
-     contra la izquierda, ocupando poco más de la mitad de la pantalla. */
-  .promo-cd {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    margin-bottom: 0;
-  }
-  .promo-cd-label {
-    font-size: 0.62rem;
-    text-shadow: 0 1px 4px rgba(0,0,0,.5);
-  }
-  .promo-cd-nums { gap: 6px; }
-  .promo-cd-u {
-    /* Ancho fijo (sin flex, para que no se repartan todo el ancho): las
-       cuatro cajas ocupan cerca del 60% de la pantalla. */
-    flex: 0 0 auto;
-    width: 54px;
-    min-width: 0;
-    padding: 7px 3px 5px;
-  }
-  .promo-cd-u b { font-size: 1.3rem; }
-  .promo-cd-u i { font-size: 0.54rem; letter-spacing: .08em; }
-  .hero-promo-nota {
-    align-self: stretch;
-    max-width: none;
-  }
-  .hero-promo-actions {
-    margin-top: auto; /* empuja botones + nota al pie */
-  }
-  .hero-promo-actions {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-  }
-  .hero-promo-actions .btn-primary,
-  .hero-promo-actions .btn-ghost-dark {
-    width: 100%;
+
+  .multihero-arrow { display: none; }
+  .multihero-dots { bottom: var(--space-3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .multihero-track,
+  .multihero-dot,
+  .multihero-dot.is-active.is-progressing::after {
+    transition: none;
+    animation: none;
   }
 }
 
