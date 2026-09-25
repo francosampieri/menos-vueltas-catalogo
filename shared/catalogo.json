@@ -9439,6 +9439,106 @@
       "Imagen": "",
       "Tipo": "Rentable",
       "Sin_Stock": false
+    },
+    {
+      "Id": "550",
+      "Activo": "ON",
+      "Cat B2C": "OFF",
+      "Cat B2B": "ON",
+      "Producto": "Pasta de Mani Proteíca Salted Caramel",
+      "Marca": "ENTRENUTS",
+      "Tamaño": "370",
+      "UM": "g",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tags": "",
+      "Id_Grupo": "288",
+      "Tipo_Variante": "",
+      "Label_Variante": "",
+      "Label_Tamaño": "",
+      "Imagen": "",
+      "Tipo": "Rentable",
+      "Sin_Stock": false
+    },
+    {
+      "Id": "551",
+      "Activo": "ON",
+      "Cat B2C": "OFF",
+      "Cat B2B": "ON",
+      "Producto": "Pasta de Mani Crocante",
+      "Marca": "ENTRENUTS",
+      "Tamaño": "370",
+      "UM": "g",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tags": "",
+      "Id_Grupo": "289",
+      "Tipo_Variante": "",
+      "Label_Variante": "",
+      "Label_Tamaño": "",
+      "Imagen": "",
+      "Tipo": "Rentable",
+      "Sin_Stock": false
+    },
+    {
+      "Id": "552",
+      "Activo": "ON",
+      "Cat B2C": "OFF",
+      "Cat B2B": "ON",
+      "Producto": "Miel Líquida",
+      "Marca": "MONTENATURAL",
+      "Tamaño": "500",
+      "UM": "g",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tags": "",
+      "Id_Grupo": "290",
+      "Tipo_Variante": "",
+      "Label_Variante": "",
+      "Label_Tamaño": "",
+      "Imagen": "",
+      "Tipo": "Rentable",
+      "Sin_Stock": false
+    },
+    {
+      "Id": "553",
+      "Activo": "ON",
+      "Cat B2C": "OFF",
+      "Cat B2B": "ON",
+      "Producto": "Frutigran Avena y Chips de Chocolate",
+      "Marca": "FRUTIGRAN",
+      "Tamaño": "250",
+      "UM": "g",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tags": "",
+      "Id_Grupo": "291",
+      "Tipo_Variante": "",
+      "Label_Variante": "",
+      "Label_Tamaño": "",
+      "Imagen": "",
+      "Tipo": "Rentable",
+      "Sin_Stock": false
+    },
+    {
+      "Id": "554",
+      "Activo": "ON",
+      "Cat B2C": "OFF",
+      "Cat B2B": "ON",
+      "Producto": "Frutigran Salvado",
+      "Marca": "FRUTIGRAN",
+      "Tamaño": "250",
+      "UM": "g",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tags": "",
+      "Id_Grupo": "292",
+      "Tipo_Variante": "",
+      "Label_Variante": "",
+      "Label_Tamaño": "",
+      "Imagen": "",
+      "Tipo": "Rentable",
+      "Sin_Stock": false
     }
   ],
   "grupos": [
@@ -11345,6 +11445,41 @@
       "Marca": "BENEVIA",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables"
+    },
+    {
+      "Id_Grupo": "288",
+      "Nombre_Grupo": "Pasta de Mani Proteíca Salted Caramel",
+      "Marca": "ENTRENUTS",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables"
+    },
+    {
+      "Id_Grupo": "289",
+      "Nombre_Grupo": "Pasta de Mani Sin Azúcar Crocante",
+      "Marca": "ENTRENUTS",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables"
+    },
+    {
+      "Id_Grupo": "290",
+      "Nombre_Grupo": "Miel Líquida",
+      "Marca": "",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables"
+    },
+    {
+      "Id_Grupo": "291",
+      "Nombre_Grupo": "Frutigran Avena y Chips de Chocolate",
+      "Marca": "FRUTIGRAN",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables"
+    },
+    {
+      "Id_Grupo": "292",
+      "Nombre_Grupo": "Frutigran Salvado",
+      "Marca": "FRUTIGRAN",
+      "Categoria": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables"
     }
   ],
   "precios_b2c": [
@@ -12420,13 +12555,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Harinas",
       "Tipo": "Ancla",
-      "Precio_Venta": "$6.000,00",
+      "Precio_Venta": "$5.800,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$6.000,00",
+      "Precio_Mayorista": "$5.800,00",
       "promo": "",
-      "Precio_Promo": "$6.000,00",
-      "Precio_Promo_Mayorista": "$6.000,00"
+      "Precio_Promo": "$5.800,00",
+      "Precio_Promo_Mayorista": "$5.800,00"
     },
     {
       "Id": "79",
@@ -18197,11 +18332,11 @@
       "Tipo": "Rentable",
       "Precio_Venta": "$7.000,00",
       "Uni Dto": "3",
-      "Dto": "5%",
-      "Precio_Mayorista": "$6.650,00",
+      "Dto": "4%",
+      "Precio_Mayorista": "$6.700,00",
       "promo": "",
       "Precio_Promo": "$7.000,00",
-      "Precio_Promo_Mayorista": "$6.650,00"
+      "Precio_Promo_Mayorista": "$6.700,00"
     },
     {
       "Id": "533",
@@ -19472,13 +19607,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Harinas",
       "Tipo": "Ancla",
-      "Precio_Venta": "$5.900,00",
+      "Precio_Venta": "$5.700,00",
       "Uni Dto": "2",
       "Dto": "8%",
-      "Precio_Mayorista": "$5.450,00",
+      "Precio_Mayorista": "$5.250,00",
       "promo": "",
-      "Precio_Promo": "$5.900,00",
-      "Precio_Promo_Mayorista": "$5.450,00"
+      "Precio_Promo": "$5.700,00",
+      "Precio_Promo_Mayorista": "$5.250,00"
     },
     {
       "Id": "79",
