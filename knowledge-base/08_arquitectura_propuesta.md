@@ -28,6 +28,14 @@ Google Sheets (fuente de verdad)
 
 B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. El orden editorial de grupos se configura localmente en ese archivo y se separa por canal, categoría y subcategoría; sólo reordena los grupos ya elegibles para la exploración normal. La misma colección ordenada alimenta los rieles mobile y las grillas desktop. Esta capa no modifica la fuente de Sheets ni los CSV o JSON generados, ni precios, promociones o disponibilidad. La política de envío se aplica sólo a B2C: el mismo cálculo debe alimentar el carrito, el mensaje de pedido y la transferencia por QR; el QR conserva productos y cantidades, y recalcula el envío al abrirse en el teléfono. El carrito crea un mensaje de pedido para WhatsApp. En escritorio contempla abrir WhatsApp Web o transferir el pedido al teléfono mediante QR; en móvil abre WhatsApp directamente.
 
+### Multihero público
+
+Las landings B2C y B2B usan la misma estructura de carrusel definida en sus `index.html` y el módulo compartido sin dependencias `shared/multihero.js`. Cada hero es un bloque HTML independiente: el primero es `hero-actual` (vacío hasta contar con su diseño), el segundo es `hero-estandar` y se pueden agregar héroes extra sin modificar la lógica de navegación. El contenido y las acciones permanecen propios de cada canal.
+
+El módulo normaliza el ciclo automático y la interacción: avanza cada ocho segundos, vuelve al primer bloque al terminar, reinicia el conteo después de una navegación manual y respeta `prefers-reduced-motion` y la visibilidad de la pestaña. En desktop se navega con flechas; en mobile se usa swipe horizontal deliberado. Los puntos de navegación muestran el bloque activo y su progreso, sin ofrecer un control permanente para detener la rotación.
+
+Todos los héroes deben ajustarse al mismo lienzo: relación 16:7 en desktop/tablet (guía de imagen 1600 × 700 px) y 9:13 en mobile (guía de imagen 1080 × 1560 px). Esto evita saltos de layout aunque su contenido, imagen, CTAs o contadores sean distintos.
+
 ### Actualización del catálogo
 
 `.github/workflows/actualizar-catalogo.yml` se ejecuta cada 30 minutos y puede iniciarse manualmente. Descarga los CSV públicos de Productos, Grupos y Precios; produce el catálogo completo y una versión reducida para el panel; valida que no exista una proporción anormal de productos B2C activos sin precio; y hace commit y push de los JSON cuando detecta cambios.

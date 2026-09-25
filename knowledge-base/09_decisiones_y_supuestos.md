@@ -10,6 +10,10 @@
 - El precio se comunica como competitivo o conveniente, sin construir una propuesta de servicio premium.
 - El público objetivo puede incluir barrios privados; la estética se mantiene accesible y no premium.
 - La identidad visual vigente toma como referencia el Brand Book de Canva: verde oliva, fondo cálido claro, grafito, DM Sans, Cabin e iconografía Tabler.
+- El hero público se implementa como un multihero compartido por B2C y B2B: `hero-actual` vacío en la primera posición, `hero-estandar` en la segunda y bloques HTML extra independientes cuando se definan. Cada canal conserva su contenido y acciones propios.
+- El multihero rota automáticamente cada ocho segundos y el punto activo se completa progresivamente para anticipar el siguiente desplazamiento. La navegación manual reinicia el conteo; en desktop usa flechas y en mobile swipe horizontal, sin flechas visibles.
+- El multihero se pausa al interactuar, cuando la pestaña pierde visibilidad, si el sistema solicita reducción de movimiento y mientras se mantiene el dedo sobre él en mobile. No se pausa al pasar el cursor en desktop y no incluye un botón permanente para detener la rotación.
+- Todo hero debe respetar relación 16:7 en desktop/tablet (guía 1600 × 700 px) y 9:13 en mobile (guía 1080 × 1560 px), incluso cuando tenga imágenes, botones o contadores distintos.
 - WhatsApp es el canal de cierre y coordinación.
 - La prioridad comercial inmediata es alcanzar y sostener 10 pedidos B2C semanales; la validación activa de segmentos de mayor poder adquisitivo queda después de ese objetivo.
 - La primera campaña de adquisición fuera del círculo cercano se prueba mediante visitas puerta a puerta en 21 de Julio. Busca captar contactos B2C interesados por WhatsApp; el seguimiento es manual y los contactos inactivos durante tres o cuatro semanas pueden retirarse de la lista o recibir comunicaciones con menor frecuencia.

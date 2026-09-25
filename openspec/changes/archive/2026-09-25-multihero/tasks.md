@@ -14,4 +14,4 @@
 ## 3. Verificación
 
 - [x] 3.1 Ejecutar la suite Node completa y `openspec validate multihero --strict`; verificar que todos los tests y la especificación pasen.
-- [ ] 3.2 Revisar manualmente B2C y B2B en desktop y mobile: ciclo de ocho segundos, punto activo, flechas, swipe, pausas solicitadas y ausencia de pausa por hover desktop.
+- [x] 3.2 Revisar manualmente B2C y B2B en desktop y mobile: ciclo de ocho segundos, punto activo, flechas, swipe, pausas solicitadas y ausencia de pausa por hover desktop.
