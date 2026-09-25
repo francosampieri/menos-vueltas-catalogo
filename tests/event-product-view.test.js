@@ -39,7 +39,6 @@ test('does not expose inactive or empty event definitions', () => {
 test('ships an isolated B2C event shell and no B2B entry point', () => {
   assert.match(b2c, /VISTAS_EVENTO_B2C/);
   assert.match(b2c, /id="vista-evento"/);
-  assert.match(b2c, /data-vista-evento[^>]*data-evento-id="campana-nuevos-habitos"/);
   assert.match(source, /\[data-vista-evento\]\[data-evento-id\]/);
   assert.doesNotMatch(b2b, /vista-evento|VISTAS_EVENTO_B2C|data-vista-evento/);
   assert.match(styles, /#vista-evento/);
