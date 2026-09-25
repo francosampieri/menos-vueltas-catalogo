@@ -22,6 +22,14 @@
 5. Al importar el pedido, el panel revalida el código. El equipo comprueba manualmente que corresponda a primera compra; si no corresponde, lo retira y se recalculan descuento, envío y total.
 6. Al guardar el pedido quedan registrados el código, su porcentaje y el descuento aplicado, independientes de cambios posteriores en la campaña.
 
+## Flujo B2C: vista editorial de evento
+
+1. La persona llega desde el CTA de un hero B2C activo; la vista no se publica en menú, buscador, filtros, sidebar ni catálogo normal.
+2. La web consulta la definición del evento vinculada a ese hero y conserva su lista explícita y ordenada de `Id_Grupo`; sólo presenta los grupos activos que existan en el catálogo B2C vigente.
+3. La persona explora las tarjetas de la selección. Al elegir una, se abre el mismo modal de producto que usa el catálogo, sin navegar hacia él.
+4. Al cerrar el modal, el foco vuelve a la tarjeta que lo abrió. Cerrar la vista, usar Escape o Atrás devuelve a la landing B2C sin conservar una ruta permanente para el evento.
+5. Al retirar el CTA del hero y su definición asociada, el evento deja de tener entrada pública. Esto no elimina ni modifica los productos en sus categorías naturales o en Nuevos.
+
 ## Flujo de carrito temporal y QR
 
 1. Al agregar un producto manualmente, la web guarda únicamente sus identificadores y cantidades en el almacenamiento temporal de la pestaña y del canal actual; B2C y B2B no comparten ese estado.

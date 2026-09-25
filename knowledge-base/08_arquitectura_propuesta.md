@@ -36,6 +36,12 @@ El módulo normaliza el ciclo automático y la interacción: avanza cada ocho se
 
 Todos los héroes deben ajustarse al mismo lienzo: relación 16:7 en desktop/tablet (guía de imagen 1600 × 700 px) y 9:13 en mobile (guía de imagen 1080 × 1560 px). Esto evita saltos de layout aunque su contenido, imagen, CTAs o contadores sean distintos.
 
+### Vista editorial de evento B2C
+
+La landing B2C puede definir una `vista-evento` junto al hero que la invoca. La definición local contiene activación, textos, CTA y una lista ordenada de `Id_Grupo`; `shared/app.js` la resuelve exclusivamente contra el catálogo B2C ya cargado, descarta grupos ausentes o inactivos y no infiere productos por categoría, tags o Nuevos. No hay URL o ruta permanente, ni punto de entrada en B2B, menú, filtros, buscador o catálogo normal.
+
+La vista crea sus propias tarjetas para evitar conflictos con las tarjetas ya renderizadas del catálogo, pero reutiliza datos públicos vigentes, precios, badges, carrito y `abrirModalProducto(...)`. El estado de navegación conserva el origen para que el cierre de modal, Escape, Atrás y el cierre de la vista devuelvan al lugar correcto. Retirar conjuntamente el CTA y la definición deja el evento inaccesible sin modificar Sheets, Apps Script, JSON generado ni los productos del catálogo.
+
 ### Actualización del catálogo
 
 `.github/workflows/actualizar-catalogo.yml` se ejecuta cada 30 minutos y puede iniciarse manualmente. Descarga los CSV públicos de Productos, Grupos y Precios; produce el catálogo completo y una versión reducida para el panel; valida que no exista una proporción anormal de productos B2C activos sin precio; y hace commit y push de los JSON cuando detecta cambios.
