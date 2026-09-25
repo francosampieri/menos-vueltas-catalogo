@@ -459,8 +459,10 @@ img { display: block; max-width: 100%; }
 ══════════════════════════════════════════════════════ */
 #vista-landing  { display: block; }
 #vista-catalogo { display: none;  }
+#vista-evento   { display: none;  }
 #vista-landing.oculta   { display: none;  }
 #vista-catalogo.visible { display: block; }
+#vista-evento.visible   { display: block; }
 
 
 /* ══════════════════════════════════════════════════════
@@ -3190,6 +3192,62 @@ img { display: block; max-width: 100%; }
   font-size: 0.845rem;
   color: var(--t3);
   font-weight: 400;
+}
+
+/* ══════════════════════════════════════════════════════
+   VISTA EVENTO B2C
+   Estructura neutral: no define estética ni jerarquía de una campaña.
+══════════════════════════════════════════════════════ */
+.evento-topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line-soft);
+  height: 48px;
+}
+.evento-topbar-inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: 0 var(--space-5);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.evento-titulo-label {
+  font-size: 0.845rem;
+  color: var(--t3);
+  font-weight: 400;
+}
+.evento-main {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5) 120px;
+}
+.evento-head {
+  margin-bottom: var(--space-6);
+  max-width: 680px;
+}
+.evento-head h1 {
+  font-family: var(--font);
+  color: var(--t1);
+  font-size: clamp(1.6rem, 3vw, 2.35rem);
+  margin: 0;
+}
+.evento-head p {
+  color: var(--t2);
+  margin: var(--space-2) 0 0;
+  line-height: 1.55;
+}
+.evento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+.evento-grid > .event-card { min-width: 0; }
+
+@media (max-width: 600px) {
+  .evento-topbar-inner { padding: 0 var(--space-4); }
+  .evento-main { padding: var(--space-6) var(--space-4) 110px; }
+  .evento-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 }
 
 /* Filtros (chips). Solo se usan en mobile: en escritorio la navegación la

@@ -91,6 +91,26 @@ function productoNoDisponible(producto) {
   return DisponibilidadPublica.isUnavailable(producto);
 }
 
+// ══ VISTAS EDITORIALES TEMPORALES B2C ══
+// Cada evento declara de forma explícita los Id_Grupo que desea reunir. No
+// toma categorías, tags ni la marca de Nuevo como sustituto de esa lista.
+const VistaEventoB2C = (() => {
+  function eligibleGroupIds(definition, availableIds) {
+    if (!definition?.active || !Array.isArray(definition.groupIds)) return [];
+    const seen = new Set();
+    return definition.groupIds
+      .map(String)
+      .filter(id => !seen.has(id) && seen.add(id))
+      .filter(id => availableIds?.has(id));
+  }
+
+  function canOpen(definition, ids) {
+    return definition?.active === true && Array.isArray(ids) && ids.length > 0;
+  }
+
+  return Object.freeze({ eligibleGroupIds, canOpen });
+})();
+
 // ══ ESTADO GLOBAL ══
 let grupos          = {};  // id_grupo → { nombre, marca, categoria, subcategoria }
 let catalogo        = {};  // id_grupo → [productos]
@@ -316,6 +336,13 @@ function badgeCarritoIcono() {
   return b;
 }
 
+function actualizarBadgesCarritoGrupo(gid) {
+  const estaEnCarrito = carrito.some(item => item.gid === gid);
+  document.querySelectorAll('[data-badge-carrito-grupo]').forEach(badge => {
+    if (badge.dataset.badgeCarritoGrupo === String(gid)) badge.classList.toggle('visible', estaEnCarrito);
+  });
+}
+
 // Línea de precio unitario de cada renglón del carrito. Con descuento por
 // cantidad activo se tacha el precio unitario (ya con promo) y se muestra el
 // de cantidad; si no, se tacha el de lista contra el de promo.
@@ -424,6 +451,7 @@ function renderCatalogo() {
   llenarMegamenu();
   renderGrupos();
   renderNuevosIngresos();
+  inicializarCTAsVistaEvento();
 
   // El QR tiene prioridad sobre cualquier estado temporal de esta pestaña.
   // Ambos flujos esperan al catálogo actual y no restauran navegación ni capas.
@@ -1242,6 +1270,192 @@ function crearCard(gid, vars) {
   });
 
   return card;
+}
+
+function configuracionVistasEventoB2C() {
+  if (CANAL !== 'B2C' || typeof window === 'undefined') return {};
+  return window.VISTAS_EVENTO_B2C || {};
+}
+
+function definicionVistaEvento(idEvento) {
+  return configuracionVistasEventoB2C()[String(idEvento)] || null;
+}
+
+function gruposElegiblesVistaEvento(definicion) {
+  return VistaEventoB2C.eligibleGroupIds(definicion, new Set(Object.keys(catalogo)));
+}
+
+function idSeguroEvento(valor) {
+  return String(valor).replace(/[^a-zA-Z0-9_-]/g, '-');
+}
+
+function crearCardEvento(idEvento, gid, vars) {
+  const g = grupos[gid] || {};
+  const primera = vars[0];
+  const nombre = g.nombre || primera['Producto'] || 'Producto';
+  const marca = g.marca || primera['Marca'] || '';
+  const categoria = g.categoria || primera['Categoria'] || '';
+  const precio = preciosDe(primera).promo;
+  const precioCantidad = preciosCantidadDe(primera).promo;
+  const unidadesCantidad = parseInt(primera['Uni Dto']) || 0;
+
+  const card = document.createElement('article');
+  card.className = 'card event-card';
+  card.id = `event-card-${idSeguroEvento(idEvento)}-${gid}`;
+  card.tabIndex = 0;
+  card.setAttribute('role', 'button');
+  card.setAttribute('aria-label', `Ver detalle de ${nombre}`);
+
+  const imagen = document.createElement('div');
+  imagen.className = 'card-img-wrap' + (grupoTieneNuevo(vars) ? ' tiene-nuevo' : '');
+  const placeholder = document.createElement('div');
+  placeholder.className = 'card-img-placeholder';
+  placeholder.textContent = getEmoji(categoria);
+  imagen.appendChild(placeholder);
+
+  const url = primera['Imagen'] && primera['Imagen'].trim() ? primera['Imagen'].trim() : null;
+  if (url) {
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = nombre;
+    img.onload = () => { placeholder.style.display = 'none'; };
+    img.onerror = () => { img.remove(); };
+    imagen.appendChild(img);
+  }
+
+  const etiqueta = etiquetaPromo(primera);
+  if (etiqueta && tienePromo(primera)) {
+    imagen.classList.add('tiene-promo');
+    imagen.appendChild(badgePromo(etiqueta));
+  }
+  if (grupoTieneNuevo(vars)) imagen.appendChild(badgeNuevo());
+  const badgeCarrito = badgeCarritoIcono();
+  badgeCarrito.dataset.badgeCarritoGrupo = gid;
+  if (carrito.some(item => item.gid === gid)) badgeCarrito.classList.add('visible');
+  imagen.appendChild(badgeCarrito);
+
+  const cuerpo = document.createElement('div');
+  cuerpo.className = 'card-body';
+  const marcaEl = document.createElement('div');
+  marcaEl.className = 'card-marca';
+  marcaEl.textContent = marca;
+  const nombreEl = document.createElement('div');
+  nombreEl.className = 'card-nombre';
+  nombreEl.textContent = nombre;
+  const variante = document.createElement('div');
+  variante.className = 'card-variante-label';
+  variante.textContent = buildVarianteLabel(primera, vars);
+  const precioEl = document.createElement('div');
+  precioEl.className = 'card-precio' + (precio === null ? ' sin-precio' : '');
+  if (precio === null) precioEl.textContent = 'Precio a confirmar';
+  else precioEl.innerHTML = htmlPrecioCard(primera);
+  cuerpo.append(marcaEl, nombreEl, variante, precioEl);
+
+  if (unidadesCantidad > 0 && precioCantidad !== null) {
+    const cantidad = document.createElement('div');
+    cantidad.className = 'card-precio-dto';
+    cantidad.innerHTML = `<strong>${formatPrecio(precioCantidad)} c/u</strong> ${unidadesCantidad} o más`;
+    cuerpo.appendChild(cantidad);
+  }
+  if (productoNoDisponible(primera)) {
+    const disponibilidad = document.createElement('p');
+    disponibilidad.className = 'producto-no-disponible';
+    disponibilidad.textContent = DisponibilidadPublica.message;
+    cuerpo.appendChild(disponibilidad);
+  }
+
+  card.append(imagen, cuerpo);
+  const abrirDetalle = event => abrirModalProducto(gid, vars, 0, event.currentTarget);
+  card.addEventListener('click', abrirDetalle);
+  card.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    abrirDetalle(event);
+  });
+  return card;
+}
+
+function renderVistaEvento(idEvento) {
+  const definicion = definicionVistaEvento(idEvento);
+  const ids = gruposElegiblesVistaEvento(definicion);
+  if (!VistaEventoB2C.canOpen(definicion, ids)) return false;
+
+  const contenedor = document.getElementById('evento-productos');
+  const titulo = document.getElementById('evento-titulo');
+  const etiqueta = document.getElementById('evento-titulo-label');
+  const descripcion = document.getElementById('evento-descripcion');
+  if (!contenedor || !titulo || !etiqueta || !descripcion) return false;
+
+  const textoTitulo = definicion.title || 'Selección especial';
+  titulo.textContent = textoTitulo;
+  etiqueta.textContent = textoTitulo;
+  descripcion.textContent = definicion.description || '';
+  descripcion.hidden = !definicion.description;
+  contenedor.replaceChildren(...ids.map(gid => crearCardEvento(idEvento, gid, catalogo[gid])));
+  return true;
+}
+
+function inicializarCTAsVistaEvento() {
+  if (CANAL !== 'B2C') return;
+  document.querySelectorAll('[data-vista-evento][data-evento-id]').forEach(cta => {
+    const definicion = definicionVistaEvento(cta.dataset.eventoId);
+    const puedeAbrir = VistaEventoB2C.canOpen(definicion, gruposElegiblesVistaEvento(definicion));
+    cta.hidden = !puedeAbrir;
+    cta.setAttribute('aria-hidden', String(!puedeAbrir));
+    if (cta.dataset.eventoInicializado) return;
+    cta.dataset.eventoInicializado = 'true';
+    cta.addEventListener('click', event => abrirVistaEvento(cta.dataset.eventoId, event.currentTarget));
+  });
+}
+
+function activarVistaEvento(idEvento, opciones = {}) {
+  if (CANAL !== 'B2C' || !renderVistaEvento(idEvento)) return false;
+  const evento = document.getElementById('vista-evento');
+  if (!evento) return false;
+  document.getElementById('vista-landing')?.classList.add('oculta');
+  document.getElementById('vista-catalogo')?.classList.remove('visible');
+  evento.classList.add('visible');
+  evento.dataset.eventoId = idEvento;
+  evento.setAttribute('aria-hidden', 'false');
+  actualizarEstadoBarraMovil('landing');
+  document.removeEventListener('keydown', escCerrarVistaEvento);
+  document.addEventListener('keydown', escCerrarVistaEvento);
+  window.scrollTo({ top: 0, behavior: opciones.instantaneo ? 'instant' : 'auto' });
+  return true;
+}
+
+function desactivarVistaEvento() {
+  const evento = document.getElementById('vista-evento');
+  document.removeEventListener('keydown', escCerrarVistaEvento);
+  if (!evento) return;
+  evento.classList.remove('visible');
+  evento.removeAttribute('data-evento-id');
+  evento.setAttribute('aria-hidden', 'true');
+}
+
+function abrirVistaEvento(idEvento, disparador = document.activeElement, opciones = {}) {
+  const yaVisible = document.getElementById('vista-evento')?.classList.contains('visible');
+  if (!yaVisible && !opciones.desdeHistorial) actualizarHistorialUiActual();
+  if (!activarVistaEvento(idEvento, opciones)) return false;
+  if (!opciones.desdeHistorial) {
+    if (!yaVisible) crearEntradaHistorialUi('evento', disparador);
+    else actualizarHistorialUiActual();
+  }
+  return true;
+}
+
+function cerrarVistaEvento(opciones = {}) {
+  const evento = document.getElementById('vista-evento');
+  if (!evento?.classList.contains('visible')) return;
+  if (!opciones.desdeHistorial && volverEnHistorialUi('evento')) return;
+  desactivarVistaEvento();
+  document.getElementById('vista-landing')?.classList.remove('oculta');
+  actualizarEstadoBarraMovil('landing');
+  window.scrollTo({ top: 0, behavior: opciones.instantaneo ? 'instant' : 'auto' });
+}
+
+function escCerrarVistaEvento(event) {
+  if (event.key === 'Escape' && !document.getElementById('productoModal')) cerrarVistaEvento();
 }
 
 // Refresca la parte "de arriba" de una card (o del modal): label de
@@ -2100,6 +2314,7 @@ function agregarAlCarrito(gid, variante, qty, opciones = {}) {
   if (badge) badge.classList.add('visible');
   const badgeModal = document.getElementById(`badge-modal-${gid}`);
   if (badgeModal) badgeModal.classList.add('visible');
+  actualizarBadgesCarritoGrupo(gid);
   return true;
 }
 
@@ -2158,6 +2373,7 @@ function eliminarDelCarrito(idx) {
     const badgeModal = document.getElementById(`badge-modal-${gid}`);
     if (badgeModal) badgeModal.classList.remove('visible');
   }
+  actualizarBadgesCarritoGrupo(gid);
   actualizarUICarrito();
   guardarCarritoSesion();
 }
@@ -2860,7 +3076,9 @@ function capaUiActual() {
 
 function selectorDeFocoUi(elemento, capa) {
   if (elemento?.id) return `#${CSS.escape(elemento.id)}`;
-  if (capa === 'producto' && elemento?.closest?.('[id^="card-"]')) return `#${CSS.escape(elemento.closest('[id^="card-"]').id)}`;
+  if (capa === 'producto' && elemento?.closest?.('[id^="card-"], [id^="event-card-"]')) {
+    return `#${CSS.escape(elemento.closest('[id^="card-"], [id^="event-card-"]').id)}`;
+  }
   if (capa === 'carrito') {
     if (elemento?.classList?.contains('cart-floating-btn')) return '#cartFloatingBtn';
     if (elemento?.classList?.contains('mobile-bottom-nav-action--cart')) return '#mobileCartButton';
@@ -2871,16 +3089,22 @@ function selectorDeFocoUi(elemento, capa) {
 
 function estadoUiActual(capa = capaUiActual(), foco = null) {
   const catalogoVisible = document.getElementById('vista-catalogo')?.classList.contains('visible');
+  const eventoVisible = document.getElementById('vista-evento')?.classList.contains('visible');
+  const scrollActual = document.body.classList.contains('modal-abierto') ? scrollGuardado : window.scrollY;
   return {
     [MARCA_HISTORIAL_UI]: true,
-    vista: catalogoVisible ? 'catalogo' : 'landing',
+    vista: eventoVisible ? 'evento' : (catalogoVisible ? 'catalogo' : 'landing'),
     catalogo: {
       categoria: filtroActivo,
       subcategoria: filtroSubcat,
       filtroEspecial,
       busqueda: busquedaActiva,
-      scrollY: document.body.classList.contains('modal-abierto') ? scrollGuardado : window.scrollY
+      scrollY: scrollActual
     },
+    evento: eventoVisible ? {
+      id: document.getElementById('vista-evento').dataset.eventoId || null,
+      scrollY: scrollActual
+    } : null,
     capa,
     foco
   };
@@ -2908,7 +3132,9 @@ function crearEntradaHistorialUi(tipo, disparador = document.activeElement) {
 }
 
 function volverEnHistorialUi(tipo) {
-  if (!esEstadoUi(history.state) || history.state.capa?.tipo !== tipo) return false;
+  if (!esEstadoUi(history.state)) return false;
+  if (tipo === 'evento' && history.state.vista !== 'evento') return false;
+  if (tipo !== 'evento' && history.state.capa?.tipo !== tipo) return false;
   history.back();
   return true;
 }
@@ -2931,6 +3157,7 @@ function restaurarFocoUi(estadoSaliente) {
 function cerrarCapasParaHistorialUi() {
   document.removeEventListener('keydown', escCerrarModal);
   document.removeEventListener('keydown', escCerrarEnvio);
+  desactivarVistaEvento();
   document.getElementById('productoModal')?.remove();
   document.getElementById('envioModal')?.remove();
   document.getElementById('carritoOverlay')?.classList.remove('open');
@@ -2945,7 +3172,8 @@ function restaurarEstadoHistorialUi(estado, estadoSaliente) {
   cerrarCapasParaHistorialUi();
 
   const esCatalogo = estado.vista === 'catalogo';
-  document.getElementById('vista-landing').classList.toggle('oculta', esCatalogo);
+  const esEvento = estado.vista === 'evento';
+  document.getElementById('vista-landing').classList.toggle('oculta', esCatalogo || esEvento);
   document.getElementById('vista-catalogo').classList.toggle('visible', esCatalogo);
   actualizarEstadoBarraMovil(esCatalogo ? 'catalogo' : 'landing');
 
@@ -2969,7 +3197,11 @@ function restaurarEstadoHistorialUi(estado, estadoSaliente) {
     document.getElementById('catalogo-titulo-label').textContent = etiqueta;
   }
 
-  const y = estado.catalogo?.scrollY || 0;
+  if (esEvento && !activarVistaEvento(estado.evento?.id, { desdeHistorial: true, instantaneo: true })) {
+    document.getElementById('vista-landing').classList.remove('oculta');
+  }
+
+  const y = esEvento ? (estado.evento?.scrollY || 0) : (estado.catalogo?.scrollY || 0);
   window.scrollTo({ top: y, behavior: 'instant' });
 
   const capa = estado.capa;
@@ -2987,7 +3219,9 @@ function restaurarEstadoHistorialUi(estado, estadoSaliente) {
   }
 
   restaurandoHistorialUi = false;
-  estadoHistorialUiActual = estado;
+  estadoHistorialUiActual = esEvento && !document.getElementById('vista-evento')?.classList.contains('visible')
+    ? estadoUiActual()
+    : estado;
   restaurarFocoUi(estadoSaliente);
 }
 
@@ -3026,16 +3260,20 @@ function actualizarEstadoBarraMovil(vista) {
 
 function mostrarLanding(opciones = {}) {
   const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
-  if (estabaEnCatalogo && !opciones.desdeHistorial) actualizarHistorialUiActual();
+  const estabaEnEvento = document.getElementById('vista-evento')?.classList.contains('visible');
+  const estabaEnVistaEspecial = estabaEnCatalogo || estabaEnEvento;
+  if (estabaEnVistaEspecial && !opciones.desdeHistorial) actualizarHistorialUiActual();
   document.getElementById('vista-landing').classList.remove('oculta');
   document.getElementById('vista-catalogo').classList.remove('visible');
+  desactivarVistaEvento();
   actualizarEstadoBarraMovil('landing');
   window.scrollTo({ top: 0, behavior: opciones.instantaneo ? 'instant' : 'smooth' });
-  if (estabaEnCatalogo && !opciones.desdeHistorial) crearEntradaHistorialUi(null);
+  if (estabaEnVistaEspecial && !opciones.desdeHistorial) crearEntradaHistorialUi(null);
 }
 
 function mostrarCatalogo(cat, sub, opciones = {}) {
   const estabaEnCatalogo = document.getElementById('vista-catalogo').classList.contains('visible');
+  const estabaEnEvento = document.getElementById('vista-evento')?.classList.contains('visible');
   const creaEntrada = !estabaEnCatalogo && !opciones.desdeHistorial;
   if (creaEntrada) actualizarHistorialUiActual();
   // Al elegir una categoría, sus helpers actualizan filtros. Durante la
@@ -3044,6 +3282,7 @@ function mostrarCatalogo(cat, sub, opciones = {}) {
   if (creaEntrada) suspendiendoActualizacionHistorialUi = true;
   document.getElementById('vista-landing').classList.add('oculta');
   document.getElementById('vista-catalogo').classList.add('visible');
+  if (estabaEnEvento) desactivarVistaEvento();
   actualizarEstadoBarraMovil('catalogo');
   window.scrollTo({ top: 0 });
 

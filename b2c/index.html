@@ -191,12 +191,44 @@
 <!-- ══ LANDING ══ -->
 <div id="vista-landing">
 
+  <!-- Configuración temporal de vistas editoriales. Se mantiene junto a los
+       heroes B2C: al retirar el CTA y esta definición, la vista deja de
+       tener entrada. Esta configuración es una prueba temporal. -->
+  <script>
+    window.VISTAS_EVENTO_B2C = Object.freeze({
+      'campana-nuevos-habitos': Object.freeze({
+        active: true,
+        title: 'Vista evento de prueba',
+        description: 'Selección temporal para revisar el recorrido de esta nueva vista.',
+        cta: 'Ver productos de prueba',
+        groupIds: ['280', '1', '2', '3', '69', '70']
+      })
+    });
+  </script>
+
   <!-- Los bloques se pueden reordenar, quitar o extender libremente. Cada
        hero conserva su propio HTML; el carrusel sólo aporta navegación. -->
   <section class="multihero" data-multihero aria-roledescription="carrusel" aria-label="Mensajes destacados">
     <div class="multihero-track" data-multihero-track>
-      <!-- Hero actual: primer bloque reservado para la próxima campaña. -->
-      <article class="multihero-slide multihero-slide--actual" data-multihero-slide></article>
+      <!-- Hero actual: prueba temporal de acceso a la vista evento. -->
+      <article class="multihero-slide multihero-slide--actual" data-multihero-slide>
+        <section class="hero-bg">
+          <div class="hero">
+            <div class="hero-inner">
+              <h1 class="hero-title">Vista evento</h1>
+              <div class="hero-pills">
+                <span class="hero-pill">Prueba temporal</span>
+              </div>
+              <div class="hero-actions">
+                <button class="btn-primary" type="button" data-vista-evento data-evento-id="campana-nuevos-habitos">Ver productos de prueba</button>
+              </div>
+            </div>
+            <div class="hero-visual">
+              <img src="hero-bolsas.jpg" alt="" class="hero-photo">
+            </div>
+          </div>
+        </section>
+      </article>
 
       <!-- Hero estándar: segundo bloque por defecto. -->
       <article class="multihero-slide multihero-slide--standard" data-multihero-slide>
@@ -690,6 +722,31 @@
   </footer>
 
 </div><!-- /vista-landing -->
+
+<!-- ══ VISTA EVENTO B2C ══
+     El hero asociado es la única entrada. Esta estructura es deliberadamente
+     neutral: la campaña define luego sus textos y diseño sin alterar el
+     catálogo, filtros, buscador ni navegación normal. -->
+<div id="vista-evento" aria-hidden="true">
+  <div class="evento-topbar">
+    <div class="evento-topbar-inner">
+      <button class="back-btn" type="button" onclick="cerrarVistaEvento()">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Inicio
+      </button>
+      <span class="evento-titulo-label" id="evento-titulo-label"></span>
+    </div>
+  </div>
+  <main class="evento-main" aria-labelledby="evento-titulo">
+    <header class="evento-head">
+      <h1 id="evento-titulo"></h1>
+      <p id="evento-descripcion"></p>
+    </header>
+    <div class="evento-grid" id="evento-productos"></div>
+  </main>
+</div><!-- /vista-evento -->
 
 
 <!-- ══ CATÁLOGO ══ -->
