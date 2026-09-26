@@ -233,27 +233,17 @@
 
       <!-- Hero estándar: segundo bloque por defecto. -->
       <article class="multihero-slide multihero-slide--standard" data-multihero-slide>
-        <section class="hero-bg">
-          <div class="hero">
-            <div class="hero-inner">
-              <h1 class="hero-title">Menos Vueltas</h1>
-              <div class="hero-pills">
-                <span class="hero-pill">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  Más tiempo para vos
-                </span>
-                <span class="hero-pill">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  Más ahorro
-                </span>
-              </div>
-              <div class="hero-actions">
-                <button class="btn-primary" onclick="mostrarCatalogoCompleto()">Ver catálogo</button>
-                <button class="btn-ghost-dark" onclick="scrollLanding('como-comprar')">Cómo pedir</button>
-              </div>
-            </div>
-            <div class="hero-visual">
-              <img src="hero-bolsas.jpg" alt="Bolsas de compras Menos Vueltas" class="hero-photo">
+        <section class="hero-standard">
+          <picture class="hero-standard__art">
+            <source media="(max-width: 700px)" srcset="hero-estandar-mobile.png">
+            <img src="hero-estandar-desktop.png" alt="Bolsas reutilizables con compras junto a la entrada de un hogar">
+          </picture>
+          <div class="hero-standard__content">
+            <h1 class="hero-standard__title">Menos Vueltas</h1>
+            <p class="hero-standard__subtitle">Más tiempo para vos</p>
+            <div class="hero-standard__actions">
+              <button class="hero-standard__primary" type="button" onclick="mostrarCatalogoCompleto()">Ver catálogo</button>
+              <button class="hero-standard__secondary" type="button" onclick="scrollLanding('como-comprar')">Cómo comprar</button>
             </div>
           </div>
         </section>

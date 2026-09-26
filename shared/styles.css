@@ -686,6 +686,111 @@ img { display: block; max-width: 100%; }
   outline-offset: 3px;
 }
 
+/* Hero estándar B2C. Las artes ya incluyen el espacio libre para el texto,
+   por eso se alternan por breakpoint sin recortes ni capas sobre la foto. */
+.hero-standard {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #f6f1e7;
+}
+
+.hero-standard__art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero-standard__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-standard__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: min(45%, 53rem);
+  height: 100%;
+  margin-left: clamp(1.5rem, 6.75vw, 8rem);
+  padding-bottom: clamp(.5rem, 2vw, 2rem);
+}
+
+.hero-standard__title {
+  margin: 0;
+  color: #526244;
+  font-family: var(--font);
+  font-size: clamp(3.15rem, 5.25vw, 6.2rem);
+  font-weight: 700;
+  letter-spacing: -.055em;
+  line-height: .98;
+  white-space: nowrap;
+}
+
+.hero-standard__subtitle {
+  margin: clamp(.75rem, 1.25vw, 1.5rem) 0 clamp(1.8rem, 2.7vw, 3.25rem);
+  color: #2F3430;
+  font-family: var(--font);
+  font-size: clamp(1.65rem, 2.75vw, 3.25rem);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1.08;
+}
+
+.hero-standard__actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(.8rem, 1.65vw, 2rem);
+}
+
+.hero-standard__primary,
+.hero-standard__secondary {
+  min-height: clamp(3.25rem, 4.4vw, 5.25rem);
+  padding: 0 clamp(1.35rem, 2.25vw, 2.75rem);
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: clamp(1rem, 1.6vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background var(--t) var(--ease), color var(--t) var(--ease), border-color var(--t) var(--ease), transform 150ms var(--ease);
+}
+
+.hero-standard__primary {
+  min-width: clamp(12rem, 15.25vw, 18.25rem);
+  border: 1px solid #526244;
+  background: #526244;
+  color: #fff;
+}
+
+.hero-standard__secondary {
+  min-width: clamp(13rem, 16vw, 19.25rem);
+  border: 3px solid #526244;
+  background: transparent;
+  color: #526244;
+}
+
+.hero-standard__primary:hover { background: #445437; border-color: #445437; }
+.hero-standard__secondary:hover { background: rgba(246, 244, 238, .58); }
+.hero-standard__primary:active,
+.hero-standard__secondary:active { transform: scale(.98); }
+.hero-standard__primary:focus-visible,
+.hero-standard__secondary:focus-visible {
+  outline: 3px solid #2F3430;
+  outline-offset: 3px;
+}
+
 /* El hero estándar conserva su diseño interno, pero se adapta al lienzo del
    carrusel para que todos los slides tengan la misma altura. */
 .multihero-slide .hero-bg,
@@ -789,6 +894,42 @@ img { display: block; max-width: 100%; }
   .multihero-slide {
     aspect-ratio: 9 / 13;
   }
+
+  .hero-standard__content {
+    justify-content: flex-start;
+    width: 100%;
+    margin-left: 0;
+    padding: clamp(2.5rem, 18.5vw, 12rem) 6.75% 0;
+  }
+
+  .hero-standard__title {
+    font-size: clamp(2.2rem, 7.7vw, 5.2rem);
+    letter-spacing: -.06em;
+  }
+
+  .hero-standard__subtitle {
+    margin: clamp(.7rem, 2.5vw, 1.4rem) 0 clamp(.95rem, 3.3vw, 2rem);
+    font-size: clamp(1.05rem, 4.45vw, 3rem);
+    letter-spacing: -.045em;
+  }
+
+  .hero-standard__actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 60%;
+    gap: clamp(.7rem, 2.3vw, 1.5rem);
+  }
+
+  .hero-standard__primary,
+  .hero-standard__secondary {
+    width: 100%;
+    min-width: 0;
+    min-height: clamp(2.75rem, 8.6vw, 5.8rem);
+    padding: 0 clamp(.8rem, 2.8vw, 1.8rem);
+    font-size: clamp(.95rem, 3.1vw, 2rem);
+  }
+
+  .hero-standard__secondary { border-width: 2px; }
 
   .hero-comer-mejor__content {
     justify-content: flex-start;
