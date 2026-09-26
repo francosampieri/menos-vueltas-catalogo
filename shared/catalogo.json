@@ -9371,12 +9371,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "barra proteica, barra de proteína, proteína, snack proteico, salted caramel, caramelo salado, caramelo, chocolate, snack, colación, gimnasio, entrenamiento",
       "Id_Grupo": "287",
       "Tipo_Variante": "Sabor",
       "Label_Variante": "Salted Caramel",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/546-benevia-barra-proteica-salted-caramel-60-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9391,12 +9391,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "barra proteica, barra de proteína, proteína, snack proteico, coco, sabor coco, snack, colación, gimnasio, entrenamiento",
       "Id_Grupo": "287",
       "Tipo_Variante": "Sabor",
       "Label_Variante": "Coco",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/547-benevia-barra-proteica-coco-60-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9411,12 +9411,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "barra proteica, barra de proteína, proteína, snack proteico, naranja, sabor naranja, snack, colación, gimnasio, entrenamiento",
       "Id_Grupo": "287",
       "Tipo_Variante": "Sabor",
       "Label_Variante": "Naranja",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/548-benevia-barra-proteica-naranja-60-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9431,12 +9431,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "barra proteica, barra de proteína, proteína, snack proteico, frutos rojos, frutas rojas, frutos del bosque, frutilla, arándanos, snack, colación, gimnasio, entrenamiento",
       "Id_Grupo": "287",
       "Tipo_Variante": "Sabor",
       "Label_Variante": "Frutos Rojos",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/549-benevia-barra-proteica-frutos-rojos-60-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9451,12 +9451,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "pasta de maní, mantequilla de maní, crema de maní, maní, pasta de maní proteica, proteína, salted caramel, caramelo salado, caramelo, snack, desayuno, merienda",
       "Id_Grupo": "288",
       "Tipo_Variante": "",
       "Label_Variante": "",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/550-entrenuts-pasta-de-mani-proteica-salted-caramel-370-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9471,12 +9471,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "pasta de maní, mantequilla de maní, crema de maní, maní, pasta de maní crocante, maní crocante, crocante, crunchy, desayuno, merienda, tostadas, snack",
       "Id_Grupo": "289",
       "Tipo_Variante": "",
       "Label_Variante": "",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/551-entrenuts-pasta-de-mani-crocante-370-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9491,12 +9491,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "miel, miel líquida, miel natural, miel de abeja, endulzante, dulce, desayuno, merienda, tostadas, repostería, cocina",
       "Id_Grupo": "290",
       "Tipo_Variante": "",
       "Label_Variante": "",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/552-montenatural-miel-liquida-500-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9511,12 +9511,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "frutigran, galletas, galletitas, avena, chips de chocolate, chocolate, cereal, integrales, snack, desayuno, merienda, colación",
       "Id_Grupo": "291",
       "Tipo_Variante": "",
       "Label_Variante": "",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/553-frutigran-avena-y-chips-de-chocolate-250-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9531,12 +9531,12 @@
       "UM": "g",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
-      "Tags": "",
+      "Tags": "frutigran, galletas, galletitas, salvado, fibra, cereal, integrales, snack, desayuno, merienda, colación",
       "Id_Grupo": "292",
       "Tipo_Variante": "",
       "Label_Variante": "",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/554-frutigran-salvado-250-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     }
@@ -18532,6 +18532,141 @@
       "promo": "",
       "Precio_Promo": "$23.300,00",
       "Precio_Promo_Mayorista": "$22.150,00"
+    },
+    {
+      "Id": "546",
+      "Producto": "Barra Proteíca Salted Caramel BENEVIA 60 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$1.900,00",
+      "Uni Dto": "4",
+      "Dto": "10%",
+      "Precio_Mayorista": "$1.700,00",
+      "promo": "",
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.700,00"
+    },
+    {
+      "Id": "547",
+      "Producto": "Barra Proteíca Coco BENEVIA 60 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$1.900,00",
+      "Uni Dto": "4",
+      "Dto": "10%",
+      "Precio_Mayorista": "$1.700,00",
+      "promo": "",
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.700,00"
+    },
+    {
+      "Id": "548",
+      "Producto": "Barra Proteíca Naranja BENEVIA 60 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$1.900,00",
+      "Uni Dto": "4",
+      "Dto": "10%",
+      "Precio_Mayorista": "$1.700,00",
+      "promo": "",
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.700,00"
+    },
+    {
+      "Id": "549",
+      "Producto": "Barra Proteíca Frutos Rojos BENEVIA 60 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$1.900,00",
+      "Uni Dto": "4",
+      "Dto": "10%",
+      "Precio_Mayorista": "$1.700,00",
+      "promo": "",
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.700,00"
+    },
+    {
+      "Id": "550",
+      "Producto": "Pasta de Mani Proteíca Salted Caramel ENTRENUTS 370 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$5.400,00",
+      "Uni Dto": "3",
+      "Dto": "10%",
+      "Precio_Mayorista": "$4.850,00",
+      "promo": "",
+      "Precio_Promo": "$5.400,00",
+      "Precio_Promo_Mayorista": "$4.850,00"
+    },
+    {
+      "Id": "551",
+      "Producto": "Pasta de Mani Crocante ENTRENUTS 370 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$4.000,00",
+      "Uni Dto": "3",
+      "Dto": "10%",
+      "Precio_Mayorista": "$3.600,00",
+      "promo": "",
+      "Precio_Promo": "$4.000,00",
+      "Precio_Promo_Mayorista": "$3.600,00"
+    },
+    {
+      "Id": "552",
+      "Producto": "Miel Líquida MONTENATURAL 500 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$5.500,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$5.500,00",
+      "promo": "",
+      "Precio_Promo": "$5.500,00",
+      "Precio_Promo_Mayorista": "$5.500,00"
+    },
+    {
+      "Id": "553",
+      "Producto": "Frutigran Avena y Chips de Chocolate FRUTIGRAN 250 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$3.000,00",
+      "Uni Dto": "3",
+      "Dto": "5%",
+      "Precio_Mayorista": "$2.850,00",
+      "promo": "",
+      "Precio_Promo": "$3.000,00",
+      "Precio_Promo_Mayorista": "$2.850,00"
+    },
+    {
+      "Id": "554",
+      "Producto": "Frutigran Salvado FRUTIGRAN 250 g",
+      "Estado": "OFF",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$2.400,00",
+      "Uni Dto": "3",
+      "Dto": "5%",
+      "Precio_Mayorista": "$2.300,00",
+      "promo": "",
+      "Precio_Promo": "$2.400,00",
+      "Precio_Promo_Mayorista": "$2.300,00"
     }
   ],
   "precios_b2b": [
@@ -25088,7 +25223,7 @@
       "Precio_Mayorista": "$1.600,00",
       "promo": "",
       "Precio_Promo": "$1.650,00",
-      "Precio_Promo_Mayorista": "160000,00%"
+      "Precio_Promo_Mayorista": "$1.600,00"
     },
     {
       "Id": "513",
@@ -25103,7 +25238,7 @@
       "Precio_Mayorista": "$3.050,00",
       "promo": "",
       "Precio_Promo": "$3.200,00",
-      "Precio_Promo_Mayorista": "305000,00%"
+      "Precio_Promo_Mayorista": "$3.050,00"
     },
     {
       "Id": "514",
@@ -25118,7 +25253,7 @@
       "Precio_Mayorista": "$1.450,00",
       "promo": "",
       "Precio_Promo": "$1.600,00",
-      "Precio_Promo_Mayorista": "145000,00%"
+      "Precio_Promo_Mayorista": "$1.450,00"
     },
     {
       "Id": "515",
@@ -25133,7 +25268,7 @@
       "Precio_Mayorista": "$1.450,00",
       "promo": "",
       "Precio_Promo": "$1.600,00",
-      "Precio_Promo_Mayorista": "145000,00%"
+      "Precio_Promo_Mayorista": "$1.450,00"
     },
     {
       "Id": "516",
@@ -25148,7 +25283,7 @@
       "Precio_Mayorista": "$1.450,00",
       "promo": "",
       "Precio_Promo": "$1.600,00",
-      "Precio_Promo_Mayorista": "145000,00%"
+      "Precio_Promo_Mayorista": "$1.450,00"
     },
     {
       "Id": "517",
@@ -25163,7 +25298,7 @@
       "Precio_Mayorista": "$1.950,00",
       "promo": "",
       "Precio_Promo": "$2.100,00",
-      "Precio_Promo_Mayorista": "195000,00%"
+      "Precio_Promo_Mayorista": "$1.950,00"
     },
     {
       "Id": "518",
@@ -25178,7 +25313,7 @@
       "Precio_Mayorista": "$1.950,00",
       "promo": "",
       "Precio_Promo": "$2.100,00",
-      "Precio_Promo_Mayorista": "195000,00%"
+      "Precio_Promo_Mayorista": "$1.950,00"
     },
     {
       "Id": "519",
@@ -25193,7 +25328,7 @@
       "Precio_Mayorista": "$1.950,00",
       "promo": "",
       "Precio_Promo": "$2.100,00",
-      "Precio_Promo_Mayorista": "195000,00%"
+      "Precio_Promo_Mayorista": "$1.950,00"
     },
     {
       "Id": "520",
@@ -25208,7 +25343,7 @@
       "Precio_Mayorista": "$1.150,00",
       "promo": "",
       "Precio_Promo": "$1.250,00",
-      "Precio_Promo_Mayorista": "115000,00%"
+      "Precio_Promo_Mayorista": "$1.150,00"
     },
     {
       "Id": "521",
@@ -25223,7 +25358,7 @@
       "Precio_Mayorista": "$2.400,00",
       "promo": "",
       "Precio_Promo": "$2.600,00",
-      "Precio_Promo_Mayorista": "240000,00%"
+      "Precio_Promo_Mayorista": "$2.400,00"
     },
     {
       "Id": "522",
@@ -25238,7 +25373,7 @@
       "Precio_Mayorista": "$4.250,00",
       "promo": "",
       "Precio_Promo": "$4.600,00",
-      "Precio_Promo_Mayorista": "425000,00%"
+      "Precio_Promo_Mayorista": "$4.250,00"
     },
     {
       "Id": "523",
@@ -25253,7 +25388,7 @@
       "Precio_Mayorista": "$4.150,00",
       "promo": "",
       "Precio_Promo": "$4.500,00",
-      "Precio_Promo_Mayorista": "415000,00%"
+      "Precio_Promo_Mayorista": "$4.150,00"
     },
     {
       "Id": "524",
@@ -25268,7 +25403,7 @@
       "Precio_Mayorista": "$4.600,00",
       "promo": "",
       "Precio_Promo": "$5.000,00",
-      "Precio_Promo_Mayorista": "460000,00%"
+      "Precio_Promo_Mayorista": "$4.600,00"
     },
     {
       "Id": "525",
@@ -25283,7 +25418,7 @@
       "Precio_Mayorista": "$2.000,00",
       "promo": "",
       "Precio_Promo": "$2.200,00",
-      "Precio_Promo_Mayorista": "200000,00%"
+      "Precio_Promo_Mayorista": "$2.000,00"
     },
     {
       "Id": "526",
@@ -25298,7 +25433,7 @@
       "Precio_Mayorista": "$8.200,00",
       "promo": "",
       "Precio_Promo": "$8.550,00",
-      "Precio_Promo_Mayorista": "820000,00%"
+      "Precio_Promo_Mayorista": "$8.200,00"
     },
     {
       "Id": "527",
@@ -25313,7 +25448,7 @@
       "Precio_Mayorista": "$1.700,00",
       "promo": "",
       "Precio_Promo": "$1.800,00",
-      "Precio_Promo_Mayorista": "170000,00%"
+      "Precio_Promo_Mayorista": "$1.700,00"
     },
     {
       "Id": "528",
@@ -25328,7 +25463,7 @@
       "Precio_Mayorista": "$4.700,00",
       "promo": "",
       "Precio_Promo": "$5.000,00",
-      "Precio_Promo_Mayorista": "470000,00%"
+      "Precio_Promo_Mayorista": "$4.700,00"
     },
     {
       "Id": "529",
@@ -25343,7 +25478,7 @@
       "Precio_Mayorista": "$1.150,00",
       "promo": "",
       "Precio_Promo": "$1.300,00",
-      "Precio_Promo_Mayorista": "115000,00%"
+      "Precio_Promo_Mayorista": "$1.150,00"
     },
     {
       "Id": "530",
@@ -25358,7 +25493,7 @@
       "Precio_Mayorista": "$1.150,00",
       "promo": "",
       "Precio_Promo": "$1.300,00",
-      "Precio_Promo_Mayorista": "115000,00%"
+      "Precio_Promo_Mayorista": "$1.150,00"
     },
     {
       "Id": "531",
@@ -25373,7 +25508,7 @@
       "Precio_Mayorista": "$1.150,00",
       "promo": "",
       "Precio_Promo": "$1.300,00",
-      "Precio_Promo_Mayorista": "115000,00%"
+      "Precio_Promo_Mayorista": "$1.150,00"
     },
     {
       "Id": "532",
@@ -25388,7 +25523,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "533",
@@ -25403,7 +25538,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "534",
@@ -25418,7 +25553,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "535",
@@ -25433,7 +25568,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "536",
@@ -25448,7 +25583,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "537",
@@ -25463,7 +25598,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "538",
@@ -25478,7 +25613,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "539",
@@ -25493,7 +25628,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "540",
@@ -25508,7 +25643,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "541",
@@ -25523,7 +25658,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "542",
@@ -25538,7 +25673,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "543",
@@ -25553,7 +25688,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "544",
@@ -25568,7 +25703,7 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
     },
     {
       "Id": "545",
@@ -25583,7 +25718,142 @@
       "Precio_Mayorista": "$0,00",
       "promo": "",
       "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "0,00%"
+      "Precio_Promo_Mayorista": "$0,00"
+    },
+    {
+      "Id": "546",
+      "Producto": "Barra Proteíca Salted Caramel BENEVIA 60 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "$1.700,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.700,00",
+      "promo": "",
+      "Precio_Promo": "$1.700,00",
+      "Precio_Promo_Mayorista": "$1.700,00"
+    },
+    {
+      "Id": "547",
+      "Producto": "Barra Proteíca Coco BENEVIA 60 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "$0,00"
+    },
+    {
+      "Id": "548",
+      "Producto": "Barra Proteíca Naranja BENEVIA 60 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "$0,00"
+    },
+    {
+      "Id": "549",
+      "Producto": "Barra Proteíca Frutos Rojos BENEVIA 60 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "$0,00"
+    },
+    {
+      "Id": "550",
+      "Producto": "Pasta de Mani Proteíca Salted Caramel ENTRENUTS 370 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "$0,00"
+    },
+    {
+      "Id": "551",
+      "Producto": "Pasta de Mani Crocante ENTRENUTS 370 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "$0,00"
+    },
+    {
+      "Id": "552",
+      "Producto": "Miel Líquida MONTENATURAL 500 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "$0,00"
+    },
+    {
+      "Id": "553",
+      "Producto": "Frutigran Avena y Chips de Chocolate FRUTIGRAN 250 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "$0,00"
+    },
+    {
+      "Id": "554",
+      "Producto": "Frutigran Salvado FRUTIGRAN 250 g",
+      "Estado": "",
+      "Categoría": "Snacks y Golosinas",
+      "Subcategoria": "Snacks Saludables",
+      "Tipo": "Rentable",
+      "Precio_Venta": "",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$0,00",
+      "promo": "",
+      "Precio_Promo": "$0,00",
+      "Precio_Promo_Mayorista": "$0,00"
     }
   ]
 }
