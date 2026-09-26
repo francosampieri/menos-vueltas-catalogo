@@ -19,10 +19,11 @@ test('ships the comer-mejor campaign in the first B2C multihero slide', () => {
 
 test('keeps the campaign art whole and adapts its content by canvas', () => {
   assert.match(styles, /\.hero-comer-mejor__art\s*\{[^}]*z-index:\s*0/);
-  assert.match(styles, /\.hero-comer-mejor__art img\s*\{[\s\S]*?object-fit:\s*contain/);
+  assert.match(styles, /\.hero-comer-mejor__art img\s*\{[^}]*object-fit:\s*contain[^}]*transform:\s*translateX\(3%\) scale\(\.91\)/);
   assert.match(styles, /\.hero-comer-mejor__content\s*\{[\s\S]*?width:\s*46%/);
   assert.match(styles, /@media \(max-width: 700px\)\s*\{[\s\S]*?\.hero-comer-mejor__content[\s\S]*?width:\s*100%/);
   assert.match(styles, /\.hero-comer-mejor__actions[\s\S]*?flex-direction:\s*column/);
+  assert.match(styles, /@media \(max-width: 700px\)\s*\{[\s\S]*?\.hero-comer-mejor__primary,[\s\S]*?min-height:\s*clamp\(2\.5rem, 10vw, 3\.8rem\)/);
 });
 
 test('includes the two final campaign art files in B2C', () => {
