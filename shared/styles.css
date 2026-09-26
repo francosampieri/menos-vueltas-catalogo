@@ -614,7 +614,7 @@ img { display: block; max-width: 100%; }
   height: 100%;
   object-fit: contain;
   object-position: center;
-  transform: translateX(3%) scale(.91);
+  transform: translateX(3%) scale(.89);
   transform-origin: center;
 }
 
