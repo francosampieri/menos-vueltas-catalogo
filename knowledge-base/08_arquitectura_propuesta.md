@@ -30,17 +30,21 @@ B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. El orden
 
 ### Multihero público
 
-Las landings B2C y B2B usan la misma estructura de carrusel definida en sus `index.html` y el módulo compartido sin dependencias `shared/multihero.js`. Cada hero es un bloque HTML independiente: el primero es `hero-actual` (vacío hasta contar con su diseño), el segundo es `hero-estandar` y se pueden agregar héroes extra sin modificar la lógica de navegación. El contenido y las acciones permanecen propios de cada canal.
+Las landings B2C y B2B usan la misma estructura de carrusel definida en sus `index.html` y el módulo compartido sin dependencias `shared/multihero.js`. Cada hero es un bloque HTML independiente: el primero es `hero-actual`, el segundo es `hero-estandar` y se pueden agregar héroes extra sin modificar la lógica de navegación. El contenido y las acciones permanecen propios de cada canal. B2C tiene activo en su primer bloque el hero de campaña “Comer mejor”; B2B conserva ese bloque vacío hasta contar con su diseño propio.
 
 El módulo normaliza el ciclo automático y la interacción: avanza cada ocho segundos, vuelve al primer bloque al terminar, reinicia el conteo después de una navegación manual y respeta `prefers-reduced-motion` y la visibilidad de la pestaña. En desktop se navega con flechas; en mobile se usa swipe horizontal deliberado. Los puntos de navegación muestran el bloque activo y su progreso, sin ofrecer un control permanente para detener la rotación.
 
 Todos los héroes deben ajustarse al mismo lienzo: relación 16:7 en desktop/tablet (guía de imagen 1600 × 700 px) y 9:13 en mobile (guía de imagen 1080 × 1560 px). Esto evita saltos de layout aunque su contenido, imagen, CTAs o contadores sean distintos.
+
+El hero B2C “Comer mejor” usa dos artes finales de productos, uno por lienzo, como fondo sin recortes y mantiene título, bajada y CTAs en HTML. Su CTA principal entra a la `vista-evento`; el secundario abre el catálogo normal.
 
 ### Vista editorial de evento B2C
 
 La landing B2C puede definir una `vista-evento` junto al hero que la invoca. La definición local contiene activación, textos, CTA y una lista ordenada de `Id_Grupo`; `shared/app.js` la resuelve exclusivamente contra el catálogo B2C ya cargado, descarta grupos ausentes o inactivos y no infiere productos por categoría, tags o Nuevos. No hay URL o ruta permanente, ni punto de entrada en B2B, menú, filtros, buscador o catálogo normal.
 
 La vista crea sus propias tarjetas para evitar conflictos con las tarjetas ya renderizadas del catálogo, pero reutiliza datos públicos vigentes, precios, badges, carrito y `abrirModalProducto(...)`. El estado de navegación conserva el origen para que el cierre de modal, Escape, Atrás y el cierre de la vista devuelvan al lugar correcto. Retirar conjuntamente el CTA y la definición deja el evento inaccesible sin modificar Sheets, Apps Script, JSON generado ni los productos del catálogo.
+
+La primera selección activa, asociada al hero “Comer mejor”, incluye provisionalmente sólo Huevos Caseros (`Id_Grupo` 280), el único grupo confirmado en el catálogo B2C al momento de configurarla. Los demás productos del arte se agregan únicamente cuando existan sus `Id_Grupo` reales.
 
 ### Actualización del catálogo
 
