@@ -587,6 +587,103 @@ img { display: block; max-width: 100%; }
 
 .multihero-slide--actual { background: var(--surface); }
 
+/* Hero B2C "Comer mejor". Usa artes con los mismos lienzos que el carrusel
+   para conservar la composición completa; los textos y CTAs quedan editables
+   y accesibles como HTML. */
+.hero-comer-mejor {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #FAFAF7;
+}
+
+.hero-comer-mejor__art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero-comer-mejor__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.hero-comer-mejor__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 46%;
+  height: 100%;
+  padding: clamp(2rem, 5vw, 6.25rem) 2rem clamp(2rem, 5vw, 6.25rem) clamp(1.5rem, 6.25vw, 6.25rem);
+}
+
+.hero-comer-mejor__title {
+  margin: 0 0 clamp(1rem, 1.5vw, 1.5rem);
+  color: #2F3430;
+  font-family: var(--font-body);
+  font-size: clamp(2.5rem, 4.35vw, 4.35rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+
+.hero-comer-mejor__accent { color: #6E8B5B; }
+
+.hero-comer-mejor__description {
+  max-width: 530px;
+  margin: 0 0 clamp(1.5rem, 2.4vw, 2.5rem);
+  color: #6F746E;
+  font-family: var(--font);
+  font-size: clamp(1rem, 1.45vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.hero-comer-mejor__actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(.75rem, 1.35vw, 1.35rem);
+}
+
+.hero-comer-mejor__primary,
+.hero-comer-mejor__secondary {
+  min-width: clamp(11rem, 15.8vw, 15.8rem);
+  min-height: clamp(3.25rem, 4.35vw, 4.35rem);
+  padding: 0 1.5rem;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: clamp(1rem, 1.3vw, 1.3rem);
+  font-weight: 600;
+}
+
+.hero-comer-mejor__primary {
+  border: 1px solid #6E8B5B;
+  background: #6E8B5B;
+  color: #FAFAF7;
+}
+
+.hero-comer-mejor__secondary {
+  border: 2px solid #587547;
+  background: transparent;
+  color: #587547;
+}
+
+.hero-comer-mejor__primary:focus-visible,
+.hero-comer-mejor__secondary:focus-visible {
+  outline: 3px solid #C8CCBF;
+  outline-offset: 3px;
+}
+
 /* El hero estándar conserva su diseño interno, pero se adapta al lienzo del
    carrusel para que todos los slides tengan la misma altura. */
 .multihero-slide .hero-bg,
@@ -689,6 +786,39 @@ img { display: block; max-width: 100%; }
 @media (max-width: 700px) {
   .multihero-slide {
     aspect-ratio: 9 / 13;
+  }
+
+  .hero-comer-mejor__content {
+    justify-content: flex-start;
+    width: 100%;
+    padding: clamp(1.5rem, 7vw, 4.5rem) 7.2% clamp(4.5rem, 13vw, 7.5rem);
+  }
+
+  .hero-comer-mejor__title {
+    margin-bottom: clamp(.85rem, 3vw, 1.5rem);
+    font-size: clamp(2rem, 9vw, 4.15rem);
+    line-height: 1.06;
+  }
+
+  .hero-comer-mejor__description {
+    max-width: 88%;
+    margin-bottom: 0;
+    font-size: clamp(1rem, 4.1vw, 1.65rem);
+    line-height: 1.27;
+  }
+
+  .hero-comer-mejor__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: clamp(.55rem, 2.4vw, 1rem);
+    margin-top: auto;
+  }
+
+  .hero-comer-mejor__primary,
+  .hero-comer-mejor__secondary {
+    width: 100%;
+    min-height: clamp(3.6rem, 14vw, 5rem);
+    font-size: clamp(1.05rem, 4.7vw, 1.85rem);
   }
 
   .multihero-arrow { display: none; }

@@ -197,14 +197,13 @@
   <script>
     window.VISTAS_EVENTO_B2C = Object.freeze({
       'campana-nuevos-habitos': Object.freeze({
-        active: false,
-        title: '',
-        description: '',
-        cta: '',
-        groupIds: []
-        // Cuando existan los Id_Grupo, cargarlos en este orden: premezcla de
-        // panqueques proteicos, pastas de maní, mix de frutos secos, galletas
-        // Frutigran, huevos caseros y miel líquida.
+        active: true,
+        title: 'Con Menos Vueltas, comer mejor es más simple.',
+        description: 'Nuevos ingresos para sumar a tus desayunos y meriendas',
+        cta: 'Ver selección',
+        // Por ahora sólo se incluye el grupo confirmado en el catálogo B2C.
+        // Sumar los demás únicamente con sus Id_Grupo reales.
+        groupIds: ['280']
       })
     });
   </script>
@@ -213,8 +212,24 @@
        hero conserva su propio HTML; el carrusel sólo aporta navegación. -->
   <section class="multihero" data-multihero aria-roledescription="carrusel" aria-label="Mensajes destacados">
     <div class="multihero-track" data-multihero-track>
-      <!-- Hero actual: primer bloque reservado para la próxima campaña. -->
-      <article class="multihero-slide multihero-slide--actual" data-multihero-slide></article>
+      <!-- Hero actual: campaña B2C "Comer mejor". El arte sólo aporta la
+           composición de productos; textos y acciones siguen siendo HTML. -->
+      <article class="multihero-slide multihero-slide--actual" data-multihero-slide>
+        <section class="hero-comer-mejor">
+          <picture class="hero-comer-mejor__art" aria-hidden="true">
+            <source media="(max-width: 700px)" srcset="hero-comer-mejor-mobile.png">
+            <img src="hero-comer-mejor-desktop.png" alt="">
+          </picture>
+          <div class="hero-comer-mejor__content">
+            <h1 class="hero-comer-mejor__title">Con <span class="hero-comer-mejor__accent">Menos Vueltas</span>,<br>comer mejor es<br><span class="hero-comer-mejor__accent">más simple.</span></h1>
+            <p class="hero-comer-mejor__description">Nuevos ingresos para sumar a tus desayunos y meriendas</p>
+            <div class="hero-comer-mejor__actions">
+              <button class="hero-comer-mejor__primary" type="button" data-vista-evento data-evento-id="campana-nuevos-habitos">Ver selección</button>
+              <button class="hero-comer-mejor__secondary" type="button" onclick="mostrarCatalogoCompleto()">Ver catálogo</button>
+            </div>
+          </div>
+        </section>
+      </article>
 
       <!-- Hero estándar: segundo bloque por defecto. -->
       <article class="multihero-slide multihero-slide--standard" data-multihero-slide>
