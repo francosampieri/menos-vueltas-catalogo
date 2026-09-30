@@ -180,9 +180,17 @@ function limpiarCarritoSesion() {
 // En la card del catálogo la badge se muestra si CUALQUIERA de las
 // variantes del grupo es nueva (no parpadea al rotar); en el modal la
 // badge se muestra solo cuando la variante seleccionada es nueva.
-const NUEVOS = [
-  '532', '484', '541', '523', '515', '533', '534', '535', '536', '537', '538', '539', '540', '542', '543', '544', '545', '514', '516', '517', '518', '519', '520', '521', '522', '524', '525', '526', '527', '528', '529', '530', '531', '512', '513', '307', '308', '311', '312', '313' 
+const NUEVOS_B2C = [
+  '546', '547', '548', '549', '550', '551', '552', '553',
+  '554', '555', '556', '557', '558', '559', '560', '561'
 ];
+const NUEVOS_B2B = [
+  '532', '484', '541', '523', '515', '533', '534', '535', '536', '537',
+  '538', '539', '540', '542', '543', '544', '545', '514', '516', '517',
+  '518', '519', '520', '521', '522', '524', '525', '526', '527', '528',
+  '529', '530', '531', '512', '513', '307', '308', '311', '312', '313'
+];
+const NUEVOS = CANAL === 'B2C' ? NUEVOS_B2C : NUEVOS_B2B;
 
 function esNuevo(idProd) {
   return NUEVOS.includes(String(idProd));

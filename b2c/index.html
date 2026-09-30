@@ -193,7 +193,7 @@
 
   <!-- Configuración temporal de vistas editoriales. Se mantiene junto a los
        heroes B2C: al retirar el CTA y esta definición, la vista deja de
-       tener entrada. No agregar IDs hasta que existan en el catálogo. -->
+       tener entrada. Mantener sólo Id_Grupo reales y en orden editorial. -->
   <script>
     window.VISTAS_EVENTO_B2C = Object.freeze({
       'campana-nuevos-habitos': Object.freeze({
@@ -201,9 +201,10 @@
         title: 'Con Menos Vueltas, comer mejor es más simple.',
         description: 'Nuevos ingresos para sumar a tus desayunos y meriendas',
         cta: 'Ver selección',
-        // Por ahora sólo se incluye el grupo confirmado en el catálogo B2C.
-        // Sumar los demás únicamente con sus Id_Grupo reales.
-        groupIds: ['280']
+        groupIds: [
+          '293', '288', '289', '287', '294', '295', '296', '290',
+          '280', '291', '292', '272'
+        ]
       })
     });
   </script>
