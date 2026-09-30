@@ -9556,7 +9556,7 @@
       "Tipo_Variante": "Sabor",
       "Label_Variante": "Chocolate",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/555-procake-panqueques-proteicos-chocolate-250-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
@@ -9576,7 +9576,7 @@
       "Tipo_Variante": "Sabor",
       "Label_Variante": "Vainilla",
       "Label_Tamaño": "",
-      "Imagen": "",
+      "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/556-procake-panqueques-proteicos-vainilla-250-g.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
     },
