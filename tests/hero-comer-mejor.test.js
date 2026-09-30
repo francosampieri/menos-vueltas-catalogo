@@ -9,8 +9,8 @@ const app = fs.readFileSync(path.join(root, 'shared', 'app.js'), 'utf8');
 const styles = fs.readFileSync(path.join(root, 'shared', 'styles.css'), 'utf8');
 
 const NUEVOS_ESPERADOS = [
-  '546', '547', '548', '549', '550', '551', '552', '553',
-  '554', '555', '556', '557', '558', '559', '560', '561'
+  '555', '556', '550', '546', '547', '548', '549', '557',
+  '558', '553', '551', '552', '554', '559', '560', '561'
 ];
 const NUEVOS_B2B_ANTERIORES = [
   '532', '484', '541', '523', '515', '533', '534', '535', '536', '537',
