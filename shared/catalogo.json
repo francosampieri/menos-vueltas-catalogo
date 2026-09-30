@@ -18873,13 +18873,13 @@
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
-      "Precio_Venta": "",
+      "Precio_Venta": "$4.450,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$0,00",
-      "promo": "",
-      "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "$0,00"
+      "Precio_Mayorista": "$4.450,00",
+      "promo": "10%",
+      "Precio_Promo": "$4.000,00",
+      "Precio_Promo_Mayorista": "$4.000,00"
     },
     {
       "Id": "558",
@@ -18888,13 +18888,13 @@
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
-      "Precio_Venta": "",
+      "Precio_Venta": "$1.200,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$0,00",
-      "promo": "",
-      "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "$0,00"
+      "Precio_Mayorista": "$1.200,00",
+      "promo": "10%",
+      "Precio_Promo": "$1.100,00",
+      "Precio_Promo_Mayorista": "$1.100,00"
     },
     {
       "Id": "559",
@@ -18903,13 +18903,13 @@
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
-      "Precio_Venta": "",
+      "Precio_Venta": "$5.300,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$0,00",
-      "promo": "",
-      "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "$0,00"
+      "Precio_Mayorista": "$5.300,00",
+      "promo": "10%",
+      "Precio_Promo": "$4.750,00",
+      "Precio_Promo_Mayorista": "$4.750,00"
     },
     {
       "Id": "560",
@@ -18918,13 +18918,13 @@
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
-      "Precio_Venta": "",
+      "Precio_Venta": "$1.400,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$0,00",
-      "promo": "",
-      "Precio_Promo": "$0,00",
-      "Precio_Promo_Mayorista": "$0,00"
+      "Precio_Mayorista": "$1.400,00",
+      "promo": "10%",
+      "Precio_Promo": "$1.250,00",
+      "Precio_Promo_Mayorista": "$1.250,00"
     },
     {
       "Id": "561",
