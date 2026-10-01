@@ -9365,7 +9365,7 @@
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
-      "Producto": "Barra Proteíca Salted Caramel",
+      "Producto": "Barra Proteica Salted Caramel",
       "Marca": "BENEVIA",
       "Tamaño": "60",
       "UM": "g",
@@ -9385,7 +9385,7 @@
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
-      "Producto": "Barra Proteíca Coco",
+      "Producto": "Barra Proteica Coco",
       "Marca": "BENEVIA",
       "Tamaño": "60",
       "UM": "g",
@@ -9405,7 +9405,7 @@
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
-      "Producto": "Barra Proteíca Naranja",
+      "Producto": "Barra Proteica Naranja",
       "Marca": "BENEVIA",
       "Tamaño": "60",
       "UM": "g",
@@ -9425,7 +9425,7 @@
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
-      "Producto": "Barra Proteíca Frutos Rojos",
+      "Producto": "Barra Proteica Frutos Rojos",
       "Marca": "BENEVIA",
       "Tamaño": "60",
       "UM": "g",
@@ -9445,7 +9445,7 @@
       "Activo": "ON",
       "Cat B2C": "ON",
       "Cat B2B": "ON",
-      "Producto": "Pasta de Mani Proteíca Salted Caramel",
+      "Producto": "Pasta de Mani Proteica Salted Caramel",
       "Marca": "ENTRENUTS",
       "Tamaño": "370",
       "UM": "g",
@@ -11741,14 +11741,14 @@
     },
     {
       "Id_Grupo": "287",
-      "Nombre_Grupo": "Barra Proteíca 20g de Proteína",
+      "Nombre_Grupo": "Barra Proteica 20g de Proteína",
       "Marca": "BENEVIA",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables"
     },
     {
       "Id_Grupo": "288",
-      "Nombre_Grupo": "Pasta de Mani Proteíca",
+      "Nombre_Grupo": "Pasta de Mani Proteica",
       "Marca": "ENTRENUTS",
       "Categoria": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables"
@@ -18863,7 +18863,7 @@
     },
     {
       "Id": "546",
-      "Producto": "Barra Proteíca Salted Caramel BENEVIA 60 g",
+      "Producto": "Barra Proteica Salted Caramel BENEVIA 60 g",
       "Estado": "ON",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -18878,7 +18878,7 @@
     },
     {
       "Id": "547",
-      "Producto": "Barra Proteíca Coco BENEVIA 60 g",
+      "Producto": "Barra Proteica Coco BENEVIA 60 g",
       "Estado": "ON",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -18893,7 +18893,7 @@
     },
     {
       "Id": "548",
-      "Producto": "Barra Proteíca Naranja BENEVIA 60 g",
+      "Producto": "Barra Proteica Naranja BENEVIA 60 g",
       "Estado": "ON",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -18908,7 +18908,7 @@
     },
     {
       "Id": "549",
-      "Producto": "Barra Proteíca Frutos Rojos BENEVIA 60 g",
+      "Producto": "Barra Proteica Frutos Rojos BENEVIA 60 g",
       "Estado": "ON",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -18923,7 +18923,7 @@
     },
     {
       "Id": "550",
-      "Producto": "Pasta de Mani Proteíca Salted Caramel ENTRENUTS 370 g",
+      "Producto": "Pasta de Mani Proteica Salted Caramel ENTRENUTS 370 g",
       "Estado": "ON",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -26170,7 +26170,7 @@
     },
     {
       "Id": "546",
-      "Producto": "Barra Proteíca Salted Caramel BENEVIA 60 g",
+      "Producto": "Barra Proteica Salted Caramel BENEVIA 60 g",
       "Estado": "",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -26185,7 +26185,7 @@
     },
     {
       "Id": "547",
-      "Producto": "Barra Proteíca Coco BENEVIA 60 g",
+      "Producto": "Barra Proteica Coco BENEVIA 60 g",
       "Estado": "",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -26200,7 +26200,7 @@
     },
     {
       "Id": "548",
-      "Producto": "Barra Proteíca Naranja BENEVIA 60 g",
+      "Producto": "Barra Proteica Naranja BENEVIA 60 g",
       "Estado": "",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -26215,7 +26215,7 @@
     },
     {
       "Id": "549",
-      "Producto": "Barra Proteíca Frutos Rojos BENEVIA 60 g",
+      "Producto": "Barra Proteica Frutos Rojos BENEVIA 60 g",
       "Estado": "",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
@@ -26230,7 +26230,7 @@
     },
     {
       "Id": "550",
-      "Producto": "Pasta de Mani Proteíca Salted Caramel ENTRENUTS 370 g",
+      "Producto": "Pasta de Mani Proteica Salted Caramel ENTRENUTS 370 g",
       "Estado": "",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
