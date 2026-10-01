@@ -71,6 +71,7 @@ function makeContext({ providers, products, movements, orders, items, productShe
   let lockDepth = 0;
   let lockAcquisitions = 0;
   let maxLockDepth = 0;
+  let catalogOpenCalls = 0;
   const context = {
     console,
     Date,
@@ -80,7 +81,7 @@ function makeContext({ providers, products, movements, orders, items, productShe
     PropertiesService: { getScriptProperties: () => ({ getProperty: key => key === 'CATALOG_SPREADSHEET_ID' ? 'configured' : null }) },
     SpreadsheetApp: {
       getActiveSpreadsheet: () => operational,
-      openById: id => { assert.equal(id, 'configured'); return catalog; }
+      openById: id => { assert.equal(id, 'configured'); catalogOpenCalls++; return catalog; }
     },
     LockService: { getScriptLock: () => ({
       waitLock() { lockDepth++; lockAcquisitions++; maxLockDepth = Math.max(maxLockDepth, lockDepth); },
@@ -100,6 +101,7 @@ function makeContext({ providers, products, movements, orders, items, productShe
   vm.runInContext(CODE, context);
   return {
     context, operational, catalog,
+    catalogOpenCalls: () => catalogOpenCalls,
     lockDepth: () => lockDepth,
     lockAcquisitions: () => lockAcquisitions,
     maxLockDepth: () => maxLockDepth
@@ -371,6 +373,34 @@ test('stock summary is algebraic, isolated, nullable for unmanaged products and 
   assert.equal(byId['P-2'].Gestiona_Stock, false);
   assert.equal(byId['P-2'].Saldo, null);
   assert.equal(byId['P-3'].Saldo, 0);
+});
+
+test('stock summary validates several ledger rows with one catalog read, preserves first duplicate and rejects unknown products', () => {
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
+  const duplicate = makeContext({
+    products: [
+      ['Id', 'Codigo_Proveedor', 'Producto', 'Id_Proveedor', 'Modalidad_Abastecimiento', 'Sin_Stock'],
+      ['P-1', 'L-PRIMERO', 'Primero', 'PRV-A', 'STOCK_PROPIO', false],
+      ['P-1', 'L-SEGUNDO', 'Segundo', 'PRV-A', 'CONTRA_PEDIDO', false]
+    ],
+    movements: [headers,
+      ['I-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 3, 4, '', '', '', '', 'M-1', 'STOCK_PROPIO'],
+      ['S-1', new Date('2030-01-02T00:00:00Z'), 'P-1', 'VENTA', -1, '', '', '', '1', '1', 'VENTA:1:1', ''],
+      ['M-1', new Date('2030-01-03T00:00:00Z'), 'P-1', 'ROTURA_MERMA', -1, '', '', '', '', '', 'M-2', '']
+    ]
+  });
+  const result = get(duplicate.context, { accion: 'resumenStock' });
+  assert.equal(result.ok, true);
+  assert.equal(duplicate.catalogOpenCalls(), 1);
+  assert.deepEqual(result.productos.map(producto => producto.Saldo), [1, null]);
+
+  const unknown = makeContext({ movements: [headers,
+    ['I-X', new Date('2030-01-01T00:00:00Z'), 'P-NO-EXISTE', 'INGRESO', 1, 4, '', '', '', '', 'M-X', 'STOCK_PROPIO']
+  ] });
+  const rejected = get(unknown.context, { accion: 'resumenStock' });
+  assert.equal(rejected.ok, false);
+  assert.equal('productos' in rejected, false);
+  assert.equal(unknown.catalogOpenCalls(), 1);
 });
 
 test('stock summary fails closed with no partial balances for malformed ledger rows', () => {
@@ -833,6 +863,23 @@ test('C-08 exposes valuation as a read-only private query and fails closed on ma
   assert.equal(rejected.ok, false);
   assert.equal('productos' in rejected, false);
   assert.equal(invalid.operational.insertSheetCalls, 0);
+});
+
+test('C-08 valuation reads the catalog once for several movements and preserves its FIFO result', () => {
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
+  const valued = makeContext({ movements: [headers,
+    ['I-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 2, 4, '', '', '', '', 'I-1', 'STOCK_PROPIO'],
+    ['I-2', new Date('2030-01-02T00:00:00Z'), 'P-1', 'INGRESO', 3, 6, '', '', '', '', 'I-2', 'CONSIGNACION'],
+    ['S-1', new Date('2030-01-03T00:00:00Z'), 'P-1', 'VENTA', -3, '', '', '', '1', '1', 'VENTA:1:1', '']
+  ] });
+  const result = get(valued.context, { accion: 'valorizacionStock' });
+  assert.equal(result.ok, true);
+  assert.equal(valued.catalogOpenCalls(), 1);
+  const producto = result.productos.find(fila => fila.Id_Producto === 'P-1');
+  assert.equal(producto.Saldo, 2);
+  assert.equal(producto.Capital_Stock_Propio, 0);
+  assert.equal(producto.Valor_Consignacion, 12);
+  assert.equal(producto.Valor_Fisico_Conocido, 12);
 });
 
 test('C-08 derives ingress modality from current classification, rejects a mismatched client value and reads historical layers after reclassification', () => {
