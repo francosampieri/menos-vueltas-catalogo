@@ -848,7 +848,7 @@ function resumenStock() {
   const h = hojaMovimientosExistente();
   const filas = h.getDataRange().getValues();
   const columnas = columnasMovimientos(filas[0]);
-  const ledger = validarFilasMovimientos(filas, columnas, true).lista;
+  const ledger = validarFilasMovimientos(filas, columnas, true, false, productos).lista;
   const saldos = {};
   ledger.forEach(function (movimiento) {
     saldos[movimiento.Id_Producto] = (saldos[movimiento.Id_Producto] || 0) + movimiento.Cantidad;
@@ -872,7 +872,7 @@ function valorizacionStock() {
   const productos = listarProductosClasificados();
   const h = hojaMovimientosExistente();
   const filas = h.getDataRange().getValues();
-  const ledger = validarFilasMovimientos(filas, columnasMovimientos(filas[0]), true, true).lista;
+  const ledger = validarFilasMovimientos(filas, columnasMovimientos(filas[0]), true, true, productos).lista;
   const proyeccion = proyectarValorizacionLedger(ledger);
   const porProducto = {};
   productos.forEach(function (producto) { porProducto[producto.Id_Producto] = producto; });
@@ -1065,10 +1065,11 @@ function proyectarMovimientoHistorial(movimiento) {
   return resultado;
 }
 
-function validarFilasMovimientos(filas, columnas, validarProductos, permitirHistoricoReclasificado) {
+function validarFilasMovimientos(filas, columnas, validarProductos, permitirHistoricoReclasificado, productosClasificados) {
   const lista = [];
   const porId = {};
   const porClave = {};
+  const productosParaValidar = validarProductos ? (productosClasificados || listarProductosClasificados()) : null;
   for (let i = 1; i < filas.length; i++) {
     const fila = filas[i];
     if (fila.every(esVacio)) continue;
@@ -1120,7 +1121,7 @@ function validarFilasMovimientos(filas, columnas, validarProductos, permitirHist
     // C-03 aunque el catálogo se haya reclasificado después. Las demás
     // salidas conservan la validación de clasificación vigente de C-02.
     if (validarProductos) {
-      const producto = obtenerProductoClasificado(movimiento.Id_Producto);
+      const producto = obtenerProductoClasificado(movimiento.Id_Producto, productosParaValidar);
       if (!permitirHistoricoReclasificado && movimiento.Tipo !== 'VENTA' && !producto.Gestiona_Stock) {
         throw new Error('Movimiento para producto sin stock gestionado.');
       }
@@ -1153,9 +1154,10 @@ function listarProductosClasificados() {
   });
 }
 
-function obtenerProductoClasificado(idProducto) {
+function obtenerProductoClasificado(idProducto, productosClasificados) {
   const id = textoSimple(idProducto);
-  const producto = listarProductosClasificados().filter(function (p) { return p.Id_Producto === id; })[0];
+  const productos = productosClasificados || listarProductosClasificados();
+  const producto = productos.filter(function (p) { return p.Id_Producto === id; })[0];
   if (!producto) throw new Error('No existe el producto solicitado.');
   return producto;
 }
