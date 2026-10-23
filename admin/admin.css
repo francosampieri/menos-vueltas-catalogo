@@ -340,6 +340,7 @@ button { cursor: pointer; background: none; border: none; }
 
 .ganancia { font-weight: 700; color: var(--accent-2); }
 .ganancia--neg { color: var(--rojo); }
+.ganancia-fifo { display: block; margin-top: 3px; color: var(--t3); font-size: .72rem; white-space: nowrap; }
 
 .vacio {
   padding: var(--s6) var(--s4);

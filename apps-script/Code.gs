@@ -59,6 +59,7 @@ function doGet(e) {
     if (accion === 'listarProveedores') return json({ ok: true, proveedores: listarProveedores() });
     if (accion === 'resumenStock') return json({ ok: true, productos: resumenStock() });
     if (accion === 'valorizacionStock') return json({ ok: true, productos: valorizacionStock() });
+    if (accion === 'costosFifoVentas') return json({ ok: true, ventas: costosFifoVentas() });
     if (accion === 'listarMovimientos') return json({ ok: true, movimientos: listarMovimientos(e.parameter) });
     if (accion === 'validarCodigo') {
       const codigo = e && e.parameter ? e.parameter.codigo : '';
@@ -902,6 +903,37 @@ function valorizacionStock() {
       Coberturas: estado.coberturas,
       Correcciones: estado.correcciones,
       Faltantes: estado.faltantes
+    };
+  });
+}
+
+// Sólo costo físico de VENTAS, nunca precio al cliente ni cobros. La
+// corrección posterior revierte stock, pero no reescribe el pedido entregado.
+function costosFifoVentas() {
+  const productos = listarProductosClasificados();
+  const h = hojaMovimientosExistente();
+  const filas = h.getDataRange().getValues();
+  const ledger = validarFilasMovimientos(filas, columnasMovimientos(filas[0]), true, true, productos).lista;
+  const estados = proyectarValorizacionLedger(ledger).productos;
+  return ledger.filter(function (movimiento) { return movimiento.Tipo === 'VENTA'; }).map(function (movimiento) {
+    const estado = estados[movimiento.Id_Producto];
+    const salida = estado.salidas[movimiento.Movimiento_Id];
+    const tramos = salida.Asignaciones.concat(estado.coberturas.filter(function (cobertura) {
+      return cobertura.Salida_Movimiento_Id === movimiento.Movimiento_Id;
+    }));
+    let cantidadConCosto = 0;
+    let costoConocido = 0;
+    tramos.forEach(function (tramo) {
+      if (tramo.Costo_Unitario === null) return;
+      cantidadConCosto += tramo.Cantidad;
+      costoConocido += tramo.Cantidad * tramo.Costo_Unitario;
+    });
+    return {
+      Id_Pedido: movimiento.Id_Pedido, Item_Id: movimiento.Item_Id,
+      Id_Producto: movimiento.Id_Producto, Cantidad: -movimiento.Cantidad,
+      Cantidad_Con_Costo: cantidadConCosto,
+      Cantidad_Pendiente: -movimiento.Cantidad - cantidadConCosto,
+      Costo_Conocido: costoConocido
     };
   });
 }

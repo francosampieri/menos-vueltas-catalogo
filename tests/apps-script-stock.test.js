@@ -939,3 +939,46 @@ test('C-08 values a historical ingress without modality, keeps its FIFO cost and
     assert.equal('productos' in invalida, false);
   }
 });
+
+test('FIFO sale cost read combines two layers and later shortage coverage without changing sheets', () => {
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
+  const date = new Date('2030-01-01T00:00:00Z');
+  const { context, operational } = makeContext({ movements: [headers,
+    ['I-1', date, 'P-1', 'INGRESO', 2, 10, '', '', '', '', 'I-1', 'STOCK_PROPIO'],
+    ['I-2', date, 'P-1', 'INGRESO', 1, 20, '', '', '', '', 'I-2', 'STOCK_PROPIO'],
+    ['V-1', date, 'P-1', 'VENTA', -4, '', '', '', '42', 'ITEM-42', 'VENTA:42:ITEM-42', ''],
+    ['I-3', date, 'P-1', 'INGRESO', 1, 30, '', '', '', '', 'I-3', 'STOCK_PROPIO']
+  ] });
+  const before = JSON.stringify(operational.getSheetByName('Movimientos_Stock').rows);
+  const result = get(context, { accion: 'costosFifoVentas' });
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.ventas, [{ Id_Pedido: '42', Item_Id: 'ITEM-42', Id_Producto: 'P-1', Cantidad: 4,
+    Cantidad_Con_Costo: 4, Cantidad_Pendiente: 0, Costo_Conocido: 70 }]);
+  assert.equal(JSON.stringify(operational.getSheetByName('Movimientos_Stock').rows), before);
+  assert.equal(operational.insertSheetCalls, 0);
+});
+
+test('FIFO sale cost read keeps unknown units pending and ignores physical reversal for original sale margin', () => {
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
+  const date = new Date('2030-01-01T00:00:00Z');
+  const { context } = makeContext({ movements: [headers,
+    ['H-1', date, 'P-1', 'INGRESO', 1, '', '', '', '', '', 'H-1', ''],
+    ['V-1', date, 'P-1', 'VENTA', -3, '', '', '', '42', 'ITEM-42', 'VENTA:42:ITEM-42', ''],
+    ['I-1', date, 'P-1', 'INGRESO', 1, 15, '', '', '', '', 'I-1', 'STOCK_PROPIO'],
+    ['C-1', date, 'P-1', 'CORRECCION', 1, '', 'V-1', 'ajuste físico', '', '', 'C-1', '']
+  ] });
+  const result = get(context, { accion: 'costosFifoVentas' });
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.ventas, [{ Id_Pedido: '42', Item_Id: 'ITEM-42', Id_Producto: 'P-1', Cantidad: 3,
+    Cantidad_Con_Costo: 1, Cantidad_Pendiente: 2, Costo_Conocido: 15 }]);
+});
+
+test('FIFO sale cost read fails closed on malformed ledger', () => {
+  const headers = ['Movimiento_Id', 'Fecha', 'Id_Producto', 'Tipo', 'Cantidad', 'Costo_Unitario', 'Referencia', 'Nota', 'Id_Pedido', 'Item_Id', 'Clave_Idempotencia', 'Modalidad_Abastecimiento'];
+  const { context } = makeContext({ movements: [headers,
+    ['I-1', new Date('2030-01-01T00:00:00Z'), 'P-1', 'INGRESO', 1, 'bad-cost', '', '', '', '', 'I-1', 'STOCK_PROPIO']
+  ] });
+  const result = get(context, { accion: 'costosFifoVentas' });
+  assert.equal(result.ok, false);
+  assert.equal('ventas' in result, false);
+});

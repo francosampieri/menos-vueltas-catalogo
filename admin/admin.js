@@ -53,6 +53,7 @@ let PROVEEDORES = [];
 let RESUMEN_STOCK = [];
 let MOVIMIENTOS_STOCK = [];
 let MOVIMIENTOS_STOCK_VISTA = [];
+let COSTOS_FIFO_VENTAS = null;
 let proveedorEnEdicion = null;
 let movimientoPendiente = null;
 let enviandoMovimiento = false;
@@ -804,6 +805,11 @@ const API = {
     return respuesta.productos || [];
   },
 
+  async costosFifoVentas() {
+    const respuesta = await this.leerOperativo('costosFifoVentas');
+    return respuesta.ventas || [];
+  },
+
   async registrarMovimiento(movimiento) {
     const respuesta = await this.escribirOperativo('registrarMovimiento', { movimiento });
     return respuesta.movimiento;
@@ -924,7 +930,9 @@ if (typeof module === 'object' && module.exports) {
   module.exports = {
     lineaDesdeCatalogo, calcularLinea, tienePromoTemporalLinea,
     calcularPedido, modoEnvioPedido, paraGuardar, esPedidoAlCosto,
-    calcularMetricas, calcularEstadisticasClientes, incorporarPedidoGuardado,
+    calcularMetricas, calcularGananciaFifoPedido, calcularKpiGananciaFifo,
+    etiquetaGananciaFifoKpi, textoGananciaFifoPedido,
+    calcularEstadisticasClientes, incorporarPedidoGuardado,
     actualizarPedidoTrasGuardado, construirProveedorParaGuardar,
     construirClasificacionProducto, resumenInventarioDelCanal, filtrarResumenStock, filasInventarioValorizado, filaProveedor,
     construirMovimientoManual, prepararIntentoMovimientoManual,
@@ -973,6 +981,17 @@ async function arrancarPanel() {
 
   verLista();
   recuperarBorrador();
+  recargarGananciaFifo();
+}
+
+async function recargarGananciaFifo() {
+  if (!SHEETS_URL) return;
+  try {
+    COSTOS_FIFO_VENTAS = await API.costosFifoVentas();
+  } catch (error) {
+    COSTOS_FIFO_VENTAS = null;
+  }
+  if (!document.getElementById('vistaLista').hidden) pintarLista();
 }
 
 function avisarModoLocal() {
@@ -1438,6 +1457,7 @@ async function enviarMovimientoPendiente() {
     document.getElementById('movimientoForm').reset();
     mostrarEstadoMovimiento('Movimiento confirmado.', false);
     await recargarInventario();
+    recargarGananciaFifo();
   } catch (error) {
     movimientoPendiente = resolverFalloMovimientoPendiente(movimientoPendiente, error);
     if (movimientoPendiente) {
@@ -1581,7 +1601,7 @@ function pintarLista() {
       <td><span class="estado ${claseEstado}">${p.estado}</span></td>
       <td class="num">${t.unidades}</td>
       <td class="num"><b>${money(t.total)}</b></td>
-      <td class="num"><span class="ganancia${t.ganancia < 0 ? ' ganancia--neg' : ''}">${money(t.ganancia)}</span></td>
+      <td class="num"><span class="ganancia${t.ganancia < 0 ? ' ganancia--neg' : ''}">${money(t.ganancia)}</span>${textoGananciaFifoPedido(p, COSTOS_FIFO_VENTAS)}</td>
     </tr>`;
   }).join('');
 }
@@ -1589,6 +1609,7 @@ function pintarLista() {
 function pintarKpis(pedidos) {
   const { facturado, ganancia, pedidosActivos, entregados, cancelados, ticket } = calcularMetricas(pedidos);
   const margen = facturado ? ganancia / facturado * 100 : 0;
+  const fifo = COSTOS_FIFO_VENTAS === null ? null : calcularKpiGananciaFifo(pedidos, COSTOS_FIFO_VENTAS, CANAL);
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi">
@@ -1602,15 +1623,34 @@ function pintarKpis(pedidos) {
       <div class="kpi-s">ticket ${money(ticket)}</div>
     </div>
     <div class="kpi">
-      <div class="kpi-l">Ganancia</div>
+      <div class="kpi-l">Ganancia estimada</div>
       <div class="kpi-v kpi-v--verde">${money(ganancia)}</div>
       <div class="kpi-s">${margen.toFixed(1)}% de margen</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-l">Ganancia FIFO entregada</div>
+      <div class="kpi-v kpi-v--verde">${fifo ? etiquetaGananciaFifoKpi(fifo) : 'No disponible'}</div>
+      <div class="kpi-s">${fifo ? `${fifo.completos} completos · ${fifo.pendientes} pendientes` : 'Costo de tandas no disponible'} · antes de logística</div>
     </div>
     <div class="kpi">
       <div class="kpi-l">Cancelados</div>
       <div class="kpi-v">${cancelados}</div>
       <div class="kpi-s">&nbsp;</div>
     </div>`;
+}
+
+function textoGananciaFifoPedido(pedido, ventas) {
+  if (ventas === null) return '';
+  const margen = calcularGananciaFifoPedido(pedido, ventas);
+  if (margen.estado === 'no_aplica') return '';
+  if (margen.estado === 'pendiente') return `<small class="ganancia-fifo">FIFO pendiente · ${margen.unidadesPendientes} sin costo</small>`;
+  return `<small class="ganancia-fifo">FIFO ${money(margen.ganancia)}</small>`;
+}
+
+function etiquetaGananciaFifoKpi(fifo) {
+  if (!fifo.completos && fifo.pendientes) return 'Pendiente';
+  if (!fifo.completos) return 'Sin ventas con stock';
+  return money(fifo.ganancia);
 }
 
 function calcularMetricas(pedidos) {
@@ -1630,6 +1670,50 @@ function calcularMetricas(pedidos) {
     cancelados: comerciales.filter(p => p.estado === 'Cancelado').length,
     ticket: noCancelados.length ? facturado / noCancelados.length : 0
   };
+}
+
+// Indicador de entregas, independiente de calcularPedido() y de sus totales
+// históricos. Los faltantes nunca se interpretan como costo cero.
+function calcularGananciaFifoPedido(pedido, ventas) {
+  if (!pedido || pedido.estado !== 'Entregado' || esPedidoAlCosto(pedido) ||
+      !Number.isFinite(Number(pedido.total)) || !Array.isArray(pedido.items) || !pedido.items.length) {
+    return { estado: 'no_aplica' };
+  }
+  const items = pedido.items;
+  if (items.some(item => !item.itemId || !['CONTRA_PEDIDO', 'CONSIGNACION', 'STOCK_PROPIO'].includes(item.modalidadAbastecimiento) ||
+      item.gestionaStock !== (item.modalidadAbastecimiento !== 'CONTRA_PEDIDO'))) {
+    return { estado: 'no_aplica' };
+  }
+  const gestionados = items.filter(item => item.gestionaStock);
+  if (!gestionados.length) return { estado: 'no_aplica' };
+
+  let costoConocido = items.filter(item => !item.gestionaStock).reduce((total, item) => total + Number(item.costoTot || 0), 0);
+  let unidadesPendientes = 0;
+  gestionados.forEach(item => {
+    const venta = (ventas || []).find(v => String(v.Id_Pedido) === String(pedido.id) && v.Item_Id === item.itemId);
+    if (!venta || venta.Id_Producto !== item.id || Number(venta.Cantidad) !== Number(item.cant)) {
+      unidadesPendientes += Number(item.cant);
+      return;
+    }
+    costoConocido += Number(venta.Costo_Conocido);
+    unidadesPendientes += Number(venta.Cantidad_Pendiente);
+  });
+  return {
+    estado: unidadesPendientes ? 'pendiente' : 'completo', costoConocido, unidadesPendientes,
+    ganancia: unidadesPendientes ? null : Number(pedido.total) - costoConocido
+  };
+}
+
+function calcularKpiGananciaFifo(pedidos, ventas, canal) {
+  const resultado = { ganancia: 0, completos: 0, pendientes: 0 };
+  (pedidos || []).filter(p => p.canal === canal).forEach(p => {
+    const margen = calcularGananciaFifoPedido(p, ventas);
+    if (margen.estado === 'completo') {
+      resultado.ganancia += margen.ganancia;
+      resultado.completos++;
+    } else if (margen.estado === 'pendiente') resultado.pendientes++;
+  });
+  return resultado;
 }
 
 
@@ -2294,10 +2378,12 @@ async function guardarPedido() {
     edicion = actualizados.edicion;
     PEDIDOS = actualizados.pedidos;
     const id = edicion.id;
+    const entregado = edicion.estado === 'Entregado';
 
     localStorage.removeItem(BORRADOR_KEY);
     toast(`Pedido #${id} guardado`);
     verLista();
+    if (entregado) recargarGananciaFifo();
   } catch (e) {
     // Si el guardado falla NO se pierde el trabajo: el pedido queda en el
     // navegador y se ofrece recuperarlo al volver a entrar.

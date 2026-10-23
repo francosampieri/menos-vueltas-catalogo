@@ -21,6 +21,7 @@
 10. Ante un cambio de precio del proveedor, se respeta al cliente el precio B2C confirmado al realizar su pedido.
 11. Los precios comunicados y calculados en B2C, incluidos los de promociones temporales, por cantidad y códigos, son múltiplos de $50. Se redondean al múltiplo más cercano y, en empate, hacia abajo. B2B no adopta esta regla.
 12. Un pedido B2C de uso interno puede marcarse como pedido al costo. En ese caso, cada línea usa su costo unitario congelado; no aplican promociones, códigos promocionales ni descuentos por cantidad.
+13. `Precio_Costo` en Precios es la referencia para fijar precios y estimar la ganancia del pedido. Cada `INGRESO` registra por separado el costo real de su tanda; no actualiza automáticamente Precios ni el precio al cliente. Un cambio del costo de referencia sólo afecta nuevas cotizaciones tras la actualización del catálogo, no los importes ya congelados.
 
 ## Códigos promocionales B2C
 
@@ -61,6 +62,8 @@
 23. Las métricas de valor distinguen capital propio, consignación y valor físico conocido. Un ingreso legado con costo válido pero sin modalidad sólo puede sumar a valor físico conocido y debe advertir que la composición histórica por modalidad es incompleta. Un tramo sin costo histórico deja el total de capital incompleto.
 24. Una corrección positiva sólo puede revertir, dentro de su cantidad neta reversible, una salida negativa previa del mismo producto. Primero corrige el faltante pendiente si existe y luego restaura automáticamente las capas FIFO de origen; no se elige tanda ni costo manualmente.
 25. No se realiza backfill automático de modalidades ni costos históricos. Una normalización manual puntual sólo es válida cuando la modalidad histórica real se conoce; no habilita a inferirla desde el producto actual.
+26. La ganancia FIFO es un indicador comercial privado y separado de la ganancia estimada y sus estadísticas. Sólo se calcula para pedidos `Entregado` con líneas gestionadas y vínculo completo entre ítem y `VENTA`: resta del total congelado el costo de las tandas FIFO consumidas y, en pedidos mixtos, el costo de referencia congelado de las líneas contra pedido. Una venta puede consumir varias tandas; un ingreso posterior puede cubrir su faltante de costo sin reescribir el pedido.
+27. Si falta la venta vinculada, alguna unidad carece de costo o el histórico no tiene snapshot suficiente, no se inventa un costo ni se publica una ganancia FIFO definitiva. El KPI separado suma sólo pedidos completos del canal activo; los pedidos al costo quedan fuera. Las correcciones físicas de stock no reescriben el precio, el costo original de la venta ni la ganancia comercial del pedido. Este margen es previo a logística y no equivale a un cobro registrado ni a utilidad contable.
 
 ## Abastecimiento por proveedor
 

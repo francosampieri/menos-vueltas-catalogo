@@ -24,6 +24,57 @@ test('el panel presenta Pedir a Proveedor sin alterar la acción de copiar lista
   assert.match(script, /onclick="copiarListaAbastecimiento\(\$\{indice\}\)"[^>]*>Copiar lista/);
 });
 
+test('FIFO margin uses delivered stock layers and frozen contra-pedido cost without replacing estimate', () => {
+  const pedido = { id: 42, canal: 'b2c', estado: 'Entregado', total: 1000, ganancia: 400, pedidoAlCosto: false, items: [
+    { id: 'P-1', itemId: 'ST-1', cant: 3, costoTot: 300, modalidadAbastecimiento: 'STOCK_PROPIO', gestionaStock: true },
+    { id: 'P-2', itemId: 'CP-1', cant: 1, costoTot: 200, modalidadAbastecimiento: 'CONTRA_PEDIDO', gestionaStock: false }
+  ] };
+  const venta = { Id_Pedido: '42', Item_Id: 'ST-1', Id_Producto: 'P-1', Cantidad: 3,
+    Cantidad_Con_Costo: 3, Cantidad_Pendiente: 0, Costo_Conocido: 240 };
+  assert.deepEqual(admin.calcularGananciaFifoPedido(pedido, [venta]), {
+    estado: 'completo', costoConocido: 440, unidadesPendientes: 0, ganancia: 560
+  });
+  assert.equal(pedido.ganancia, 400);
+  assert.deepEqual(admin.calcularKpiGananciaFifo([pedido, { ...pedido, id: 43, canal: 'b2b' }], [venta], 'b2c'), {
+    ganancia: 560, completos: 1, pendientes: 0
+  });
+});
+
+test('FIFO margin remains pending for uncovered or missing stock sales, and skips old snapshots', () => {
+  const pedido = { id: 42, canal: 'b2c', estado: 'Entregado', total: 1000, pedidoAlCosto: false, items: [
+    { id: 'P-1', itemId: 'ST-1', cant: 2, costoTot: 200, modalidadAbastecimiento: 'STOCK_PROPIO', gestionaStock: true }
+  ] };
+  const parcial = { Id_Pedido: '42', Item_Id: 'ST-1', Id_Producto: 'P-1', Cantidad: 2,
+    Cantidad_Con_Costo: 1, Cantidad_Pendiente: 1, Costo_Conocido: 75 };
+  assert.deepEqual(admin.calcularGananciaFifoPedido(pedido, [parcial]), {
+    estado: 'pendiente', costoConocido: 75, unidadesPendientes: 1, ganancia: null
+  });
+  assert.deepEqual(admin.calcularGananciaFifoPedido(pedido, []), {
+    estado: 'pendiente', costoConocido: 0, unidadesPendientes: 2, ganancia: null
+  });
+  assert.equal(admin.calcularGananciaFifoPedido({ ...pedido, items: [{ ...pedido.items[0], itemId: '' }] }, [parcial]).estado, 'no_aplica');
+  assert.equal(admin.calcularGananciaFifoPedido({ ...pedido, estado: 'Nuevo' }, [parcial]).estado, 'no_aplica');
+  assert.equal(admin.calcularGananciaFifoPedido({ ...pedido, pedidoAlCosto: true }, [parcial]).estado, 'no_aplica');
+  assert.deepEqual(admin.calcularKpiGananciaFifo([pedido], [parcial], 'b2c'), {
+    ganancia: 0, completos: 0, pendientes: 1
+  });
+  assert.equal(admin.etiquetaGananciaFifoKpi({ ganancia: 0, completos: 0, pendientes: 1 }), 'Pendiente');
+  assert.equal(admin.etiquetaGananciaFifoKpi({ ganancia: 250, completos: 1, pendientes: 1 }), '$250');
+  assert.equal(admin.etiquetaGananciaFifoKpi({ ganancia: 0, completos: 0, pendientes: 0 }), 'Sin ventas con stock');
+  assert.match(admin.textoGananciaFifoPedido(pedido, [parcial]), /FIFO pendiente · 1 sin costo/);
+  assert.equal(admin.textoGananciaFifoPedido(pedido, null), '');
+});
+
+test('FIFO margin UI labels the separate estimate and delivered KPI without changing saved values', () => {
+  const markup = fs.readFileSync(path.join(__dirname, '..', 'admin', 'index.html'), 'utf8');
+  const script = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.js'), 'utf8');
+  assert.match(markup, /Ganancia estimada/);
+  assert.match(script, /Ganancia FIFO entregada/);
+  assert.match(script, /async costosFifoVentas\(\)/);
+  assert.match(script, /recargarGananciaFifo/);
+  assert.match(script, /await recargarInventario\(\);\s*recargarGananciaFifo\(\);/);
+});
+
 test('admin separates suppliers and keeps inventory actions in read-only-opening modals', () => {
   const markup = fs.readFileSync(path.join(__dirname, '..', 'admin', 'index.html'), 'utf8');
   const script = fs.readFileSync(path.join(__dirname, '..', 'admin', 'admin.js'), 'utf8');

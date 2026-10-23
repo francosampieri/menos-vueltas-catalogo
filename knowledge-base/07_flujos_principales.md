@@ -99,6 +99,14 @@
 5. Si hace falta rectificar una salida o ingreso, el equipo registra una corrección relacionada. La corrección no borra ni altera el antecedente, ni permite elegir manualmente una tanda.
 6. Consultar el resumen, el detalle o el historial no genera movimientos, no modifica precios, disponibilidad, catálogo, B2C, B2B ni Finanzas.
 
+## Flujo de ganancia FIFO de pedidos entregados
+
+1. El responsable mantiene en Precios el costo de referencia que guía la cotización y registra en cada ingreso de stock el costo real de esa tanda; el ingreso no actualiza Precios.
+2. Al entregar un pedido con stock gestionado, sus movimientos `VENTA` quedan vinculados por pedido e ítem. Una lectura privada asigna a cada venta los costos de las tandas consumidas por FIFO, incluso si cruza tandas o un ingreso posterior cubre un faltante.
+3. El admin conserva la ganancia estimada del pedido y muestra por separado la ganancia FIFO de entregados con trazabilidad y costo completos. En pedidos mixtos suma el costo de referencia congelado de las líneas contra pedido al costo FIFO de las líneas gestionadas.
+4. Si faltan unidades valorizables o una venta vinculada, muestra el indicador como pendiente y no lo suma al KPI definitivo. Los históricos sin snapshot no se reconstruyen desde el catálogo actual; los pedidos al costo quedan excluidos de la métrica comercial.
+5. El KPI FIFO agrupa sólo pedidos completos del canal activo. Consultarlo no cambia importes históricos, movimientos, cobros ni Finanzas. Las correcciones físicas no alteran el margen comercial original; el indicador es previo a logística y no representa utilidad contable definitiva.
+
 ## Flujo B2B — objetivo en preparación
 
 1. Un comercio pequeño accede a la propuesta B2B.

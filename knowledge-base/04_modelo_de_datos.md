@@ -31,6 +31,8 @@ Campos comerciales confirmados:
 | `Precio_Promo` | Precio unitario con promoción |
 | `Precio_Promo_Mayorista` | Precio por cantidad con promoción |
 
+`Precios.Precio_Costo` es el costo unitario de referencia para cotizar y calcular la ganancia estimada del pedido; no representa necesariamente el costo de la tanda entregada. `Movimientos_Stock.Costo_Unitario` registra el costo real de cada `INGRESO`. Registrar un ingreso no actualiza la hoja Precios ni cambia precios de venta.
+
 Para publicarse, un producto debe estar `Activo` y habilitado con `Cat B2C` o `Cat B2B`. El panel consume `admin/productos.json`, una versión reducida con los campos necesarios para búsqueda y cálculos.
 
 ### Abastecimiento e inventario operativos
@@ -44,6 +46,8 @@ La planilla operativa privada contiene la entidad `Proveedores`. Su clave establ
 Todo `INGRESO` nuevo incorpora la modalidad histórica privada `Modalidad_Abastecimiento`, con valor exacto `STOCK_PROPIO` o `CONSIGNACION`, y un costo unitario válido. La modalidad pertenece al evento de ingreso: no se deriva después desde la clasificación actual del producto. Los ingresos históricos con modalidad y costo vacíos permanecen como tramos no valorizables; los que conservan costo válido pero no modalidad son legado valorizable sin modalidad. Ambos casos siguen legibles sin backfill automático.
 
 Las tandas o capas de costo, asignaciones FIFO y faltantes pendientes no son una tabla ni una hoja nueva: son una proyección privada en memoria a partir del ledger. Cada ingreso conserva su identidad de capa aun cuando su remanente sea cero. La proyección calcula por separado capital propio, valor de consignación y valor físico conocido; este último puede incluir legado valorizable sin modalidad, sin atribuirlo a ninguna de las dos primeras métricas. Los tramos sin costo y los faltantes pendientes no se presentan como costo cero.
+
+Una lectura privada adicional deriva el costo de cada `VENTA` vinculada por `Id_Pedido` e `Item_Id`: suma las unidades y costos de todas sus asignaciones FIFO, incluso si cruza tandas o un ingreso posterior cubre un faltante. Informa por separado el costo conocido y las unidades pendientes o no valorizables. No crea una hoja de costo de ventas ni modifica el ledger, `Pedidos` o `Items`.
 
 `Sin_Stock` es una decisión manual global, independiente del saldo físico. Es el único dato de este dominio que se publica al catálogo como booleano; los campos privados de proveedor, modalidad, costos, capas derivadas y movimientos permanecen excluidos.
 
@@ -88,6 +92,8 @@ anteriores pueden conservar estas nuevas columnas vacías.
 está activo, identifica que el pedido se cotizó al costo y permite excluirlo de
 las métricas y estadísticas comerciales sin retirarlo de la operación. Los
 pedidos históricos sin este valor se interpretan como `false`.
+
+`Costo` y `Ganancia` guardados en `Pedidos` son importes históricos estimados a partir del costo de referencia congelado en sus ítems; no se sobrescriben con el costo FIFO. El admin calcula aparte una ganancia FIFO sólo para pedidos entregados con líneas de stock gestionado y trazabilidad completa, usando el `Total` congelado, el costo FIFO de esas líneas y el costo de referencia congelado de las líneas contra pedido. El KPI separado suma únicamente pedidos completos del canal activo; los pendientes no aportan una ganancia definitiva y los pedidos al costo quedan excluidos. No se infieren movimientos para pedidos históricos sin snapshot.
 
 ## Códigos promocionales B2C
 
