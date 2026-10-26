@@ -36,7 +36,7 @@ test('publishes responsive clean art with editable title, description and catalo
   }
 });
 
-test('leaves the selection pending and its CTA hidden before the catalog loads', () => {
+test('keeps the pending selection CTA visible as an unbound design preview', () => {
   const script = landing.match(/<script>\s*(window\.VISTAS_EVENTO_B2C[\s\S]*?)<\/script>/);
   assert.ok(script);
   const context = { window: {} };
@@ -46,7 +46,10 @@ test('leaves the selection pending and its CTA hidden before the catalog loads',
   assert.equal(pending.active, false);
   assert.equal(pending.groupIds.length, 0);
   assert.equal(pending.cta, 'Ver Selección');
-  assert.match(slides(landing)[0], /<button[^>]*data-evento-id="clasicos-cocina"[^>]*\bhidden\b[^>]*aria-hidden="true"[^>]*>Ver Selección<\/button>/);
+  const button = slides(landing)[0].match(/<button[^>]*class="hero-clasicos__primary"[^>]*>Ver Selección<\/button>/)?.[0];
+  assert.ok(button);
+  assert.doesNotMatch(button, /\bhidden\b|aria-hidden="true"/);
+  assert.doesNotMatch(button, /data-vista-evento|onclick=/);
   assert.equal(context.window.VISTAS_EVENTO_B2C['campana-nuevos-habitos'].active, true);
 });
 

@@ -197,7 +197,7 @@
   <script>
     window.VISTAS_EVENTO_B2C = Object.freeze({
       // Selección pendiente: completar los seis Id_Grupo habilitados y activar
-      // juntos. El CTA permanece oculto mientras no haya una selección válida.
+      // juntos. El CTA se muestra sin acción para revisar el diseño.
       'clasicos-cocina': Object.freeze({
         active: false,
         title: 'Más Clásicos para tu cocina',
@@ -233,7 +233,8 @@
             <h1 class="hero-clasicos__title"><span class="hero-clasicos__title-main">Más Clásicos</span><span class="hero-clasicos__title-secondary">para tu cocina</span></h1>
             <p class="hero-clasicos__description"><span>Tu cocina suma clásicos</span><span>de primeras marcas</span></p>
             <div class="hero-clasicos__actions">
-              <button class="hero-clasicos__primary" type="button" data-vista-evento data-evento-id="clasicos-cocina" hidden aria-hidden="true">Ver Selección</button>
+              <!-- Agregar data-vista-evento al habilitar la selección. -->
+              <button class="hero-clasicos__primary" type="button" data-evento-id="clasicos-cocina">Ver Selección</button>
               <button class="hero-clasicos__secondary" type="button" onclick="mostrarCatalogoCompleto()">Ver catálogo</button>
             </div>
           </div>
