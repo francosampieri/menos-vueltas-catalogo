@@ -35,8 +35,8 @@ function gruposEventoComerMejor(source) {
   return [...match[1].matchAll(/'(\d+)'/g)].map(([, id]) => id);
 }
 
-test('ships the comer-mejor campaign in the first B2C multihero slide', () => {
-  assert.match(landing, /multihero-slide--actual[\s\S]*?hero-comer-mejor/);
+test('preserves the comer-mejor campaign in its dedicated B2C multihero slide', () => {
+  assert.match(landing, /multihero-slide--comer-mejor[\s\S]*?hero-comer-mejor/);
   assert.match(landing, /hero-comer-mejor-desktop\.png/);
   assert.match(landing, /hero-comer-mejor-mobile\.png/);
   assert.match(landing, /data-vista-evento[^>]*data-evento-id="campana-nuevos-habitos"/);
