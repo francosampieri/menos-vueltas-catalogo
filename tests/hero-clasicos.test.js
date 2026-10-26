@@ -45,8 +45,8 @@ test('keeps the pending selection CTA visible as an unbound design preview', () 
   assert.ok(pending, 'Clasicos must use the existing editorial-view API');
   assert.equal(pending.active, false);
   assert.equal(pending.groupIds.length, 0);
-  assert.equal(pending.cta, 'Ver Selección');
-  const button = slides(landing)[0].match(/<button[^>]*class="hero-clasicos__primary"[^>]*>Ver Selección<\/button>/)?.[0];
+  assert.equal(pending.cta, 'Ver selección');
+  const button = slides(landing)[0].match(/<button[^>]*class="hero-clasicos__primary"[^>]*>Ver selección<\/button>/)?.[0];
   assert.ok(button);
   assert.doesNotMatch(button, /\bhidden\b|aria-hidden="true"/);
   assert.doesNotMatch(button, /data-vista-evento|onclick=/);

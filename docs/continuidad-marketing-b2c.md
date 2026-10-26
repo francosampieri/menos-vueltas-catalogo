@@ -1,14 +1,14 @@
 # Continuidad de marketing B2C — catálogo, próximo evento y Meta Ads
 
-Actualizado: 25 de octubre de 2026.
+Actualizado: 26 de octubre de 2026.
 
 Este documento resume la conversación para retomarla en esta u otra sesión. Separa instrucciones del responsable, observaciones, hipótesis y propuestas del asistente. Registra las definiciones aprobadas del evento de incorporaciones B2C; no autoriza publicación, gasto en anuncios ni modificaciones de las políticas de la base de conocimiento.
 
 ## Punto de continuidad
 
-**Etapa cerrada: flyer B2C de «Más Clásicos para tu cocina» definido y aprobado por el responsable.** El archivo definitivo es `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`. No reabrir su diseño ni usar como finales las variantes descartadas, salvo pedido del responsable.
+**Etapa cerrada: flyer y heros desktop/mobile de «Más Clásicos para tu cocina» aprobados; heros implementados en la rama `evento/clasicos-cocina`.** El flyer definitivo es `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`. No reabrir el diseño ni usar como finales las variantes descartadas, salvo pedido del responsable.
 
-**Próximo paso confirmado: crear el hero en una nueva sesión**, con adaptaciones desktop y mobile. Después quedan los copys de WhatsApp y Facebook. Las presentaciones y la pieza del flyer ya están cerradas; siguen pendientes la adaptación de textos y acciones del hero, su convivencia con las campañas actuales y la fecha de lanzamiento. La aprobación del flyer no prueba que todos los productos estén publicados o disponibles, ni autoriza publicar piezas o implementar cambios en la web.
+**Próximo paso confirmado: retomar cuando el responsable haya subido los productos**, verificar sus seis `Id_Grupo` reales y habilitación B2C y conectar «Ver selección». El botón se muestra por pedido del responsable, sin acción por ahora; «Ver catálogo» funciona. El orden está cerrado: Clásicos, estándar, Comer mejor. Después quedan los copys de WhatsApp y Facebook y la fecha de lanzamiento. La implementación no acredita que todos los productos estén publicados o disponibles, ni autoriza lanzar la campaña.
 
 La relación entre ese evento y la prueba de publicidad paga debe resolverse al retomarla. No asumir que diseñar el evento autoriza lanzar anuncios ni que ambos deban ser una misma campaña.
 
@@ -59,11 +59,23 @@ Recursos útiles para el hero:
 
 Traducir la mejora interna del catálogo al beneficio de poder resolver más de la compra cotidiana en Menos Vueltas. Mostrar las marcas y productos como prueba concreta, conservando la compra simple y la comodidad del servicio como marco.
 
-Evitar «mejoramos la calidad» o «mejores marcas», que pueden desvalorizar el surtido anterior, y promesas de resolver toda la compra. El flyer quedó aprobado sin bajada. Los textos para hero y copys todavía requieren su propia adaptación; los borradores previos no son textos finales.
+Evitar «mejoramos la calidad» o «mejores marcas», que pueden desvalorizar el surtido anterior, y promesas de resolver toda la compra. El flyer quedó aprobado sin bajada. Los textos del hero están cerrados en la sección siguiente; los copys de lanzamiento siguen pendientes.
+
+### Heros cerrados e implementados — 26 de octubre
+
+- **Rama:** `evento/clasicos-cocina`. Archivos: `b2c/index.html`, `shared/styles.css`, `b2c/hero-clasicos-desktop.jpg` y `b2c/hero-clasicos-mobile.png`.
+- **Artes:** fondo blanco, los seis envases aprobados, sin textos promocionales ni botones incrustados; lienzos 1600 × 700 y 1080 × 1560 px. Productos desplazados para despejar las acciones; no recrear el arte al retomar.
+- **Desktop:** «Más Clásicos» / «para tu cocina», grafito, Cabin 500 y DM Sans 400, interlineado compacto. Bajada HTML «Tu cocina suma clásicos» / «de primeras marcas» y botones en las posiciones aprobadas.
+- **Mobile:** título centrado en Cabin, primera línea con peso 500, interlineado compacto, sin bajada; botones apilados.
+- **CTAs exactos:** «Ver selección» (selección con s minúscula, corrección final) y «Ver catálogo».
+- **Carrusel B2C:** Clásicos primero, estándar segundo, Comer mejor tercero. B2B conserva su estructura propia.
+- **Estado del botón principal:** visible sin acción para revisar diseño. Conserva `data-evento-id="clasicos-cocina"`, pero no lleva `data-vista-evento`; la definición sigue con `active: false` y `groupIds: []`. No basta con quitar `hidden`: el inicializador oculta automáticamente las selecciones inactivas conectadas.
+- **Pendiente para mañana:** comprobar los seis productos subidos y su habilitación B2C, confirmar los `Id_Grupo` en el orden editorial acordado, completar `groupIds`, activar la definición y reponer `data-vista-evento`. No inventar IDs ni editar el JSON generado o Sheets para forzar disponibilidad.
+- **Verificación:** 19 pruebas de hero, carrusel y vista-evento; revisión local desktop/mobile y navegación de catálogo. Las capturas de referencia están en `C:/Users/franc/Desktop/Menos Vueltas/outputs/hero-mas-clasicos/implementacion/`; los archivos `boton-visible-hero-*.png` muestran ambos botones. No implican publicación.
 
 ### Lista de trabajo para el lanzamiento
 
-El flyer ya está cerrado. La adaptación a Estado y las acciones del hero siguen pendientes; el CTA del flyer no equivale a un botón o enlace funcional de la web.
+El flyer y los heros están cerrados. La adaptación a Estado y la conexión de la selección siguen pendientes; el CTA del flyer no equivale a un botón o enlace funcional de la web.
 
 - [x] Confirmar título final del flyer y selección central ordenada, sin mostacholes.
 - [x] Confirmar presentaciones y variedades del flyer.
@@ -71,26 +83,27 @@ El flyer ya está cerrado. La adaptación a Estado y las acciones del hero sigue
 - [x] Cerrar flyer sin bajada, CTA «Sumalos a tu próxima compra» y web visible `menosvueltas.com.ar`.
 - [ ] Definir fecha de lanzamiento.
 - [x] Crear y aprobar **flyer principal**: `Flyers/clasicos_cocina.jpg`, JPEG de 1122 × 1402 px.
-- [ ] Crear **hero desktop** de 1600 × 700 px y **hero mobile** de 1080 × 1560 px, según las proporciones vigentes en KB. En la web, título, bajada y botones permanecen como HTML separado del arte.
-- [ ] Acordar los textos adaptados del hero, si llevará bajada, sus botones y destinos. «Ver novedades» hacia una selección del evento sigue siendo sólo una propuesta; no trasladar automáticamente el CTA del flyer a una acción funcional.
-- [ ] Definir cómo convivirá el nuevo hero con «Comer mejor» y el hero estándar; no asumir reemplazo ni retiro.
+- [x] Crear y aprobar **hero desktop** de 1600 × 700 px y **hero mobile** de 1080 × 1560 px, con título, bajada y botones HTML separados del arte.
+- [x] Cerrar textos y acciones: «Ver selección» hacia la futura selección del evento; «Ver catálogo» hacia catálogo completo. Selección aún sin conectar.
+- [x] Definir convivencia: Clásicos, estándar, Comer mejor; no se retira la campaña anterior.
 - [ ] Preparar la selección del evento con los productos reales y sus identificadores verificados, cuando corresponda implementar.
 - [ ] Redactar **copy de lanzamiento para WhatsApp**, breve y con enlace; preparar una versión de recordatorio si se decide usarla.
 - [ ] Redactar **copy de publicación en Facebook**, con novedad, marcas/productos, beneficio del servicio y enlace.
 - [ ] Evaluar una adaptación del flyer para **Estado de WhatsApp**, propuesta en 1080 × 1920 px.
 - [x] Revisar visualmente el flyer y recibir la conformidad final del responsable.
-- [ ] Revisar hero en desktop/mobile y consistencia entre flyer, hero y copys antes de difundir.
+- [x] Implementar y revisar visualmente el hero en desktop/mobile.
+- [ ] Revisar consistencia con los copys cuando se redacten, antes de difundir.
 - [ ] Antes de lanzar, verificar publicación y disponibilidad de los productos anunciados, hero en desktop/mobile, enlaces, botones y recorrido hasta agregar al carrito.
 
-### Inicio de la próxima sesión: hero
+### Inicio de la próxima sesión: conectar selección
 
 1. Leer esta nota, el índice de KB y los documentos de marca y negocio relevantes.
 2. Recuperar la memoria de `menos-vueltas-catalogo`.
-3. Abrir el JPG definitivo `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`. Usarlo como referencia de campaña; no reabrir el flyer ni partir de una variante descartada.
-4. Preparar propuestas de hero desktop y mobile que conserven el mensaje, los seis productos y el carácter de la composición aprobada. El flyer es una pieza completa con texto y contactos: no recortarlo como si fuera un arte de hero listo para producción.
-5. Revisar los heros actuales y la KB. Mantener 16:7 en desktop y 9:13 en mobile; para la implementación vigente, textos y botones son HTML separado del arte. Resolver con el responsable la adaptación del título, bajada si corresponde, CTA, destinos y convivencia con «Comer mejor» y el hero estándar.
-6. Antes de configurar una selección, verificar productos reales, disponibilidad e `Id_Grupo` en el catálogo B2C. La vista-evento vigente se abre desde un hero y no tiene una ruta permanente externa; no inventar un enlace directo a la nueva selección.
-7. Respetar el Brand Book: verde oliva, fondo claro cálido, grafito, DM Sans, Cabin y tono calmo y cercano. Presentar el hero para revisión antes de cualquier publicación o implementación no solicitada. No añadir descuentos, precios, fechas ni condiciones sin definición.
+3. Revisar el estado de `evento/clasicos-cocina` y los cambios existentes. El flyer y ambos heros están cerrados; no rediseñarlos.
+4. Verificar en el catálogo B2C actualizado los seis productos, presentaciones y disponibilidad. Recibir del responsable los IDs si no pueden confirmarse; no deducirlos desde el arte ni reutilizar los de Comer mejor.
+5. Completar `clasicos-cocina.groupIds` en el orden editorial confirmado, activar la definición y conectar el botón existente con `data-vista-evento`. Mantener «Ver selección», con s minúscula, y el orden de los tres heros.
+6. Probar apertura de la selección, tarjetas, modal, carrito, regreso y «Ver catálogo» en desktop/mobile. La vista-evento no tiene ruta externa permanente; no inventar un enlace directo.
+7. Retomar copys y fecha de lanzamiento cuando corresponda. No publicar ni añadir descuentos, precios, fechas o condiciones sin definición.
 
 ## Restricciones y preferencias expresadas por el responsable
 
@@ -194,18 +207,19 @@ Usar etiquetas de WhatsApp y el registro operativo existente si ayudan. Añadir 
 ## Al retomar
 
 1. Leer esta nota y recuperar la memoria del proyecto `menos-vueltas-catalogo`.
-2. Continuar con el **hero** tomando como referencia el flyer cerrado en `Flyers/clasicos_cocina.jpg`. No reabrir las decisiones aprobadas de la pieza.
-3. Resolver la adaptación del hero y sus acciones; luego continuar con copys. Las presentaciones y los seis envases ya están definidos, sin mostacholes. No inventar productos, precios ni disponibilidad.
-4. Consultar la KB y el estado real del hero, la vista-evento y el catálogo antes de diseñar o implementar. No asumir que el evento nuevo reemplaza la campaña anterior sin definirlo.
+2. Continuar en `evento/clasicos-cocina` con los heros cerrados e implementados. No reabrir el flyer ni el diseño desktop/mobile.
+3. Con los productos ya subidos, verificar los seis `Id_Grupo` y su habilitación B2C y conectar «Ver selección». Después continuar con copys. No inventar productos, precios ni disponibilidad.
+4. Consultar la KB y el estado real de la vista-evento y el catálogo antes de activar la selección. Conservar el orden Clásicos, estándar, Comer mejor.
 5. Retomar Meta Ads cuando corresponda y resolver destino, segmentación real, oferta si la hay, cargos y fecha. Verificar las opciones actuales de Meta; no tratar la documentación consultada en octubre de 2026 como garantía permanente de la interfaz.
 
 Prompt sugerido:
 
-> Leé `docs/continuidad-marketing-b2c.md` y la KB relevante. El flyer B2C ya quedó definido en `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`. Quiero continuar con la creación del hero desktop y mobile para «Más Clásicos para tu cocina», usando ese flyer como referencia. Conservá los seis productos y su importancia, sin mostacholes, COSTERO ni galletas de arroz. Revisá los heros actuales y ayudame a cerrar la adaptación de textos, CTA, destinos y convivencia con las campañas vigentes antes de producir las piezas. Respetá las proporciones y la separación de arte y HTML de la KB. No modifiques el flyer ni publiques o implementes cambios sin que lo pidamos.
+> Leé `docs/continuidad-marketing-b2c.md` y la KB relevante. Los heros de «Más Clásicos para tu cocina» ya están cerrados e implementados en `evento/clasicos-cocina`. Ya subí los productos: verifiquemos sus seis `Id_Grupo` reales y habilitación B2C para conectar el botón «Ver selección», actualmente visible sin acción. Conservá diseño, textos y orden Clásicos, estándar, Comer mejor. Probá la selección y el recorrido en desktop/mobile; no inventes IDs ni modifiques el catálogo generado, precios o disponibilidad para forzar la activación. No publiques cambios sin autorización.
 
 ## Fuentes de continuidad
 
 - Conversación de análisis, iteración y aprobación del flyer por el responsable, 23–25 de octubre de 2026.
+- Conversación de cierre e implementación de los heros y corrección del CTA, 26 de octubre de 2026. El responsable autorizó documentar la continuidad para retomar con los productos subidos.
 - Flyer definitivo local: `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`.
 - [Índice canónico de KB](../knowledge-base/README.md): consultar siempre políticas vigentes allí; esta nota no las reemplaza.
 - [Decisiones y supuestos](../knowledge-base/09_decisiones_y_supuestos.md): incluye marca, canales, hero y límites de autonomía.
