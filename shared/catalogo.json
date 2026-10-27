@@ -4670,7 +4670,7 @@
       "Tamaño": "400",
       "UM": "g",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Lacteos",
+      "Subcategoria": "Dulces y Endulzantes",
       "Tags": "dulce de leche, untable, desayuno, postre, argentina",
       "Id_Grupo": "136",
       "Tipo_Variante": "",
@@ -10209,7 +10209,7 @@
       "Marca": "LEDESMA",
       "Tamaño": "1",
       "UM": "kg",
-      "Categoria": "Almacén",
+      "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Dulces y Endulzantes",
       "Tags": "",
       "Id_Grupo": "317",
@@ -11123,7 +11123,7 @@
       "Nombre_Grupo": "Dulce de Leche",
       "Marca": "FRANZ",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Lacteos"
+      "Subcategoria": "Dulces y Endulzantes"
     },
     {
       "Id_Grupo": "137",
@@ -12333,7 +12333,7 @@
       "Id_Grupo": "317",
       "Nombre_Grupo": "Azúcar",
       "Marca": "LEDESMA",
-      "Categoria": "Almacén",
+      "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Dulces y Endulzantes"
     }
   ],
@@ -15853,7 +15853,7 @@
       "Producto": "Dulce de Leche FRANZ 400 g",
       "Estado": "ON",
       "Categoría": "Desayuno y Mediatarde",
-      "Subcategoria": "Lacteos",
+      "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Ancla",
       "Precio_Venta": "$2.350,00",
       "Uni Dto": "4",
@@ -20022,7 +20022,7 @@
       "Id": "588",
       "Producto": "Azúcar LEDESMA 1 kg",
       "Estado": "ON",
-      "Categoría": "Almacén",
+      "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Ancla",
       "Precio_Venta": "$1.650,00",
@@ -23550,7 +23550,7 @@
       "Producto": "Dulce de Leche FRANZ 400 g",
       "Estado": "",
       "Categoría": "Desayuno y Mediatarde",
-      "Subcategoria": "Lacteos",
+      "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Ancla",
       "Precio_Venta": "$2.100,00",
       "Uni Dto": "3",
