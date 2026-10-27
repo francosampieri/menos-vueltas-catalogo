@@ -7722,9 +7722,9 @@
     },
     {
       "Id": "462",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Trapo Blanco Edicion Especial",
       "Marca": "COSTERO",
       "Tamaño": "1",
@@ -18161,7 +18161,7 @@
     {
       "Id": "462",
       "Producto": "Trapo Blanco Edicion Especial COSTERO 1 u",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Limpieza",
       "Subcategoria": "Utensilios de Limpieza",
       "Tipo": "Rentable",
