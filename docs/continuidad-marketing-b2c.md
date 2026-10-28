@@ -1,16 +1,113 @@
 # Continuidad de marketing B2C — catálogo, próximo evento y Meta Ads
 
-Actualizado: 23 de octubre de 2026.
+Actualizado: 27 de octubre de 2026.
 
-Este documento resume la conversación para retomarla en esta u otra sesión. Separa instrucciones del responsable, observaciones, hipótesis y propuestas del asistente. No es una campaña aprobada, una autorización de gasto ni una modificación de las políticas de la base de conocimiento.
+Este documento resume la conversación para retomarla en esta u otra sesión. Separa instrucciones del responsable, observaciones, hipótesis y propuestas del asistente. Registra las definiciones aprobadas del evento de incorporaciones B2C; no autoriza publicación, gasto en anuncios ni modificaciones de las políticas de la base de conocimiento.
 
 ## Punto de continuidad
 
-**Etapa actual confirmada: terminar de afinar el catálogo.** El responsable está incorporando productos de marcas conocidas y alta rotación para mejorar el surtido y su percepción. No comenzar todavía el diseño de la campaña de Meta Ads.
+**Etapa cerrada: flyer y heros desktop/mobile de «Más Clásicos para tu cocina» aprobados; heros implementados en la rama `evento/clasicos-cocina`.** El flyer definitivo es `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`. No reabrir el diseño ni usar como finales las variantes descartadas, salvo pedido del responsable.
 
-**Próximo paso confirmado: diseñar el próximo evento de incorporación de productos al catálogo**, incluyendo flyers, hero, copys y las piezas que se acuerden. Todavía no están definidos su nombre, productos finales, fecha, selección visual, oferta ni destino de los CTA.
+**Selección conectada en la rama:** el 27 de octubre se verificaron los productos en el catálogo público actualizado y se habilitó «Ver selección» para los seis grupos del evento. El responsable confirmó reemplazar la lista anterior de Nuevos B2C por los IDs `563`–`588`. El orden sigue cerrado: Clásicos, estándar, Comer mejor. Quedan la publicación autorizada del código, los copys de WhatsApp y Facebook y la fecha de lanzamiento. No lanzar la campaña por inferencia.
 
 La relación entre ese evento y la prueba de publicidad paga debe resolverse al retomarla. No asumir que diseñar el evento autoriza lanzar anuncios ni que ambos deban ser una misma campaña.
+
+## Evento confirmado — Más Clásicos para tu cocina
+
+### Definiciones del responsable
+
+- **Título visible del flyer aprobado:** «Más Clásicos» / «para tu cocina», en dos renglones negros, con el logo horizontal de Menos Vueltas centrado arriba.
+- «Tu cocina suma clásicos» fue el título inicial; el responsable lo reemplazó durante esta sesión. No recuperarlo como título vigente al retomar.
+- **Canal:** B2C.
+- **Propósito interno:** completar productos esenciales faltantes y sumar marcas reconocidas al catálogo.
+- El responsable había mostrado interés en reutilizar «Tu [ámbito] suma clásicos» en futuros eventos. Sigue siendo una idea exploratoria, no una regla de marca ni una condición de la pieza final.
+- COSTERO y las galletas de arroz quedan separados de esta campaña y sus flyers. Son novedades del catálogo, pero no protagonistas de este evento. Las tostadas mencionadas inicialmente tampoco integran la selección central de seis productos acordada.
+- Desodorante, talco, shampoo, acondicionador y bolsas de consorcio se mencionaron como ejemplos de futuras incorporaciones; no forman parte de este evento ni acreditan disponibilidad.
+
+### Selección central, por importancia
+
+1. Arroz Gallo Oro parboil — 500 g.
+2. Fideos Lucchetti tallarín N.º 5 — 500 g.
+3. Puré de papas Chef — 100 g.
+4. Crema de leche para cocinar Las Tres Niñas — 200 ml.
+5. Manteca clásica La Serenísima — 200 g.
+6. Azúcar Ledesma Clásica — 1 kg, por debajo de la manteca en importancia.
+
+Son **seis envases**. El responsable eliminó expresamente los mostacholes: alcanza con los tallarines y así se descarga la composición. No reincorporarlos por haber aparecido en los adjuntos o bocetos iniciales. Las fotos exactas fueron aportadas por el responsable; no sustituir variedades o presentaciones ni inferir precios, disponibilidad o identificadores de catálogo desde los envases.
+
+### Flyer definitivo — decisiones aprobadas
+
+- **Archivo final:** [Flyers/clasicos_cocina.jpg](<C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg>), fuera del repositorio. Es la referencia principal para continuar, por encima de los bocetos de `outputs/`.
+- **Formato comprobado:** JPEG de 1122 × 1402 px, aproximadamente 4:5. Los 1080 × 1350 px habían sido una propuesta; no describirlos como dimensiones reales del archivo final.
+- **Sin bajada:** el responsable pidió que la pieza se explique con imágenes y título, evitando texto adicional.
+- **Cabecera:** logo horizontal original centrado en el espacio entre el borde superior y «Más Clásicos». Sustituye el primer renglón que inicialmente decía «Menos Vueltas» en verde; no hay un segundo logo en el pie.
+- **Título:** «Más Clásicos» / «para tu cocina», negro, centrado y con tipografía humanista más liviana (la opción B elegida). El último renglón se acercó al segundo sin cambiar su tamaño. Las alternativas de título verde/negro fueron descartadas.
+- **Composición:** opción 3 centrada, inspirada en `C:/Users/franc/Desktop/Menos Vueltas/Flyers/comer_mejor_limpia.png`. Escalas y planos distintos, apoyos y sombras sobre mesada/tabla, paño, ingredientes y utensilios para dar peso y vida a los envases. Arroz como foco principal; tallarines y puré acompañan como siguientes prioridades.
+- **Azúcar:** se agrandó para que el paquete de 1 kg tenga una proporción más creíble; conserva el plano de fondo detrás de los tallarines.
+- **CTA exacto:** «Sumalos a tu próxima compra».
+- **Pie elegido (opción B):** `menosvueltas.com.ar` debajo del CTA y el número comercial de WhatsApp debajo de la web, algo más chico. **Sin iconos ni barra separadora.** El número está en el arte; no transcribirlo en documentación o código.
+- **Cierre:** el 25 de octubre el responsable confirmó que el flyer quedó definido en ese JPG. Esto cierra el diseño de la pieza; no acredita publicación o lanzamiento.
+
+Recursos útiles para el hero:
+
+- Logo original: `C:/Users/franc/Desktop/Menos Vueltas/Logos/png/logo_completo_1000x340.png`.
+- Lámina persistente con los seis envases: `C:/Users/franc/Desktop/Menos Vueltas/outputs/mas-clasicos-para-tu-cocina/referencias-seis-productos.png`.
+- Las fotos individuales se aportaron desde archivos temporales. Si ya no están disponibles, revisar los recursos del proyecto o pedirlas nuevamente; no reemplazarlas por envases inventados. Sus prefijos de archivo no acreditan `Id_Grupo`.
+- Los PNG de trabajo en `outputs/mas-clasicos-para-tu-cocina/` conservan las iteraciones. No confundir una variante sin logo, con iconos o con otro pie con el JPG definitivo.
+
+### Enfoque de comunicación propuesto
+
+Traducir la mejora interna del catálogo al beneficio de poder resolver más de la compra cotidiana en Menos Vueltas. Mostrar las marcas y productos como prueba concreta, conservando la compra simple y la comodidad del servicio como marco.
+
+Evitar «mejoramos la calidad» o «mejores marcas», que pueden desvalorizar el surtido anterior, y promesas de resolver toda la compra. El flyer quedó aprobado sin bajada. Los textos del hero están cerrados en la sección siguiente; los copys de lanzamiento siguen pendientes.
+
+### Heros cerrados e implementados — 26 de octubre
+
+- **Rama:** `evento/clasicos-cocina`. Archivos: `b2c/index.html`, `shared/styles.css`, `b2c/hero-clasicos-desktop.jpg` y `b2c/hero-clasicos-mobile.png`.
+- **Artes:** fondo blanco, los seis envases aprobados, sin textos promocionales ni botones incrustados; lienzos 1600 × 700 y 1080 × 1560 px. Productos desplazados para despejar las acciones; no recrear el arte al retomar.
+- **Desktop:** «Más Clásicos» / «para tu cocina», grafito, Cabin 500 y DM Sans 400, interlineado compacto. Bajada HTML «Tu cocina suma clásicos» / «de primeras marcas» y botones en las posiciones aprobadas.
+- **Mobile:** título centrado en Cabin, primera línea con peso 500, interlineado compacto, sin bajada; botones apilados.
+- **CTAs exactos:** «Ver selección» (selección con s minúscula, corrección final) y «Ver catálogo».
+- **Carrusel B2C:** Clásicos primero, estándar segundo, Comer mejor tercero. B2B conserva su estructura propia.
+- **Estado del botón principal:** conectado a `clasicos-cocina` mediante `data-vista-evento`; definición activa con `groupIds: ['316', '314', '313', '311', '312', '317']`. La prueba previa sin acción quedó reemplazada al verificar los productos reales el 27 de octubre.
+- **Productos verificados:** arroz Gallo Oro 500 g, producto `587` / grupo `316`; tallarín Lucchetti 500 g, `585` / `314`; puré Chef 100 g, `584` / `313`; crema Las Tres Niñas 200 ml, `582` / `311`; manteca La Serenísima 200 g, `583` / `312`; azúcar Ledesma 1 kg, `588` / `317`. Todos figuraban activos y habilitados B2C al consultar el catálogo público.
+- **Nuevos ingresos:** reemplazo confirmado por los 26 IDs `563`–`588`; no se suman a los anteriores ni se modifica B2B. Mostacholes (`586`, grupo `315`) pertenece a Nuevos por esa lista, pero queda fuera de Clásicos.
+- **Prioridades del catálogo B2C:** Conservas — tomate triturado, puré de tomate, pulpa (`298`, `41`, `42`); Arroz y Puré de Papas — parboil, grano largo (`316`, `65`); Fideos — mostachol, tallarín, largos, cortos, nidos cabello de ángel (`315`, `314`, `67`, `66`, `68`); Dulces y Endulzantes — azúcar, dulce de leche, miel (`317`, `136`, `290`). Orden confirmado por el responsable el 27 de octubre; los demás grupos siguen alfabéticamente y B2B conserva sus prioridades. Estas subcategorías se contrastaron con una consulta nueva del catálogo público, que ya separa Arroz y Puré de Papas de Fideos.
+- **Dato para publicar/probar:** el JSON versionado local seguía desactualizado al iniciar esta sesión. La verificación usa una copia del catálogo público actualizado fuera del repositorio; no se modificó el JSON generado para forzar disponibilidad. Antes de publicar, integrar la actualización generada del catálogo para no desplegar datos anteriores.
+- **Verificación:** 19 pruebas de hero, carrusel y vista-evento; revisión local desktop/mobile y navegación de catálogo. Las capturas de referencia están en `C:/Users/franc/Desktop/Menos Vueltas/outputs/hero-mas-clasicos/implementacion/`; los archivos `boton-visible-hero-*.png` muestran ambos botones. No implican publicación.
+
+### Lista de trabajo para el lanzamiento
+
+El flyer y los heros están cerrados y la selección está conectada en la rama. La adaptación a Estado y la publicación siguen pendientes; el CTA del flyer no equivale a una ruta externa de la selección web.
+
+- [x] Confirmar título final del flyer y selección central ordenada, sin mostacholes.
+- [x] Confirmar presentaciones y variedades del flyer.
+- [x] Recibir las fotos exactas de los seis envases y localizar el logo original.
+- [x] Cerrar flyer sin bajada, CTA «Sumalos a tu próxima compra» y web visible `menosvueltas.com.ar`.
+- [ ] Definir fecha de lanzamiento.
+- [x] Crear y aprobar **flyer principal**: `Flyers/clasicos_cocina.jpg`, JPEG de 1122 × 1402 px.
+- [x] Crear y aprobar **hero desktop** de 1600 × 700 px y **hero mobile** de 1080 × 1560 px, con título, bajada y botones HTML separados del arte.
+- [x] Cerrar textos y acciones: «Ver selección» hacia los seis grupos del evento; «Ver catálogo» hacia catálogo completo. Selección conectada en la rama.
+- [x] Definir convivencia: Clásicos, estándar, Comer mejor; no se retira la campaña anterior.
+- [x] Preparar y conectar la selección del evento con seis grupos reales verificados.
+- [x] Reemplazar Nuevos B2C por los IDs `563`–`588`, según confirmación del responsable.
+- [ ] Redactar **copy de lanzamiento para WhatsApp**, breve y con enlace; preparar una versión de recordatorio si se decide usarla.
+- [ ] Redactar **copy de publicación en Facebook**, con novedad, marcas/productos, beneficio del servicio y enlace.
+- [ ] Evaluar una adaptación del flyer para **Estado de WhatsApp**, propuesta en 1080 × 1920 px.
+- [x] Revisar visualmente el flyer y recibir la conformidad final del responsable.
+- [x] Implementar y revisar visualmente el hero en desktop/mobile.
+- [ ] Revisar consistencia con los copys cuando se redacten, antes de difundir.
+- [ ] Antes de lanzar, verificar publicación y disponibilidad de los productos anunciados, hero en desktop/mobile, enlaces, botones y recorrido hasta agregar al carrito.
+
+### Inicio de la próxima sesión: revisar publicación y comunicación
+
+1. Leer esta nota, el índice de KB y los documentos de marca y negocio relevantes.
+2. Recuperar la memoria de `menos-vueltas-catalogo`.
+3. Revisar el estado de `evento/clasicos-cocina` y los cambios existentes. El flyer y ambos heros están cerrados; no rediseñarlos.
+4. La selección ya está conectada con los seis grupos indicados arriba; revisar que el catálogo generado siga vigente al integrar/publicar la rama. No modificar sus datos manualmente.
+5. Mantener «Ver selección», con s minúscula, el orden de los tres heros y la lista Nuevos B2C `563`–`588` confirmada.
+6. Al publicar, verificar selección, tarjetas, modal, carrito, regreso y «Ver catálogo» en desktop/mobile con los datos que sirva ese despliegue. La vista-evento no tiene ruta externa permanente; no inventar un enlace directo.
+7. Retomar copys y fecha de lanzamiento cuando corresponda. No publicar ni añadir descuentos, precios, fechas o condiciones sin definición.
 
 ## Restricciones y preferencias expresadas por el responsable
 
@@ -77,7 +174,7 @@ Después de escuchar estas objeciones, el asistente pasó de preferir WhatsApp a
 
 - Para los anuncios de captación, el responsable considera central la comodidad y el tiempo. Rechaza como concepto principal un producto genérico que también se consigue en cualquier kiosco o supermercado.
 - Mostrar productos puede respaldar surtido y confianza, pero la razón para elegir el servicio debe quedar clara. Esto no impide que el próximo **evento de nuevos productos** tenga protagonismo de productos: son objetivos creativos que deben distinguirse.
-- Se propusieron dos expresiones del servicio: «Más tiempo para vos» y «Una tarea menos para organizar». Son propuestas, no copys finales ni un nombre de evento aprobado.
+- Para captación se discutieron «Más tiempo para vos», mensaje vigente de marca, y «Una tarea menos para organizar», propuesta del asistente. No son copys finales de anuncios. El flyer del evento de incorporaciones quedó aprobado con logo horizontal y título «Más Clásicos» / «para tu cocina»; «Tu cocina suma clásicos» es la denominación anterior.
 - Se mantiene la marca accesible y cercana según la KB, sin adoptar una estética premium sólo por la hipótesis socioeconómica.
 - El responsable no descarta un descuento de primera compra, aunque reduzca margen, para favorecer adquisición y repetición.
 - No se aprobó porcentaje, código, vigencia, acumulación, envío gratis ni presupuesto promocional. No extender automáticamente beneficios de otras campañas a esta prueba.
@@ -114,18 +211,21 @@ Usar etiquetas de WhatsApp y el registro operativo existente si ayudan. Añadir 
 ## Al retomar
 
 1. Leer esta nota y recuperar la memoria del proyecto `menos-vueltas-catalogo`.
-2. Confirmar si el responsable ya está conforme con el catálogo. Si no, mantener esa prioridad.
-3. Si el catálogo está listo, trabajar primero el evento de incorporación de productos: selección final, objetivo, mensaje, piezas y CTA. No inventar productos, precios ni disponibilidad.
-4. Consultar la KB y el estado real del hero, la vista-evento y el catálogo antes de diseñar o implementar. No asumir que el evento nuevo reemplaza la campaña anterior sin definirlo.
+2. Continuar en `evento/clasicos-cocina` con los heros cerrados e implementados. No reabrir el flyer ni el diseño desktop/mobile.
+3. La selección ya está conectada y Nuevos B2C actualizado en la rama. Revisar integración del catálogo generado y publicación autorizada; después continuar con copys. No inventar productos, precios ni disponibilidad.
+4. Consultar la KB y el estado real de la vista-evento y el catálogo. Conservar el orden Clásicos, estándar, Comer mejor.
 5. Retomar Meta Ads cuando corresponda y resolver destino, segmentación real, oferta si la hay, cargos y fecha. Verificar las opciones actuales de Meta; no tratar la documentación consultada en octubre de 2026 como garantía permanente de la interfaz.
 
 Prompt sugerido:
 
-> Leé `docs/continuidad-marketing-b2c.md`. Ya estoy conforme con el catálogo y quiero diseñar el evento de incorporación de nuevos productos. Retomemos las definiciones guardadas y resolvamos los pendientes sin dar por aprobada la campaña de Meta Ads.
+> Leé `docs/continuidad-marketing-b2c.md` y la KB relevante. En `evento/clasicos-cocina` están cerrados los heros, conectada la selección de seis grupos y reemplazados los Nuevos B2C por 563–588. Revisemos la integración del catálogo generado antes de publicar y continuemos con la comunicación del lanzamiento. Conservá diseño, textos y orden de heros. No modifiques datos comerciales ni publiques sin autorización.
 
 ## Fuentes de continuidad
 
-- Conversación de análisis y devolución del responsable, octubre de 2026.
+- Conversación de análisis, iteración y aprobación del flyer por el responsable, 23–25 de octubre de 2026.
+- Conversación de cierre e implementación de los heros y corrección del CTA, 26 de octubre de 2026. El responsable autorizó documentar la continuidad para retomar con los productos subidos.
+- Productos y grupos contrastados con el catálogo público el 27 de octubre de 2026; confirmación del responsable de reemplazar Nuevos B2C por 563–588.
+- Flyer definitivo local: `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`.
 - [Índice canónico de KB](../knowledge-base/README.md): consultar siempre políticas vigentes allí; esta nota no las reemplaza.
 - [Decisiones y supuestos](../knowledge-base/09_decisiones_y_supuestos.md): incluye marca, canales, hero y límites de autonomía.
 - [Flujos principales](../knowledge-base/07_flujos_principales.md): compra B2C, WhatsApp, invitación de novedades y vista-evento.

@@ -78,7 +78,6 @@ test('ships the requested Snacks Salados priorities in both channels', () => {
 test('ships the expanded editorial priorities independently for both channels', () => {
   const api = ordering();
   const priorities = [
-    ['Almacén', 'Conservas', ['41', '42']],
     ['Almacén', 'Especias', ['62', '43', '44', '45']],
     ['Almacén', 'Salsas y Aderezos', ['271', '98', '102', '101', '97', '100', '99']],
     ['Desayuno y Mediatarde', 'Café', ['285', '286', '118', '119', '120']],
@@ -88,6 +87,10 @@ test('ships the expanded editorial priorities independently for both channels', 
   ];
 
   for (const channel of ['B2C', 'B2B']) {
+    assert.deepEqual(
+      Array.from(api.getPriorityIds(channel, 'Almacén', 'Conservas')),
+      channel === 'B2C' ? ['298', '41', '42'] : ['41', '42']
+    );
     for (const [category, subcategory, expectedIds] of priorities) {
       assert.deepEqual(
         Array.from(api.getPriorityIds(channel, category, subcategory)),
@@ -102,6 +105,27 @@ test('ships the expanded editorial priorities independently for both channels', 
     for (const parmesanId of ['103', '104', '105', '106', '107', '108']) {
       assert.ok(!saucePriorities.includes(parmesanId), `${channel} must leave Parmesan sauce ${parmesanId} alphabetical`);
     }
+  }
+});
+
+test('prioritizes the approved B2C pantry groups in order and leaves other groups alphabetical', () => {
+  const api = ordering();
+  const sections = [
+    ['Almacén', 'Conservas', ['298', '41', '42']],
+    ['Almacén', 'Arroz y Puré de Papas', ['316', '65']],
+    ['Almacén', 'Fideos', ['315', '314', '67', '66', '68']],
+    ['Desayuno y Mediatarde', 'Dulces y Endulzantes', ['317', '136', '290']]
+  ];
+  for (const [category, subcategory, ids] of sections) {
+    const groups = [
+      {id:'999',nombre:'B adicional'},
+      ...ids.slice().reverse().map(id=>({id,nombre:`Grupo ${id}`})),
+      {id:'998',nombre:'A adicional'}
+    ];
+    assert.deepEqual(Array.from(api.getPriorityIds('B2C', category, subcategory)), ids);
+    assert.deepEqual(api.sortGroups({channel:'B2C',category,subcategory,groups}).map(group=>group.id), [...ids,'998','999']);
+    assert.deepEqual(api.sortGroups({channel:'B2C',category,subcategory,groups:groups.filter(group=>group.id!==ids[0])}).map(group=>group.id), [...ids.slice(1),'998','999']);
+    if (subcategory!=='Conservas') assert.deepEqual(Array.from(api.getPriorityIds('B2B',category,subcategory)), []);
   }
 });
 

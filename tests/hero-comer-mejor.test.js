@@ -9,8 +9,10 @@ const app = fs.readFileSync(path.join(root, 'shared', 'app.js'), 'utf8');
 const styles = fs.readFileSync(path.join(root, 'shared', 'styles.css'), 'utf8');
 
 const NUEVOS_ESPERADOS = [
-  '555', '556', '550', '546', '547', '548', '549', '557',
-  '558', '553', '551', '552', '554', '559', '560', '561'
+  '563', '564', '565', '566', '567', '568', '569', '570',
+  '571', '572', '573', '574', '575', '576', '577', '578',
+  '579', '580', '581', '582', '583', '584', '585', '586',
+  '587', '588'
 ];
 const NUEVOS_B2B_ANTERIORES = [
   '532', '484', '541', '523', '515', '533', '534', '535', '536', '537',
@@ -35,8 +37,8 @@ function gruposEventoComerMejor(source) {
   return [...match[1].matchAll(/'(\d+)'/g)].map(([, id]) => id);
 }
 
-test('ships the comer-mejor campaign in the first B2C multihero slide', () => {
-  assert.match(landing, /multihero-slide--actual[\s\S]*?hero-comer-mejor/);
+test('preserves the comer-mejor campaign in its dedicated B2C multihero slide', () => {
+  assert.match(landing, /multihero-slide--comer-mejor[\s\S]*?hero-comer-mejor/);
   assert.match(landing, /hero-comer-mejor-desktop\.png/);
   assert.match(landing, /hero-comer-mejor-mobile\.png/);
   assert.match(landing, /data-vista-evento[^>]*data-evento-id="campana-nuevos-habitos"/);
