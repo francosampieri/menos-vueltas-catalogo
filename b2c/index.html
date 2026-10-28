@@ -196,14 +196,13 @@
        tener entrada. Mantener sólo Id_Grupo reales y en orden editorial. -->
   <script>
     window.VISTAS_EVENTO_B2C = Object.freeze({
-      // Selección pendiente: completar los seis Id_Grupo habilitados y activar
-      // juntos. El CTA se muestra sin acción para revisar el diseño.
+      // Seis grupos verificados en el catálogo B2C, en orden editorial.
       'clasicos-cocina': Object.freeze({
-        active: false,
+        active: true,
         title: 'Más Clásicos para tu cocina',
         description: 'Tu cocina suma clásicos de primeras marcas',
         cta: 'Ver selección',
-        groupIds: []
+        groupIds: ['316', '314', '313', '311', '312', '317']
       }),
       'campana-nuevos-habitos': Object.freeze({
         active: true,
@@ -233,8 +232,7 @@
             <h1 class="hero-clasicos__title"><span class="hero-clasicos__title-main">Más Clásicos</span><span class="hero-clasicos__title-secondary">para tu cocina</span></h1>
             <p class="hero-clasicos__description"><span>Tu cocina suma clásicos</span><span>de primeras marcas</span></p>
             <div class="hero-clasicos__actions">
-              <!-- Agregar data-vista-evento al habilitar la selección. -->
-              <button class="hero-clasicos__primary" type="button" data-evento-id="clasicos-cocina">Ver selección</button>
+              <button class="hero-clasicos__primary" type="button" data-vista-evento data-evento-id="clasicos-cocina">Ver selección</button>
               <button class="hero-clasicos__secondary" type="button" onclick="mostrarCatalogoCompleto()">Ver catálogo</button>
             </div>
           </div>

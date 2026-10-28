@@ -14,11 +14,14 @@ const OrdenEditorialCatalogo = (() => {
   const configuracion = Object.freeze({
     B2C: Object.freeze({
       'Almacén': Object.freeze({
-        'Conservas': Object.freeze(['41', '42']),
+        'Conservas': Object.freeze(['298', '41', '42']),
+        'Arroz y Puré de Papas': Object.freeze(['316', '65']),
+        'Fideos': Object.freeze(['315', '314', '67', '66', '68']),
         'Especias': Object.freeze(['62', '43', '44', '45']),
         'Salsas y Aderezos': Object.freeze(['271', '98', '102', '101', '97', '100', '99'])
       }),
       'Desayuno y Mediatarde': Object.freeze({
+        'Dulces y Endulzantes': Object.freeze(['317', '136', '290']),
         'Café': Object.freeze(['285', '286', '118', '119', '120']),
         'Cereales': Object.freeze(['122', '124', '123']),
         'Yerba Mate': Object.freeze(['173', '171'])
@@ -181,8 +184,10 @@ function limpiarCarritoSesion() {
 // variantes del grupo es nueva (no parpadea al rotar); en el modal la
 // badge se muestra solo cuando la variante seleccionada es nueva.
 const NUEVOS_B2C = [
-  '555', '556', '550', '546', '547', '548', '549', '557',
-  '558', '553', '551', '552', '554', '559', '560', '561'
+  '563', '564', '565', '566', '567', '568', '569', '570',
+  '571', '572', '573', '574', '575', '576', '577', '578',
+  '579', '580', '581', '582', '583', '584', '585', '586',
+  '587', '588'
 ];
 const NUEVOS_B2B = [
   '532', '484', '541', '523', '515', '533', '534', '535', '536', '537',

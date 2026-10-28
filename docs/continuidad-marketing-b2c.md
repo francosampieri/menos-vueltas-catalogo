@@ -1,6 +1,6 @@
 # Continuidad de marketing B2C — catálogo, próximo evento y Meta Ads
 
-Actualizado: 26 de octubre de 2026.
+Actualizado: 27 de octubre de 2026.
 
 Este documento resume la conversación para retomarla en esta u otra sesión. Separa instrucciones del responsable, observaciones, hipótesis y propuestas del asistente. Registra las definiciones aprobadas del evento de incorporaciones B2C; no autoriza publicación, gasto en anuncios ni modificaciones de las políticas de la base de conocimiento.
 
@@ -8,7 +8,7 @@ Este documento resume la conversación para retomarla en esta u otra sesión. Se
 
 **Etapa cerrada: flyer y heros desktop/mobile de «Más Clásicos para tu cocina» aprobados; heros implementados en la rama `evento/clasicos-cocina`.** El flyer definitivo es `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`. No reabrir el diseño ni usar como finales las variantes descartadas, salvo pedido del responsable.
 
-**Próximo paso confirmado: retomar cuando el responsable haya subido los productos**, verificar sus seis `Id_Grupo` reales y habilitación B2C y conectar «Ver selección». El botón se muestra por pedido del responsable, sin acción por ahora; «Ver catálogo» funciona. El orden está cerrado: Clásicos, estándar, Comer mejor. Después quedan los copys de WhatsApp y Facebook y la fecha de lanzamiento. La implementación no acredita que todos los productos estén publicados o disponibles, ni autoriza lanzar la campaña.
+**Selección conectada en la rama:** el 27 de octubre se verificaron los productos en el catálogo público actualizado y se habilitó «Ver selección» para los seis grupos del evento. El responsable confirmó reemplazar la lista anterior de Nuevos B2C por los IDs `563`–`588`. El orden sigue cerrado: Clásicos, estándar, Comer mejor. Quedan la publicación autorizada del código, los copys de WhatsApp y Facebook y la fecha de lanzamiento. No lanzar la campaña por inferencia.
 
 La relación entre ese evento y la prueba de publicidad paga debe resolverse al retomarla. No asumir que diseñar el evento autoriza lanzar anuncios ni que ambos deban ser una misma campaña.
 
@@ -69,13 +69,16 @@ Evitar «mejoramos la calidad» o «mejores marcas», que pueden desvalorizar el
 - **Mobile:** título centrado en Cabin, primera línea con peso 500, interlineado compacto, sin bajada; botones apilados.
 - **CTAs exactos:** «Ver selección» (selección con s minúscula, corrección final) y «Ver catálogo».
 - **Carrusel B2C:** Clásicos primero, estándar segundo, Comer mejor tercero. B2B conserva su estructura propia.
-- **Estado del botón principal:** visible sin acción para revisar diseño. Conserva `data-evento-id="clasicos-cocina"`, pero no lleva `data-vista-evento`; la definición sigue con `active: false` y `groupIds: []`. No basta con quitar `hidden`: el inicializador oculta automáticamente las selecciones inactivas conectadas.
-- **Pendiente para mañana:** comprobar los seis productos subidos y su habilitación B2C, confirmar los `Id_Grupo` en el orden editorial acordado, completar `groupIds`, activar la definición y reponer `data-vista-evento`. No inventar IDs ni editar el JSON generado o Sheets para forzar disponibilidad.
+- **Estado del botón principal:** conectado a `clasicos-cocina` mediante `data-vista-evento`; definición activa con `groupIds: ['316', '314', '313', '311', '312', '317']`. La prueba previa sin acción quedó reemplazada al verificar los productos reales el 27 de octubre.
+- **Productos verificados:** arroz Gallo Oro 500 g, producto `587` / grupo `316`; tallarín Lucchetti 500 g, `585` / `314`; puré Chef 100 g, `584` / `313`; crema Las Tres Niñas 200 ml, `582` / `311`; manteca La Serenísima 200 g, `583` / `312`; azúcar Ledesma 1 kg, `588` / `317`. Todos figuraban activos y habilitados B2C al consultar el catálogo público.
+- **Nuevos ingresos:** reemplazo confirmado por los 26 IDs `563`–`588`; no se suman a los anteriores ni se modifica B2B. Mostacholes (`586`, grupo `315`) pertenece a Nuevos por esa lista, pero queda fuera de Clásicos.
+- **Prioridades del catálogo B2C:** Conservas — tomate triturado, puré de tomate, pulpa (`298`, `41`, `42`); Arroz y Puré de Papas — parboil, grano largo (`316`, `65`); Fideos — mostachol, tallarín, largos, cortos, nidos cabello de ángel (`315`, `314`, `67`, `66`, `68`); Dulces y Endulzantes — azúcar, dulce de leche, miel (`317`, `136`, `290`). Orden confirmado por el responsable el 27 de octubre; los demás grupos siguen alfabéticamente y B2B conserva sus prioridades. Estas subcategorías se contrastaron con una consulta nueva del catálogo público, que ya separa Arroz y Puré de Papas de Fideos.
+- **Dato para publicar/probar:** el JSON versionado local seguía desactualizado al iniciar esta sesión. La verificación usa una copia del catálogo público actualizado fuera del repositorio; no se modificó el JSON generado para forzar disponibilidad. Antes de publicar, integrar la actualización generada del catálogo para no desplegar datos anteriores.
 - **Verificación:** 19 pruebas de hero, carrusel y vista-evento; revisión local desktop/mobile y navegación de catálogo. Las capturas de referencia están en `C:/Users/franc/Desktop/Menos Vueltas/outputs/hero-mas-clasicos/implementacion/`; los archivos `boton-visible-hero-*.png` muestran ambos botones. No implican publicación.
 
 ### Lista de trabajo para el lanzamiento
 
-El flyer y los heros están cerrados. La adaptación a Estado y la conexión de la selección siguen pendientes; el CTA del flyer no equivale a un botón o enlace funcional de la web.
+El flyer y los heros están cerrados y la selección está conectada en la rama. La adaptación a Estado y la publicación siguen pendientes; el CTA del flyer no equivale a una ruta externa de la selección web.
 
 - [x] Confirmar título final del flyer y selección central ordenada, sin mostacholes.
 - [x] Confirmar presentaciones y variedades del flyer.
@@ -84,9 +87,10 @@ El flyer y los heros están cerrados. La adaptación a Estado y la conexión de 
 - [ ] Definir fecha de lanzamiento.
 - [x] Crear y aprobar **flyer principal**: `Flyers/clasicos_cocina.jpg`, JPEG de 1122 × 1402 px.
 - [x] Crear y aprobar **hero desktop** de 1600 × 700 px y **hero mobile** de 1080 × 1560 px, con título, bajada y botones HTML separados del arte.
-- [x] Cerrar textos y acciones: «Ver selección» hacia la futura selección del evento; «Ver catálogo» hacia catálogo completo. Selección aún sin conectar.
+- [x] Cerrar textos y acciones: «Ver selección» hacia los seis grupos del evento; «Ver catálogo» hacia catálogo completo. Selección conectada en la rama.
 - [x] Definir convivencia: Clásicos, estándar, Comer mejor; no se retira la campaña anterior.
-- [ ] Preparar la selección del evento con los productos reales y sus identificadores verificados, cuando corresponda implementar.
+- [x] Preparar y conectar la selección del evento con seis grupos reales verificados.
+- [x] Reemplazar Nuevos B2C por los IDs `563`–`588`, según confirmación del responsable.
 - [ ] Redactar **copy de lanzamiento para WhatsApp**, breve y con enlace; preparar una versión de recordatorio si se decide usarla.
 - [ ] Redactar **copy de publicación en Facebook**, con novedad, marcas/productos, beneficio del servicio y enlace.
 - [ ] Evaluar una adaptación del flyer para **Estado de WhatsApp**, propuesta en 1080 × 1920 px.
@@ -95,14 +99,14 @@ El flyer y los heros están cerrados. La adaptación a Estado y la conexión de 
 - [ ] Revisar consistencia con los copys cuando se redacten, antes de difundir.
 - [ ] Antes de lanzar, verificar publicación y disponibilidad de los productos anunciados, hero en desktop/mobile, enlaces, botones y recorrido hasta agregar al carrito.
 
-### Inicio de la próxima sesión: conectar selección
+### Inicio de la próxima sesión: revisar publicación y comunicación
 
 1. Leer esta nota, el índice de KB y los documentos de marca y negocio relevantes.
 2. Recuperar la memoria de `menos-vueltas-catalogo`.
 3. Revisar el estado de `evento/clasicos-cocina` y los cambios existentes. El flyer y ambos heros están cerrados; no rediseñarlos.
-4. Verificar en el catálogo B2C actualizado los seis productos, presentaciones y disponibilidad. Recibir del responsable los IDs si no pueden confirmarse; no deducirlos desde el arte ni reutilizar los de Comer mejor.
-5. Completar `clasicos-cocina.groupIds` en el orden editorial confirmado, activar la definición y conectar el botón existente con `data-vista-evento`. Mantener «Ver selección», con s minúscula, y el orden de los tres heros.
-6. Probar apertura de la selección, tarjetas, modal, carrito, regreso y «Ver catálogo» en desktop/mobile. La vista-evento no tiene ruta externa permanente; no inventar un enlace directo.
+4. La selección ya está conectada con los seis grupos indicados arriba; revisar que el catálogo generado siga vigente al integrar/publicar la rama. No modificar sus datos manualmente.
+5. Mantener «Ver selección», con s minúscula, el orden de los tres heros y la lista Nuevos B2C `563`–`588` confirmada.
+6. Al publicar, verificar selección, tarjetas, modal, carrito, regreso y «Ver catálogo» en desktop/mobile con los datos que sirva ese despliegue. La vista-evento no tiene ruta externa permanente; no inventar un enlace directo.
 7. Retomar copys y fecha de lanzamiento cuando corresponda. No publicar ni añadir descuentos, precios, fechas o condiciones sin definición.
 
 ## Restricciones y preferencias expresadas por el responsable
@@ -208,18 +212,19 @@ Usar etiquetas de WhatsApp y el registro operativo existente si ayudan. Añadir 
 
 1. Leer esta nota y recuperar la memoria del proyecto `menos-vueltas-catalogo`.
 2. Continuar en `evento/clasicos-cocina` con los heros cerrados e implementados. No reabrir el flyer ni el diseño desktop/mobile.
-3. Con los productos ya subidos, verificar los seis `Id_Grupo` y su habilitación B2C y conectar «Ver selección». Después continuar con copys. No inventar productos, precios ni disponibilidad.
-4. Consultar la KB y el estado real de la vista-evento y el catálogo antes de activar la selección. Conservar el orden Clásicos, estándar, Comer mejor.
+3. La selección ya está conectada y Nuevos B2C actualizado en la rama. Revisar integración del catálogo generado y publicación autorizada; después continuar con copys. No inventar productos, precios ni disponibilidad.
+4. Consultar la KB y el estado real de la vista-evento y el catálogo. Conservar el orden Clásicos, estándar, Comer mejor.
 5. Retomar Meta Ads cuando corresponda y resolver destino, segmentación real, oferta si la hay, cargos y fecha. Verificar las opciones actuales de Meta; no tratar la documentación consultada en octubre de 2026 como garantía permanente de la interfaz.
 
 Prompt sugerido:
 
-> Leé `docs/continuidad-marketing-b2c.md` y la KB relevante. Los heros de «Más Clásicos para tu cocina» ya están cerrados e implementados en `evento/clasicos-cocina`. Ya subí los productos: verifiquemos sus seis `Id_Grupo` reales y habilitación B2C para conectar el botón «Ver selección», actualmente visible sin acción. Conservá diseño, textos y orden Clásicos, estándar, Comer mejor. Probá la selección y el recorrido en desktop/mobile; no inventes IDs ni modifiques el catálogo generado, precios o disponibilidad para forzar la activación. No publiques cambios sin autorización.
+> Leé `docs/continuidad-marketing-b2c.md` y la KB relevante. En `evento/clasicos-cocina` están cerrados los heros, conectada la selección de seis grupos y reemplazados los Nuevos B2C por 563–588. Revisemos la integración del catálogo generado antes de publicar y continuemos con la comunicación del lanzamiento. Conservá diseño, textos y orden de heros. No modifiques datos comerciales ni publiques sin autorización.
 
 ## Fuentes de continuidad
 
 - Conversación de análisis, iteración y aprobación del flyer por el responsable, 23–25 de octubre de 2026.
 - Conversación de cierre e implementación de los heros y corrección del CTA, 26 de octubre de 2026. El responsable autorizó documentar la continuidad para retomar con los productos subidos.
+- Productos y grupos contrastados con el catálogo público el 27 de octubre de 2026; confirmación del responsable de reemplazar Nuevos B2C por 563–588.
 - Flyer definitivo local: `C:/Users/franc/Desktop/Menos Vueltas/Flyers/clasicos_cocina.jpg`.
 - [Índice canónico de KB](../knowledge-base/README.md): consultar siempre políticas vigentes allí; esta nota no las reemplaza.
 - [Decisiones y supuestos](../knowledge-base/09_decisiones_y_supuestos.md): incluye marca, canales, hero y límites de autonomía.

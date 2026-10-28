@@ -36,20 +36,21 @@ test('publishes responsive clean art with editable title, description and catalo
   }
 });
 
-test('keeps the pending selection CTA visible as an unbound design preview', () => {
+test('connects the Clasicos CTA to the six approved groups in editorial order', () => {
   const script = landing.match(/<script>\s*(window\.VISTAS_EVENTO_B2C[\s\S]*?)<\/script>/);
   assert.ok(script);
   const context = { window: {} };
   vm.runInNewContext(script[1], context);
-  const pending = context.window.VISTAS_EVENTO_B2C['clasicos-cocina'];
-  assert.ok(pending, 'Clasicos must use the existing editorial-view API');
-  assert.equal(pending.active, false);
-  assert.equal(pending.groupIds.length, 0);
-  assert.equal(pending.cta, 'Ver selección');
+  const campaign = context.window.VISTAS_EVENTO_B2C['clasicos-cocina'];
+  assert.ok(campaign, 'Clasicos must use the existing editorial-view API');
+  assert.equal(campaign.active, true);
+  assert.deepEqual([...campaign.groupIds], ['316', '314', '313', '311', '312', '317']);
+  assert.equal(campaign.cta, 'Ver selección');
   const button = slides(landing)[0].match(/<button[^>]*class="hero-clasicos__primary"[^>]*>Ver selección<\/button>/)?.[0];
   assert.ok(button);
   assert.doesNotMatch(button, /\bhidden\b|aria-hidden="true"/);
-  assert.doesNotMatch(button, /data-vista-evento|onclick=/);
+  assert.match(button, /data-vista-evento\b[^>]*data-evento-id="clasicos-cocina"/);
+  assert.doesNotMatch(button, /onclick=/);
   assert.equal(context.window.VISTAS_EVENTO_B2C['campana-nuevos-habitos'].active, true);
 });
 
