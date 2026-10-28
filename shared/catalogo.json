@@ -3162,9 +3162,9 @@
     },
     {
       "Id": "172",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Salsa Criolla",
       "Marca": "PARMESANA",
       "Tamaño": "300",
@@ -3222,9 +3222,9 @@
     },
     {
       "Id": "175",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Salsa de Ají",
       "Marca": "PARMESANA",
       "Tamaño": "300",
@@ -4862,9 +4862,9 @@
     },
     {
       "Id": "278",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Mermeladas Vidrio",
       "Marca": "DE LA HUERTA",
       "Tamaño": "540",
@@ -4995,7 +4995,7 @@
       "Id_Grupo": "139",
       "Tipo_Variante": "",
       "Label_Variante": "",
-      "Label_Tamaño": "600 cc",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/284-si-diet-edulcorante-tradicional-600-cc.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
@@ -5013,9 +5013,9 @@
       "Subcategoria": "Dulces y Endulzantes",
       "Tags": "edulcorante, endulzante, sin azúcar, dieta, light",
       "Id_Grupo": "139",
-      "Tipo_Variante": "",
-      "Label_Variante": "",
-      "Label_Tamaño": "500 cc",
+      "Tipo_Variante": "Tipo",
+      "Label_Variante": "Stevia",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/285-si-diet-edulcorante-tradicional-500-cc.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
@@ -5035,7 +5035,7 @@
       "Id_Grupo": "139",
       "Tipo_Variante": "",
       "Label_Variante": "",
-      "Label_Tamaño": "200 cc",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/286-si-diet-edulcorante-tradicional-200-cc.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
@@ -5055,7 +5055,7 @@
       "Id_Grupo": "140",
       "Tipo_Variante": "",
       "Label_Variante": "",
-      "Label_Tamaño": "600 cc",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/287-si-diet-edulcorante-stevia-600-cc.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
@@ -5072,10 +5072,10 @@
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Dulces y Endulzantes",
       "Tags": "edulcorante, stevia, natural, sin azúcar, dieta",
-      "Id_Grupo": "140",
-      "Tipo_Variante": "",
-      "Label_Variante": "",
-      "Label_Tamaño": "500 cc",
+      "Id_Grupo": "139",
+      "Tipo_Variante": "Tipo",
+      "Label_Variante": "Tradicional",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/288-si-diet-edulcorante-stevia-500-cc.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
@@ -5095,7 +5095,7 @@
       "Id_Grupo": "140",
       "Tipo_Variante": "",
       "Label_Variante": "",
-      "Label_Tamaño": "200 cc",
+      "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/289-si-diet-edulcorante-stevia-200-cc.webp",
       "Tipo": "Rentable",
       "Sin_Stock": false
@@ -5382,9 +5382,9 @@
     },
     {
       "Id": "305",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Conos Queso",
       "Marca": "GOOD SHOW",
       "Tamaño": "53",
@@ -8882,9 +8882,9 @@
     },
     {
       "Id": "522",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Calamares",
       "Marca": "PENNISI",
       "Tamaño": "170",
@@ -8902,9 +8902,9 @@
     },
     {
       "Id": "523",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Cazuela de Mariscos",
       "Marca": "PENNISI",
       "Tamaño": "180",
@@ -8922,9 +8922,9 @@
     },
     {
       "Id": "524",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Mejillones",
       "Marca": "PENNISI",
       "Tamaño": "170",
@@ -9782,9 +9782,9 @@
     },
     {
       "Id": "567",
-      "Activo": "ON",
-      "Cat B2C": "ON",
-      "Cat B2B": "ON",
+      "Activo": "OFF",
+      "Cat B2C": "OFF",
+      "Cat B2B": "OFF",
       "Producto": "Paño Absorbente",
       "Marca": "MATEXUR",
       "Tamaño": "1",
@@ -12811,12 +12811,12 @@
       "Subcategoria": "Repostería y Postres",
       "Tipo": "Rentable",
       "Precio_Venta": "$3.750,00",
-      "Uni Dto": "3",
-      "Dto": "8%",
-      "Precio_Mayorista": "$3.450,00",
-      "promo": "",
-      "Precio_Promo": "$3.750,00",
-      "Precio_Promo_Mayorista": "$3.450,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$3.750,00",
+      "promo": "20%",
+      "Precio_Promo": "$3.000,00",
+      "Precio_Promo_Mayorista": "$3.000,00"
     },
     {
       "Id": "33",
@@ -12841,12 +12841,12 @@
       "Subcategoria": "Harinas",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.950,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$1.950,00",
-      "promo": "10%",
-      "Precio_Promo": "$1.750,00",
-      "Precio_Promo_Mayorista": "$1.750,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$1.800,00",
+      "promo": "",
+      "Precio_Promo": "$1.950,00",
+      "Precio_Promo_Mayorista": "$1.800,00"
     },
     {
       "Id": "35",
@@ -12856,12 +12856,12 @@
       "Subcategoria": "Harinas",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.950,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$1.950,00",
-      "promo": "10%",
-      "Precio_Promo": "$1.750,00",
-      "Precio_Promo_Mayorista": "$1.750,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$1.800,00",
+      "promo": "",
+      "Precio_Promo": "$1.950,00",
+      "Precio_Promo_Mayorista": "$1.800,00"
     },
     {
       "Id": "36",
@@ -12915,13 +12915,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Arroz y Puré de Papas",
       "Tipo": "Ancla",
-      "Precio_Venta": "$700,00",
+      "Precio_Venta": "$800,00",
       "Uni Dto": "6",
       "Dto": "10%",
-      "Precio_Mayorista": "$650,00",
+      "Precio_Mayorista": "$700,00",
       "promo": "",
-      "Precio_Promo": "$700,00",
-      "Precio_Promo_Mayorista": "$650,00"
+      "Precio_Promo": "$800,00",
+      "Precio_Promo_Mayorista": "$700,00"
     },
     {
       "Id": "40",
@@ -13186,12 +13186,12 @@
       "Subcategoria": "Vinagres",
       "Tipo": "Rentable",
       "Precio_Venta": "$4.600,00",
-      "Uni Dto": "2",
-      "Dto": "8%",
-      "Precio_Mayorista": "$4.250,00",
-      "promo": "",
-      "Precio_Promo": "$4.600,00",
-      "Precio_Promo_Mayorista": "$4.250,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$4.600,00",
+      "promo": "12%",
+      "Precio_Promo": "$4.050,00",
+      "Precio_Promo_Mayorista": "$4.050,00"
     },
     {
       "Id": "64",
@@ -13201,12 +13201,12 @@
       "Subcategoria": "Vinagres",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.850,00",
-      "Uni Dto": "3",
-      "Dto": "8%",
-      "Precio_Mayorista": "$2.600,00",
-      "promo": "",
-      "Precio_Promo": "$2.850,00",
-      "Precio_Promo_Mayorista": "$2.600,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$2.850,00",
+      "promo": "12%",
+      "Precio_Promo": "$2.500,00",
+      "Precio_Promo_Mayorista": "$2.500,00"
     },
     {
       "Id": "65",
@@ -14711,7 +14711,7 @@
     {
       "Id": "172",
       "Producto": "Salsa Criolla PARMESANA 300 cc",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Almacén",
       "Subcategoria": "Salsas y Aderezos",
       "Tipo": "Rentable",
@@ -14756,7 +14756,7 @@
     {
       "Id": "175",
       "Producto": "Salsa de Ají PARMESANA 300 cc",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Almacén",
       "Subcategoria": "Salsas y Aderezos",
       "Tipo": "Rentable",
@@ -15000,13 +15000,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Especias",
       "Tipo": "Rentable",
-      "Precio_Venta": "$4.050,00",
-      "Uni Dto": "2",
-      "Dto": "12%",
-      "Precio_Mayorista": "$3.550,00",
-      "promo": "",
-      "Precio_Promo": "$4.050,00",
-      "Precio_Promo_Mayorista": "$3.550,00"
+      "Precio_Venta": "$4.300,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$4.300,00",
+      "promo": "15%",
+      "Precio_Promo": "$3.650,00",
+      "Precio_Promo_Mayorista": "$3.650,00"
     },
     {
       "Id": "193",
@@ -15015,13 +15015,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Especias",
       "Tipo": "Rentable",
-      "Precio_Venta": "$4.050,00",
-      "Uni Dto": "2",
-      "Dto": "12%",
-      "Precio_Mayorista": "$3.550,00",
-      "promo": "",
-      "Precio_Promo": "$4.050,00",
-      "Precio_Promo_Mayorista": "$3.550,00"
+      "Precio_Venta": "$4.300,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$4.300,00",
+      "promo": "15%",
+      "Precio_Promo": "$3.650,00",
+      "Precio_Promo_Mayorista": "$3.650,00"
     },
     {
       "Id": "194",
@@ -15030,13 +15030,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Especias",
       "Tipo": "Rentable",
-      "Precio_Venta": "$4.550,00",
-      "Uni Dto": "2",
-      "Dto": "12%",
-      "Precio_Mayorista": "$4.000,00",
-      "promo": "",
-      "Precio_Promo": "$4.550,00",
-      "Precio_Promo_Mayorista": "$4.000,00"
+      "Precio_Venta": "$4.850,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$4.850,00",
+      "promo": "15%",
+      "Precio_Promo": "$4.100,00",
+      "Precio_Promo_Mayorista": "$4.100,00"
     },
     {
       "Id": "195",
@@ -15046,12 +15046,12 @@
       "Subcategoria": "Especias",
       "Tipo": "Rentable",
       "Precio_Venta": "$4.550,00",
-      "Uni Dto": "2",
-      "Dto": "12%",
-      "Precio_Mayorista": "$4.000,00",
-      "promo": "",
-      "Precio_Promo": "$4.550,00",
-      "Precio_Promo_Mayorista": "$4.000,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$4.550,00",
+      "promo": "15%",
+      "Precio_Promo": "$3.850,00",
+      "Precio_Promo_Mayorista": "$3.850,00"
     },
     {
       "Id": "196",
@@ -15211,12 +15211,12 @@
       "Subcategoria": "Snacks Salados",
       "Tipo": "Ancla",
       "Precio_Venta": "$4.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$4.900,00",
-      "promo": "12%",
-      "Precio_Promo": "$4.300,00",
-      "Precio_Promo_Mayorista": "$4.300,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$4.500,00",
+      "promo": "",
+      "Precio_Promo": "$4.900,00",
+      "Precio_Promo_Mayorista": "$4.500,00"
     },
     {
       "Id": "208",
@@ -15226,12 +15226,12 @@
       "Subcategoria": "Snacks Salados",
       "Tipo": "Ancla",
       "Precio_Venta": "$4.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$4.900,00",
-      "promo": "12%",
-      "Precio_Promo": "$4.300,00",
-      "Precio_Promo_Mayorista": "$4.300,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$4.500,00",
+      "promo": "",
+      "Precio_Promo": "$4.900,00",
+      "Precio_Promo_Mayorista": "$4.500,00"
     },
     {
       "Id": "209",
@@ -15241,12 +15241,12 @@
       "Subcategoria": "Snacks Salados",
       "Tipo": "Ancla",
       "Precio_Venta": "$4.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$4.900,00",
-      "promo": "12%",
-      "Precio_Promo": "$4.300,00",
-      "Precio_Promo_Mayorista": "$4.300,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$4.500,00",
+      "promo": "",
+      "Precio_Promo": "$4.900,00",
+      "Precio_Promo_Mayorista": "$4.500,00"
     },
     {
       "Id": "210",
@@ -15256,12 +15256,12 @@
       "Subcategoria": "Snacks Salados",
       "Tipo": "Ancla",
       "Precio_Venta": "$4.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$4.900,00",
-      "promo": "12%",
-      "Precio_Promo": "$4.300,00",
-      "Precio_Promo_Mayorista": "$4.300,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$4.500,00",
+      "promo": "",
+      "Precio_Promo": "$4.900,00",
+      "Precio_Promo_Mayorista": "$4.500,00"
     },
     {
       "Id": "211",
@@ -15496,11 +15496,11 @@
       "Subcategoria": "Magdalenas y Budines",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.200,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$2.200,00",
-      "promo": "10%",
-      "Precio_Promo": "$2.000,00",
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$2.000,00",
+      "promo": "",
+      "Precio_Promo": "$2.200,00",
       "Precio_Promo_Mayorista": "$2.000,00"
     },
     {
@@ -15511,11 +15511,11 @@
       "Subcategoria": "Magdalenas y Budines",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.200,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$2.200,00",
-      "promo": "10%",
-      "Precio_Promo": "$2.000,00",
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$2.000,00",
+      "promo": "",
+      "Precio_Promo": "$2.200,00",
       "Precio_Promo_Mayorista": "$2.000,00"
     },
     {
@@ -15946,11 +15946,11 @@
       "Subcategoria": "Chocolatadas",
       "Tipo": "Rentable",
       "Precio_Venta": "$3.000,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$3.000,00",
-      "promo": "10%",
-      "Precio_Promo": "$2.700,00",
+      "Uni Dto": "3",
+      "Dto": "10%",
+      "Precio_Mayorista": "$2.700,00",
+      "promo": "",
+      "Precio_Promo": "$3.000,00",
       "Precio_Promo_Mayorista": "$2.700,00"
     },
     {
@@ -15961,11 +15961,11 @@
       "Subcategoria": "Chocolatadas",
       "Tipo": "Rentable",
       "Precio_Venta": "$950,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$950,00",
-      "promo": "10%",
-      "Precio_Promo": "$850,00",
+      "Uni Dto": "4",
+      "Dto": "10%",
+      "Precio_Mayorista": "$850,00",
+      "promo": "",
+      "Precio_Promo": "$950,00",
       "Precio_Promo_Mayorista": "$850,00"
     },
     {
@@ -16001,7 +16001,7 @@
     {
       "Id": "278",
       "Producto": "Mermeladas Vidrio DE LA HUERTA 540 cc",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Rentable",
@@ -16111,12 +16111,12 @@
       "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.650,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$2.400,00",
-      "promo": "",
-      "Precio_Promo": "$2.650,00",
-      "Precio_Promo_Mayorista": "$2.400,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$2.650,00",
+      "promo": "15%",
+      "Precio_Promo": "$2.250,00",
+      "Precio_Promo_Mayorista": "$2.250,00"
     },
     {
       "Id": "286",
@@ -16156,12 +16156,12 @@
       "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Rentable",
       "Precio_Venta": "$3.000,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$2.700,00",
-      "promo": "",
-      "Precio_Promo": "$3.000,00",
-      "Precio_Promo_Mayorista": "$2.700,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$3.000,00",
+      "promo": "15%",
+      "Precio_Promo": "$2.550,00",
+      "Precio_Promo_Mayorista": "$2.550,00"
     },
     {
       "Id": "289",
@@ -16231,12 +16231,12 @@
       "Subcategoria": "Aceites",
       "Tipo": "Rentable",
       "Precio_Venta": "$8.000,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$7.200,00",
-      "promo": "",
-      "Precio_Promo": "$8.000,00",
-      "Precio_Promo_Mayorista": "$7.200,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$8.000,00",
+      "promo": "15%",
+      "Precio_Promo": "$6.800,00",
+      "Precio_Promo_Mayorista": "$6.800,00"
     },
     {
       "Id": "295",
@@ -16246,12 +16246,12 @@
       "Subcategoria": "Aceites",
       "Tipo": "Rentable",
       "Precio_Venta": "$14.000,00",
-      "Uni Dto": "2",
-      "Dto": "12%",
-      "Precio_Mayorista": "$12.300,00",
-      "promo": "",
-      "Precio_Promo": "$14.000,00",
-      "Precio_Promo_Mayorista": "$12.300,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$14.000,00",
+      "promo": "15%",
+      "Precio_Promo": "$11.900,00",
+      "Precio_Promo_Mayorista": "$11.900,00"
     },
     {
       "Id": "296",
@@ -16391,7 +16391,7 @@
     {
       "Id": "305",
       "Producto": "Conos Queso GOOD SHOW 53 g",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
@@ -16516,12 +16516,12 @@
       "Subcategoria": "Higiene Femenina",
       "Tipo": "Rentable",
       "Precio_Venta": "$3.250,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$3.250,00",
-      "promo": "12%",
-      "Precio_Promo": "$2.850,00",
-      "Precio_Promo_Mayorista": "$2.850,00"
+      "Uni Dto": "3",
+      "Dto": "10%",
+      "Precio_Mayorista": "$2.950,00",
+      "promo": "",
+      "Precio_Promo": "$3.250,00",
+      "Precio_Promo_Mayorista": "$2.950,00"
     },
     {
       "Id": "315",
@@ -16531,12 +16531,12 @@
       "Subcategoria": "Higiene Femenina",
       "Tipo": "Rentable",
       "Precio_Venta": "$7.000,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$7.000,00",
-      "promo": "12%",
-      "Precio_Promo": "$6.150,00",
-      "Precio_Promo_Mayorista": "$6.150,00"
+      "Uni Dto": "2",
+      "Dto": "10%",
+      "Precio_Mayorista": "$6.300,00",
+      "promo": "",
+      "Precio_Promo": "$7.000,00",
+      "Precio_Promo_Mayorista": "$6.300,00"
     },
     {
       "Id": "316",
@@ -16546,12 +16546,12 @@
       "Subcategoria": "Higiene Femenina",
       "Tipo": "Rentable",
       "Precio_Venta": "$3.200,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$3.200,00",
-      "promo": "12%",
-      "Precio_Promo": "$2.800,00",
-      "Precio_Promo_Mayorista": "$2.800,00"
+      "Uni Dto": "4",
+      "Dto": "10%",
+      "Precio_Mayorista": "$2.900,00",
+      "promo": "",
+      "Precio_Promo": "$3.200,00",
+      "Precio_Promo_Mayorista": "$2.900,00"
     },
     {
       "Id": "317",
@@ -16561,12 +16561,12 @@
       "Subcategoria": "Higiene Femenina",
       "Tipo": "Rentable",
       "Precio_Venta": "$5.600,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$5.600,00",
-      "promo": "12%",
-      "Precio_Promo": "$4.950,00",
-      "Precio_Promo_Mayorista": "$4.950,00"
+      "Uni Dto": "3",
+      "Dto": "10%",
+      "Precio_Mayorista": "$5.050,00",
+      "promo": "",
+      "Precio_Promo": "$5.600,00",
+      "Precio_Promo_Mayorista": "$5.050,00"
     },
     {
       "Id": "318",
@@ -17521,11 +17521,11 @@
       "Subcategoria": "Lavandinas y Desinfectantes",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.250,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$2.250,00",
-      "promo": "15%",
-      "Precio_Promo": "$1.900,00",
+      "Uni Dto": "2",
+      "Dto": "15%",
+      "Precio_Mayorista": "$1.900,00",
+      "promo": "",
+      "Precio_Promo": "$2.250,00",
       "Precio_Promo_Mayorista": "$1.900,00"
     },
     {
@@ -17641,11 +17641,11 @@
       "Subcategoria": "Lavandería",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.500,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$2.500,00",
-      "promo": "15%",
-      "Precio_Promo": "$2.150,00",
+      "Uni Dto": "3",
+      "Dto": "15%",
+      "Precio_Mayorista": "$2.150,00",
+      "promo": "",
+      "Precio_Promo": "$2.500,00",
       "Precio_Promo_Mayorista": "$2.150,00"
     },
     {
@@ -17806,12 +17806,12 @@
       "Subcategoria": "Encendedores y Fósforos",
       "Tipo": "Rentable",
       "Precio_Venta": "$3.350,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$3.000,00",
-      "promo": "",
-      "Precio_Promo": "$3.350,00",
-      "Precio_Promo_Mayorista": "$3.000,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$3.350,00",
+      "promo": "15%",
+      "Precio_Promo": "$2.850,00",
+      "Precio_Promo_Mayorista": "$2.850,00"
     },
     {
       "Id": "426",
@@ -17821,11 +17821,11 @@
       "Subcategoria": "Encendedores y Fósforos",
       "Tipo": "Rentable",
       "Precio_Venta": "$4.300,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$4.300,00",
-      "promo": "15%",
-      "Precio_Promo": "$3.650,00",
+      "Uni Dto": "2",
+      "Dto": "15%",
+      "Precio_Mayorista": "$3.650,00",
+      "promo": "",
+      "Precio_Promo": "$4.300,00",
       "Precio_Promo_Mayorista": "$3.650,00"
     },
     {
@@ -18751,12 +18751,12 @@
       "Subcategoria": "Jugos",
       "Tipo": "Rentable",
       "Precio_Venta": "$3.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$3.900,00",
-      "promo": "15%",
-      "Precio_Promo": "$3.300,00",
-      "Precio_Promo_Mayorista": "$3.300,00"
+      "Uni Dto": "2",
+      "Dto": "10%",
+      "Precio_Mayorista": "$3.500,00",
+      "promo": "",
+      "Precio_Promo": "$3.900,00",
+      "Precio_Promo_Mayorista": "$3.500,00"
     },
     {
       "Id": "504",
@@ -19031,7 +19031,7 @@
     {
       "Id": "522",
       "Producto": "Calamares PENNISI 170 g",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Almacén",
       "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
@@ -19046,7 +19046,7 @@
     {
       "Id": "523",
       "Producto": "Cazuela de Mariscos PENNISI 180 g",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Almacén",
       "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
@@ -19061,7 +19061,7 @@
     {
       "Id": "524",
       "Producto": "Mejillones PENNISI 170 g",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Almacén",
       "Subcategoria": "Enlatados",
       "Tipo": "Rentable",
@@ -19141,12 +19141,12 @@
       "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.500,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$1.350,00",
-      "promo": "",
-      "Precio_Promo": "$1.500,00",
-      "Precio_Promo_Mayorista": "$1.350,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.500,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.300,00",
+      "Precio_Promo_Mayorista": "$1.300,00"
     },
     {
       "Id": "530",
@@ -19156,12 +19156,12 @@
       "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.500,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$1.350,00",
-      "promo": "",
-      "Precio_Promo": "$1.500,00",
-      "Precio_Promo_Mayorista": "$1.350,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.500,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.300,00",
+      "Precio_Promo_Mayorista": "$1.300,00"
     },
     {
       "Id": "531",
@@ -19171,12 +19171,12 @@
       "Subcategoria": "Snacks Salados",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.500,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$1.350,00",
-      "promo": "",
-      "Precio_Promo": "$1.500,00",
-      "Precio_Promo_Mayorista": "$1.350,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.500,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.300,00",
+      "Precio_Promo_Mayorista": "$1.300,00"
     },
     {
       "Id": "532",
@@ -19186,12 +19186,12 @@
       "Subcategoria": "Huevos",
       "Tipo": "Rentable",
       "Precio_Venta": "$7.000,00",
-      "Uni Dto": "3",
-      "Dto": "4%",
-      "Precio_Mayorista": "$6.700,00",
+      "Uni Dto": "2",
+      "Dto": "3%",
+      "Precio_Mayorista": "$6.800,00",
       "promo": "",
       "Precio_Promo": "$7.000,00",
-      "Precio_Promo_Mayorista": "$6.700,00"
+      "Precio_Promo_Mayorista": "$6.800,00"
     },
     {
       "Id": "533",
@@ -19245,13 +19245,13 @@
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Café",
       "Tipo": "Rentable",
-      "Precio_Venta": "$22.850,00",
+      "Precio_Venta": "$23.200,00",
       "Uni Dto": "2",
-      "Dto": "1,8%",
-      "Precio_Mayorista": "$22.450,00",
+      "Dto": "2%",
+      "Precio_Mayorista": "$22.750,00",
       "promo": "",
-      "Precio_Promo": "$22.850,00",
-      "Precio_Promo_Mayorista": "$22.450,00"
+      "Precio_Promo": "$23.200,00",
+      "Precio_Promo_Mayorista": "$22.750,00"
     },
     {
       "Id": "537",
@@ -19321,12 +19321,12 @@
       "Subcategoria": "Café",
       "Tipo": "Rentable",
       "Precio_Venta": "$12.950,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$12.950,00",
-      "promo": "8%",
-      "Precio_Promo": "$11.900,00",
-      "Precio_Promo_Mayorista": "$11.900,00"
+      "Uni Dto": "2",
+      "Dto": "5%",
+      "Precio_Mayorista": "$12.300,00",
+      "promo": "",
+      "Precio_Promo": "$12.950,00",
+      "Precio_Promo_Mayorista": "$12.300,00"
     },
     {
       "Id": "542",
@@ -19336,12 +19336,12 @@
       "Subcategoria": "Café",
       "Tipo": "Rentable",
       "Precio_Venta": "$16.000,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$16.000,00",
-      "promo": "8%",
-      "Precio_Promo": "$14.700,00",
-      "Precio_Promo_Mayorista": "$14.700,00"
+      "Uni Dto": "2",
+      "Dto": "5%",
+      "Precio_Mayorista": "$15.200,00",
+      "promo": "",
+      "Precio_Promo": "$16.000,00",
+      "Precio_Promo_Mayorista": "$15.200,00"
     },
     {
       "Id": "543",
@@ -19351,12 +19351,12 @@
       "Subcategoria": "Café",
       "Tipo": "Rentable",
       "Precio_Venta": "$15.700,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$15.700,00",
-      "promo": "8%",
-      "Precio_Promo": "$14.450,00",
-      "Precio_Promo_Mayorista": "$14.450,00"
+      "Uni Dto": "2",
+      "Dto": "5%",
+      "Precio_Mayorista": "$14.900,00",
+      "promo": "",
+      "Precio_Promo": "$15.700,00",
+      "Precio_Promo_Mayorista": "$14.900,00"
     },
     {
       "Id": "544",
@@ -19396,12 +19396,12 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$1.900,00",
-      "promo": "10%",
-      "Precio_Promo": "$1.700,00",
-      "Precio_Promo_Mayorista": "$1.700,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$1.750,00",
+      "promo": "",
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.750,00"
     },
     {
       "Id": "547",
@@ -19411,12 +19411,12 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$1.900,00",
-      "promo": "10%",
-      "Precio_Promo": "$1.700,00",
-      "Precio_Promo_Mayorista": "$1.700,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$1.750,00",
+      "promo": "",
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.750,00"
     },
     {
       "Id": "548",
@@ -19426,12 +19426,12 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$1.900,00",
-      "promo": "10%",
-      "Precio_Promo": "$1.700,00",
-      "Precio_Promo_Mayorista": "$1.700,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$1.750,00",
+      "promo": "",
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.750,00"
     },
     {
       "Id": "549",
@@ -19441,12 +19441,12 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.900,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$1.900,00",
-      "promo": "10%",
-      "Precio_Promo": "$1.700,00",
-      "Precio_Promo_Mayorista": "$1.700,00"
+      "Uni Dto": "3",
+      "Dto": "8%",
+      "Precio_Mayorista": "$1.750,00",
+      "promo": "",
+      "Precio_Promo": "$1.900,00",
+      "Precio_Promo_Mayorista": "$1.750,00"
     },
     {
       "Id": "550",
@@ -19456,12 +19456,12 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$5.400,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$5.400,00",
-      "promo": "10%",
-      "Precio_Promo": "$4.850,00",
-      "Precio_Promo_Mayorista": "$4.850,00"
+      "Uni Dto": "2",
+      "Dto": "5%",
+      "Precio_Mayorista": "$5.150,00",
+      "promo": "",
+      "Precio_Promo": "$5.400,00",
+      "Precio_Promo_Mayorista": "$5.150,00"
     },
     {
       "Id": "551",
@@ -19471,12 +19471,12 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$4.000,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$4.000,00",
-      "promo": "10%",
-      "Precio_Promo": "$3.600,00",
-      "Precio_Promo_Mayorista": "$3.600,00"
+      "Uni Dto": "2",
+      "Dto": "5%",
+      "Precio_Mayorista": "$3.800,00",
+      "promo": "",
+      "Precio_Promo": "$4.000,00",
+      "Precio_Promo_Mayorista": "$3.800,00"
     },
     {
       "Id": "552",
@@ -19489,9 +19489,9 @@
       "Uni Dto": "",
       "Dto": "",
       "Precio_Mayorista": "$5.800,00",
-      "promo": "10%",
-      "Precio_Promo": "$5.200,00",
-      "Precio_Promo_Mayorista": "$5.200,00"
+      "promo": "",
+      "Precio_Promo": "$5.800,00",
+      "Precio_Promo_Mayorista": "$5.800,00"
     },
     {
       "Id": "553",
@@ -19504,9 +19504,9 @@
       "Uni Dto": "",
       "Dto": "",
       "Precio_Mayorista": "$3.000,00",
-      "promo": "5%",
-      "Precio_Promo": "$2.850,00",
-      "Precio_Promo_Mayorista": "$2.850,00"
+      "promo": "",
+      "Precio_Promo": "$3.000,00",
+      "Precio_Promo_Mayorista": "$3.000,00"
     },
     {
       "Id": "554",
@@ -19519,9 +19519,9 @@
       "Uni Dto": "",
       "Dto": "",
       "Precio_Mayorista": "$2.400,00",
-      "promo": "5%",
-      "Precio_Promo": "$2.300,00",
-      "Precio_Promo_Mayorista": "$2.300,00"
+      "promo": "",
+      "Precio_Promo": "$2.400,00",
+      "Precio_Promo_Mayorista": "$2.400,00"
     },
     {
       "Id": "555",
@@ -19530,13 +19530,13 @@
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
-      "Precio_Venta": "$10.500,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$10.500,00",
-      "promo": "7%",
-      "Precio_Promo": "$9.750,00",
-      "Precio_Promo_Mayorista": "$9.750,00"
+      "Precio_Venta": "$10.600,00",
+      "Uni Dto": "2",
+      "Dto": "6%",
+      "Precio_Mayorista": "$9.950,00",
+      "promo": "",
+      "Precio_Promo": "$10.600,00",
+      "Precio_Promo_Mayorista": "$9.950,00"
     },
     {
       "Id": "556",
@@ -19545,13 +19545,13 @@
       "Categoría": "Snacks y Golosinas",
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
-      "Precio_Venta": "$10.500,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$10.500,00",
-      "promo": "7%",
-      "Precio_Promo": "$9.750,00",
-      "Precio_Promo_Mayorista": "$9.750,00"
+      "Precio_Venta": "$10.600,00",
+      "Uni Dto": "2",
+      "Dto": "6%",
+      "Precio_Mayorista": "$9.950,00",
+      "promo": "",
+      "Precio_Promo": "$10.600,00",
+      "Precio_Promo_Mayorista": "$9.950,00"
     },
     {
       "Id": "557",
@@ -19561,11 +19561,11 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$4.450,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$4.450,00",
-      "promo": "10%",
-      "Precio_Promo": "$4.000,00",
+      "Uni Dto": "2",
+      "Dto": "10%",
+      "Precio_Mayorista": "$4.000,00",
+      "promo": "",
+      "Precio_Promo": "$4.450,00",
       "Precio_Promo_Mayorista": "$4.000,00"
     },
     {
@@ -19576,11 +19576,11 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.200,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$1.200,00",
-      "promo": "10%",
-      "Precio_Promo": "$1.100,00",
+      "Uni Dto": "3",
+      "Dto": "10%",
+      "Precio_Mayorista": "$1.100,00",
+      "promo": "",
+      "Precio_Promo": "$1.200,00",
       "Precio_Promo_Mayorista": "$1.100,00"
     },
     {
@@ -19591,11 +19591,11 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$5.300,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$5.300,00",
-      "promo": "10%",
-      "Precio_Promo": "$4.750,00",
+      "Uni Dto": "2",
+      "Dto": "10%",
+      "Precio_Mayorista": "$4.750,00",
+      "promo": "",
+      "Precio_Promo": "$5.300,00",
       "Precio_Promo_Mayorista": "$4.750,00"
     },
     {
@@ -19606,11 +19606,11 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.400,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$1.400,00",
-      "promo": "10%",
-      "Precio_Promo": "$1.250,00",
+      "Uni Dto": "3",
+      "Dto": "10%",
+      "Precio_Mayorista": "$1.250,00",
+      "promo": "",
+      "Precio_Promo": "$1.400,00",
       "Precio_Promo_Mayorista": "$1.250,00"
     },
     {
@@ -19621,12 +19621,12 @@
       "Subcategoria": "Snacks Saludables",
       "Tipo": "Rentable",
       "Precio_Venta": "$500,00",
-      "Uni Dto": "",
-      "Dto": "",
-      "Precio_Mayorista": "$500,00",
-      "promo": "20%",
-      "Precio_Promo": "$400,00",
-      "Precio_Promo_Mayorista": "$400,00"
+      "Uni Dto": "3",
+      "Dto": "15%",
+      "Precio_Mayorista": "$450,00",
+      "promo": "",
+      "Precio_Promo": "$500,00",
+      "Precio_Promo_Mayorista": "$450,00"
     },
     {
       "Id": "562",
@@ -19650,13 +19650,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Conservas",
       "Tipo": "Rentable",
-      "Precio_Venta": "$1.850,00",
-      "Uni Dto": "6",
-      "Dto": "10%",
-      "Precio_Mayorista": "$1.650,00",
-      "promo": "",
-      "Precio_Promo": "$1.850,00",
-      "Precio_Promo_Mayorista": "$1.650,00"
+      "Precio_Venta": "$1.750,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.750,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.500,00",
+      "Precio_Promo_Mayorista": "$1.500,00"
     },
     {
       "Id": "564",
@@ -19666,12 +19666,12 @@
       "Subcategoria": "Utensilios de Limpieza",
       "Tipo": "Rentable",
       "Precio_Venta": "$3.800,00",
-      "Uni Dto": "2",
-      "Dto": "10%",
-      "Precio_Mayorista": "$3.400,00",
-      "promo": "",
-      "Precio_Promo": "$3.800,00",
-      "Precio_Promo_Mayorista": "$3.400,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$3.800,00",
+      "promo": "15%",
+      "Precio_Promo": "$3.250,00",
+      "Precio_Promo_Mayorista": "$3.250,00"
     },
     {
       "Id": "565",
@@ -19681,12 +19681,12 @@
       "Subcategoria": "Utensilios de Limpieza",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.300,00",
-      "Uni Dto": "2",
-      "Dto": "10%",
-      "Precio_Mayorista": "$1.150,00",
-      "promo": "",
-      "Precio_Promo": "$1.300,00",
-      "Precio_Promo_Mayorista": "$1.150,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.300,00",
+      "promo": "25%",
+      "Precio_Promo": "$1.000,00",
+      "Precio_Promo_Mayorista": "$1.000,00"
     },
     {
       "Id": "566",
@@ -19696,27 +19696,27 @@
       "Subcategoria": "Utensilios de Limpieza",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.550,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$1.400,00",
-      "promo": "",
-      "Precio_Promo": "$1.550,00",
-      "Precio_Promo_Mayorista": "$1.400,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.550,00",
+      "promo": "20%",
+      "Precio_Promo": "$1.250,00",
+      "Precio_Promo_Mayorista": "$1.250,00"
     },
     {
       "Id": "567",
       "Producto": "Paño Absorbente MATEXUR 1 u",
-      "Estado": "ON",
+      "Estado": "OFF",
       "Categoría": "Limpieza",
       "Subcategoria": "Utensilios de Limpieza",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.150,00",
-      "Uni Dto": "3",
-      "Dto": "12%",
-      "Precio_Mayorista": "$1.000,00",
-      "promo": "",
-      "Precio_Promo": "$1.150,00",
-      "Precio_Promo_Mayorista": "$1.000,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.150,00",
+      "promo": "25%",
+      "Precio_Promo": "$850,00",
+      "Precio_Promo_Mayorista": "$850,00"
     },
     {
       "Id": "568",
@@ -19726,12 +19726,12 @@
       "Subcategoria": "Utensilios de Limpieza",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.000,00",
-      "Uni Dto": "2",
-      "Dto": "10%",
-      "Precio_Mayorista": "$1.800,00",
-      "promo": "",
-      "Precio_Promo": "$2.000,00",
-      "Precio_Promo_Mayorista": "$1.800,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$2.000,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.700,00",
+      "Precio_Promo_Mayorista": "$1.700,00"
     },
     {
       "Id": "569",
@@ -19740,13 +19740,13 @@
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Galletas",
       "Tipo": "Rentable",
-      "Precio_Venta": "$1.550,00",
+      "Precio_Venta": "$1.600,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$1.550,00",
-      "promo": "",
-      "Precio_Promo": "$1.550,00",
-      "Precio_Promo_Mayorista": "$1.550,00"
+      "Precio_Mayorista": "$1.600,00",
+      "promo": "10%",
+      "Precio_Promo": "$1.450,00",
+      "Precio_Promo_Mayorista": "$1.450,00"
     },
     {
       "Id": "570",
@@ -19755,13 +19755,13 @@
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Galletas",
       "Tipo": "Rentable",
-      "Precio_Venta": "$1.550,00",
+      "Precio_Venta": "$1.600,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$1.550,00",
-      "promo": "",
-      "Precio_Promo": "$1.550,00",
-      "Precio_Promo_Mayorista": "$1.550,00"
+      "Precio_Mayorista": "$1.600,00",
+      "promo": "10%",
+      "Precio_Promo": "$1.450,00",
+      "Precio_Promo_Mayorista": "$1.450,00"
     },
     {
       "Id": "571",
@@ -19770,13 +19770,13 @@
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Galletas",
       "Tipo": "Rentable",
-      "Precio_Venta": "$1.550,00",
+      "Precio_Venta": "$1.600,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$1.550,00",
-      "promo": "",
-      "Precio_Promo": "$1.550,00",
-      "Precio_Promo_Mayorista": "$1.550,00"
+      "Precio_Mayorista": "$1.600,00",
+      "promo": "10%",
+      "Precio_Promo": "$1.450,00",
+      "Precio_Promo_Mayorista": "$1.450,00"
     },
     {
       "Id": "572",
@@ -19786,11 +19786,11 @@
       "Subcategoria": "Tostadas y Galletas de Agua",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.200,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$2.000,00",
-      "promo": "",
-      "Precio_Promo": "$2.200,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$2.200,00",
+      "promo": "10%",
+      "Precio_Promo": "$2.000,00",
       "Precio_Promo_Mayorista": "$2.000,00"
     },
     {
@@ -19801,11 +19801,11 @@
       "Subcategoria": "Tostadas y Galletas de Agua",
       "Tipo": "Rentable",
       "Precio_Venta": "$2.200,00",
-      "Uni Dto": "3",
-      "Dto": "10%",
-      "Precio_Mayorista": "$2.000,00",
-      "promo": "",
-      "Precio_Promo": "$2.200,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$2.200,00",
+      "promo": "10%",
+      "Precio_Promo": "$2.000,00",
       "Precio_Promo_Mayorista": "$2.000,00"
     },
     {
@@ -19819,9 +19819,9 @@
       "Uni Dto": "",
       "Dto": "",
       "Precio_Mayorista": "$2.000,00",
-      "promo": "",
-      "Precio_Promo": "$2.000,00",
-      "Precio_Promo_Mayorista": "$2.000,00"
+      "promo": "20%",
+      "Precio_Promo": "$1.600,00",
+      "Precio_Promo_Mayorista": "$1.600,00"
     },
     {
       "Id": "575",
@@ -19834,9 +19834,9 @@
       "Uni Dto": "",
       "Dto": "",
       "Precio_Mayorista": "$2.000,00",
-      "promo": "",
-      "Precio_Promo": "$2.000,00",
-      "Precio_Promo_Mayorista": "$2.000,00"
+      "promo": "20%",
+      "Precio_Promo": "$1.600,00",
+      "Precio_Promo_Mayorista": "$1.600,00"
     },
     {
       "Id": "576",
@@ -19846,12 +19846,12 @@
       "Subcategoria": "Baño",
       "Tipo": "Rentable",
       "Precio_Venta": "$4.000,00",
-      "Uni Dto": "2",
-      "Dto": "8%",
-      "Precio_Mayorista": "$3.700,00",
-      "promo": "",
-      "Precio_Promo": "$4.000,00",
-      "Precio_Promo_Mayorista": "$3.700,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$4.000,00",
+      "promo": "10%",
+      "Precio_Promo": "$3.600,00",
+      "Precio_Promo_Mayorista": "$3.600,00"
     },
     {
       "Id": "577",
@@ -19861,12 +19861,12 @@
       "Subcategoria": "Baño",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.900,00",
-      "Uni Dto": "2",
-      "Dto": "8%",
-      "Precio_Mayorista": "$1.750,00",
-      "promo": "",
-      "Precio_Promo": "$1.900,00",
-      "Precio_Promo_Mayorista": "$1.750,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.900,00",
+      "promo": "10%",
+      "Precio_Promo": "$1.700,00",
+      "Precio_Promo_Mayorista": "$1.700,00"
     },
     {
       "Id": "578",
@@ -19876,12 +19876,12 @@
       "Subcategoria": "Galletas",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.600,00",
-      "Uni Dto": "3",
-      "Dto": "8%",
-      "Precio_Mayorista": "$1.450,00",
-      "promo": "",
-      "Precio_Promo": "$1.600,00",
-      "Precio_Promo_Mayorista": "$1.450,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.600,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.350,00",
+      "Precio_Promo_Mayorista": "$1.350,00"
     },
     {
       "Id": "579",
@@ -19891,12 +19891,12 @@
       "Subcategoria": "Galletas",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.600,00",
-      "Uni Dto": "3",
-      "Dto": "8%",
-      "Precio_Mayorista": "$1.450,00",
-      "promo": "",
-      "Precio_Promo": "$1.600,00",
-      "Precio_Promo_Mayorista": "$1.450,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.600,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.350,00",
+      "Precio_Promo_Mayorista": "$1.350,00"
     },
     {
       "Id": "580",
@@ -19906,12 +19906,12 @@
       "Subcategoria": "Galletas",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.600,00",
-      "Uni Dto": "3",
-      "Dto": "8%",
-      "Precio_Mayorista": "$1.450,00",
-      "promo": "",
-      "Precio_Promo": "$1.600,00",
-      "Precio_Promo_Mayorista": "$1.450,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.600,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.350,00",
+      "Precio_Promo_Mayorista": "$1.350,00"
     },
     {
       "Id": "581",
@@ -19921,12 +19921,12 @@
       "Subcategoria": "Galletas",
       "Tipo": "Rentable",
       "Precio_Venta": "$1.600,00",
-      "Uni Dto": "3",
-      "Dto": "8%",
-      "Precio_Mayorista": "$1.450,00",
-      "promo": "",
-      "Precio_Promo": "$1.600,00",
-      "Precio_Promo_Mayorista": "$1.450,00"
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$1.600,00",
+      "promo": "15%",
+      "Precio_Promo": "$1.350,00",
+      "Precio_Promo_Mayorista": "$1.350,00"
     },
     {
       "Id": "582",
@@ -20010,13 +20010,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Arroz y Puré de Papas",
       "Tipo": "Ancla",
-      "Precio_Venta": "$1.700,00",
+      "Precio_Venta": "$1.650,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$1.700,00",
+      "Precio_Mayorista": "$1.650,00",
       "promo": "",
-      "Precio_Promo": "$1.700,00",
-      "Precio_Promo_Mayorista": "$1.700,00"
+      "Precio_Promo": "$1.650,00",
+      "Precio_Promo_Mayorista": "$1.650,00"
     },
     {
       "Id": "588",
@@ -20025,13 +20025,13 @@
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Ancla",
-      "Precio_Venta": "$1.650,00",
+      "Precio_Venta": "$1.700,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$1.650,00",
+      "Precio_Mayorista": "$1.700,00",
       "promo": "",
-      "Precio_Promo": "$1.650,00",
-      "Precio_Promo_Mayorista": "$1.650,00"
+      "Precio_Promo": "$1.700,00",
+      "Precio_Promo_Mayorista": "$1.700,00"
     }
   ],
   "precios_b2b": [
