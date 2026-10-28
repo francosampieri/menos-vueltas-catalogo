@@ -197,6 +197,10 @@ const NUEVOS_B2B = [
 ];
 const NUEVOS = CANAL === 'B2C' ? NUEVOS_B2C : NUEVOS_B2B;
 
+// Orden de exhibición de la landing B2C, separado de la lista completa de Nuevos.
+// Arroz parboil, puré Chef, tallarín, crema de leche y azúcar.
+const ORDEN_NUEVOS_LANDING_B2C = ['587', '584', '585', '582', '588'];
+
 function esNuevo(idProd) {
   return NUEVOS.includes(String(idProd));
 }
@@ -479,13 +483,14 @@ function renderNuevosIngresos() {
 
   cont.innerHTML = '';
   const seccion = document.getElementById('nuevos-ingresos');
+  const orden = CANAL === 'B2C' ? [...ORDEN_NUEVOS_LANDING_B2C, ...NUEVOS] : NUEVOS;
 
   const items = Object.entries(catalogo)
     .filter(([, vars]) => grupoTieneNuevo(vars))
-    // NUEVOS ya expresa el orden de alta que se quiere comunicar.
+    // Los destacados de B2C van primero; el resto conserva el orden de alta.
     .sort(([, varsA], [, varsB]) => {
       const indice = vars => Math.min(...vars.filter(v => esNuevo(v['Id']))
-        .map(v => NUEVOS.indexOf(String(v['Id']))));
+        .map(v => orden.indexOf(String(v['Id']))));
       return indice(varsA) - indice(varsB);
     })
     .slice(0, 5);

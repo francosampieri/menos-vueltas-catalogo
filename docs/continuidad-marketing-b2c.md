@@ -1,6 +1,6 @@
 # Continuidad de marketing B2C — catálogo, próximo evento y Meta Ads
 
-Actualizado: 27 de octubre de 2026.
+Actualizado: 28 de octubre de 2026.
 
 Este documento resume la conversación para retomarla en esta u otra sesión. Separa instrucciones del responsable, observaciones, hipótesis y propuestas del asistente. Registra las definiciones aprobadas del evento de incorporaciones B2C; no autoriza publicación, gasto en anuncios ni modificaciones de las políticas de la base de conocimiento.
 
@@ -72,6 +72,7 @@ Evitar «mejoramos la calidad» o «mejores marcas», que pueden desvalorizar el
 - **Estado del botón principal:** conectado a `clasicos-cocina` mediante `data-vista-evento`; definición activa con `groupIds: ['316', '314', '313', '311', '312', '317']`. La prueba previa sin acción quedó reemplazada al verificar los productos reales el 27 de octubre.
 - **Productos verificados:** arroz Gallo Oro 500 g, producto `587` / grupo `316`; tallarín Lucchetti 500 g, `585` / `314`; puré Chef 100 g, `584` / `313`; crema Las Tres Niñas 200 ml, `582` / `311`; manteca La Serenísima 200 g, `583` / `312`; azúcar Ledesma 1 kg, `588` / `317`. Todos figuraban activos y habilitados B2C al consultar el catálogo público.
 - **Nuevos ingresos:** reemplazo confirmado por los 26 IDs `563`–`588`; no se suman a los anteriores ni se modifica B2B. Mostacholes (`586`, grupo `315`) pertenece a Nuevos por esa lista, pero queda fuera de Clásicos.
+- **Franja Nuevos de la landing:** orden confirmado el 28 de octubre y aplicado en `main` por pedido explícito: arroz parboil, puré Chef, tallarín, crema de leche y azúcar (productos `587`, `584`, `585`, `582`, `588`). Configuración independiente `ORDEN_NUEVOS_LANDING_B2C`, con la colección completa, el acceso Ver todos y la selección Clásicos conservados. Si falta un destacado elegible, completa con el siguiente nuevo según el orden anterior.
 - **Prioridades del catálogo B2C:** Conservas — tomate triturado, puré de tomate, pulpa (`298`, `41`, `42`); Arroz y Puré de Papas — parboil, grano largo (`316`, `65`); Fideos — mostachol, tallarín, largos, cortos, nidos cabello de ángel (`315`, `314`, `67`, `66`, `68`); Dulces y Endulzantes — azúcar, dulce de leche, miel (`317`, `136`, `290`). Orden confirmado por el responsable el 27 de octubre; los demás grupos siguen alfabéticamente y B2B conserva sus prioridades. Estas subcategorías se contrastaron con una consulta nueva del catálogo público, que ya separa Arroz y Puré de Papas de Fideos.
 - **Dato para publicar/probar:** el JSON versionado local seguía desactualizado al iniciar esta sesión. La verificación usa una copia del catálogo público actualizado fuera del repositorio; no se modificó el JSON generado para forzar disponibilidad. Antes de publicar, integrar la actualización generada del catálogo para no desplegar datos anteriores.
 - **Verificación:** 19 pruebas de hero, carrusel y vista-evento; revisión local desktop/mobile y navegación de catálogo. Las capturas de referencia están en `C:/Users/franc/Desktop/Menos Vueltas/outputs/hero-mas-clasicos/implementacion/`; los archivos `boton-visible-hero-*.png` muestran ambos botones. No implican publicación.
