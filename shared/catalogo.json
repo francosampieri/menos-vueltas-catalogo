@@ -9498,7 +9498,7 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/552-montenatural-miel-liquida-500-g.webp",
       "Tipo": "Rentable",
-      "Sin_Stock": false
+      "Sin_Stock": true
     },
     {
       "Id": "553",
