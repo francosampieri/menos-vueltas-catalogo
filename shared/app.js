@@ -473,6 +473,7 @@ function renderCatalogo() {
   // El QR tiene prioridad sobre cualquier estado temporal de esta pestaña.
   // Ambos flujos esperan al catálogo actual y no restauran navegación ni capas.
   if (!restaurarPedidoDesdeHash()) restaurarCarritoDesdeSesion();
+  registrarEventoMetaB2C('init');
 }
 
 // Sección "Nuevos ingresos" de la landing. Solo muestra una selección breve:
@@ -2281,6 +2282,13 @@ function resumenPedidoActual() {
   };
 }
 
+// La medición es opcional: errores, bloqueadores o ausencia del módulo no
+// pueden alterar el carrito ni consumir el gesto que abre WhatsApp.
+function registrarEventoMetaB2C(accion, ...args) {
+  if (CANAL !== 'B2C') return;
+  try { window.MVMetaPixel?.[accion]?.(...args); } catch (_) {}
+}
+
 function agregarAlCarrito(gid, variante, qty, opciones = {}) {
   if (productoNoDisponible(variante) && !opciones.permitirNoDisponible) return false;
   const g      = grupos[gid] || {};
@@ -2333,6 +2341,7 @@ function agregarAlCarrito(gid, variante, qty, opciones = {}) {
   const badgeModal = document.getElementById(`badge-modal-${gid}`);
   if (badgeModal) badgeModal.classList.add('visible');
   actualizarBadgesCarritoGrupo(gid);
+  if (opciones.manual !== false) registrarEventoMetaB2C('addToCart', idProd, qty);
   return true;
 }
 
@@ -2853,8 +2862,9 @@ function construirMensajePedido() {
 }
 
 function abrirWhatsAppConPedido() {
-  if (carritoTieneProductosNoDisponibles()) return;
+  if (!carrito.length || carritoTieneProductosNoDisponibles()) return;
   const url = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(construirMensajePedido())}`;
+  registrarEventoMetaB2C('whatsAppOrderClick');
   window.open(url, '_blank');
 }
 
