@@ -116,19 +116,48 @@ test('SDK load or transport failure stays contained and never retries events', (
   assert.doesNotThrow(() => { p.api.addToCart('21', 1); p.api.whatsAppOrderClick(); p.api.setConsent(false); });
 });
 
-test('only B2C includes the disabled module, with no noscript bypass', () => {
+function configuredPage(options = {}) {
   const html = read('b2c/index.html');
   const config = { window: {} };
   vm.runInNewContext(html.match(/window\.META_PIXEL_B2C\s*=\s*\{[^}]+\}/)[0], config);
-  assert.equal(config.window.META_PIXEL_B2C.enabled, false);
+  const p = pixel({ ...config.window.META_PIXEL_B2C, ...options });
+  const startup = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+    .map(match => match[1]).find(source => source.includes('MVMetaPixel'));
+  assert.ok(startup, 'B2C must start tracking from its HTML without a visitor action');
+  p.start = () => vm.runInContext(startup, p.context);
+  p.start();
+  return p;
+}
+
+test('B2C HTML automatically starts its Pixel once, with no noscript bypass', () => {
+  const html = read('b2c/index.html');
+  const config = { window: {} };
+  vm.runInNewContext(html.match(/window\.META_PIXEL_B2C\s*=\s*\{[^}]+\}/)[0], config);
+  assert.equal(config.window.META_PIXEL_B2C.enabled, true);
   assert.match(config.window.META_PIXEL_B2C.pixelId, /^\d{5,30}$/);
-  const p = pixel(config.window.META_PIXEL_B2C);
-  p.api.setConsent(true); p.api.addToCart('21', 1); p.api.whatsAppOrderClick();
-  assert.equal(p.scripts.length, 0);
-  assert.equal(p.calls.length, 0);
+  const p = configuredPage();
+  p.start(); p.api.init();
+  assert.equal(p.scripts.length, 1);
+  p.load();
+  assert.deepEqual(p.calls.filter(c => c[0].startsWith('track')), [
+    ['trackSingle', config.window.META_PIXEL_B2C.pixelId, 'PageView']
+  ]);
   assert.match(html, /src="meta-pixel.js"/);
   for (const file of ['b2b/index.html', 'admin/index.html']) assert.doesNotMatch(read(file), /meta-pixel|fbq|fbevents/);
   assert.doesNotMatch(html, /facebook\.com\/tr/);
+});
+
+test('automatic startup respects the off switch and channel, and tolerates a missing module', () => {
+  for (const options of [{ enabled: false }, { channel: 'B2B' }, { channel: 'ADMIN' }]) {
+    const p = configuredPage(options);
+    p.api.addToCart('21', 1); p.api.whatsAppOrderClick();
+    assert.equal(p.scripts.length, 0);
+    assert.equal(p.calls.length, 0);
+  }
+  const p = configuredPage({ enabled: false });
+  p.window.META_PIXEL_B2C.enabled = true;
+  p.window.MVMetaPixel = undefined;
+  assert.doesNotThrow(p.start);
 });
 
 const app = read('shared/app.js');
@@ -256,5 +285,28 @@ test('actual session and QR restoration replace quantities without emitting AddT
     assert.equal(p.calls.filter(c => c[2] === 'AddToCart' || c[2] === 'WhatsAppOrderClick').length, 0);
     assert.equal(c.effects.opens, 0);
     assert.equal(c.effects.manual, 0);
+  }
+});
+
+test('automatic HTML startup measures the actual desktop and mobile flows while the SDK loads', () => {
+  for (const mobile of [false, true]) {
+    const p = configuredPage();
+    const c = commerce(p, mobile);
+    c.run("agregarAlCarrito('group-9', {Id:'21'}, 2); enviarWhatsApp()");
+    if (!mobile) {
+      c.actions['[data-accion="qr"]']();
+      assert.equal(p.calls.length, 0);
+      c.actions['[data-accion="web"]']();
+    }
+    assert.equal(c.effects.opens, 1);
+    p.load();
+    p.start(); p.api.init();
+    assert.deepEqual(p.calls.filter(call => call[0].startsWith('track')).map(call => call[2]),
+      ['PageView', 'AddToCart', 'WhatsAppOrderClick']);
+    c.run('abrirWhatsAppConPedido()');
+    assert.equal(p.calls.filter(call => call[2] === 'WhatsAppOrderClick').length, 2);
+    p.api.setConsent(false);
+    c.run('enviarWhatsApp()');
+    assert.equal(p.calls.filter(call => call[2] === 'WhatsAppOrderClick').length, 2);
   }
 });

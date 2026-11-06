@@ -992,10 +992,17 @@
 
 <script>window.CANAL = 'B2C';</script>
 <script>
-  // Activar sólo después de resolver ID, privacidad y consentimiento.
-  window.META_PIXEL_B2C = { enabled: false, pixelId: '932328919811200' };
+  // Medición automática B2C. Cambiar enabled a false para deshabilitarla.
+  window.META_PIXEL_B2C = { enabled: true, pixelId: '932328919811200' };
 </script>
 <script src="meta-pixel.js"></script>
+<script>
+  // Inicio automático solicitado por el responsable, sin consulta al visitante.
+  // setConsent es la API técnica del módulo; esta llamada no obtiene consentimiento.
+  try {
+    if (window.META_PIXEL_B2C.enabled) window.MVMetaPixel?.setConsent(true);
+  } catch (_) { /* El carrito y WhatsApp no dependen de Meta. */ }
+</script>
 <script src="shipping.js"></script>
 <script src="app.js"></script>
 <script src="multihero.js"></script>
