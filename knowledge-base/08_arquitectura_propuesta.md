@@ -28,6 +28,24 @@ Google Sheets (fuente de verdad)
 
 B2C y B2B comparten el motor de catálogo y carrito en `shared/app.js`. El orden editorial de grupos se configura localmente en ese archivo y se separa por canal, categoría y subcategoría; sólo reordena los grupos ya elegibles para la exploración normal. La misma colección ordenada alimenta los rieles mobile y las grillas desktop. Esta capa no modifica la fuente de Sheets ni los CSV o JSON generados, ni precios, promociones o disponibilidad. La política de envío se aplica sólo a B2C: el mismo cálculo debe alimentar el carrito, el mensaje de pedido y la transferencia por QR; el QR conserva productos y cantidades, y recalcula el envío al abrirse en el teléfono. El carrito crea un mensaje de pedido para WhatsApp. En escritorio contempla abrir WhatsApp Web o transferir el pedido al teléfono mediante QR; en móvil abre WhatsApp directamente.
 
+### Medición publicitaria B2C con Meta Pixel
+
+Desde el despliegue `92c9d18` del 6 de noviembre de 2026, `b2c/index.html` configura e inicia automáticamente el Pixel de Meta mediante `shared/meta-pixel.js`. La integración usa JavaScript vanilla, sin dependencias de aplicación nuevas, backend, CAPI ni dashboard. El módulo está en recursos compartidos, pero sólo B2C lo carga; B2B y admin quedan fuera. Los hooks opcionales de `shared/app.js` comprueban el canal y contienen errores para que la compra no dependa de Meta.
+
+El contrato comprende sólo estos eventos:
+
+| Evento | Punto de emisión | Exclusiones |
+|---|---|---|
+| `PageView` | Una vez por carga completa del documento elegible | Cambios de vista, filtros, modales y reinicializaciones |
+| `AddToCart` | Tras un agregado manual permitido y exitoso | Restauración de sesión o QR, renderizado, edición interna de cantidades y agregados rechazados |
+| `WhatsAppOrderClick` | Intento de salida a WhatsApp con carrito válido en `abrirWhatsAppConPedido()` | Carrito vacío o bloqueado, apertura/cancelación del selector, visualización del QR, restauración y consultas genéricas |
+
+El SDK se carga de forma asíncrona y la inicialización es idempotente. Las acciones elegibles ocurridas durante la descarga esperan en una cola; un fallo no bloquea el carrito ni la salida a WhatsApp. Se envían eventos dirigidos al Pixel configurado, sin reutilizar instalaciones preexistentes. No se emite `Purchase` ni se incluye un fallback `noscript`. La configuración automática se desactiva desde el módulo; el responsable confirmó también apagadas las coincidencias avanzadas automáticas y el seguimiento de eventos sin código en Meta.
+
+Los parámetros propios de `AddToCart` se limitan al ID de variante, tipo de contenido y cantidad añadida; `WhatsAppOrderClick` sólo agrega el canal constante `B2C`. No se adjuntan importes, mensaje del pedido, enlace de WhatsApp, datos de clientes, costos ni márgenes. Esto no implica que el SDK de Meta carezca de su propia recolección de información del navegador. Como el SDK lee URL y referrer, el módulo comprueba ambos: admite las rutas públicas explícitas y sólo el parámetro `fbclid` con formato acotado; rechaza hashes y otros parámetros, incluidos UTMs. Esta restricción puede omitir visitas según su contexto; no se promete medición completa ni se exige que exista `fbclid` para medir.
+
+La modalidad publicada es automática, sin aviso ni consulta al visitante, por decisión explícita del responsable. El HTML usa `enabled: true` y llama a `MVMetaPixel.setConsent(true)`; el nombre de esa API técnica no acredita consentimiento obtenido del visitante. No existe interfaz ni persistencia de una elección de medición. Para apagar nuevas cargas, cambiar a `enabled: false` y publicar el cambio. En una pestaña abierta, `MVMetaPixel.setConsent(false)` detiene nuevos eventos y descarta pendientes propios hasta una nueva habilitación; recargar vuelve a aplicar la configuración publicada. Detener no borra eventos ya recibidos por Meta.
+
 ### Multihero público
 
 Las landings B2C y B2B usan la misma estructura de carrusel definida en sus `index.html` y el módulo compartido sin dependencias `shared/multihero.js`. Cada hero es un bloque HTML independiente y se pueden agregar o reordenar héroes sin modificar la lógica de navegación. El orden B2C es Clásicos, estándar y Comer mejor. El contenido y las acciones permanecen propios de cada canal; B2B conserva su estructura con el primer bloque vacío hasta contar con su diseño propio.

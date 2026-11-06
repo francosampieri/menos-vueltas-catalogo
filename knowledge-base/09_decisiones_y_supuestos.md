@@ -61,6 +61,15 @@
 - Entender el código e incorporar funcionalidades tiene prioridad sobre eliminar código muerto.
 - Una futura reescritura con buenas prácticas es deseable, pero no inmediata.
 
+### Medición y conversión comercial B2C — confirmadas el 6 de noviembre de 2026
+
+- Meta Pixel se limita a B2C y a `PageView`, `AddToCart` manual exitoso y el evento personalizado `WhatsAppOrderClick`. No emitir `Purchase` ni interpretar el carrito como un cobro.
+- `WhatsAppOrderClick` es el indicador comercial principal de la web para estimar pedidos/ventas. Representa el intento válido de abrir WhatsApp con el pedido armado; no confirma apertura de la aplicación, envío del mensaje, conversación, compra ni cobro. El responsable comparará periódicamente su conteo con las compras reales; Finanzas conserva la fuente operativa de cobros.
+- La conversión personalizada visible en Meta es «Pedido Iniciado por WhatsApp», basada en `WhatsAppOrderClick` y con regla URL que contiene `https://menosvueltas.com.ar/`. El evento y su conversión derivada describen el mismo intento: no se suman como dos pedidos.
+- Se evitan duplicados técnicos, pero cada reintento deliberado de abrir WhatsApp con un pedido válido cuenta otra vez, incluso con el mismo carrito. El conteo no equivale a pedidos ni compradores únicos, y un intento con apertura bloqueada puede contar. El selector y el QR no son intentos de envío; restaurar el carrito tampoco genera `AddToCart`.
+- El reporte publicitario incorpora Total y Costo de esa conversión, junto con Monto gastado, sin Valor. Ads Manager muestra conversiones atribuidas a anuncios y puede diferir de la actividad total recibida en Eventos. El costo se interpreta por intento atribuido, sin derivar ingresos cobrados ni ROAS de importes del carrito. La configuración del reporte no constituye autorización para lanzar campañas o gastar.
+- Tras una primera implementación apagada, el responsable pidió explícitamente la activación automática sin aviso, política ni solicitud de consentimiento. Esa modalidad fue publicada; registra una decisión de implementación, no consentimiento obtenido del visitante ni una conclusión de cumplimiento jurídico o contractual. El alcance mínimo y los filtros existentes de datos se conservan.
+
 ## Supuestos a validar antes de automatizar
 
 - Los datos publicados desde Sheets son suficientes y consistentes para alimentar las vistas web.
