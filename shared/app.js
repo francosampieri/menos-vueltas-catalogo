@@ -2252,6 +2252,7 @@ function resumenPedidoActual() {
     });
     const conCodigo = policy.calculateShipping({
       channel: 'B2C',
+      validatedPromotion: codigoPromocional,
       items: [{ unitPrice: promo.discountedProductsTotal, quantity: 1 }]
     });
     return {
@@ -2844,6 +2845,9 @@ function construirMensajePedido() {
     }
     if (dtoCantidad > 0) {
       msg += `Descuentos por cantidad: -${formatPrecio(dtoCantidad)}\n`;
+    }
+    if (resumen.promotion) {
+      msg += `Código promocional: ${resumen.promotion.code} (${resumen.promotion.percent}%)\n`;
     }
     if (dtoCodigo > 0 && resumen.promotion) {
       msg += `Descuento por código: -${formatPrecio(dtoCodigo)}\n`;

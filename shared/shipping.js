@@ -19,7 +19,7 @@
   const B2C_SHIPPING_COST = 1500;
   const B2C_FREE_SHIPPING_THRESHOLD = 35000;
 
-  function calculateShipping({ channel, items = [] } = {}) {
+  function calculateShipping({ channel, items = [], validatedPromotion = null } = {}) {
     const hasMissingPrice = items.some(item =>
       !item || !Number.isFinite(item.unitPrice) || item.unitPrice < 0
     );
@@ -62,7 +62,7 @@
       };
     }
 
-    const isFree = productsTotal >= B2C_FREE_SHIPPING_THRESHOLD;
+    const isFree = hasFreeShipping(validatedPromotion) || productsTotal >= B2C_FREE_SHIPPING_THRESHOLD;
     const shippingCost = isFree ? 0 : B2C_SHIPPING_COST;
     const amountRemaining = isFree ? 0 : B2C_FREE_SHIPPING_THRESHOLD - productsTotal;
 
@@ -71,7 +71,7 @@
       shippingCost,
       total: productsTotal + shippingCost,
       amountRemaining,
-      progress: Math.min(100, Math.round((productsTotal / B2C_FREE_SHIPPING_THRESHOLD) * 100)),
+      progress: isFree ? 100 : Math.min(100, Math.round((productsTotal / B2C_FREE_SHIPPING_THRESHOLD) * 100)),
       status: isFree ? 'free' : 'paid'
     };
   }
@@ -105,6 +105,12 @@
 
   function normalizeCode(value) {
     return String(value || '').trim().toUpperCase();
+  }
+
+  // Excepción de campaña para un código ya validado contra Sheets.
+  function hasFreeShipping(validatedPromotion) {
+    return Boolean(validatedPromotion && normalizeCode(validatedPromotion.code) === '21JULIO10' &&
+      Number.isFinite(validatedPromotion.percent) && validatedPromotion.percent > 0 && validatedPromotion.percent <= 100);
   }
 
   // B2C comunica importes en múltiplos de $50. En el punto medio se elige
@@ -163,7 +169,7 @@
     calculateShipping
   });
   const admin = Object.freeze({ parseShippingFromMessage, serializeShipping, totalWithShipping });
-  const promotion = Object.freeze({ normalizeCode, roundToNearest50, calculatePromotion });
+  const promotion = Object.freeze({ normalizeCode, roundToNearest50, calculatePromotion, hasFreeShipping });
 
   return Object.freeze({ policy, admin, promotion });
 });

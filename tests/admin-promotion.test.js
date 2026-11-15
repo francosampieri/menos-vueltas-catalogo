@@ -225,7 +225,7 @@ test('B2C rounds catalog prices and applies the code discount line by line', () 
   assert.equal(result.descuentoCodigo, 1200);
   assert.equal(result.elegibleCodigo, 12100);
   assert.equal(result.productosNetos, 16400);
-  assert.equal(result.envio, 1500);
+  assert.equal(result.envio, 0);
   assert.deepEqual(result.promotionLines.map(line => line.discountedTotal), [10900, 5500]);
   assert.deepEqual(result.promotionLines.map(line => line.discount), [1200, 0]);
 });

@@ -489,6 +489,7 @@ function calcularEnvioPedido(p, productosNetos) {
 
   const resumen = MenosVueltasShipping.calculateShipping({
     channel: 'B2C',
+    validatedPromotion: { code: p.codigoPromo, percent: num(p.porcentajeCodigo) },
     items: [{ unitPrice: productosNetos, quantity: 1 }]
   });
   return resumen.shippingCost;
@@ -2301,7 +2302,9 @@ function actualizarCampoEnvio(envio) {
       : 'Valor manual fijado para este pedido.';
   } else {
     aviso.textContent = envio === 0
-      ? 'Envío gratis por superar $35.000 netos en productos.'
+      ? (MenosVueltasPromotion.hasFreeShipping({ code: edicion.codigoPromo, percent: num(edicion.porcentajeCodigo) })
+        ? `Envío gratis por código ${normalizarCodigoPromo(edicion.codigoPromo)}.`
+        : 'Envío gratis por superar $35.000 netos en productos.')
       : 'Regla B2C automática: $1.500 dentro de la cobertura vigente.';
   }
 }
@@ -2893,6 +2896,12 @@ async function confirmarImportarWA() {
       edicion.codigoPromo = normalizarCodigoPromo(respuesta.promocion.codigo);
       edicion.porcentajeCodigo = Number(respuesta.promocion.porcentaje);
       edicion.descuentoCodigo = 0;
+      // En un pedido nuevo la bonificación depende del código validado:
+      // al retirarlo, se vuelve a aplicar la regla normal de envío.
+      if (edicion.id == null && waParse.envioMsg === 0 &&
+          MenosVueltasPromotion.hasFreeShipping({ code: edicion.codigoPromo, percent: edicion.porcentajeCodigo })) {
+        edicion.envioModo = 'automatico';
+      }
     } catch (error) {
       edicion.codigoPromo = '';
       edicion.porcentajeCodigo = 0;
