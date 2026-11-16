@@ -109,7 +109,7 @@
 
   // Excepción de campaña para un código ya validado contra Sheets.
   function hasFreeShipping(validatedPromotion) {
-    return Boolean(validatedPromotion && normalizeCode(validatedPromotion.code) === '21JULIO10' &&
+    return Boolean(validatedPromotion && ['21JULIO10', '10OFF'].includes(normalizeCode(validatedPromotion.code)) &&
       Number.isFinite(validatedPromotion.percent) && validatedPromotion.percent > 0 && validatedPromotion.percent <= 100);
   }
 

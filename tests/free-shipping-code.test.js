@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const { policy, promotion, admin: adminShipping } = require('../shared/shipping.js');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'shared/app.js'), 'utf8');
-function cart(channel = 'B2C', valid = true) {
+function cart(channel = 'B2C', valid = true, code = '21JULIO10') {
   const context = {
     CANAL: channel, codigoPromocional: null,
     carrito: [{ idProd: 'SYNTHETIC', nombre: 'Producto de prueba', marca: '', qty: 1,
@@ -14,7 +14,7 @@ function cart(channel = 'B2C', valid = true) {
     window: { MenosVueltasShipping: policy, MenosVueltasPromotion: promotion },
     document: { getElementById: () => null }, SHEETS_URL_PUBLICA: 'https://example.invalid',
     fetch: async () => ({ json: async () => valid
-      ? { ok: true, promocion: { codigo: '21JULIO10', porcentaje: 10 } }
+      ? { ok: true, promocion: { codigo: code, porcentaje: 10 } }
       : { ok: false, error: 'Código inválido' } }),
     actualizarEstadoCodigoPromocional() {}, actualizarUICarrito() {}, guardarCarritoSesion() {},
     formatPrecio: value => `$${value}`, porcentajeDescuentoLinea: () => '10%',
@@ -55,6 +55,31 @@ test('removing or rejecting the code restores paid shipping', async () => {
   assert.equal(rejected.codigoPromocional, null);
 });
 
+test('validated 10OFF gives 10% plus free shipping in cart, WhatsApp and QR; removal and rejection restore shipping', async () => {
+  const c = cart('B2C', true, '10OFF');
+  await c.aplicarCodigoPromocional(' 10off ');
+  assert.equal(c.resumenPedidoActual().codeDiscount, 1000);
+  assert.equal(c.resumenPedidoActual().shippingCost, 0);
+  assert.equal(c.resumenPedidoActual().total, 9000);
+  assert.match(c.construirMensajePedido(), /Envío: GRATIS/);
+  assert.match(c.construirMensajePedido(), /Código promocional: 10OFF \(10%\)/);
+  assert.equal(c.codificarPedido(), 'SYNTHETICX1:C10OFF');
+  c.quitarCodigoPromocional();
+  assert.equal(c.resumenPedidoActual().shippingCost, 1500);
+  assert.equal(c.resumenPedidoActual().total, 11500);
+  await c.aplicarCodigoPromocional('10OFF');
+  c.fetch = async () => ({ json: async () => ({ ok: false, error: 'Código inactivo' }) });
+  await c.aplicarCodigoPromocional('10OFF');
+  assert.equal(c.codigoPromocional, null);
+  assert.equal(c.resumenPedidoActual().shippingCost, 1500);
+  assert.equal(c.resumenPedidoActual().total, 11500);
+  assert.equal(c.resumenPedidoActual().total, 11500);
+  const rejected = cart('B2C', false, '10OFF');
+  await rejected.aplicarCodigoPromocional('10OFF');
+  assert.equal(rejected.codigoPromocional, null);
+  assert.equal(rejected.resumenPedidoActual().shippingCost, 1500);
+});
+
 test('other codes, invalid percentages and B2B never receive code-based free shipping', () => {
   for (const validatedPromotion of [null, { code: 'OTHER10', percent: 10 },
     { code: '21JULIO10', percent: 0 }, { code: '21JULIO10', percent: 101 }]) {
@@ -89,11 +114,11 @@ test('admin automatic draft applies free shipping and removal restores charge; h
 
 test('new WhatsApp imports keep campaign shipping automatic so removing the code restores its cost', async () => {
   const adminSource = fs.readFileSync(path.join(__dirname, '..', 'admin/admin.js'), 'utf8');
-  for (const id of [undefined, 123]) {
+  for (const code of ['21JULIO10', '10OFF']) for (const id of [undefined, 123]) {
     const context = {
       edicion: { id, canal: 'b2c', items: [] }, CATALOGO: { b2c: [] },
-      waParse: { items: [], tieneEnvioMsg: true, envioMsg: 0, codigoPromo: '21JULIO10' },
-      API: { validarCodigo: async () => ({ promocion: { codigo: '21JULIO10', porcentaje: 10 } }) },
+      waParse: { items: [], tieneEnvioMsg: true, envioMsg: 0, codigoPromo: code },
+      API: { validarCodigo: async () => ({ promocion: { codigo: code, porcentaje: 10 } }) },
       MenosVueltasPromotion: promotion, normalizarCodigoPromo: promotion.normalizeCode,
       pintarItems() {}, cerrarImportarWA() {}, toast() {}
     };
@@ -103,13 +128,33 @@ test('new WhatsApp imports keep campaign shipping automatic so removing the code
   }
 });
 
+test('10OFF admin automatic orders get the benefit while invalid codes and B2B remain excluded', () => {
+  const draft = { canal: 'b2c', codigoPromo: '10OFF', porcentajeCodigo: 10,
+    envioModo: 'automatico', items: [{ id: 'SYNTHETIC', nombre: 'Producto de prueba',
+      cant: 1, lista: 20000, promo: 20000, cantMin: 0, porCant: 0, promoCant: 0, costo: 5000 }] };
+  assert.equal(admin.calcularPedido(draft).descuentoCodigo, 2000);
+  assert.equal(admin.calcularPedido(draft).envio, 0);
+  assert.equal(admin.calcularPedido(draft).total, 18000);
+  assert.equal(admin.paraGuardar(draft).envio, 0);
+  for (const invalid of [{ codigoPromo: '', porcentajeCodigo: 0 },
+    { porcentajeCodigo: 0 }, { porcentajeCodigo: 101 }, { codigoPromo: 'OTHER10' }]) {
+    assert.equal(admin.calcularPedido({ ...draft, ...invalid }).envio, 1500);
+  }
+  assert.equal(admin.calcularPedido({ ...draft, canal: 'b2b' }).envio, null);
+  assert.equal(admin.calcularPedido({ ...draft, canal: 'b2b' }).total, 20000);
+  assert.equal(admin.calcularPedido({ ...draft, envioModo: 'historico', envio: 1500 }).envio, 1500);
+  assert.equal(admin.calcularPedido({ ...draft, envioModo: 'fijado', envio: 800 }).envio, 800);
+});
+
 test('shipping benefit also covers only temporarily promoted products without discounting them again', async () => {
-  const c = cart();
-  c.carrito[0].precio = 5500;
-  c.carrito[0].tienePromoProducto = true;
-  await c.aplicarCodigoPromocional('21JULIO10');
-  assert.equal(c.resumenPedidoActual().codeDiscount, 0);
-  assert.equal(c.resumenPedidoActual().shippingCost, 0);
-  assert.equal(c.resumenPedidoActual().total, 5500);
-  assert.match(c.construirMensajePedido(), /Código promocional: 21JULIO10/);
+  for (const code of ['21JULIO10', '10OFF']) {
+    const c = cart('B2C', true, code);
+    c.carrito[0].precio = 5500;
+    c.carrito[0].tienePromoProducto = true;
+    await c.aplicarCodigoPromocional(code);
+    assert.equal(c.resumenPedidoActual().codeDiscount, 0);
+    assert.equal(c.resumenPedidoActual().shippingCost, 0);
+    assert.equal(c.resumenPedidoActual().total, 5500);
+    assert.ok(c.construirMensajePedido().includes(`Código promocional: ${code}`));
+  }
 });
