@@ -14790,13 +14790,13 @@
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Café",
       "Tipo": "Ancla",
-      "Precio_Venta": "$6.400,00",
-      "Uni Dto": "4",
-      "Dto": "4%",
-      "Precio_Mayorista": "$6.150,00",
-      "promo": "",
-      "Precio_Promo": "$6.400,00",
-      "Precio_Promo_Mayorista": "$6.150,00"
+      "Precio_Venta": "$7.100,00",
+      "Uni Dto": "",
+      "Dto": "",
+      "Precio_Mayorista": "$7.100,00",
+      "promo": "5%",
+      "Precio_Promo": "$6.750,00",
+      "Precio_Promo_Mayorista": "$6.750,00"
     },
     {
       "Id": "178",
