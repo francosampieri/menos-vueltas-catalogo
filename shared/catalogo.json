@@ -19935,13 +19935,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Lacteos",
       "Tipo": "Ancla",
-      "Precio_Venta": "$2.900,00",
+      "Precio_Venta": "$2.800,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$2.900,00",
+      "Precio_Mayorista": "$2.800,00",
       "promo": "",
-      "Precio_Promo": "$2.900,00",
-      "Precio_Promo_Mayorista": "$2.900,00"
+      "Precio_Promo": "$2.800,00",
+      "Precio_Promo_Mayorista": "$2.800,00"
     },
     {
       "Id": "583",
@@ -19950,13 +19950,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Lacteos",
       "Tipo": "Ancla",
-      "Precio_Venta": "$4.800,00",
+      "Precio_Venta": "$4.600,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$4.800,00",
+      "Precio_Mayorista": "$4.600,00",
       "promo": "",
-      "Precio_Promo": "$4.800,00",
-      "Precio_Promo_Mayorista": "$4.800,00"
+      "Precio_Promo": "$4.600,00",
+      "Precio_Promo_Mayorista": "$4.600,00"
     },
     {
       "Id": "584",
@@ -19965,13 +19965,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Arroz y Puré de Papas",
       "Tipo": "Ancla",
-      "Precio_Venta": "$2.000,00",
+      "Precio_Venta": "$1.800,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$2.000,00",
+      "Precio_Mayorista": "$1.800,00",
       "promo": "",
-      "Precio_Promo": "$2.000,00",
-      "Precio_Promo_Mayorista": "$2.000,00"
+      "Precio_Promo": "$1.800,00",
+      "Precio_Promo_Mayorista": "$1.800,00"
     },
     {
       "Id": "585",
@@ -20010,13 +20010,13 @@
       "Categoría": "Almacén",
       "Subcategoria": "Arroz y Puré de Papas",
       "Tipo": "Ancla",
-      "Precio_Venta": "$1.650,00",
+      "Precio_Venta": "$1.550,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$1.650,00",
+      "Precio_Mayorista": "$1.550,00",
       "promo": "",
-      "Precio_Promo": "$1.650,00",
-      "Precio_Promo_Mayorista": "$1.650,00"
+      "Precio_Promo": "$1.550,00",
+      "Precio_Promo_Mayorista": "$1.550,00"
     },
     {
       "Id": "588",
@@ -20025,13 +20025,13 @@
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Ancla",
-      "Precio_Venta": "$1.700,00",
+      "Precio_Venta": "$1.550,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$1.700,00",
+      "Precio_Mayorista": "$1.550,00",
       "promo": "",
-      "Precio_Promo": "$1.700,00",
-      "Precio_Promo_Mayorista": "$1.700,00"
+      "Precio_Promo": "$1.550,00",
+      "Precio_Promo_Mayorista": "$1.550,00"
     }
   ],
   "precios_b2b": [
