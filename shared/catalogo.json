@@ -8738,7 +8738,7 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/514-menubox-vaso-avena-almendra-y-chips-de-chocolate-64-g.webp",
       "Tipo": "Rentable",
-      "Sin_Stock": true
+      "Sin_Stock": false
     },
     {
       "Id": "515",
@@ -8758,7 +8758,7 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/515-menubox-vaso-avena-banana-y-ddl-64-g.webp",
       "Tipo": "Rentable",
-      "Sin_Stock": true
+      "Sin_Stock": false
     },
     {
       "Id": "516",
@@ -8778,7 +8778,7 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/516-menubox-vaso-avena-y-arandanos-59-g.webp",
       "Tipo": "Rentable",
-      "Sin_Stock": true
+      "Sin_Stock": false
     },
     {
       "Id": "517",
@@ -9498,7 +9498,7 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/552-montenatural-miel-liquida-500-g.webp",
       "Tipo": "Rentable",
-      "Sin_Stock": true
+      "Sin_Stock": false
     },
     {
       "Id": "553",
@@ -9698,7 +9698,7 @@
       "Label_Tamaño": "",
       "Imagen": "https://res.cloudinary.com/dgkh64tcm/image/upload/productos/562-menubox-vaso-avena-frutos-rojos-64-g.webp",
       "Tipo": "Rentable",
-      "Sin_Stock": true
+      "Sin_Stock": false
     },
     {
       "Id": "563",
@@ -19485,13 +19485,13 @@
       "Categoría": "Desayuno y Mediatarde",
       "Subcategoria": "Dulces y Endulzantes",
       "Tipo": "Rentable",
-      "Precio_Venta": "$5.800,00",
+      "Precio_Venta": "$6.600,00",
       "Uni Dto": "",
       "Dto": "",
-      "Precio_Mayorista": "$5.800,00",
+      "Precio_Mayorista": "$6.600,00",
       "promo": "",
-      "Precio_Promo": "$5.800,00",
-      "Precio_Promo_Mayorista": "$5.800,00"
+      "Precio_Promo": "$6.600,00",
+      "Precio_Promo_Mayorista": "$6.600,00"
     },
     {
       "Id": "553",
